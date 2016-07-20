@@ -1,0 +1,1893 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FreeMarketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ActivityLogging">
+          <Key>
+            <PropertyRef Name="ActivityNumber" />
+          </Key>
+          <Property Name="ActivityNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AddressName">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AuditUser">
+          <Key>
+            <PropertyRef Name="ActionNumber" />
+          </Key>
+          <Property Name="ActionNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" Nullable="false" />
+          <Property Name="Identity" Type="nvarchar" MaxLength="100" />
+          <Property Name="Action" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="Courier">
+          <Key>
+            <PropertyRef Name="CourierNumber" />
+          </Key>
+          <Property Name="CourierNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourierName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MainContactName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MainContactTelephoneNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="MainContactCellphoneNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="MainContactEmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="nvarchar" MaxLength="100" />
+          <Property Name="BankingDetailsBranchCode" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" />
+          <Property Name="TrustedCourier" Type="bit" Nullable="false" />
+          <Property Name="Activated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CourierLocation">
+          <Key>
+            <PropertyRef Name="CourierNumber" />
+            <PropertyRef Name="LocationNumberOrigin" />
+            <PropertyRef Name="LocationNumberDestination" />
+          </Key>
+          <Property Name="CourierNumber" Type="int" Nullable="false" />
+          <Property Name="LocationNumberOrigin" Type="int" Nullable="false" />
+          <Property Name="LocationNumberDestination" Type="int" Nullable="false" />
+          <Property Name="CourierFee" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CourierStockMovementLog">
+          <Key>
+            <PropertyRef Name="StockMovementNumber" />
+          </Key>
+          <Property Name="StockMovementNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="CustodianNumber" Type="int" Nullable="false" />
+          <Property Name="CourierNumber" Type="int" Nullable="false" />
+          <Property Name="CourierEmployeeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateAddedStock" Type="datetime" />
+          <Property Name="DateSubtractedStock" Type="datetime" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Custodian">
+          <Key>
+            <PropertyRef Name="CustodianNumber" />
+          </Key>
+          <Property Name="CustodianNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustodianName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CustodianTelephoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustodianCellphoneNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustodianLocation">
+          <Key>
+            <PropertyRef Name="LocationNumber" />
+            <PropertyRef Name="CustodianNumber" />
+          </Key>
+          <Property Name="LocationNumber" Type="int" Nullable="false" />
+          <Property Name="CustodianNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerNumber" />
+          </Key>
+          <Property Name="CustomerNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="CellphoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PreferredCommunicationMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerAddress">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerNumber" Type="int" Nullable="false" />
+          <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressLine1" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="AddressLine2" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="AddressLine3" Type="nvarchar" MaxLength="250" />
+          <Property Name="AddressLine4" Type="nvarchar" MaxLength="250" />
+          <Property Name="AddressSuburb" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressCity" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressPostalCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="DepartmentNumber" />
+          </Key>
+          <Property Name="DepartmentNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DepartmentName" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExceptionLogging">
+          <Key>
+            <PropertyRef Name="ExceptionNumber" />
+          </Key>
+          <Property Name="ExceptionNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="StackTrace" Type="nvarchar(max)" />
+          <Property Name="Identity" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="FreeMarketOwner">
+          <Key>
+            <PropertyRef Name="EmailAddress" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CellphoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBranchCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="LocationNumber" />
+          </Key>
+          <Property Name="LocationNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PostalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="LocationName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Lattitude" Type="decimal" Precision="9" Scale="6" />
+          <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
+          <Property Name="FarmName" Type="nvarchar" MaxLength="100" />
+          <Property Name="StreetAddress" Type="nvarchar" MaxLength="200" />
+          <Property Name="TownName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Province" Type="nvarchar" MaxLength="100" />
+          <Property Name="Country" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="ItemNumber" />
+          </Key>
+          <Property Name="ItemNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderNumber" Type="int" Nullable="false" />
+          <Property Name="SupplierNumber" Type="int" Nullable="false" />
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="CourierNumber" Type="int" Nullable="false" />
+          <Property Name="Settled" Type="bit" />
+          <Property Name="PaySupplier" Type="bit" />
+          <Property Name="PayCourier" Type="bit" />
+          <Property Name="PaidSupplier" Type="bit" />
+          <Property Name="PaidCourier" Type="bit" />
+          <Property Name="OrderItemStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Quantity" Type="smallint" Nullable="false" />
+          <Property Name="OrderItemValue" Type="money" Nullable="false" />
+          <Property Name="DeliveryDateAgreed" Type="datetime" />
+          <Property Name="DeliveryDateActual" Type="datetime" />
+          <Property Name="CourierFee" Type="money" />
+          <Property Name="CustomerProductQualityRating" Type="nvarchar(max)" />
+          <Property Name="CustomerCourierOnTimeDeliveryRating" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderDatePlaced" Type="datetime" />
+          <Property Name="OrderDateClosed" Type="datetime" />
+          <Property Name="CustomerNumber" Type="int" Nullable="false" />
+          <Property Name="TotalOrderValue" Type="money" Nullable="false" />
+          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerOverallSatisfactionRating" Type="nvarchar(max)" />
+          <Property Name="PaymentReceived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderStatus">
+          <Key>
+            <PropertyRef Name="OrderStatusNumber" />
+          </Key>
+          <Property Name="OrderStatusNumber" Type="int" Nullable="false" />
+          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayMessage">
+          <Key>
+            <PropertyRef Name="MessageNumber" />
+          </Key>
+          <Property Name="MessageNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Reference" Type="varchar" MaxLength="80" />
+          <Property Name="Pay_Request_ID" Type="char" MaxLength="36" />
+          <Property Name="PayGate_ID" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="Amount" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="Currency" Type="char" MaxLength="3" />
+          <Property Name="ReturnUrl" Type="varchar" MaxLength="255" />
+          <Property Name="Transaction_Date" Type="varchar" MaxLength="19" />
+          <Property Name="Locale" Type="varchar" MaxLength="5" />
+          <Property Name="Country" Type="char" MaxLength="3" />
+          <Property Name="Email" Type="varchar" MaxLength="225" />
+          <Property Name="Pay_Method" Type="varchar" MaxLength="10" />
+          <Property Name="Pay_Method_Detail" Type="varchar" MaxLength="225" />
+          <Property Name="Notify_Url" Type="varchar" MaxLength="225" />
+          <Property Name="User1" Type="varchar" MaxLength="225" />
+          <Property Name="User2" Type="varchar" MaxLength="225" />
+          <Property Name="User3" Type="varchar" MaxLength="225" />
+          <Property Name="Vault" Type="bit" />
+          <Property Name="Vault_ID" Type="varchar" MaxLength="40" />
+          <Property Name="TransactionStatus" Type="numeric" Precision="1" Scale="0" />
+          <Property Name="Result_Code" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="Auth_Code" Type="varchar" MaxLength="10" />
+          <Property Name="Result_Desc" Type="varchar" MaxLength="80" />
+          <Property Name="Transaction_ID" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="Risk_Indicator" Type="char" MaxLength="2" />
+          <Property Name="Pay_Vault_Data1" Type="varchar" MaxLength="50" />
+          <Property Name="Pay_Vault_Data2" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayParameter">
+          <Key>
+            <PropertyRef Name="PaymentGatewayNumber" />
+          </Key>
+          <Property Name="PaymentGatewayNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentGatewayName" Type="nvarchar" MaxLength="100" />
+          <Property Name="PaymentGatewayID" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="TransactionRequestUrl" Type="varchar" MaxLength="255" />
+          <Property Name="Return_Url" Type="varchar" MaxLength="255" />
+          <Property Name="Notify_Url" Type="varchar" MaxLength="255" />
+          <Property Name="RedirectToSecurePayment_Url" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayPaymentMethods">
+          <Key>
+            <PropertyRef Name="PayMethod" />
+          </Key>
+          <Property Name="PayMethod" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayTransactionStatus">
+          <Key>
+            <PropertyRef Name="TransactionCode" />
+          </Key>
+          <Property Name="TransactionCode" Type="int" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PreferredCommunicationMethod">
+          <Key>
+            <PropertyRef Name="CommunicationMethodNumber" />
+          </Key>
+          <Property Name="CommunicationMethodNumber" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommunicationMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DepartmentNumber" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="Size" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Activated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductCustodian">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+            <PropertyRef Name="CustodianNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="CustodianNumber" Type="int" Nullable="false" />
+          <Property Name="QuantityOnHand" Type="int" Nullable="false" />
+          <Property Name="DateLastIncreasedBySupplier" Type="datetime" />
+          <Property Name="AmountLastIncreasedBySupplier" Type="int" />
+        </EntityType>
+        <EntityType Name="ProductPicture">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="Picture" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Annotation" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProductSupplier">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+            <PropertyRef Name="SupplierNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="SupplierNumber" Type="int" Nullable="false" />
+          <Property Name="PricePerUnit" Type="smallmoney" />
+        </EntityType>
+        <EntityType Name="SiteConfiguration">
+          <Key>
+            <PropertyRef Name="SiteConfigurationNumber" />
+          </Key>
+          <Property Name="SiteConfigurationNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="50" />
+          <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierNumber" />
+          </Key>
+          <Property Name="SupplierNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MainContactName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MainContactTelephoneNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="MainContactCellphoneNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="MainContactEmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankingDetailsBranchCode" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" />
+          <Property Name="TrustedSupplier" Type="bit" Nullable="false" />
+          <Property Name="Activated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SupplierAddress">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierNumber" Type="int" Nullable="false" />
+          <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressLine1" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="AddressLine2" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="AddressLine3" Type="nvarchar" MaxLength="250" />
+          <Property Name="AddressLine4" Type="nvarchar" MaxLength="250" />
+          <Property Name="AddressSuburb" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressCity" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressPostalCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_CourierLocation_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierLocation_Location">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="LocationNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="LocationNumberOrigin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierLocation_Location1">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="LocationNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="LocationNumberDestination" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Custodian">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Custodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="CustodianNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustodianLocation_Custodian">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="1" />
+          <End Role="CustodianLocation" Type="Self.CustodianLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Custodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Principal>
+            <Dependent Role="CustodianLocation">
+              <PropertyRef Name="CustodianNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustodianLocation_Location">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="CustodianLocation" Type="Self.CustodianLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="LocationNumber" />
+            </Principal>
+            <Dependent Role="CustodianLocation">
+              <PropertyRef Name="LocationNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerAddress_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CustomerAddress" Type="Self.CustomerAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerNumber" />
+            </Principal>
+            <Dependent Role="CustomerAddress">
+              <PropertyRef Name="CustomerNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_OrderHeader">
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderHeader_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerNumber" />
+            </Principal>
+            <Dependent Role="OrderHeader">
+              <PropertyRef Name="CustomerNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentNumber" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="DepartmentNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductCustodian_Custodian">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="1" />
+          <End Role="ProductCustodian" Type="Self.ProductCustodian" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Custodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Principal>
+            <Dependent Role="ProductCustodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductCustodian_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductCustodian" Type="Self.ProductCustodian" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductCustodian">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductPicture_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductPicture" Type="Self.ProductPicture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductPicture">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSupplier_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductSupplier" Type="Self.ProductSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductSupplier">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSupplier_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="ProductSupplier" Type="Self.ProductSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="ProductSupplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SupplierAddress_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="SupplierAddress" Type="Self.SupplierAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="SupplierAddress">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FreeMarketModelStoreContainer">
+          <EntitySet Name="ActivityLogging" EntityType="Self.ActivityLogging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AddressName" EntityType="Self.AddressName" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AuditUser" EntityType="Self.AuditUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Courier" EntityType="Self.Courier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourierLocation" EntityType="Self.CourierLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourierStockMovementLog" EntityType="Self.CourierStockMovementLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Custodian" EntityType="Self.Custodian" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustodianLocation" EntityType="Self.CustodianLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerAddress" EntityType="Self.CustomerAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExceptionLogging" EntityType="Self.ExceptionLogging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FreeMarketOwner" EntityType="Self.FreeMarketOwner" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderHeader" EntityType="Self.OrderHeader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderStatus" EntityType="Self.OrderStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentGatewayMessage" EntityType="Self.PaymentGatewayMessage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentGatewayParameter" EntityType="Self.PaymentGatewayParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentGatewayPaymentMethods" EntityType="Self.PaymentGatewayPaymentMethods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentGatewayTransactionStatus" EntityType="Self.PaymentGatewayTransactionStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PreferredCommunicationMethod" EntityType="Self.PreferredCommunicationMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductCustodian" EntityType="Self.ProductCustodian" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductPicture" EntityType="Self.ProductPicture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductSupplier" EntityType="Self.ProductSupplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SiteConfiguration" EntityType="Self.SiteConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SupplierAddress" EntityType="Self.SupplierAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CourierLocation_Courier" Association="Self.FK_CourierLocation_Courier">
+            <End Role="Courier" EntitySet="Courier" />
+            <End Role="CourierLocation" EntitySet="CourierLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierLocation_Location" Association="Self.FK_CourierLocation_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="CourierLocation" EntitySet="CourierLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierLocation_Location1" Association="Self.FK_CourierLocation_Location1">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="CourierLocation" EntitySet="CourierLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Courier" Association="Self.FK_CourierStockMovementLog_Courier">
+            <End Role="Courier" EntitySet="Courier" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Custodian" Association="Self.FK_CourierStockMovementLog_Custodian">
+            <End Role="Custodian" EntitySet="Custodian" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Product" Association="Self.FK_CourierStockMovementLog_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustodianLocation_Custodian" Association="Self.FK_CustodianLocation_Custodian">
+            <End Role="Custodian" EntitySet="Custodian" />
+            <End Role="CustodianLocation" EntitySet="CustodianLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustodianLocation_Location" Association="Self.FK_CustodianLocation_Location">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="CustodianLocation" EntitySet="CustodianLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerAddress_Customer" Association="Self.FK_CustomerAddress_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="CustomerAddress" EntitySet="CustomerAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Courier" Association="Self.FK_OrderDetail_Courier">
+            <End Role="Courier" EntitySet="Courier" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="Self.FK_OrderDetail_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeader" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Product" Association="Self.FK_OrderDetail_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Supplier" Association="Self.FK_OrderDetail_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderHeader_Customer" Association="Self.FK_OrderHeader_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="OrderHeader" EntitySet="OrderHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Department" Association="Self.FK_Product_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductCustodian_Custodian" Association="Self.FK_ProductCustodian_Custodian">
+            <End Role="Custodian" EntitySet="Custodian" />
+            <End Role="ProductCustodian" EntitySet="ProductCustodian" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductCustodian_Product" Association="Self.FK_ProductCustodian_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductCustodian" EntitySet="ProductCustodian" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductPicture_Product" Association="Self.FK_ProductPicture_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductPicture" EntitySet="ProductPicture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Product" Association="Self.FK_ProductSupplier_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductSupplier" EntitySet="ProductSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Supplier" Association="Self.FK_ProductSupplier_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="ProductSupplier" EntitySet="ProductSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SupplierAddress_Supplier" Association="Self.FK_SupplierAddress_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="SupplierAddress" EntitySet="SupplierAddress" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FreeMarketModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ActivityLogging">
+          <Key>
+            <PropertyRef Name="ActivityNumber" />
+          </Key>
+          <Property Name="ActivityNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="AddressName">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AddressName1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AuditUser">
+          <Key>
+            <PropertyRef Name="ActionNumber" />
+          </Key>
+          <Property Name="ActionNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Identity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Courier">
+          <Key>
+            <PropertyRef Name="CourierNumber" />
+          </Key>
+          <Property Name="CourierNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourierName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainContactName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainContactTelephoneNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="MainContactCellphoneNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="MainContactEmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BankingDetailsBranchCode" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Precision="3" />
+          <Property Name="TrustedCourier" Type="Boolean" Nullable="false" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CourierLocations" Relationship="Self.FK_CourierLocation_Courier" FromRole="Courier" ToRole="CourierLocation" />
+          <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Courier" FromRole="Courier" ToRole="CourierStockMovementLog" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Courier" FromRole="Courier" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="CourierLocation">
+          <Key>
+            <PropertyRef Name="CourierNumber" />
+            <PropertyRef Name="LocationNumberOrigin" />
+            <PropertyRef Name="LocationNumberDestination" />
+          </Key>
+          <Property Name="CourierNumber" Type="Int32" Nullable="false" />
+          <Property Name="LocationNumberOrigin" Type="Int32" Nullable="false" />
+          <Property Name="LocationNumberDestination" Type="Int32" Nullable="false" />
+          <Property Name="CourierFee" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Courier" Relationship="Self.FK_CourierLocation_Courier" FromRole="CourierLocation" ToRole="Courier" />
+          <NavigationProperty Name="Location" Relationship="Self.FK_CourierLocation_Location" FromRole="CourierLocation" ToRole="Location" />
+          <NavigationProperty Name="Location1" Relationship="Self.FK_CourierLocation_Location1" FromRole="CourierLocation" ToRole="Location" />
+        </EntityType>
+        <EntityType Name="CourierStockMovementLog">
+          <Key>
+            <PropertyRef Name="StockMovementNumber" />
+          </Key>
+          <Property Name="StockMovementNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="CustodianNumber" Type="Int32" Nullable="false" />
+          <Property Name="CourierNumber" Type="Int32" Nullable="false" />
+          <Property Name="CourierEmployeeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateAddedStock" Type="DateTime" Precision="3" />
+          <Property Name="DateSubtractedStock" Type="DateTime" Precision="3" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Courier" Relationship="Self.FK_CourierStockMovementLog_Courier" FromRole="CourierStockMovementLog" ToRole="Courier" />
+          <NavigationProperty Name="Custodian" Relationship="Self.FK_CourierStockMovementLog_Custodian" FromRole="CourierStockMovementLog" ToRole="Custodian" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_CourierStockMovementLog_Product" FromRole="CourierStockMovementLog" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Custodian">
+          <Key>
+            <PropertyRef Name="CustodianNumber" />
+          </Key>
+          <Property Name="CustodianNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustodianName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CustodianTelephoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustodianCellphoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Custodian" FromRole="Custodian" ToRole="CourierStockMovementLog" />
+          <NavigationProperty Name="ProductCustodians" Relationship="Self.FK_ProductCustodian_Custodian" FromRole="Custodian" ToRole="ProductCustodian" />
+          <NavigationProperty Name="Locations" Relationship="Self.CustodianLocation" FromRole="Custodian" ToRole="Location" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerNumber" />
+          </Key>
+          <Property Name="CustomerNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CellphoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PreferredCommunicationMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CustomerAddresses" Relationship="Self.FK_CustomerAddress_Customer" FromRole="Customer" ToRole="CustomerAddress" />
+          <NavigationProperty Name="OrderHeaders" Relationship="Self.FK_OrderHeader_Customer" FromRole="Customer" ToRole="OrderHeader" />
+        </EntityType>
+        <EntityType Name="CustomerAddress">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerNumber" Type="Int32" Nullable="false" />
+          <Property Name="AddressName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine2" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine3" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine4" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressSuburb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressPostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_CustomerAddress_Customer" FromRole="CustomerAddress" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="DepartmentNumber" />
+          </Key>
+          <Property Name="DepartmentNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DepartmentName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Product_Department" FromRole="Department" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="ExceptionLogging">
+          <Key>
+            <PropertyRef Name="ExceptionNumber" />
+          </Key>
+          <Property Name="ExceptionNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateTime" Type="DateTime" Precision="3" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Identity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="FreeMarketOwner">
+          <Key>
+            <PropertyRef Name="EmailAddress" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CellphoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBranchCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="LocationNumber" />
+          </Key>
+          <Property Name="LocationNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LocationName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Lattitude" Type="Decimal" Precision="9" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
+          <Property Name="FarmName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StreetAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TownName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Province" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CourierLocations" Relationship="Self.FK_CourierLocation_Location" FromRole="Location" ToRole="CourierLocation" />
+          <NavigationProperty Name="CourierLocations1" Relationship="Self.FK_CourierLocation_Location1" FromRole="Location" ToRole="CourierLocation" />
+          <NavigationProperty Name="Custodians" Relationship="Self.CustodianLocation" FromRole="Location" ToRole="Custodian" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="ItemNumber" />
+          </Key>
+          <Property Name="ItemNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" />
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="CourierNumber" Type="Int32" Nullable="false" />
+          <Property Name="Settled" Type="Boolean" />
+          <Property Name="PaySupplier" Type="Boolean" />
+          <Property Name="PayCourier" Type="Boolean" />
+          <Property Name="PaidSupplier" Type="Boolean" />
+          <Property Name="PaidCourier" Type="Boolean" />
+          <Property Name="OrderItemStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Quantity" Type="Int16" Nullable="false" />
+          <Property Name="OrderItemValue" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="DeliveryDateAgreed" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryDateActual" Type="DateTime" Precision="3" />
+          <Property Name="CourierFee" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CustomerProductQualityRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerCourierOnTimeDeliveryRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Courier" Relationship="Self.FK_OrderDetail_Courier" FromRole="OrderDetail" ToRole="Courier" />
+          <NavigationProperty Name="OrderHeader" Relationship="Self.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
+        </EntityType>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderDatePlaced" Type="DateTime" Precision="3" />
+          <Property Name="OrderDateClosed" Type="DateTime" Precision="3" />
+          <Property Name="CustomerNumber" Type="Int32" Nullable="false" />
+          <Property Name="TotalOrderValue" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerOverallSatisfactionRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_OrderHeader_Customer" FromRole="OrderHeader" ToRole="Customer" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="OrderStatu">
+          <Key>
+            <PropertyRef Name="OrderStatusNumber" />
+          </Key>
+          <Property Name="OrderStatusNumber" Type="Int32" Nullable="false" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayMessage">
+          <Key>
+            <PropertyRef Name="MessageNumber" />
+          </Key>
+          <Property Name="MessageNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Reference" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Pay_Request_ID" Type="String" MaxLength="36" FixedLength="true" Unicode="false" />
+          <Property Name="PayGate_ID" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="Amount" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="Currency" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="ReturnUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_Date" Type="String" MaxLength="19" FixedLength="false" Unicode="false" />
+          <Property Name="Locale" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="Pay_Method" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Pay_Method_Detail" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="Notify_Url" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="User1" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="User2" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="User3" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="Vault" Type="Boolean" />
+          <Property Name="Vault_ID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionStatus" Type="Decimal" Precision="1" Scale="0" />
+          <Property Name="Result_Code" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="Auth_Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Result_Desc" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_ID" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="Risk_Indicator" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Pay_Vault_Data1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Pay_Vault_Data2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayParameter">
+          <Key>
+            <PropertyRef Name="PaymentGatewayNumber" />
+          </Key>
+          <Property Name="PaymentGatewayNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentGatewayName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentGatewayID" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="TransactionRequestUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Return_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Notify_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RedirectToSecurePayment_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayPaymentMethod">
+          <Key>
+            <PropertyRef Name="PayMethod" />
+          </Key>
+          <Property Name="PayMethod" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PaymentGatewayTransactionStatu">
+          <Key>
+            <PropertyRef Name="TransactionCode" />
+          </Key>
+          <Property Name="TransactionCode" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PreferredCommunicationMethod">
+          <Key>
+            <PropertyRef Name="CommunicationMethodNumber" />
+          </Key>
+          <Property Name="CommunicationMethodNumber" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommunicationMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DepartmentNumber" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="Size" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Product" FromRole="Product" ToRole="CourierStockMovementLog" />
+          <NavigationProperty Name="Department" Relationship="Self.FK_Product_Department" FromRole="Product" ToRole="Department" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
+          <NavigationProperty Name="ProductCustodians" Relationship="Self.FK_ProductCustodian_Product" FromRole="Product" ToRole="ProductCustodian" />
+          <NavigationProperty Name="ProductPictures" Relationship="Self.FK_ProductPicture_Product" FromRole="Product" ToRole="ProductPicture" />
+          <NavigationProperty Name="ProductSuppliers" Relationship="Self.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
+        </EntityType>
+        <EntityType Name="ProductCustodian">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+            <PropertyRef Name="CustodianNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="CustodianNumber" Type="Int32" Nullable="false" />
+          <Property Name="QuantityOnHand" Type="Int32" Nullable="false" />
+          <Property Name="DateLastIncreasedBySupplier" Type="DateTime" Precision="3" />
+          <Property Name="AmountLastIncreasedBySupplier" Type="Int32" />
+          <NavigationProperty Name="Custodian" Relationship="Self.FK_ProductCustodian_Custodian" FromRole="ProductCustodian" ToRole="Custodian" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductCustodian_Product" FromRole="ProductCustodian" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="ProductPicture">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Annotation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductPicture_Product" FromRole="ProductPicture" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="ProductSupplier">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+            <PropertyRef Name="SupplierNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
+          <Property Name="PricePerUnit" Type="Decimal" Precision="10" Scale="4" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductSupplier_Product" FromRole="ProductSupplier" ToRole="Product" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_ProductSupplier_Supplier" FromRole="ProductSupplier" ToRole="Supplier" />
+        </EntityType>
+        <EntityType Name="SiteConfiguration">
+          <Key>
+            <PropertyRef Name="SiteConfigurationNumber" />
+          </Key>
+          <Property Name="SiteConfigurationNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Key" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierNumber" />
+          </Key>
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainContactName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainContactTelephoneNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="MainContactCellphoneNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="MainContactEmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBankName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBranchName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsBranchCode" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankingDetailsAccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Precision="3" />
+          <Property Name="TrustedSupplier" Type="Boolean" Nullable="false" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Supplier" FromRole="Supplier" ToRole="OrderDetail" />
+          <NavigationProperty Name="ProductSuppliers" Relationship="Self.FK_ProductSupplier_Supplier" FromRole="Supplier" ToRole="ProductSupplier" />
+          <NavigationProperty Name="SupplierAddresses" Relationship="Self.FK_SupplierAddress_Supplier" FromRole="Supplier" ToRole="SupplierAddress" />
+        </EntityType>
+        <EntityType Name="SupplierAddress">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
+          <Property Name="AddressName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine2" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressLine3" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine4" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressSuburb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressPostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_SupplierAddress_Supplier" FromRole="SupplierAddress" ToRole="Supplier" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_CourierLocation_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierLocation_Location">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="LocationNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="LocationNumberOrigin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierLocation_Location1">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="LocationNumber" />
+            </Principal>
+            <Dependent Role="CourierLocation">
+              <PropertyRef Name="LocationNumberDestination" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Custodian">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Custodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="CustodianNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierStockMovementLog_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="CourierStockMovementLog" Type="Self.CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductCustodian_Custodian">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="1" />
+          <End Role="ProductCustodian" Type="Self.ProductCustodian" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Custodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Principal>
+            <Dependent Role="ProductCustodian">
+              <PropertyRef Name="CustodianNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerAddress_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CustomerAddress" Type="Self.CustomerAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerNumber" />
+            </Principal>
+            <Dependent Role="CustomerAddress">
+              <PropertyRef Name="CustomerNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderHeader_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerNumber" />
+            </Principal>
+            <Dependent Role="OrderHeader">
+              <PropertyRef Name="CustomerNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentNumber" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="DepartmentNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_OrderHeader">
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductCustodian_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductCustodian" Type="Self.ProductCustodian" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductCustodian">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductPicture_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductPicture" Type="Self.ProductPicture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductPicture">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSupplier_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductSupplier" Type="Self.ProductSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductSupplier">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSupplier_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="ProductSupplier" Type="Self.ProductSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="ProductSupplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SupplierAddress_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="SupplierAddress" Type="Self.SupplierAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="SupplierAddress">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CustodianLocation">
+          <End Role="Custodian" Type="Self.Custodian" Multiplicity="*" />
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="FreeMarketEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ActivityLoggings" EntityType="Self.ActivityLogging" />
+          <EntitySet Name="AddressNames" EntityType="Self.AddressName" />
+          <EntitySet Name="AuditUsers" EntityType="Self.AuditUser" />
+          <EntitySet Name="Couriers" EntityType="Self.Courier" />
+          <EntitySet Name="CourierLocations" EntityType="Self.CourierLocation" />
+          <EntitySet Name="CourierStockMovementLogs" EntityType="Self.CourierStockMovementLog" />
+          <EntitySet Name="Custodians" EntityType="Self.Custodian" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="CustomerAddresses" EntityType="Self.CustomerAddress" />
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="ExceptionLoggings" EntityType="Self.ExceptionLogging" />
+          <EntitySet Name="FreeMarketOwners" EntityType="Self.FreeMarketOwner" />
+          <EntitySet Name="Locations" EntityType="Self.Location" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="OrderHeaders" EntityType="Self.OrderHeader" />
+          <EntitySet Name="OrderStatus" EntityType="Self.OrderStatu" />
+          <EntitySet Name="PaymentGatewayMessages" EntityType="Self.PaymentGatewayMessage" />
+          <EntitySet Name="PaymentGatewayParameters" EntityType="Self.PaymentGatewayParameter" />
+          <EntitySet Name="PaymentGatewayPaymentMethods" EntityType="Self.PaymentGatewayPaymentMethod" />
+          <EntitySet Name="PaymentGatewayTransactionStatus" EntityType="Self.PaymentGatewayTransactionStatu" />
+          <EntitySet Name="PreferredCommunicationMethods" EntityType="Self.PreferredCommunicationMethod" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="ProductCustodians" EntityType="Self.ProductCustodian" />
+          <EntitySet Name="ProductPictures" EntityType="Self.ProductPicture" />
+          <EntitySet Name="ProductSuppliers" EntityType="Self.ProductSupplier" />
+          <EntitySet Name="SiteConfigurations" EntityType="Self.SiteConfiguration" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <EntitySet Name="SupplierAddresses" EntityType="Self.SupplierAddress" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_CourierLocation_Courier" Association="Self.FK_CourierLocation_Courier">
+            <End Role="Courier" EntitySet="Couriers" />
+            <End Role="CourierLocation" EntitySet="CourierLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Courier" Association="Self.FK_CourierStockMovementLog_Courier">
+            <End Role="Courier" EntitySet="Couriers" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Courier" Association="Self.FK_OrderDetail_Courier">
+            <End Role="Courier" EntitySet="Couriers" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierLocation_Location" Association="Self.FK_CourierLocation_Location">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="CourierLocation" EntitySet="CourierLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierLocation_Location1" Association="Self.FK_CourierLocation_Location1">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="CourierLocation" EntitySet="CourierLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Custodian" Association="Self.FK_CourierStockMovementLog_Custodian">
+            <End Role="Custodian" EntitySet="Custodians" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierStockMovementLog_Product" Association="Self.FK_CourierStockMovementLog_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductCustodian_Custodian" Association="Self.FK_ProductCustodian_Custodian">
+            <End Role="Custodian" EntitySet="Custodians" />
+            <End Role="ProductCustodian" EntitySet="ProductCustodians" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerAddress_Customer" Association="Self.FK_CustomerAddress_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CustomerAddress" EntitySet="CustomerAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderHeader_Customer" Association="Self.FK_OrderHeader_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Department" Association="Self.FK_Product_Department">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="Self.FK_OrderDetail_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Product" Association="Self.FK_OrderDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Supplier" Association="Self.FK_OrderDetail_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductCustodian_Product" Association="Self.FK_ProductCustodian_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductCustodian" EntitySet="ProductCustodians" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductPicture_Product" Association="Self.FK_ProductPicture_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductPicture" EntitySet="ProductPictures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Product" Association="Self.FK_ProductSupplier_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Supplier" Association="Self.FK_ProductSupplier_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SupplierAddress_Supplier" Association="Self.FK_SupplierAddress_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="SupplierAddress" EntitySet="SupplierAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="CustodianLocation" Association="Self.CustodianLocation">
+            <End Role="Custodian" EntitySet="Custodians" />
+            <End Role="Location" EntitySet="Locations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FreeMarketModelStoreContainer" CdmEntityContainer="FreeMarketEntities">
+          <EntitySetMapping Name="ActivityLoggings">
+            <EntityTypeMapping TypeName="FreeMarketModel.ActivityLogging">
+              <MappingFragment StoreEntitySet="ActivityLogging">
+                <ScalarProperty Name="ActivityNumber" ColumnName="ActivityNumber" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AddressNames">
+            <EntityTypeMapping TypeName="FreeMarketModel.AddressName">
+              <MappingFragment StoreEntitySet="AddressName">
+                <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
+                <ScalarProperty Name="AddressName1" ColumnName="AddressName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuditUsers">
+            <EntityTypeMapping TypeName="FreeMarketModel.AuditUser">
+              <MappingFragment StoreEntitySet="AuditUser">
+                <ScalarProperty Name="ActionNumber" ColumnName="ActionNumber" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="Identity" ColumnName="Identity" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Couriers">
+            <EntityTypeMapping TypeName="FreeMarketModel.Courier">
+              <MappingFragment StoreEntitySet="Courier">
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
+                <ScalarProperty Name="MainContactTelephoneNumber" ColumnName="MainContactTelephoneNumber" />
+                <ScalarProperty Name="MainContactCellphoneNumber" ColumnName="MainContactCellphoneNumber" />
+                <ScalarProperty Name="MainContactEmailAddress" ColumnName="MainContactEmailAddress" />
+                <ScalarProperty Name="BankingDetailsBankName" ColumnName="BankingDetailsBankName" />
+                <ScalarProperty Name="BankingDetailsBranchName" ColumnName="BankingDetailsBranchName" />
+                <ScalarProperty Name="BankingDetailsBranchCode" ColumnName="BankingDetailsBranchCode" />
+                <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
+                <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="TrustedCourier" ColumnName="TrustedCourier" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CourierLocations">
+            <EntityTypeMapping TypeName="FreeMarketModel.CourierLocation">
+              <MappingFragment StoreEntitySet="CourierLocation">
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="LocationNumberOrigin" ColumnName="LocationNumberOrigin" />
+                <ScalarProperty Name="LocationNumberDestination" ColumnName="LocationNumberDestination" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CourierStockMovementLogs">
+            <EntityTypeMapping TypeName="FreeMarketModel.CourierStockMovementLog">
+              <MappingFragment StoreEntitySet="CourierStockMovementLog">
+                <ScalarProperty Name="StockMovementNumber" ColumnName="StockMovementNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierEmployeeName" ColumnName="CourierEmployeeName" />
+                <ScalarProperty Name="DateAddedStock" ColumnName="DateAddedStock" />
+                <ScalarProperty Name="DateSubtractedStock" ColumnName="DateSubtractedStock" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Custodians">
+            <EntityTypeMapping TypeName="FreeMarketModel.Custodian">
+              <MappingFragment StoreEntitySet="Custodian">
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CustodianName" ColumnName="CustodianName" />
+                <ScalarProperty Name="CustodianTelephoneNumber" ColumnName="CustodianTelephoneNumber" />
+                <ScalarProperty Name="CustodianCellphoneNumber" ColumnName="CustodianCellphoneNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="FreeMarketModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="CellphoneNumber" ColumnName="CellphoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="PreferredCommunicationMethod" ColumnName="PreferredCommunicationMethod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerAddresses">
+            <EntityTypeMapping TypeName="FreeMarketModel.CustomerAddress">
+              <MappingFragment StoreEntitySet="CustomerAddress">
+                <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="AddressName" ColumnName="AddressName" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="AddressLine3" ColumnName="AddressLine3" />
+                <ScalarProperty Name="AddressLine4" ColumnName="AddressLine4" />
+                <ScalarProperty Name="AddressSuburb" ColumnName="AddressSuburb" />
+                <ScalarProperty Name="AddressCity" ColumnName="AddressCity" />
+                <ScalarProperty Name="AddressPostalCode" ColumnName="AddressPostalCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="FreeMarketModel.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionLoggings">
+            <EntityTypeMapping TypeName="FreeMarketModel.ExceptionLogging">
+              <MappingFragment StoreEntitySet="ExceptionLogging">
+                <ScalarProperty Name="ExceptionNumber" ColumnName="ExceptionNumber" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="Identity" ColumnName="Identity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FreeMarketOwners">
+            <EntityTypeMapping TypeName="FreeMarketModel.FreeMarketOwner">
+              <MappingFragment StoreEntitySet="FreeMarketOwner">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="CellphoneNumber" ColumnName="CellphoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="BankingDetailsBankName" ColumnName="BankingDetailsBankName" />
+                <ScalarProperty Name="BankingDetailsBranchName" ColumnName="BankingDetailsBranchName" />
+                <ScalarProperty Name="BankingDetailsBranchCode" ColumnName="BankingDetailsBranchCode" />
+                <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
+                <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="FreeMarketModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="Lattitude" ColumnName="Lattitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="FarmName" ColumnName="FarmName" />
+                <ScalarProperty Name="StreetAddress" ColumnName="StreetAddress" />
+                <ScalarProperty Name="TownName" ColumnName="TownName" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
+                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
+                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
+                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
+                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="DeliveryDateAgreed" ColumnName="DeliveryDateAgreed" />
+                <ScalarProperty Name="DeliveryDateActual" ColumnName="DeliveryDateActual" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+                <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
+                <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHeaders">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
+              <MappingFragment StoreEntitySet="OrderHeader">
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
+                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderStatus">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderStatu">
+              <MappingFragment StoreEntitySet="OrderStatus">
+                <ScalarProperty Name="OrderStatusNumber" ColumnName="OrderStatusNumber" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentGatewayMessages">
+            <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayMessage">
+              <MappingFragment StoreEntitySet="PaymentGatewayMessage">
+                <ScalarProperty Name="MessageNumber" ColumnName="MessageNumber" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="Pay_Request_ID" ColumnName="Pay_Request_ID" />
+                <ScalarProperty Name="PayGate_ID" ColumnName="PayGate_ID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ReturnUrl" ColumnName="ReturnUrl" />
+                <ScalarProperty Name="Transaction_Date" ColumnName="Transaction_Date" />
+                <ScalarProperty Name="Locale" ColumnName="Locale" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Pay_Method" ColumnName="Pay_Method" />
+                <ScalarProperty Name="Pay_Method_Detail" ColumnName="Pay_Method_Detail" />
+                <ScalarProperty Name="Notify_Url" ColumnName="Notify_Url" />
+                <ScalarProperty Name="User1" ColumnName="User1" />
+                <ScalarProperty Name="User2" ColumnName="User2" />
+                <ScalarProperty Name="User3" ColumnName="User3" />
+                <ScalarProperty Name="Vault" ColumnName="Vault" />
+                <ScalarProperty Name="Vault_ID" ColumnName="Vault_ID" />
+                <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+                <ScalarProperty Name="Result_Code" ColumnName="Result_Code" />
+                <ScalarProperty Name="Auth_Code" ColumnName="Auth_Code" />
+                <ScalarProperty Name="Result_Desc" ColumnName="Result_Desc" />
+                <ScalarProperty Name="Transaction_ID" ColumnName="Transaction_ID" />
+                <ScalarProperty Name="Risk_Indicator" ColumnName="Risk_Indicator" />
+                <ScalarProperty Name="Pay_Vault_Data1" ColumnName="Pay_Vault_Data1" />
+                <ScalarProperty Name="Pay_Vault_Data2" ColumnName="Pay_Vault_Data2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentGatewayParameters">
+            <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayParameter">
+              <MappingFragment StoreEntitySet="PaymentGatewayParameter">
+                <ScalarProperty Name="PaymentGatewayNumber" ColumnName="PaymentGatewayNumber" />
+                <ScalarProperty Name="PaymentGatewayName" ColumnName="PaymentGatewayName" />
+                <ScalarProperty Name="PaymentGatewayID" ColumnName="PaymentGatewayID" />
+                <ScalarProperty Name="TransactionRequestUrl" ColumnName="TransactionRequestUrl" />
+                <ScalarProperty Name="Return_Url" ColumnName="Return_Url" />
+                <ScalarProperty Name="Notify_Url" ColumnName="Notify_Url" />
+                <ScalarProperty Name="RedirectToSecurePayment_Url" ColumnName="RedirectToSecurePayment_Url" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentGatewayPaymentMethods">
+            <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayPaymentMethod">
+              <MappingFragment StoreEntitySet="PaymentGatewayPaymentMethods">
+                <ScalarProperty Name="PayMethod" ColumnName="PayMethod" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentGatewayTransactionStatus">
+            <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayTransactionStatu">
+              <MappingFragment StoreEntitySet="PaymentGatewayTransactionStatus">
+                <ScalarProperty Name="TransactionCode" ColumnName="TransactionCode" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PreferredCommunicationMethods">
+            <EntityTypeMapping TypeName="FreeMarketModel.PreferredCommunicationMethod">
+              <MappingFragment StoreEntitySet="PreferredCommunicationMethod">
+                <ScalarProperty Name="CommunicationMethodNumber" ColumnName="CommunicationMethodNumber" />
+                <ScalarProperty Name="CommunicationMethod" ColumnName="CommunicationMethod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="FreeMarketModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductCustodians">
+            <EntityTypeMapping TypeName="FreeMarketModel.ProductCustodian">
+              <MappingFragment StoreEntitySet="ProductCustodian">
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DateLastIncreasedBySupplier" ColumnName="DateLastIncreasedBySupplier" />
+                <ScalarProperty Name="AmountLastIncreasedBySupplier" ColumnName="AmountLastIncreasedBySupplier" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductPictures">
+            <EntityTypeMapping TypeName="FreeMarketModel.ProductPicture">
+              <MappingFragment StoreEntitySet="ProductPicture">
+                <ScalarProperty Name="PictureNumber" ColumnName="PictureNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Annotation" ColumnName="Annotation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductSuppliers">
+            <EntityTypeMapping TypeName="FreeMarketModel.ProductSupplier">
+              <MappingFragment StoreEntitySet="ProductSupplier">
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SiteConfigurations">
+            <EntityTypeMapping TypeName="FreeMarketModel.SiteConfiguration">
+              <MappingFragment StoreEntitySet="SiteConfiguration">
+                <ScalarProperty Name="SiteConfigurationNumber" ColumnName="SiteConfigurationNumber" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="FreeMarketModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
+                <ScalarProperty Name="MainContactTelephoneNumber" ColumnName="MainContactTelephoneNumber" />
+                <ScalarProperty Name="MainContactCellphoneNumber" ColumnName="MainContactCellphoneNumber" />
+                <ScalarProperty Name="MainContactEmailAddress" ColumnName="MainContactEmailAddress" />
+                <ScalarProperty Name="BankingDetailsBankName" ColumnName="BankingDetailsBankName" />
+                <ScalarProperty Name="BankingDetailsBranchName" ColumnName="BankingDetailsBranchName" />
+                <ScalarProperty Name="BankingDetailsBranchCode" ColumnName="BankingDetailsBranchCode" />
+                <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
+                <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="TrustedSupplier" ColumnName="TrustedSupplier" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SupplierAddresses">
+            <EntityTypeMapping TypeName="FreeMarketModel.SupplierAddress">
+              <MappingFragment StoreEntitySet="SupplierAddress">
+                <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="AddressName" ColumnName="AddressName" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="AddressLine3" ColumnName="AddressLine3" />
+                <ScalarProperty Name="AddressLine4" ColumnName="AddressLine4" />
+                <ScalarProperty Name="AddressSuburb" ColumnName="AddressSuburb" />
+                <ScalarProperty Name="AddressCity" ColumnName="AddressCity" />
+                <ScalarProperty Name="AddressPostalCode" ColumnName="AddressPostalCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="FreeMarketModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CustodianLocation" TypeName="FreeMarketModel.CustodianLocation" StoreEntitySet="CustodianLocation">
+            <EndProperty Name="Custodian">
+              <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+            </EndProperty>
+            <EndProperty Name="Location">
+              <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
