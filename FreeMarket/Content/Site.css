@@ -1,24 +1,60 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
 .dl-horizontal dt {
-    white-space: normal;
+	white-space: normal;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 280px;
+	max-width: 280px;
 }
+
+.carousel{
+	background: #ffffff;
+	margin-top: 20px;
+}
+.carousel .item img{
+	margin: 0 auto; /* Align slide image horizontally center */
+}
+.bs-example{
+	margin: 20px;
+}
+
+.center_div{
+	margin: 0 auto;
+	width: 50% /* value of your choice which suits your alignment */
+}
+
+hr {
+  border-top: 1px solid black !important;
+}
+
+.navbar-nav > li > a, .navbar-brand {
+	padding-top:4px !important; 
+	padding-bottom:0 !important;
+	height: 47px;
+}
+.navbar {min-height:47px !important;}
+
+a:hover {
+ cursor:pointer;
+}
+
+.form-control:focus {
+		border-color: darkslateblue;
+		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
+	}

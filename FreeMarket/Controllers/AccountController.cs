@@ -1,18 +1,17 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using FreeMarket.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -22,7 +21,7 @@ namespace FreeMarket.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +33,9 @@ namespace FreeMarket.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -120,7 +119,7 @@ namespace FreeMarket.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -156,13 +155,39 @@ namespace FreeMarket.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    try
+                    {
+                        AddCustomer(model);
+                    }
+                    catch (Exception e)
+                    {
+                        try
+                        {
+                            using (FreeMarketEntities db = new FreeMarketEntities())
+                            {
+                                ExceptionLogging ex = new ExceptionLogging()
+                                {
+                                    DateTime = DateTime.Now,
+                                    Identity = User.Identity.GetUserName(),
+                                    Message = e.Message,
+                                    StackTrace = e.StackTrace
+                                };
+                                db.ExceptionLoggings.Add(ex);
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -171,6 +196,47 @@ namespace FreeMarket.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private static void AddCustomer(RegisterBase model)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Customer newCustomer = new Customer()
+                {
+                    Name = model.Name,
+                    Surname = model.Surname,
+                    CellphoneNumber = model.PrimaryPhoneNumber,
+                    TelephoneNumber = model.SecondaryPhoneNumber,
+                    EmailAddress = model.Email,
+                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
+                };
+
+                db.Customers.Add(newCustomer);
+
+                db.SaveChanges();
+
+                Customer addedCustomer = db.Customers.Where
+                    (c => c.EmailAddress == newCustomer.EmailAddress)
+                    .FirstOrDefault();
+
+                CustomerAddress newCustomerAddress = new CustomerAddress()
+                {
+                    AddressName = model.AddressName,
+                    CustomerNumber = addedCustomer.CustomerNumber,
+                    AddressLine1 = model.AddressLine1,
+                    AddressLine2 = model.AddressLine2,
+                    AddressLine3 = model.AddressLine3,
+                    AddressLine4 = model.AddressLine4,
+                    AddressCity = model.AddressCity,
+                    AddressPostalCode = model.AddressPostalCode,
+                    AddressSuburb = model.AddressSuburb
+                };
+
+                db.CustomerAddresses.Add(newCustomerAddress);
+
+                db.SaveChanges();
+            }
         }
 
         //
@@ -353,7 +419,7 @@ namespace FreeMarket.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl, string loginProvider)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -376,6 +442,33 @@ namespace FreeMarket.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        try
+                        {
+                            AddCustomer(model);
+                        }
+                        catch (Exception e)
+                        {
+                            try
+                            {
+                                using (FreeMarketEntities db = new FreeMarketEntities())
+                                {
+                                    ExceptionLogging ex = new ExceptionLogging()
+                                    {
+                                        DateTime = DateTime.Now,
+                                        Identity = User.Identity.GetUserName(),
+                                        Message = e.Message,
+                                        StackTrace = e.StackTrace
+                                    };
+                                    db.ExceptionLoggings.Add(ex);
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -383,6 +476,8 @@ namespace FreeMarket.Controllers
             }
 
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.LoginProvider = loginProvider;
+
             return View(model);
         }
 

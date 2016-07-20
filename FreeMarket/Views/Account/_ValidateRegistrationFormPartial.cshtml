@@ -1,0 +1,209 @@
+﻿<script type="text/javascript">
+    $(document).ready(function() {
+        $('#registerForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        Email: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max email length is 100.',
+                                    max: 100
+                                },
+                                emailAddress: {
+                                    message: 'Email addresses only.'
+                                }
+                            }
+                        },
+                        Password: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Password must be between 6 and 100 characters long.',
+                                    max: 100,
+                                    min: 6
+                                },
+                                identical: {
+                                    field: 'ConfirmPassword',
+                                    message: 'The password must match its confirmation field'
+                                }
+                            }
+                        },
+                        ConfirmPassword: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Password must be between 6 and 100 characters long.',
+                                    max: 100,
+                                    min: 6
+                                },
+                                identical: {
+                                    field: 'Password',
+                                    message: 'The password must match its confirmation field'
+                                }
+                            }
+                        },
+                        Name: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 100.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        Surname: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 100.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        PrimaryPhoneNumber: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                                identical: {
+                                    field: 'ConfirmPrimaryPhoneNumber',
+                                    message: 'The phone number must match its confirmation field'
+                                }
+                            }
+                        },
+                        ConfirmPrimaryPhoneNumber: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                                identical: {
+                                    field: 'PrimaryPhoneNumber',
+                                    message: 'The phone number must match its confirmation field'
+                                }
+                            }
+                        },
+                        SecondaryPhoneNumber: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        PreferredCommunicationMethod: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        AddressName: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        AddressLine1: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 250.',
+                                    max: 250
+                                }
+                            }
+                        },
+                        AddressLine2: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 250.',
+                                    max: 250
+                                }
+                            }
+                        },
+                        AddressLine3: {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max string length is 250.',
+                                    max: 250
+                                }
+                            }
+                        },
+                        AddressLine4: {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max string length is 250.',
+                                    max: 250
+                                }
+                            }
+                        },
+                        AddressSuburb: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        AddressCity: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        AddressPostalCode: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                }
+                            }
+                        }
+
+                    }
+                })
+    });
+</script>
