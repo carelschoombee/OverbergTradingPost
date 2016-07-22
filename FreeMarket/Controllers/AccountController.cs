@@ -72,9 +72,20 @@ namespace FreeMarket.Controllers
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var allowPassOnEmailVerfication = false;
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                if (!string.IsNullOrWhiteSpace(user.UnConfirmedEmail))
+                {
+                    allowPassOnEmailVerfication = true;
+                }
+            }
+
+
+            // This now counts login failures towards account lockout
+            // To enable password failures to trigger account lockout, I changed to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -82,7 +93,7 @@ namespace FreeMarket.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return allowPassOnEmailVerfication ? RedirectToLocal(returnUrl) : RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -248,7 +259,22 @@ namespace FreeMarket.Controllers
             {
                 return View("Error");
             }
+
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+
+            if (result.Succeeded)
+            {
+                var user = UserManager.FindById(userId);
+                if (!string.IsNullOrWhiteSpace(user.UnConfirmedEmail))
+                {
+                    user.Email = user.UnConfirmedEmail;
+                    user.UserName = user.UnConfirmedEmail;
+                    user.UnConfirmedEmail = "";
+
+                    UserManager.Update(user);
+                }
+            }
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 

@@ -28,7 +28,7 @@
                                     message: 'The field is required.'
                                 },
                                 stringLength: {
-                                    message: 'Password must be between 6 and 100 characters long.',
+                                    message: 'Password must be between 6 and 100 characters long, contain a lower case character, a special character and a digit.',
                                     max: 100,
                                     min: 6
                                 },
@@ -43,14 +43,9 @@
                                 notEmpty: {
                                     message: 'The field is required.'
                                 },
-                                stringLength: {
-                                    message: 'Password must be between 6 and 100 characters long.',
-                                    max: 100,
-                                    min: 6
-                                },
                                 identical: {
                                     field: 'Password',
-                                    message: 'The password must match its confirmation field'
+                                    message: 'The passwords must match'
                                 }
                             }
                         },
@@ -102,7 +97,7 @@
                                 },
                                 identical: {
                                     field: 'PrimaryPhoneNumber',
-                                    message: 'The phone number must match its confirmation field'
+                                    message: 'The phone numbers must match'
                                 }
                             }
                         },
@@ -206,4 +201,5 @@
                     }
                 })
     });
+
 </script>

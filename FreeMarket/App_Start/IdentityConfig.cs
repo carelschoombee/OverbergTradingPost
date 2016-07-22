@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
+﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using FreeMarket.Models;
+using RestSharp;
+using RestSharp.Authenticators;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace FreeMarket
 {
@@ -18,7 +16,23 @@ namespace FreeMarket
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            RestClient client = new RestClient();
+            client.BaseUrl = new Uri("https://api.mailgun.net/v3");
+            client.Authenticator =
+                   new HttpBasicAuthenticator("api",
+                                              "key-9e5165fae169d7142f172e7ecafbbdda");
+            RestRequest request = new RestRequest();
+            request.AddParameter("domain",
+                                "sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org", ParameterType.UrlSegment);
+            request.Resource = "{domain}/messages";
+            request.AddParameter("from", "Mailgun Sandbox <postmaster@sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org>");
+            request.AddParameter("to", message.Destination);
+            request.AddParameter("subject", message.Subject);
+            request.AddParameter("text", message.Body);
+            request.Method = Method.POST;
+
+            client.Execute(request);
+
             return Task.FromResult(0);
         }
     }
@@ -40,7 +54,7 @@ namespace FreeMarket
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
@@ -57,7 +71,7 @@ namespace FreeMarket
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = false,
             };
 
             // Configure user lockout defaults
@@ -81,7 +95,7 @@ namespace FreeMarket
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;

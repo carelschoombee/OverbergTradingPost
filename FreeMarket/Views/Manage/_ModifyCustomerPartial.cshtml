@@ -1,0 +1,45 @@
+﻿@model FreeMarket.Models.ModifyAccountDetailsViewModel
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ConfirmEmailAddress, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.ConfirmEmailAddress, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Name, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Surname, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.PrimaryPhoneNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.PrimaryPhoneNumber, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.SecondaryPhoneNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.SecondaryPhoneNumber, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.PreferredCommunicationMethod, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DropDownListFor(model => model.PreferredCommunicationMethod, Model.CommunicationOptions, "Choose", new { @class = "form-control" })
+    </div>
+</div>
+

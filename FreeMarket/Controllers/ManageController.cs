@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -64,13 +66,21 @@ namespace FreeMarket.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var currentUser = await UserManager.FindByIdAsync(userId);
+            var unConfirmedEmail = "";
+            if (!String.IsNullOrWhiteSpace(currentUser.UnConfirmedEmail))
+            {
+                unConfirmedEmail = currentUser.UnConfirmedEmail;
+            }
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                ConfirmedEmail = currentUser.Email,
+                UnConfirmedEmail = unConfirmedEmail
             };
             return View(model);
         }
@@ -297,6 +307,159 @@ namespace FreeMarket.Controllers
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
             });
+        }
+
+        //public ActionResult ModifyDeliveryDetails
+        //{
+        //    var addresses = db.CustomerAddresses
+        //                .Where(c => c.CustomerNumber == customer.CustomerNumber)
+        //                .ToList();
+        //}
+
+        public ActionResult ModifyAccountDetails()
+        {
+            ModifyAccountDetailsViewModel model = new ModifyAccountDetailsViewModel();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Customer customer = db.Customers
+                    .Where(c => c.EmailAddress == User.Identity.Name)
+                    .FirstOrDefault();
+
+                if (customer != null)
+                {
+                    model = new ModifyAccountDetailsViewModel()
+                    {
+                        Email = customer.EmailAddress,
+                        ConfirmEmailAddress = "",
+                        Name = customer.Name,
+                        Surname = customer.Surname,
+                        PrimaryPhoneNumber = customer.CellphoneNumber,
+                        SecondaryPhoneNumber = customer.TelephoneNumber,
+                        PreferredCommunicationMethod = customer.PreferredCommunicationMethod
+                    };
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ModifyAccountDetailsResponse(ModifyAccountDetailsViewModel viewModel)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Customer customer = db.Customers
+                    .Where(c => c.EmailAddress == User.Identity.Name)
+                    .FirstOrDefault();
+            }
+
+            return View();
+        }
+
+        public ActionResult ChangeEmail()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var model = new ChangeEmailViewModel()
+            {
+                ConfirmedEmail = user.Email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeEmail(ChangeEmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("ChangeEmail", "Manage");
+            }
+
+            var user = await UserManager.FindByEmailAsync(model.ConfirmedEmail);
+            var userId = user.Id;
+            if (user != null)
+            {
+                //doing a quick swap so we can send the appropriate confirmation email
+                user.UnConfirmedEmail = user.Email;
+                user.Email = model.UnConfirmedEmail;
+                user.EmailConfirmed = false;
+                var result = await UserManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    string callbackUrl =
+                    await SendEmailConfirmationTokenAsync(userId, "Confirm your new email");
+
+                    var tempUnconfirmed = user.Email;
+                    user.Email = user.UnConfirmedEmail;
+                    user.UnConfirmedEmail = tempUnconfirmed;
+                    result = await UserManager.UpdateAsync(user);
+
+                    callbackUrl = await SendEmailConfirmationWarningAsync(userId, "You email has been updated to: " + user.UnConfirmedEmail);
+
+                    using (FreeMarketEntities db = new FreeMarketEntities)
+                    {
+                        Customer customer = db.Customers
+                            .Where(c => c.EmailAddress == user.UnConfirmedEmail)
+                            .FirstOrDefault();
+
+                        if (customer != null)
+                        {
+                            customer.EmailAddress = user.Email;
+                        }
+
+                        db.Entry(customer).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            return RedirectToAction("Index", "Manage");
+        }
+
+        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
+        {
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account",
+               new { userId = userID, code = code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(userID, subject,
+               "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            return callbackUrl;
+        }
+
+        private async Task<string> SendEmailConfirmationWarningAsync(string userID, string body)
+        {
+            var callbackUrl = Url.Action("ConfirmEmail", "Account",
+               new { userId = userID }, protocol: Request.Url.Scheme);
+
+            await UserManager.SendEmailAsync(userID, "Email Updated", body);
+
+            return callbackUrl;
+        }
+
+        public async Task<ActionResult> CancelUnconfirmedEmail(string emailOrUserId)
+        {
+            var user = await UserManager.FindByEmailAsync(emailOrUserId);
+            if (user == null)
+            {
+                user = await UserManager.FindByIdAsync(emailOrUserId);
+                if (user != null)
+                {
+                    user.UnConfirmedEmail = "";
+                    user.EmailConfirmed = true;
+                    var result = await UserManager.UpdateAsync(user);
+                }
+            }
+            else
+            {
+                user.UnConfirmedEmail = "";
+                user.EmailConfirmed = true;
+                var result = await UserManager.UpdateAsync(user);
+            }
+
+            return RedirectToAction("Index", "Manage");
         }
 
         //

@@ -1,0 +1,32 @@
+﻿@model FreeMarket.Models.ModifyAccountDetailsViewModel
+
+@{
+    ViewBag.Title = "Modify Your Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+<div class="container center_div">
+
+@using (Html.BeginForm("ModifyAccountDetailsResponse", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "registerForm" }))
+{
+
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.Partial("_ModifyCustomerPartial")
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Update" />
+        </div>
+    </div>
+
+}
+
+</div>
+
+@Html.Partial("_ValidateAccountFormPartial")
+

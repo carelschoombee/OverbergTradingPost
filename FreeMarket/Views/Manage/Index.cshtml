@@ -23,6 +23,18 @@
             }
             ]
         </dd>
+        <dt>Email:</dt>
+        <dd>
+            @Model.ConfirmedEmail
+            @if (!String.IsNullOrWhiteSpace(Model.UnConfirmedEmail))
+            {
+                <em> - Unconfirmed: @Model.UnConfirmedEmail </em> @Html.ActionLink("Cancel", "CancelUnconfirmedEmail", new { emailOrUserId = Model.ConfirmedEmail })
+            }
+            else
+            {
+                @Html.ActionLink("Change Email", "ChangeEmail")
+            }
+        </dd>
         <dt>External Logins:</dt>
         <dd>
             @Model.Logins.Count [
@@ -83,5 +95,9 @@
                     }
                 }*@
         </dd>
+        <dt>My Account Details:</dt>
+        <dd>@Html.ActionLink("Modify", "ModifyAccountDetails")</dd>
+        <dt>My Delivery Details:</dt>
+        <dd>@Html.ActionLink("Modify", "ModifyDeliveryDetails")</dd>
     </dl>
 </div>

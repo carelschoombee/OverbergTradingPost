@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
-    public class RegisterBase
+    public class CustomerBase
     {
         [Required]
         [EmailAddress]
@@ -32,7 +32,7 @@ namespace FreeMarket.Models
         [Required]
         [Display(Name = "Confirm Primary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
-        [System.ComponentModel.DataAnnotations.Compare("PrimaryPhoneNumber", ErrorMessage = "The phone numbers not match.")]
+            
         [Phone]
         public string ConfirmPrimaryPhoneNumber { get; set; }
 
@@ -48,6 +48,22 @@ namespace FreeMarket.Models
 
         public List<SelectListItem> CommunicationOptions { get; set; }
 
+        public CustomerBase()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                CommunicationOptions = db.PreferredCommunicationMethods.Select
+                    (c => new SelectListItem
+                    {
+                        Text = c.CommunicationMethod,
+                        Value = c.CommunicationMethod
+                    }).ToList();
+            }
+        }
+    }
+
+    public class RegisterBase : CustomerBase
+    {
         [Required]
         [Display(Name = "Address Line 1")]
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
@@ -87,17 +103,10 @@ namespace FreeMarket.Models
 
         public List<SelectListItem> AdressNameOptions { get; set; }
 
-        public RegisterBase()
+        public RegisterBase() : base()
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                CommunicationOptions = db.PreferredCommunicationMethods.Select
-                    (c => new SelectListItem
-                    {
-                        Text = c.CommunicationMethod,
-                        Value = c.CommunicationMethod
-                    }).ToList();
-
                 AdressNameOptions = db.AddressNames.Select
                     (c => new SelectListItem
                     {
