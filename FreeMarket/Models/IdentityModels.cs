@@ -16,6 +16,9 @@ namespace FreeMarket.Models
             return userIdentity;
         }
 
+        public string Name { get; set; }
+        public string PreferredCommunicationMethod { get; set; }
+        public string SecondaryPhoneNumber { get; set; }
         public string UnConfirmedEmail { get; set; }
     }
 

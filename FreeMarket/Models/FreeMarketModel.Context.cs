@@ -32,14 +32,11 @@ namespace FreeMarket.Models
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
         public virtual DbSet<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
         public virtual DbSet<Custodian> Custodians { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<ExceptionLogging> ExceptionLoggings { get; set; }
         public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
         public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
         public virtual DbSet<PaymentGatewayParameter> PaymentGatewayParameters { get; set; }
@@ -54,5 +51,7 @@ namespace FreeMarket.Models
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<SupplierAddress> SupplierAddresses { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
+        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
     }
 }

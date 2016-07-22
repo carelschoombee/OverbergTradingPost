@@ -63,13 +63,43 @@ namespace FreeMarket.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ModifyAccountDetailsViewModel : CustomerBase
+    public class ModifyAccountDetailsViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Confirm Email")]
-        [System.ComponentModel.DataAnnotations.Compare("Email", ErrorMessage = "The Email addresses do not match.")]
-        public string ConfirmEmailAddress { get; set; }
+        [Display(Name = "Name")]
+        [StringLength(100, ErrorMessage = "The Name field may not contain more than 100 characters.")]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Primary Phone Number")]
+        [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
+        [Phone]
+        public string PrimaryPhoneNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Secondary Phone Number")]
+        [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
+        [Phone]
+        public string SecondaryPhoneNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Preferred Communication Method")]
+        public string PreferredCommunicationMethod { get; set; }
+
+        public List<SelectListItem> CommunicationOptions { get; set; }
+
+        public ModifyAccountDetailsViewModel()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                CommunicationOptions = db.PreferredCommunicationMethods.Select
+                    (c => new SelectListItem
+                    {
+                        Text = c.CommunicationMethod,
+                        Value = c.CommunicationMethod
+                    }).ToList();
+            }
+        }
     }
 
     public class ModifyDeliveryDetailsViewModel

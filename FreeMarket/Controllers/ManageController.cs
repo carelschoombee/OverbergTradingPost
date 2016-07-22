@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -318,44 +317,49 @@ namespace FreeMarket.Controllers
 
         public ActionResult ModifyAccountDetails()
         {
-            ModifyAccountDetailsViewModel model = new ModifyAccountDetailsViewModel();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
             {
-                Customer customer = db.Customers
-                    .Where(c => c.EmailAddress == User.Identity.Name)
-                    .FirstOrDefault();
-
-                if (customer != null)
-                {
-                    model = new ModifyAccountDetailsViewModel()
-                    {
-                        Email = customer.EmailAddress,
-                        ConfirmEmailAddress = "",
-                        Name = customer.Name,
-                        Surname = customer.Surname,
-                        PrimaryPhoneNumber = customer.CellphoneNumber,
-                        SecondaryPhoneNumber = customer.TelephoneNumber,
-                        PreferredCommunicationMethod = customer.PreferredCommunicationMethod
-                    };
-                }
+                return View("Error");
             }
+
+            ModifyAccountDetailsViewModel model = new ModifyAccountDetailsViewModel()
+            {
+                Name = user.Name,
+                PrimaryPhoneNumber = user.PhoneNumber,
+                SecondaryPhoneNumber = user.SecondaryPhoneNumber,
+                PreferredCommunicationMethod = user.PreferredCommunicationMethod
+            };
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ModifyAccountDetailsResponse(ModifyAccountDetailsViewModel viewModel)
+        public async Task<ActionResult> ModifyAccountDetails(ModifyAccountDetailsViewModel model)
         {
-            using (FreeMarketEntities db = new FreeMarketEntities())
+            if (ModelState.IsValid)
             {
-                Customer customer = db.Customers
-                    .Where(c => c.EmailAddress == User.Identity.Name)
-                    .FirstOrDefault();
+                var user = UserManager.FindById(User.Identity.GetUserId());
+                if (user == null)
+                {
+                    return View("Error");
+                }
+
+                user.Name = model.Name;
+                user.PhoneNumber = model.PrimaryPhoneNumber;
+                user.SecondaryPhoneNumber = model.SecondaryPhoneNumber;
+                user.PreferredCommunicationMethod = model.PreferredCommunicationMethod;
+
+                var result = await UserManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
             }
 
-            return View();
+            return View(model);
         }
 
         public ActionResult ChangeEmail()
@@ -398,21 +402,6 @@ namespace FreeMarket.Controllers
                     result = await UserManager.UpdateAsync(user);
 
                     callbackUrl = await SendEmailConfirmationWarningAsync(userId, "You email has been updated to: " + user.UnConfirmedEmail);
-
-                    using (FreeMarketEntities db = new FreeMarketEntities)
-                    {
-                        Customer customer = db.Customers
-                            .Where(c => c.EmailAddress == user.UnConfirmedEmail)
-                            .FirstOrDefault();
-
-                        if (customer != null)
-                        {
-                            customer.EmailAddress = user.Email;
-                        }
-
-                        db.Entry(customer).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
                 }
             }
             return RedirectToAction("Index", "Manage");

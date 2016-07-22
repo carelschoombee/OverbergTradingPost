@@ -19,11 +19,6 @@ namespace FreeMarket.Models
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Surname")]
-        [StringLength(100, ErrorMessage = "The Surname field may not contain more than 100 characters.")]
-        public string Surname { get; set; }
-
-        [Required]
         [Display(Name = "Primary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
         [Phone]
@@ -32,7 +27,7 @@ namespace FreeMarket.Models
         [Required]
         [Display(Name = "Confirm Primary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
-            
+
         [Phone]
         public string ConfirmPrimaryPhoneNumber { get; set; }
 

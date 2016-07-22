@@ -36,6 +36,7 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> DateAdded { get; set; }
         public bool TrustedCourier { get; set; }
         public bool Activated { get; set; }
+        public string UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierLocation> CourierLocations { get; set; }

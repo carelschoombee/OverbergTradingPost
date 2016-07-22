@@ -15,7 +15,7 @@ namespace FreeMarket.Models
     public partial class CustomerAddress
     {
         public int AddressNumber { get; set; }
-        public int CustomerNumber { get; set; }
+        public string CustomerNumber { get; set; }
         public string AddressName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
@@ -24,7 +24,5 @@ namespace FreeMarket.Models
         public string AddressSuburb { get; set; }
         public string AddressCity { get; set; }
         public string AddressPostalCode { get; set; }
-    
-        public virtual Customer Customer { get; set; }
     }
 }

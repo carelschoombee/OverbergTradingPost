@@ -23,13 +23,12 @@ namespace FreeMarket.Models
         public int OrderNumber { get; set; }
         public Nullable<System.DateTime> OrderDatePlaced { get; set; }
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
-        public int CustomerNumber { get; set; }
+        public string CustomerNumber { get; set; }
         public decimal TotalOrderValue { get; set; }
         public string OrderStatus { get; set; }
         public string CustomerOverallSatisfactionRating { get; set; }
         public bool PaymentReceived { get; set; }
     
-        public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

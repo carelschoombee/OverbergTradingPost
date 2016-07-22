@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FreeMarketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FreeMarketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ActivityLogging">
           <Key>
             <PropertyRef Name="ActivityNumber" />
@@ -46,6 +46,7 @@
           <Property Name="DateAdded" Type="datetime" />
           <Property Name="TrustedCourier" Type="bit" Nullable="false" />
           <Property Name="Activated" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="CourierLocation">
           <Key>
@@ -88,24 +89,12 @@
           <Property Name="LocationNumber" Type="int" Nullable="false" />
           <Property Name="CustodianNumber" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="CustomerNumber" />
-          </Key>
-          <Property Name="CustomerNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Surname" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" />
-          <Property Name="CellphoneNumber" Type="nvarchar" MaxLength="50" />
-          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="PreferredCommunicationMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="CustomerAddress">
           <Key>
             <PropertyRef Name="AddressNumber" />
           </Key>
           <Property Name="AddressNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustomerNumber" Type="int" Nullable="false" />
+          <Property Name="CustomerNumber" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AddressLine1" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="AddressLine2" Type="nvarchar" MaxLength="250" Nullable="false" />
@@ -193,7 +182,7 @@
           <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderDatePlaced" Type="datetime" />
           <Property Name="OrderDateClosed" Type="datetime" />
-          <Property Name="CustomerNumber" Type="int" Nullable="false" />
+          <Property Name="CustomerNumber" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TotalOrderValue" Type="money" Nullable="false" />
           <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
           <Property Name="CustomerOverallSatisfactionRating" Type="nvarchar(max)" />
@@ -340,6 +329,7 @@
           <Property Name="DateAdded" Type="datetime" />
           <Property Name="TrustedSupplier" Type="bit" Nullable="false" />
           <Property Name="Activated" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="SupplierAddress">
           <Key>
@@ -462,18 +452,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CustomerAddress_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="CustomerAddress" Type="Self.CustomerAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerNumber" />
-            </Principal>
-            <Dependent Role="CustomerAddress">
-              <PropertyRef Name="CustomerNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetail_Courier">
           <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
@@ -519,18 +497,6 @@
             </Principal>
             <Dependent Role="OrderDetail">
               <PropertyRef Name="SupplierNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderHeader_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerNumber" />
-            </Principal>
-            <Dependent Role="OrderHeader">
-              <PropertyRef Name="CustomerNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -627,7 +593,6 @@
           <EntitySet Name="CourierStockMovementLog" EntityType="Self.CourierStockMovementLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Custodian" EntityType="Self.Custodian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustodianLocation" EntityType="Self.CustodianLocation" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomerAddress" EntityType="Self.CustomerAddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExceptionLogging" EntityType="Self.ExceptionLogging" Schema="dbo" store:Type="Tables" />
@@ -681,10 +646,6 @@
             <End Role="Location" EntitySet="Location" />
             <End Role="CustodianLocation" EntitySet="CustodianLocation" />
           </AssociationSet>
-          <AssociationSet Name="FK_CustomerAddress_Customer" Association="Self.FK_CustomerAddress_Customer">
-            <End Role="Customer" EntitySet="Customer" />
-            <End Role="CustomerAddress" EntitySet="CustomerAddress" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Courier" Association="Self.FK_OrderDetail_Courier">
             <End Role="Courier" EntitySet="Courier" />
             <End Role="OrderDetail" EntitySet="OrderDetail" />
@@ -700,10 +661,6 @@
           <AssociationSet Name="FK_OrderDetail_Supplier" Association="Self.FK_OrderDetail_Supplier">
             <End Role="Supplier" EntitySet="Supplier" />
             <End Role="OrderDetail" EntitySet="OrderDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderHeader_Customer" Association="Self.FK_OrderHeader_Customer">
-            <End Role="Customer" EntitySet="Customer" />
-            <End Role="OrderHeader" EntitySet="OrderHeader" />
           </AssociationSet>
           <AssociationSet Name="FK_Product_Department" Association="Self.FK_Product_Department">
             <End Role="Department" EntitySet="Department" />
@@ -734,8 +691,7 @@
             <End Role="SupplierAddress" EntitySet="SupplierAddress" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FreeMarketModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -783,6 +739,7 @@
           <NavigationProperty Name="CourierLocations" Relationship="Self.FK_CourierLocation_Courier" FromRole="Courier" ToRole="CourierLocation" />
           <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Courier" FromRole="Courier" ToRole="CourierStockMovementLog" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Courier" FromRole="Courier" ToRole="OrderDetail" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CourierLocation">
           <Key>
@@ -825,36 +782,6 @@
           <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Custodian" FromRole="Custodian" ToRole="CourierStockMovementLog" />
           <NavigationProperty Name="ProductCustodians" Relationship="Self.FK_ProductCustodian_Custodian" FromRole="Custodian" ToRole="ProductCustodian" />
           <NavigationProperty Name="Locations" Relationship="Self.CustodianLocation" FromRole="Custodian" ToRole="Location" />
-        </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="CustomerNumber" />
-          </Key>
-          <Property Name="CustomerNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TelephoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CellphoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PreferredCommunicationMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="CustomerAddresses" Relationship="Self.FK_CustomerAddress_Customer" FromRole="Customer" ToRole="CustomerAddress" />
-          <NavigationProperty Name="OrderHeaders" Relationship="Self.FK_OrderHeader_Customer" FromRole="Customer" ToRole="OrderHeader" />
-        </EntityType>
-        <EntityType Name="CustomerAddress">
-          <Key>
-            <PropertyRef Name="AddressNumber" />
-          </Key>
-          <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerNumber" Type="Int32" Nullable="false" />
-          <Property Name="AddressName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AddressLine1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AddressLine2" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AddressLine3" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine4" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="AddressSuburb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AddressCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AddressPostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_CustomerAddress_Customer" FromRole="CustomerAddress" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -931,24 +858,9 @@
           <Property Name="CustomerProductQualityRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CustomerCourierOnTimeDeliveryRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Courier" Relationship="Self.FK_OrderDetail_Courier" FromRole="OrderDetail" ToRole="Courier" />
-          <NavigationProperty Name="OrderHeader" Relationship="Self.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
           <NavigationProperty Name="Product" Relationship="Self.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
           <NavigationProperty Name="Supplier" Relationship="Self.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
-        </EntityType>
-        <EntityType Name="OrderHeader">
-          <Key>
-            <PropertyRef Name="OrderNumber" />
-          </Key>
-          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderDatePlaced" Type="DateTime" Precision="3" />
-          <Property Name="OrderDateClosed" Type="DateTime" Precision="3" />
-          <Property Name="CustomerNumber" Type="Int32" Nullable="false" />
-          <Property Name="TotalOrderValue" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerOverallSatisfactionRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_OrderHeader_Customer" FromRole="OrderHeader" ToRole="Customer" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
+          <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
         </EntityType>
         <EntityType Name="OrderStatu">
           <Key>
@@ -1105,6 +1017,7 @@
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Supplier" FromRole="Supplier" ToRole="OrderDetail" />
           <NavigationProperty Name="ProductSuppliers" Relationship="Self.FK_ProductSupplier_Supplier" FromRole="Supplier" ToRole="ProductSupplier" />
           <NavigationProperty Name="SupplierAddresses" Relationship="Self.FK_SupplierAddress_Supplier" FromRole="Supplier" ToRole="SupplierAddress" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SupplierAddress">
           <Key>
@@ -1228,30 +1141,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CustomerAddress_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="CustomerAddress" Type="Self.CustomerAddress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerNumber" />
-            </Principal>
-            <Dependent Role="CustomerAddress">
-              <PropertyRef Name="CustomerNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderHeader_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerNumber" />
-            </Principal>
-            <Dependent Role="OrderHeader">
-              <PropertyRef Name="CustomerNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Product_Department">
           <End Role="Department" Type="Self.Department" Multiplicity="1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -1261,18 +1150,6 @@
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="DepartmentNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderDetail_OrderHeader">
-          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderHeader">
-              <PropertyRef Name="OrderNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1372,14 +1249,11 @@
           <EntitySet Name="CourierLocations" EntityType="Self.CourierLocation" />
           <EntitySet Name="CourierStockMovementLogs" EntityType="Self.CourierStockMovementLog" />
           <EntitySet Name="Custodians" EntityType="Self.Custodian" />
-          <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="CustomerAddresses" EntityType="Self.CustomerAddress" />
           <EntitySet Name="Departments" EntityType="Self.Department" />
           <EntitySet Name="ExceptionLoggings" EntityType="Self.ExceptionLogging" />
           <EntitySet Name="FreeMarketOwners" EntityType="Self.FreeMarketOwner" />
           <EntitySet Name="Locations" EntityType="Self.Location" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
-          <EntitySet Name="OrderHeaders" EntityType="Self.OrderHeader" />
           <EntitySet Name="OrderStatus" EntityType="Self.OrderStatu" />
           <EntitySet Name="PaymentGatewayMessages" EntityType="Self.PaymentGatewayMessage" />
           <EntitySet Name="PaymentGatewayParameters" EntityType="Self.PaymentGatewayParameter" />
@@ -1426,21 +1300,9 @@
             <End Role="Custodian" EntitySet="Custodians" />
             <End Role="ProductCustodian" EntitySet="ProductCustodians" />
           </AssociationSet>
-          <AssociationSet Name="FK_CustomerAddress_Customer" Association="Self.FK_CustomerAddress_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="CustomerAddress" EntitySet="CustomerAddresses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderHeader_Customer" Association="Self.FK_OrderHeader_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="OrderHeader" EntitySet="OrderHeaders" />
-          </AssociationSet>
           <AssociationSet Name="FK_Product_Department" Association="Self.FK_Product_Department">
             <End Role="Department" EntitySet="Departments" />
             <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="Self.FK_OrderDetail_OrderHeader">
-            <End Role="OrderHeader" EntitySet="OrderHeaders" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Product" Association="Self.FK_OrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1474,7 +1336,54 @@
             <End Role="Custodian" EntitySet="Custodians" />
             <End Role="Location" EntitySet="Locations" />
           </AssociationSet>
+          <EntitySet Name="CustomerAddresses" EntityType="FreeMarketModel.CustomerAddress" />
+          <EntitySet Name="OrderHeaders" EntityType="FreeMarketModel.OrderHeader" />
+          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="FreeMarketModel.FK_OrderDetail_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CustomerAddress">
+          <Key>
+            <PropertyRef Name="AddressNumber" />
+          </Key>
+          <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerNumber" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="AddressName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine3" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine4" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressSuburb" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressCity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressPostalCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderDatePlaced" Type="DateTime" Precision="3" />
+          <Property Name="OrderDateClosed" Type="DateTime" Precision="3" />
+          <Property Name="CustomerNumber" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="TotalOrderValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerOverallSatisfactionRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
+        </EntityType>
+        <Association Name="FK_OrderDetail_OrderHeader">
+          <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1510,6 +1419,7 @@
           <EntitySetMapping Name="Couriers">
             <EntityTypeMapping TypeName="FreeMarketModel.Courier">
               <MappingFragment StoreEntitySet="Courier">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
                 <ScalarProperty Name="CourierName" ColumnName="CourierName" />
                 <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
@@ -1558,35 +1468,6 @@
                 <ScalarProperty Name="CustodianName" ColumnName="CustodianName" />
                 <ScalarProperty Name="CustodianTelephoneNumber" ColumnName="CustodianTelephoneNumber" />
                 <ScalarProperty Name="CustodianCellphoneNumber" ColumnName="CustodianCellphoneNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="FreeMarketModel.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
-                <ScalarProperty Name="CellphoneNumber" ColumnName="CellphoneNumber" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="PreferredCommunicationMethod" ColumnName="PreferredCommunicationMethod" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CustomerAddresses">
-            <EntityTypeMapping TypeName="FreeMarketModel.CustomerAddress">
-              <MappingFragment StoreEntitySet="CustomerAddress">
-                <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
-                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
-                <ScalarProperty Name="AddressName" ColumnName="AddressName" />
-                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
-                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
-                <ScalarProperty Name="AddressLine3" ColumnName="AddressLine3" />
-                <ScalarProperty Name="AddressLine4" ColumnName="AddressLine4" />
-                <ScalarProperty Name="AddressSuburb" ColumnName="AddressSuburb" />
-                <ScalarProperty Name="AddressCity" ColumnName="AddressCity" />
-                <ScalarProperty Name="AddressPostalCode" ColumnName="AddressPostalCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1663,20 +1544,6 @@
                 <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
                 <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
                 <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderHeaders">
-            <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
-              <MappingFragment StoreEntitySet="OrderHeader">
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
-                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
-                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
-                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
-                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
-                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1815,6 +1682,7 @@
           <EntitySetMapping Name="Suppliers">
             <EntityTypeMapping TypeName="FreeMarketModel.Supplier">
               <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
                 <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
                 <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
@@ -1867,6 +1735,36 @@
               <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="CustomerAddresses">
+            <EntityTypeMapping TypeName="FreeMarketModel.CustomerAddress">
+              <MappingFragment StoreEntitySet="CustomerAddress">
+                <ScalarProperty Name="AddressPostalCode" ColumnName="AddressPostalCode" />
+                <ScalarProperty Name="AddressCity" ColumnName="AddressCity" />
+                <ScalarProperty Name="AddressSuburb" ColumnName="AddressSuburb" />
+                <ScalarProperty Name="AddressLine4" ColumnName="AddressLine4" />
+                <ScalarProperty Name="AddressLine3" ColumnName="AddressLine3" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="AddressName" ColumnName="AddressName" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHeaders">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
+              <MappingFragment StoreEntitySet="OrderHeader">
+                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
+                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

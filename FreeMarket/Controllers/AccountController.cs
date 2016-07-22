@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -162,92 +161,37 @@ namespace FreeMarket.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Name = model.Name,
+                    PhoneNumber = model.PrimaryPhoneNumber,
+                    SecondaryPhoneNumber = model.SecondaryPhoneNumber,
+                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    CustomerAddress.AddAddress(user.Id, model.AddressName, model.AddressLine1, model.AddressLine2
+                        , model.AddressLine3, model.AddressLine4, model.AddressSuburb
+                        , model.AddressCity, model.AddressPostalCode);
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    try
-                    {
-                        AddCustomer(model);
-                    }
-                    catch (Exception e)
-                    {
-                        try
-                        {
-                            using (FreeMarketEntities db = new FreeMarketEntities())
-                            {
-                                ExceptionLogging ex = new ExceptionLogging()
-                                {
-                                    DateTime = DateTime.Now,
-                                    Identity = User.Identity.GetUserName(),
-                                    Message = e.Message,
-                                    StackTrace = e.StackTrace
-                                };
-                                db.ExceptionLoggings.Add(ex);
-                            }
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-                    }
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return RedirectToAction("Index", "Home");
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        private static void AddCustomer(RegisterBase model)
-        {
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                Customer newCustomer = new Customer()
-                {
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    CellphoneNumber = model.PrimaryPhoneNumber,
-                    TelephoneNumber = model.SecondaryPhoneNumber,
-                    EmailAddress = model.Email,
-                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
-                };
-
-                db.Customers.Add(newCustomer);
-
-                db.SaveChanges();
-
-                Customer addedCustomer = db.Customers.Where
-                    (c => c.EmailAddress == newCustomer.EmailAddress)
-                    .FirstOrDefault();
-
-                CustomerAddress newCustomerAddress = new CustomerAddress()
-                {
-                    AddressName = model.AddressName,
-                    CustomerNumber = addedCustomer.CustomerNumber,
-                    AddressLine1 = model.AddressLine1,
-                    AddressLine2 = model.AddressLine2,
-                    AddressLine3 = model.AddressLine3,
-                    AddressLine4 = model.AddressLine4,
-                    AddressCity = model.AddressCity,
-                    AddressPostalCode = model.AddressPostalCode,
-                    AddressSuburb = model.AddressSuburb
-                };
-
-                db.CustomerAddresses.Add(newCustomerAddress);
-
-                db.SaveChanges();
-            }
         }
 
         //
@@ -304,10 +248,10 @@ namespace FreeMarket.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -460,40 +404,28 @@ namespace FreeMarket.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Name = model.Name,
+                    PhoneNumber = model.PrimaryPhoneNumber,
+                    SecondaryPhoneNumber = model.SecondaryPhoneNumber,
+                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
+                };
+
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        CustomerAddress.AddAddress(user.Id, model.AddressName, model.AddressLine1, model.AddressLine2
+                           , model.AddressLine3, model.AddressLine4, model.AddressSuburb
+                           , model.AddressCity, model.AddressPostalCode);
+
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                        try
-                        {
-                            AddCustomer(model);
-                        }
-                        catch (Exception e)
-                        {
-                            try
-                            {
-                                using (FreeMarketEntities db = new FreeMarketEntities())
-                                {
-                                    ExceptionLogging ex = new ExceptionLogging()
-                                    {
-                                        DateTime = DateTime.Now,
-                                        Identity = User.Identity.GetUserName(),
-                                        Message = e.Message,
-                                        StackTrace = e.StackTrace
-                                    };
-                                    db.ExceptionLoggings.Add(ex);
-                                }
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                        }
 
                         return RedirectToLocal(returnUrl);
                     }

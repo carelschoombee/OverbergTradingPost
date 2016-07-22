@@ -1,28 +1,14 @@
 ﻿@model FreeMarket.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "My Account";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2 class="text-center">@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
+<div class="container center_div">
     <hr />
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            ]
-        </dd>
         <dt>Email:</dt>
         <dd>
             @Model.ConfirmedEmail
@@ -35,7 +21,25 @@
                 @Html.ActionLink("Change Email", "ChangeEmail")
             }
         </dd>
-        <dt>External Logins:</dt>
+        <dt>Password:</dt>
+        <dd>
+
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Modify", "ChangePassword")
+            }
+            else
+            {
+                @Html.ActionLink("Create", "SetPassword")
+            }
+
+        </dd>
+        <dt>Account Details:</dt>
+        <dd>@Html.ActionLink("Modify", "ModifyAccountDetails")</dd>
+        <dt>Delivery Addresses:</dt>
+        <dd>@Html.ActionLink("Modify", "ModifyDeliveryDetails")</dd>
+       
+        <dt>Login via Google or Facebook:</dt>
         <dd>
             @Model.Logins.Count [
             @Html.ActionLink("Manage", "ManageLogins") ]
@@ -68,13 +72,13 @@
                 }
             </dd>
         *@
-        <dt>Two-Factor Authentication:</dt>
+        @*<dt>Two-Factor Authentication:</dt>
         <dd>
             <p>
                 There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
                 for details on setting up this ASP.NET application to support two-factor authentication.
             </p>
-            @*@if (Model.TwoFactor)
+            @if (Model.TwoFactor)
                 {
                     using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
@@ -93,11 +97,8 @@
                         <input type="submit" value="Enable" class="btn btn-link" />
                         </text>
                     }
-                }*@
-        </dd>
-        <dt>My Account Details:</dt>
-        <dd>@Html.ActionLink("Modify", "ModifyAccountDetails")</dd>
-        <dt>My Delivery Details:</dt>
-        <dd>@Html.ActionLink("Modify", "ModifyDeliveryDetails")</dd>
+                }
+        </dd>*@
+        
     </dl>
 </div>

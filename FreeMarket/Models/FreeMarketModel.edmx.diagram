@@ -5,21 +5,18 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="4993edc9e7824870bfafaa6e32c5d051" Name="Diagram1">
-        <EntityTypeShape EntityType="FreeMarketModel.ActivityLogging" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FreeMarketModel.ActivityLogging" Width="1.5" PointX="3.125" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.AddressName" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Courier" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.CourierLocation" Width="1.5" PointX="8.5" PointY="20.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.CourierStockMovementLog" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Custodian" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.Customer" Width="1.5" PointX="3.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.CustomerAddress" Width="1.5" PointX="6" PointY="30.625" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Department" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.ExceptionLogging" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.FreeMarketOwner" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Location" Width="1.5" PointX="5.25" PointY="25.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="8.25" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="1.5" PointX="6" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderStatu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentGatewayMessage" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentGatewayParameter" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
@@ -42,10 +39,7 @@
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Custodian" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Product" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Custodian" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_CustomerAddress_Customer" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderHeader_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_Product_Department" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Product" ManuallyRouted="false" />
@@ -54,6 +48,9 @@
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_SupplierAddress_Supplier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.CustodianLocation" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FreeMarketModel.CustomerAddress" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="1.5" PointX="5.75" PointY="1" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

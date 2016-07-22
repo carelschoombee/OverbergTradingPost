@@ -7,6 +7,7 @@ using Microsoft.Owin.Security;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
+using System.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,10 +21,10 @@ namespace FreeMarket
             client.BaseUrl = new Uri("https://api.mailgun.net/v3");
             client.Authenticator =
                    new HttpBasicAuthenticator("api",
-                                              "key-9e5165fae169d7142f172e7ecafbbdda");
+                                              ConfigurationManager.AppSettings["emailClientApiKey"]);
             RestRequest request = new RestRequest();
             request.AddParameter("domain",
-                                "sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org", ParameterType.UrlSegment);
+                                ConfigurationManager.AppSettings["emailDomainKey"], ParameterType.UrlSegment);
             request.Resource = "{domain}/messages";
             request.AddParameter("from", "Mailgun Sandbox <postmaster@sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org>");
             request.AddParameter("to", message.Destination);
