@@ -12,12 +12,9 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class AuditUser
+    public partial class SystemAction
     {
-        public long ActionNumber { get; set; }
-        public System.DateTime DateTime { get; set; }
-        public string Identity { get; set; }
-        public short Action { get; set; }
-        public string Parameters { get; set; }
+        public short ActionNumber { get; set; }
+        public string Action { get; set; }
     }
 }

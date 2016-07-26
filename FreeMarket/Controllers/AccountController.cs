@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -183,6 +185,31 @@ namespace FreeMarket.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
+                    if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
+                    {
+                        AuditUser audit = new AuditUser()
+                        {
+                            Identity = user.Id,
+                            DateTime = DateTime.Now,
+                            Action = 1
+                        };
+
+                        try
+                        {
+                            using (FreeMarketEntities db = new FreeMarketEntities())
+                            {
+                                db.AuditUsers.Add(audit);
+                                db.SaveChanges();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Could not log
+                        }
+
+                    }
+
                     return RedirectToAction("Index", "Home");
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -216,6 +243,31 @@ namespace FreeMarket.Controllers
                     user.UnConfirmedEmail = "";
 
                     UserManager.Update(user);
+                }
+
+                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
+                {
+                    AuditUser audit = new AuditUser()
+                    {
+                        Identity = user.Id,
+                        DateTime = DateTime.Now,
+                        Action = 3
+                    };
+
+                    try
+                    {
+                        using (FreeMarketEntities db = new FreeMarketEntities())
+                        {
+                            db.AuditUsers.Add(audit);
+                            db.SaveChanges();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Could not log
+                    }
+
                 }
             }
 
@@ -426,6 +478,31 @@ namespace FreeMarket.Controllers
                            , model.AddressCity, model.AddressPostalCode);
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
+                        {
+                            AuditUser audit = new AuditUser()
+                            {
+                                Identity = user.Id,
+                                DateTime = DateTime.Now,
+                                Action = 1
+                            };
+
+                            try
+                            {
+                                using (FreeMarketEntities db = new FreeMarketEntities())
+                                {
+                                    db.AuditUsers.Add(audit);
+                                    db.SaveChanges();
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // Could not log
+                            }
+
+                        }
 
                         return RedirectToLocal(returnUrl);
                     }

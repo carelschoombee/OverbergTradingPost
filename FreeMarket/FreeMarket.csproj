@@ -287,6 +287,9 @@
     <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SystemAction.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -303,6 +306,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\facebook.png" />
+    <Content Include="Content\Images\google.png" />
     <Content Include="Content\Images\leaves.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -402,6 +407,9 @@
     <Content Include="Views\Manage\_ModifyCustomerPartial.cshtml" />
     <Content Include="Views\Manage\_ValidateAccountFormPartial.cshtml" />
     <Content Include="Views\Manage\ChangeEmail.cshtml" />
+    <Content Include="Views\Manage\ModifyDeliveryDetails.cshtml" />
+    <Content Include="Views\Manage\_ModifyDeliveryDetailsPartial.cshtml" />
+    <Content Include="Views\Manage\_ValidateDeliveryFormPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

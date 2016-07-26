@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using FreeMarket.Models
 
 @if (Request.IsAuthenticated)
 {
@@ -6,9 +7,12 @@
     {
     @Html.AntiForgeryToken()
 
+        //var userWithClaims = (System.Security.Claims.ClaimsPrincipal)User;
+        //var fullName = userWithClaims.Claims.First(c => c.Type == "Name");
+
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink(User.FullName() + " - My Account", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>

@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -247,6 +248,32 @@ namespace FreeMarket.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+
+                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
+                {
+                    AuditUser audit = new AuditUser()
+                    {
+                        Identity = user.Id,
+                        DateTime = DateTime.Now,
+                        Action = 4
+                    };
+
+                    try
+                    {
+                        using (FreeMarketEntities db = new FreeMarketEntities())
+                        {
+                            db.AuditUsers.Add(audit);
+                            db.SaveChanges();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Could not log
+                    }
+
+                }
+
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
@@ -308,12 +335,107 @@ namespace FreeMarket.Controllers
             });
         }
 
-        //public ActionResult ModifyDeliveryDetails
-        //{
-        //    var addresses = db.CustomerAddresses
-        //                .Where(c => c.CustomerNumber == customer.CustomerNumber)
-        //                .ToList();
-        //}
+        public ActionResult ModifyDeliveryDetails()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            CustomerAddress address = CustomerAddress.GetCustomerAddress(user.Id);
+
+            ModifyDeliveryDetailsViewModel model = new ModifyDeliveryDetailsViewModel()
+            {
+                Address = address,
+                AddressName = address.AddressName
+            };
+
+            foreach (SelectListItem name in model.AdressNameOptions)
+            {
+                if (name.Value == address.AddressName)
+                {
+                    name.Selected = true;
+                }
+            }
+
+            return View(model);
+        }
+
+        public ActionResult ModifyDeliveryDetailsByName(string AddressName)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            CustomerAddress address = CustomerAddress.GetCustomerAddress(user.Id, AddressName);
+
+            ModifyDeliveryDetailsViewModel model = new ModifyDeliveryDetailsViewModel()
+            {
+                Address = address,
+                AddressName = address.AddressName
+            };
+
+            foreach (SelectListItem name in model.AdressNameOptions)
+            {
+                if (name.Value == AddressName)
+                {
+                    name.Selected = true;
+                }
+            }
+
+            return View("ModifyDeliveryDetails", model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ModifyDeliveryDetails(ModifyDeliveryDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = UserManager.FindById(User.Identity.GetUserId());
+                if (user == null)
+                {
+                    return View("Error");
+                }
+
+                if (CustomerAddress.AddressExists(user.Id, model.AddressName))
+                {
+                    FreeMarketResult result = CustomerAddress.UpdateAddress(user.Id, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                           , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                    if (result == FreeMarketResult.Success)
+                        TempData["message"] = string.Format
+                            ("Your {0} address has been updated.",
+                            model.AddressName);
+                    else
+                        TempData["message"] = string.Format
+                            ("Sorry, we could not process your request at this time, please try again later.");
+                }
+                else
+                {
+                    FreeMarketResult result = CustomerAddress.AddAddress(user.Id, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                           , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                    if (result == FreeMarketResult.Success)
+                        TempData["message"] = string.Format
+                            ("Your {0} address has been added to our system.",
+                            model.AddressName);
+                    else
+                        TempData["message"] = string.Format
+                            ("Sorry, we could not process your request at this time, please try again later.");
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
 
         public ActionResult ModifyAccountDetails()
         {
@@ -355,6 +477,35 @@ namespace FreeMarket.Controllers
 
                 if (result.Succeeded)
                 {
+
+                    if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                            || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
+                    {
+                        AuditUser audit = new AuditUser()
+                        {
+                            Identity = user.Id,
+                            DateTime = DateTime.Now,
+                            Action = 2
+                        };
+
+                        try
+                        {
+                            using (FreeMarketEntities db = new FreeMarketEntities())
+                            {
+                                db.AuditUsers.Add(audit);
+                                db.SaveChanges();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Could not log
+                        }
+
+                    }
+
+                    TempData["message"] = string.Format
+                            ("Your account details have been updated.");
+
                     return RedirectToAction("Index");
                 }
             }

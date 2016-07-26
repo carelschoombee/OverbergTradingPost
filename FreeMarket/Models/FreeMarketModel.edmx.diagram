@@ -7,7 +7,6 @@
       <Diagram DiagramId="4993edc9e7824870bfafaa6e32c5d051" Name="Diagram1">
         <EntityTypeShape EntityType="FreeMarketModel.ActivityLogging" Width="1.5" PointX="3.125" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.AddressName" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Courier" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.CourierLocation" Width="1.5" PointX="8.5" PointY="20.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.CourierStockMovementLog" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
@@ -51,6 +50,8 @@
         <EntityTypeShape EntityType="FreeMarketModel.CustomerAddress" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="1.5" PointX="5.75" PointY="1" />
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
+        <EntityTypeShape EntityType="FreeMarketModel.SystemAction" Width="1.5" PointX="15.375" PointY="3.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="15.375" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

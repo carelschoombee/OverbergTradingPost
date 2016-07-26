@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace FreeMarket.Models
@@ -13,6 +14,8 @@ namespace FreeMarket.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim("FullName", Name));
+
             return userIdentity;
         }
 
@@ -33,5 +36,25 @@ namespace FreeMarket.Models
         {
             return new ApplicationDbContext();
         }
+    }
+
+    public static class GenericPrincipalExtensions
+    {
+        public static string FullName(this IPrincipal user)
+        {
+            if (user.Identity.IsAuthenticated)
+            {
+                ClaimsIdentity claimsIdentity = user.Identity as ClaimsIdentity;
+                foreach (var claim in claimsIdentity.Claims)
+                {
+                    if (claim.Type == "FullName")
+                        return claim.Value;
+                }
+                return "";
+            }
+            else
+                return "";
+        }
+
     }
 }

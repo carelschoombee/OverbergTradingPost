@@ -26,7 +26,8 @@
           <Property Name="ActionNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DateTime" Type="datetime" Nullable="false" />
           <Property Name="Identity" Type="nvarchar" MaxLength="100" />
-          <Property Name="Action" Type="nvarchar" MaxLength="250" />
+          <Property Name="Action" Type="smallint" Nullable="false" />
+          <Property Name="Parameters" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Courier">
           <Key>
@@ -356,6 +357,13 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <EntityType Name="SystemActions">
+          <Key>
+            <PropertyRef Name="ActionNumber" />
+          </Key>
+          <Property Name="ActionNumber" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Action" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
         <Association Name="FK_CourierLocation_Courier">
           <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
           <End Role="CourierLocation" Type="Self.CourierLocation" Multiplicity="*" />
@@ -614,6 +622,7 @@
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SupplierAddress" EntityType="Self.SupplierAddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemActions" EntityType="Self.SystemActions" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CourierLocation_Courier" Association="Self.FK_CourierLocation_Courier">
             <End Role="Courier" EntitySet="Courier" />
             <End Role="CourierLocation" EntitySet="CourierLocation" />
@@ -708,15 +717,6 @@
           </Key>
           <Property Name="AddressNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AddressName1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AuditUser">
-          <Key>
-            <PropertyRef Name="ActionNumber" />
-          </Key>
-          <Property Name="ActionNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Identity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Action" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Courier">
           <Key>
@@ -1244,7 +1244,6 @@
         <EntityContainer Name="FreeMarketEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ActivityLoggings" EntityType="Self.ActivityLogging" />
           <EntitySet Name="AddressNames" EntityType="Self.AddressName" />
-          <EntitySet Name="AuditUsers" EntityType="Self.AuditUser" />
           <EntitySet Name="Couriers" EntityType="Self.Courier" />
           <EntitySet Name="CourierLocations" EntityType="Self.CourierLocation" />
           <EntitySet Name="CourierStockMovementLogs" EntityType="Self.CourierStockMovementLog" />
@@ -1342,6 +1341,8 @@
             <End Role="OrderHeader" EntitySet="OrderHeaders" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
+          <EntitySet Name="SystemActions" EntityType="FreeMarketModel.SystemAction" />
+          <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
         </EntityContainer>
         <EntityType Name="CustomerAddress">
           <Key>
@@ -1384,6 +1385,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SystemAction">
+          <Key>
+            <PropertyRef Name="ActionNumber" />
+          </Key>
+          <Property Name="ActionNumber" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Action" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="AuditUser">
+          <Key>
+            <PropertyRef Name="ActionNumber" />
+          </Key>
+          <Property Name="ActionNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Identity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="Int16" Nullable="false" />
+          <Property Name="Parameters" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1403,16 +1421,6 @@
               <MappingFragment StoreEntitySet="AddressName">
                 <ScalarProperty Name="AddressNumber" ColumnName="AddressNumber" />
                 <ScalarProperty Name="AddressName1" ColumnName="AddressName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AuditUsers">
-            <EntityTypeMapping TypeName="FreeMarketModel.AuditUser">
-              <MappingFragment StoreEntitySet="AuditUser">
-                <ScalarProperty Name="ActionNumber" ColumnName="ActionNumber" />
-                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
-                <ScalarProperty Name="Identity" ColumnName="Identity" />
-                <ScalarProperty Name="Action" ColumnName="Action" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1762,6 +1770,25 @@
                 <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
                 <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
                 <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemActions">
+            <EntityTypeMapping TypeName="FreeMarketModel.SystemAction">
+              <MappingFragment StoreEntitySet="SystemActions">
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="ActionNumber" ColumnName="ActionNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuditUsers">
+            <EntityTypeMapping TypeName="FreeMarketModel.AuditUser">
+              <MappingFragment StoreEntitySet="AuditUser">
+                <ScalarProperty Name="Parameters" ColumnName="Parameters" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Identity" ColumnName="Identity" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="ActionNumber" ColumnName="ActionNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

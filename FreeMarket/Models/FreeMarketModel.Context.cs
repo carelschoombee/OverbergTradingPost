@@ -27,7 +27,6 @@ namespace FreeMarket.Models
     
         public virtual DbSet<ActivityLogging> ActivityLoggings { get; set; }
         public virtual DbSet<AddressName> AddressNames { get; set; }
-        public virtual DbSet<AuditUser> AuditUsers { get; set; }
         public virtual DbSet<Courier> Couriers { get; set; }
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
         public virtual DbSet<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
@@ -53,5 +52,7 @@ namespace FreeMarket.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
+        public virtual DbSet<SystemAction> SystemActions { get; set; }
+        public virtual DbSet<AuditUser> AuditUsers { get; set; }
     }
 }

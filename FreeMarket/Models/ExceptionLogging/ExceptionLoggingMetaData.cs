@@ -2,14 +2,22 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace FreeMarket.Models
 {
+    public enum LoggingSeverityLevels
+    {
+        Transactional,
+        Audit,
+        Verbose
+    };
+
     [MetadataType(typeof(ExceptionLoggingMetaData))]
     public partial class ExceptionLogging
     {
-        public static void LogException(Exception e)
+        public static async void LogException(Exception e)
         {
             var currentUserName = HttpContext.Current.User.Identity.GetUserId() ?? "Anonymous";
 
@@ -36,11 +44,12 @@ namespace FreeMarket.Models
             }
             finally
             {
-                NotifyDeveloper(ex);
+                if ((ConfigurationManager.AppSettings["notifyDeveloperOfExceptions"]) == "true")
+                    await NotifyDeveloper(ex);
             }
         }
 
-        public static async void NotifyDeveloper(ExceptionLogging ex)
+        public static async Task<int> NotifyDeveloper(ExceptionLogging ex)
         {
             if (ex != null)
             {
@@ -51,6 +60,8 @@ namespace FreeMarket.Models
                 message.Subject = String.Format("Exception {0}", ex.ExceptionNumber);
                 await email.SendAsync(message);
             }
+
+            return 0;
         }
     }
 

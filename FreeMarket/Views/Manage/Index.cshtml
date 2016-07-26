@@ -4,10 +4,12 @@
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
+<hr />
 
-<p class="text-success">@ViewBag.StatusMessage</p>
 <div class="container center_div">
-    <hr />
+ 
+    <p class="text-success">@ViewBag.StatusMessage</p>
+
     <dl class="dl-horizontal">
         <dt>Email:</dt>
         <dd>
@@ -41,8 +43,7 @@
        
         <dt>Login via Google or Facebook:</dt>
         <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
+            @Html.ActionLink("Manage", "ManageLogins")
         </dd>
         @*
             Phone Numbers can used as a second factor of verification in a two-factor authentication system.

@@ -7,6 +7,13 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
+    public enum FreeMarketResult
+    {
+        Success,
+        Exception,
+        Failure
+    }
+
     public class IndexViewModel
     {
         public bool HasPassword { get; set; }
@@ -104,13 +111,14 @@ namespace FreeMarket.Models
 
     public class ModifyDeliveryDetailsViewModel
     {
-        public int CustomerNumber { get; set; }
+        public CustomerAddress Address { get; set; }
 
-        public List<CustomerAddress> Addresses { get; set; }
+        [Display(Name = "Address Name")]
+        public string AddressName { get; set; }
 
         public List<SelectListItem> AdressNameOptions { get; set; }
 
-        public ModifyDeliveryDetailsViewModel() : base()
+        public ModifyDeliveryDetailsViewModel()
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -118,8 +126,10 @@ namespace FreeMarket.Models
                     (c => new SelectListItem
                     {
                         Text = c.AddressName1,
-                        Value = c.AddressName1
+                        Value = c.AddressName1,
                     }).ToList();
+
+                AdressNameOptions[0].Selected = true;
             }
         }
     }
