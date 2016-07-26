@@ -8,8 +8,10 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Configuration;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FreeMarket
 {
@@ -29,12 +31,23 @@ namespace FreeMarket
             request.AddParameter("from", "Mailgun Sandbox <postmaster@sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org>");
             request.AddParameter("to", message.Destination);
             request.AddParameter("subject", message.Subject);
-            request.AddParameter("text", message.Body);
+            string body = EmailService.Borderify(message.Body);
+            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Free Market platform</td></tr><tr><td><br /><img src=\"cid:google.png\"></td></tr></table><body></html>", body));
+            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/google.png"));
+            request.AddFile("attachment", Path.Combine("files", HttpContext.Current.Server.MapPath("~/Content/Images/google.png")));
+            request.Method = Method.POST;
             request.Method = Method.POST;
 
             client.Execute(request);
 
             return Task.FromResult(0);
+        }
+
+        public static string Borderify(string html)
+        {
+            html = html.Replace("<th>", "<th style='border-left: solid 1px black;border-right: solid 1px black;border-top: solid 1px black;border-bottom: solid 1px black'>");
+            html = html.Replace("<td>", "<td style='border-left: solid 1px black;border-right: solid 1px black;border-top: solid 1px black;border-bottom: solid 1px black'>");
+            return html;
         }
     }
 

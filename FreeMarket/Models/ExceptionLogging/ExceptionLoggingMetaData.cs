@@ -56,7 +56,7 @@ namespace FreeMarket.Models
                 EmailService email = new EmailService();
                 IdentityMessage message = new IdentityMessage();
                 message.Destination = ConfigurationManager.AppSettings["supportEmail"];
-                message.Body = String.Format("An exception occurred: {0} : {1} : {2} : {3}", ex.ExceptionNumber, ex.DateTime, ex.Identity, ex.Message);
+                message.Body = String.Format("An exception occurred: " + "<tr><th>Number</th><th>Date</th><th>Identity</th><th>Message</th></tr><tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>", ex.ExceptionNumber, ex.DateTime, ex.Identity, ex.Message);
                 message.Subject = String.Format("Exception {0}", ex.ExceptionNumber);
                 await email.SendAsync(message);
             }
