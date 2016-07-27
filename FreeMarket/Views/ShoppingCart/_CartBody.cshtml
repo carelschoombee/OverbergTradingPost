@@ -1,0 +1,50 @@
+﻿@using FreeMarket.Models
+@model CartBody
+
+<table class="table table-bordered-custom table-responsive">
+    <tr>
+        <th class="col-sm-1">
+            Remove
+        </th>
+        <th class="col-sm-2">
+            Image
+        </th>
+        <th class="col-sm-6">
+            Description
+        </th>
+        <th class="col-sm-1">
+            Price
+        </th>
+        <th class="col-sm-1">
+            Quantity
+        </th>
+        <th class="col-sm-1">
+            Total
+        </th>
+    </tr>
+
+    @foreach (OrderDetail item in Model.OrderDetails)
+    {
+       <tr>
+           <td>
+               @Html.EditorFor(model => item.Selected)
+           </td>
+           <td>
+               @*<img src="@Url.Action("RenderImage", "Image", new { id = Model.id})" />*@
+           </td>
+           <td>
+               @Html.DisplayFor(model => item.ProductDescription)
+           </td>
+           <td>
+               @Html.DisplayFor(model => item.Price)
+           </td>
+           <td>
+               @Html.EditorFor(model => item.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+           </td>
+           <td>
+               @Html.DisplayFor(model => item.OrderItemValue)
+           </td>
+       </tr>
+    }
+</table>
+
