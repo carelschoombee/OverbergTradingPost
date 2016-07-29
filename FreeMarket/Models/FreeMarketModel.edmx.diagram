@@ -52,6 +52,7 @@
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
         <EntityTypeShape EntityType="FreeMarketModel.SystemAction" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="15.375" PointY="6.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.SitePicture" Width="1.5" PointX="15.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

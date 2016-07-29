@@ -1,14 +1,10 @@
-﻿@using Microsoft.AspNet.Identity
-@using FreeMarket.Models
+﻿@using FreeMarket.Models
 
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
-
-        //var userWithClaims = (System.Security.Claims.ClaimsPrincipal)User;
-        //var fullName = userWithClaims.Claims.First(c => c.Type == "Name");
 
     <ul class="nav navbar-nav navbar-right">
         <li>
@@ -28,6 +24,6 @@ else
 
 <ul class="nav navbar-nav navbar-right">
     <li>
-        <a href="@Url.Action("", "")/"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Cart</span></a>
+        <a href="@Url.Action("Cart", "ShoppingCart")/"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Cart</span></a>
     </li>
 </ul>

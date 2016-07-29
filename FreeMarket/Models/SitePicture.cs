@@ -12,14 +12,10 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductPicture
+    public partial class SitePicture
     {
         public int PictureNumber { get; set; }
-        public int ProductNumber { get; set; }
+        public string Description { get; set; }
         public byte[] Picture { get; set; }
-        public string Annotation { get; set; }
-        public string Dimensions { get; set; }
-    
-        public virtual Product Product { get; set; }
     }
 }

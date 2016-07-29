@@ -7,7 +7,15 @@ namespace FreeMarket.Models
         public OrderHeader Order { get; set; }
         public CartBody Body { get; set; }
 
-        public void Initialize() { }
+        public void Initialize(string userId)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Order = OrderHeader.GetOrderForShoppingCart(userId);
+                Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
+            }
+        }
+
         public void Save() { }
 
         public void AddItem(OrderDetail item) { }
@@ -18,6 +26,11 @@ namespace FreeMarket.Models
         public void Checkout() { }
 
         public List<string> CreateCookie() { return new List<string>(); }
+
+        public ShoppingCart(string userId)
+        {
+            Initialize(userId);
+        }
 
         public ShoppingCart()
         {

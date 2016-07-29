@@ -294,6 +294,7 @@
           <Property Name="ProductNumber" Type="int" Nullable="false" />
           <Property Name="Picture" Type="varbinary(max)" Nullable="false" />
           <Property Name="Annotation" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dimensions" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -311,6 +312,14 @@
           <Property Name="SiteConfigurationNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Key" Type="nvarchar" MaxLength="50" />
           <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SitePictures">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="Picture" Type="image" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -592,6 +601,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrderNumber" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="FreeMarketModelStoreContainer">
           <EntitySet Name="ActivityLogging" EntityType="Self.ActivityLogging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressName" EntityType="Self.AddressName" Schema="dbo" store:Type="Tables" />
@@ -619,6 +631,7 @@
           <EntitySet Name="ProductPicture" EntityType="Self.ProductPicture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductSupplier" EntityType="Self.ProductSupplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SiteConfiguration" EntityType="Self.SiteConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SitePictures" EntityType="Self.SitePictures" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SupplierAddress" EntityType="Self.SupplierAddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -976,6 +989,7 @@
           <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="Annotation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Product" Relationship="Self.FK_ProductPicture_Product" FromRole="ProductPicture" ToRole="Product" />
+          <Property Name="Dimensions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -1343,6 +1357,10 @@
           </AssociationSet>
           <EntitySet Name="SystemActions" EntityType="FreeMarketModel.SystemAction" />
           <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
+          <EntitySet Name="SitePictures" EntityType="FreeMarketModel.SitePicture" />
+          <FunctionImport Name="GetDetailsForShoppingCart" ReturnType="Collection(FreeMarketModel.GetDetailsForShoppingCart_Result)">
+            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="CustomerAddress">
           <Key>
@@ -1402,6 +1420,61 @@
           <Property Name="Action" Type="Int16" Nullable="false" />
           <Property Name="Parameters" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="SitePicture">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <ComplexType Name="GetDetailsForShoppingCart_Result">
+          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
+          <Property Type="DateTime" Name="OrderDatePlaced" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="OrderDateClosed" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CustomerNumber" Nullable="false" MaxLength="128" />
+          <Property Type="Decimal" Name="TotalOrderValue" Nullable="false" Precision="19" />
+          <Property Type="String" Name="OrderStatus" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CustomerOverallSatisfactionRating" Nullable="true" />
+          <Property Type="Boolean" Name="PaymentReceived" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="CourierNumberID" Nullable="false" />
+          <Property Type="String" Name="CourierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="2" Scale="0" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="PriceProduct" Nullable="false" Precision="19" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Int32" Name="PCProductNumberID" Nullable="false" />
+          <Property Type="Int32" Name="CustodianNumber" Nullable="false" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentNumberID" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="ItemNumber" Nullable="false" />
+          <Property Type="Int32" Name="OrderDetailOrderNumber" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
+          <Property Type="Int32" Name="OrderDetailProductNumber" Nullable="false" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="false" />
+          <Property Type="Boolean" Name="Settled" Nullable="true" />
+          <Property Type="Boolean" Name="PaySupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PayCourier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidSupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidCourier" Nullable="true" />
+          <Property Type="String" Name="OrderItemStatus" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="PriceOrderDetail" Nullable="false" Precision="19" />
+          <Property Type="Int16" Name="Quantity" Nullable="false" />
+          <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
+          <Property Type="DateTime" Name="DeliveryDateAgreed" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DeliveryDateActual" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
+          <Property Type="String" Name="CustomerProductQualityRating" Nullable="true" />
+          <Property Type="String" Name="CustomerCourierOnTimeDeliveryRating" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1662,6 +1735,7 @@
           <EntitySetMapping Name="ProductPictures">
             <EntityTypeMapping TypeName="FreeMarketModel.ProductPicture">
               <MappingFragment StoreEntitySet="ProductPicture">
+                <ScalarProperty Name="Dimensions" ColumnName="Dimensions" />
                 <ScalarProperty Name="PictureNumber" ColumnName="PictureNumber" />
                 <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
                 <ScalarProperty Name="Picture" ColumnName="Picture" />
@@ -1792,6 +1866,66 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SitePictures">
+            <EntityTypeMapping TypeName="FreeMarketModel.SitePicture">
+              <MappingFragment StoreEntitySet="SitePictures">
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PictureNumber" ColumnName="PictureNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDetailsForShoppingCart" FunctionName="FreeMarketModel.Store.GetDetailsForShoppingCart">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetDetailsForShoppingCart_Result">
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
+                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="CourierNumberID" ColumnName="CourierNumberID" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="PriceProduct" ColumnName="PriceProduct" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="PCProductNumberID" ColumnName="PCProductNumberID" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DepartmentNumberID" ColumnName="DepartmentNumberID" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="OrderDetailOrderNumber" ColumnName="OrderDetailOrderNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="OrderDetailProductNumber" ColumnName="OrderDetailProductNumber" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
+                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
+                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
+                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
+                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
+                <ScalarProperty Name="PriceOrderDetail" ColumnName="PriceOrderDetail" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="DeliveryDateAgreed" ColumnName="DeliveryDateAgreed" />
+                <ScalarProperty Name="DeliveryDateActual" ColumnName="DeliveryDateActual" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+                <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
+                <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

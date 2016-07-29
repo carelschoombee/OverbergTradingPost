@@ -201,6 +201,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Identity\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLogging.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -304,6 +308,9 @@
     <Compile Include="Models\SiteConfiguration.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SitePicture.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -332,6 +339,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\defaultPicture.png" />
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\google.png" />
     <Content Include="Content\Images\leaves.png">

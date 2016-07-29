@@ -12,7 +12,7 @@ namespace FreeMarket.Models
         public decimal ProductWeight { get; set; }
         public decimal ProductPrice { get; set; }
         public int QuantityOnHand { get; set; }
-        public byte[] MainImage { get; set; }
+        public int MainImageNumber { get; set; }
         public bool Selected { get; set; }
     }
     public class OrderDetailMetaData
