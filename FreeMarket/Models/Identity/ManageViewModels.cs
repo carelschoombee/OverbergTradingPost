@@ -7,13 +7,6 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
-    public enum FreeMarketResult
-    {
-        Success,
-        Exception,
-        Failure
-    }
-
     public class IndexViewModel
     {
         public bool HasPassword { get; set; }

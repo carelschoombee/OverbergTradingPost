@@ -44,6 +44,8 @@ namespace FreeMarket.Models
             }
             finally
             {
+                System.Diagnostics.Debug.Write(string.Format("Exception swallowed by Filter: {0}", ex));
+
                 if ((ConfigurationManager.AppSettings["notifyDeveloperOfExceptions"]) == "true")
                     NotifyDeveloper(ex);
             }

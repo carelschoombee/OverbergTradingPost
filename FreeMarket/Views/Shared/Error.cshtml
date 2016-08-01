@@ -1,4 +1,4 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@model HandleErrorInfo
 
 @{
     ViewBag.Title = "Error";
@@ -7,4 +7,8 @@
 
 <h1>There seems to be a problem...</h1>
 <h2>We experienced an error while processing your request. Please try again later.</h2>
+
+<div>
+    @Html.ActionLink("Go back to home", "Index", "Home")
+</div>
 

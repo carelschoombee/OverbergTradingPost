@@ -16,12 +16,17 @@ namespace FreeMarket.Models
             }
         }
 
-        public void Save() { }
+        public void AddItem(OrderDetail item)
+        {
+            // Remember to handle the case an existing item is added to the same order again.
+            // Increment quantity only.
+        }
 
-        public void AddItem(OrderDetail item) { }
         public void RemoveItem(OrderDetail item) { }
 
         public void UpdatePrices() { }
+
+        public void Save() { }
 
         public void Checkout() { }
 
@@ -32,9 +37,16 @@ namespace FreeMarket.Models
             Initialize(userId);
         }
 
-        public ShoppingCart()
-        {
+        public ShoppingCart() { }
 
+        public override string ToString()
+        {
+            string toString = "";
+
+            toString += "Shopping Cart Contents:";
+            toString += string.Format("{0}{1}", Order.ToString(), Body.ToString());
+
+            return toString;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace FreeMarket.Models
@@ -58,7 +59,28 @@ namespace FreeMarket.Models
                 }
             }
 
+            Debug.Write(body);
+
             return body;
+        }
+
+        public override string ToString()
+        {
+            string toString = "";
+
+            toString += "Start Cart Body:";
+
+            foreach (OrderDetail detail in OrderDetails)
+            {
+                toString += string.Format("\n----------------");
+                toString += string.Format("{0}", detail.ToString());
+                toString += string.Format("\n---------------\n");
+            }
+
+            toString += "End Cart Body:";
+            toString += string.Format("Total Lines: {0}", OrderDetails.Count);
+
+            return toString;
         }
     }
 }

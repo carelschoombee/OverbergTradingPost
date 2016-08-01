@@ -14,6 +14,17 @@ namespace FreeMarket.Models
         public int QuantityOnHand { get; set; }
         public int MainImageNumber { get; set; }
         public bool Selected { get; set; }
+
+        public override string ToString()
+        {
+            string toString = "";
+
+            toString += string.Format(("\nItem Number: {0}"), ItemNumber);
+            toString += string.Format(("\nDescription: {0}"), ProductDescription);
+            toString += string.Format(("\nQuantity: {0}"), Quantity);
+
+            return toString;
+        }
     }
     public class OrderDetailMetaData
     {

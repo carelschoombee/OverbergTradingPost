@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -52,6 +53,8 @@ namespace FreeMarket.Models
 
                         db.OrderHeaders.Add(order);
                         db.SaveChanges();
+
+                        Debug.Write(string.Format("New order for shopping cart: {0}", order.ToString()));
                     }
                     // Set the customer details on the currently unconfirmed order
                     else
@@ -60,6 +63,8 @@ namespace FreeMarket.Models
                         order.CustomerEmail = user.Email;
                         order.CustomerPrimaryContactPhone = user.PhoneNumber;
                         order.CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod;
+
+                        Debug.Write(string.Format("Existing order for shopping cart: {0}", order.ToString()));
                     }
                 }
             }
@@ -70,6 +75,18 @@ namespace FreeMarket.Models
 
             // Return an order which can be used in a shopping cart
             return order;
+        }
+
+        public override string ToString()
+        {
+            string toString = "";
+            toString += string.Format("\n----------------");
+            toString += string.Format(("\nCustomer: {0}"), CustomerName);
+            toString += string.Format(("\nOrder: {0}"), OrderNumber);
+            toString += string.Format(("\nTotal: {0}"), TotalOrderValue);
+            toString += string.Format(("\n----------------\n: {0}"), TotalOrderValue);
+
+            return toString;
         }
     }
     public class OrderHeaderMetaData

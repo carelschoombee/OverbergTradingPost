@@ -16,7 +16,7 @@ namespace FreeMarket.Controllers
 
             if (UserId == null)
             {
-                // User not logged in, use Cookie
+                // User not logged in, use Cookie   
             }
 
             ShoppingCart cart = new ShoppingCart(UserId);
@@ -25,6 +25,7 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
         public ActionResult CartTotals(ShoppingCart cart)
         {
             return PartialView("_CartTotals", cart);
