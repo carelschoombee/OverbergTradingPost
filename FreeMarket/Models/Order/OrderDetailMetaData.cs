@@ -25,6 +25,29 @@ namespace FreeMarket.Models
 
             return toString;
         }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            var item = obj as OrderDetail;
+
+            if (item == null || GetType() != item.GetType())
+            {
+                return false;
+            }
+
+            if (this.ProductNumber == item.ProductNumber && this.Quantity == item.Quantity
+                && this.SupplierNumber == item.SupplierNumber && this.CourierNumber == item.CourierNumber)
+                return true;
+            else
+                return false;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return ProductNumber.GetHashCode() ^ SupplierNumber.GetHashCode();
+        }
     }
     public class OrderDetailMetaData
     {

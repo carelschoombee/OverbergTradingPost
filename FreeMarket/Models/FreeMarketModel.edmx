@@ -604,6 +604,9 @@
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="UpdatePrices" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrderNumber" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="FreeMarketModelStoreContainer">
           <EntitySet Name="ActivityLogging" EntityType="Self.ActivityLogging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressName" EntityType="Self.AddressName" Schema="dbo" store:Type="Tables" />
@@ -1359,6 +1362,9 @@
           <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
           <EntitySet Name="SitePictures" EntityType="FreeMarketModel.SitePicture" />
           <FunctionImport Name="GetDetailsForShoppingCart" ReturnType="Collection(FreeMarketModel.GetDetailsForShoppingCart_Result)">
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UpdatePrices">
             <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -1926,6 +1932,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdatePrices" FunctionName="FreeMarketModel.Store.UpdatePrices" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

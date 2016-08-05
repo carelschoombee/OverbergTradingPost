@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Configuration;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 
@@ -27,21 +25,7 @@ namespace FreeMarket.Models
                     AddressSuburb = addressSuburb
                 };
 
-                db.CustomerAddresses.Add(address);
-
-                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                    || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                {
-                    AuditUser audit = new AuditUser()
-                    {
-                        Identity = userId,
-                        DateTime = DateTime.Now,
-                        Action = 5,
-                        Parameters = string.Format("Address name: {0}", addressName)
-                    };
-
-                    db.AuditUsers.Add(audit);
-                }
+                AuditUser.LogAudit(5, string.Format("Address name: {0}", addressName), userId);
 
                 db.SaveChanges();
             }
@@ -73,19 +57,7 @@ namespace FreeMarket.Models
 
                 db.Entry(address).State = EntityState.Modified;
 
-                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                    || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                {
-                    AuditUser audit = new AuditUser()
-                    {
-                        Identity = userId,
-                        DateTime = DateTime.Now,
-                        Action = 5,
-                        Parameters = string.Format("Address name: {0}", addressName)
-                    };
-
-                    db.AuditUsers.Add(audit);
-                }
+                AuditUser.LogAudit(5, string.Format("Address name: {0}", addressName), userId);
 
                 db.SaveChanges();
             }

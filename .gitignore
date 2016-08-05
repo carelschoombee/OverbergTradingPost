@@ -245,3 +245,5 @@ ModelManifest.xml
 .fake/
 /FreeMarket/ConnectionStrings.config
 /FreeMarket/AppSecrets.config
+/FreeMarketTests/App.config
+/FreeMarketTests/packages.config

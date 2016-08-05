@@ -220,6 +220,7 @@
     </Compile>
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Error\ErrorHelpers.cs" />
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -256,6 +257,7 @@
     <Compile Include="Models\ExceptionLogging.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Logging\AuditUserMetaData.cs" />
     <Compile Include="Models\Logging\ExceptionLoggingMetaData.cs" />
     <Compile Include="Models\FreeMarketModel.Context.cs">
       <AutoGen>True</AutoGen>

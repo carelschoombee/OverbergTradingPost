@@ -6,27 +6,50 @@
 }
 
 <h2 class="text-center">Shopping Cart</h2>
+<hr />
 
-<div class="container">
-    <div class="row">
-        @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@if (Model.Cart == null || Model.Cart.Body.OrderDetails.Count == 0)
+{
+    <div class="center_div">
+        <div class="text-center">
+            You have no items in your shopping cart yet.
+        </div>
+        
+        @if (!string.IsNullOrEmpty(Model.ReturnUrl))
         {
-            @Html.AntiForgeryToken();
+            <br />
 
-            @Html.Partial("_CartBody", Model.Cart.Body)
-
-            @Html.Partial("_CartButtons")
+            <div class="text-center">
+                <a class="btn btn-primary" href="@Model.ReturnUrl">Continue Shopping</a>
+            </div>
         }
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="col-sm-6">
-                @*@Html.Action("CartShipping", Model.Cart.Body)*@
-            </div>
-            <div class="col-sm-6">
-                @Html.Action("CartTotals", Model.Cart)
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken();
+
+                @Html.Partial("_CartBody", Model.Cart.Body)
+
+                @Html.Partial("_CartButtons", Model)
+            }
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-6">
+                    @*@Html.Action("CartShipping", Model.Cart.Body)*@
+                </div>
+                <div class="col-sm-6">
+                    @Html.Action("CartTotals", Model.Cart)
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
+
+
 

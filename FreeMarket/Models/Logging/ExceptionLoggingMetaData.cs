@@ -112,6 +112,17 @@ namespace FreeMarket.Models
 
             return 0;
         }
+
+        public static bool AuditLoggingEnabled()
+        {
+            return (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
+                    || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose));
+        }
+
+        public static bool TransactionLoggingEnabled()
+        {
+            return (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Transactional);
+        }
     }
 
     public class ExceptionLoggingMetaData

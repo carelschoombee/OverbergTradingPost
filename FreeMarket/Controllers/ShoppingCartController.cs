@@ -1,26 +1,34 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
+using System.Diagnostics;
 using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
     [RequireHttps]
-    [FreeMarketErrorHandler(View = "Error")]
     public class ShoppingCartController : Controller
     {
-        public ActionResult Cart()
+        public ActionResult Cart(ShoppingCart tempCart)
         {
             ShoppingCartViewModel model = new ShoppingCartViewModel();
+            ShoppingCart cart;
 
-            string UserId = User.Identity.GetUserId();
+            string userId = User.Identity.GetUserId();
 
-            if (UserId == null)
+            if (string.IsNullOrEmpty(userId))
             {
-                // User not logged in, use Cookie   
-            }
+                Debug.Write(string.Format("\nCreating Cart in Session..."));
 
-            ShoppingCart cart = new ShoppingCart(UserId);
-            model = new ShoppingCartViewModel() { Cart = cart };
+                model = new ShoppingCartViewModel() { Cart = tempCart };
+            }
+            else
+            {
+                Debug.Write(string.Format("\nMerging Cart with Database..."));
+
+                cart = new ShoppingCart(userId);
+                cart.Merge(tempCart, userId);
+                model = new ShoppingCartViewModel() { Cart = cart };
+            }
 
             return View(model);
         }
