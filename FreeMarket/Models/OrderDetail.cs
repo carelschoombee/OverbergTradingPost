@@ -35,8 +35,8 @@ namespace FreeMarket.Models
         public string CustomerCourierOnTimeDeliveryRating { get; set; }
     
         public virtual Courier Courier { get; set; }
-        public virtual Product Product { get; set; }
         public virtual Supplier Supplier { get; set; }
         public virtual OrderHeader OrderHeader { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

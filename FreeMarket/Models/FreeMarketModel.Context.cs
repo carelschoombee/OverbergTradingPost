@@ -44,10 +44,8 @@ namespace FreeMarket.Models
         public virtual DbSet<PaymentGatewayPaymentMethod> PaymentGatewayPaymentMethods { get; set; }
         public virtual DbSet<PaymentGatewayTransactionStatu> PaymentGatewayTransactionStatus { get; set; }
         public virtual DbSet<PreferredCommunicationMethod> PreferredCommunicationMethods { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCustodian> ProductCustodians { get; set; }
         public virtual DbSet<ProductPicture> ProductPictures { get; set; }
-        public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
         public virtual DbSet<SiteConfiguration> SiteConfigurations { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<SupplierAddress> SupplierAddresses { get; set; }
@@ -57,6 +55,8 @@ namespace FreeMarket.Models
         public virtual DbSet<SystemAction> SystemActions { get; set; }
         public virtual DbSet<AuditUser> AuditUsers { get; set; }
         public virtual DbSet<SitePicture> SitePictures { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
     
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {
@@ -65,15 +65,6 @@ namespace FreeMarket.Models
                 new ObjectParameter("OrderNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
-        }
-    
-        public virtual int UpdatePrices(Nullable<int> orderNumber)
-        {
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("OrderNumber", orderNumber) :
-                new ObjectParameter("OrderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdatePrices", orderNumberParameter);
         }
     }
 }

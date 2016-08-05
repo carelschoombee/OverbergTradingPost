@@ -37,7 +37,7 @@ namespace FreeMarket.Models
                         ProductDepartment = c.DepartmentName,
                         ProductDescription = c.Description,
                         ProductNumber = c.OrderDetailProductNumber,
-                        ProductPrice = c.PriceProduct,
+                        ProductPrice = c.PricePerUnit,
                         ProductWeight = c.Weight,
                         Quantity = c.Quantity,
                         QuantityOnHand = c.QuantityOnHand,

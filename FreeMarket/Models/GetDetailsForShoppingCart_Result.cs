@@ -32,7 +32,6 @@ namespace FreeMarket.Models
         public int DepartmentNumber { get; set; }
         public decimal Weight { get; set; }
         public string Size { get; set; }
-        public decimal PriceProduct { get; set; }
         public bool Activated { get; set; }
         public int PCProductNumberID { get; set; }
         public int CustodianNumber { get; set; }
@@ -58,5 +57,6 @@ namespace FreeMarket.Models
         public Nullable<decimal> CourierFee { get; set; }
         public string CustomerProductQualityRating { get; set; }
         public string CustomerCourierOnTimeDeliveryRating { get; set; }
+        public decimal PricePerUnit { get; set; }
     }
 }
