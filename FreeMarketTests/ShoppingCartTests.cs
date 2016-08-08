@@ -6,12 +6,14 @@ using System.Linq;
 namespace FreeMarketTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ShoppingCartTests
     {
-        FreeMarketEntities db = new FreeMarketEntities();
+        public FreeMarketEntities db = new FreeMarketEntities();
+
+        public const string userIdConst = "debba121-e845-4f50-b5fd-39a86c060e13";
 
         [TestMethod]
-        public void ShoppingCartContainsCorrectItems()
+        public void ShoppingCartContainsCorrectNumberOfItems()
         {
             // Arrange
             int orderNumber = 1;

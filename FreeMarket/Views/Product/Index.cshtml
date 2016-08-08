@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Pecan Nuts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<h1 class="text-center">Nuts, seeds and dried fruit</h1>
+<hr />
+
+<div class="container">
+    <div class="col-sm-12">
+        <div class="row">
+            @Html.Partial("_ProductCarousel")
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div id="loadingDiv" style="display:none;"></div>
+
+@Html.Action("GetAllProducts")
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+     $("#myCarousel").carousel({
+
+         interval : 5000
+
+     });
+
+});
+
+</script>

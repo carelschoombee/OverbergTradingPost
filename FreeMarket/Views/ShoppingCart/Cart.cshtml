@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<br />
 <h2 class="text-center">Shopping Cart</h2>
 <hr />
 
-@if (Model.Cart == null || Model.Cart.Body.OrderDetails.Count == 0)
+
+@if (Model.Cart == null || Model.Cart.Body == null || Model.Cart.Body.OrderDetails == null || Model.Cart.Body.OrderDetails.Count == 0)
 {
     <div class="center_div">
         <div class="text-center">

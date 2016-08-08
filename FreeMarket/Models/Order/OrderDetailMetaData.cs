@@ -19,9 +19,14 @@ namespace FreeMarket.Models
         {
             string toString = "";
 
-            toString += string.Format(("\nItem Number: {0}"), ItemNumber);
-            toString += string.Format(("\nDescription: {0}"), ProductDescription);
-            toString += string.Format(("\nQuantity: {0}"), Quantity);
+            if (ItemNumber != 0 && !string.IsNullOrEmpty(ProductDescription) && ProductPrice != 0 && Quantity != 0 && OrderItemValue != 0)
+            {
+                toString += string.Format(("\nItem Number: {0}"), ItemNumber);
+                toString += string.Format(("\nDescription: {0}"), ProductDescription);
+                toString += string.Format(("\nPrice: {0}"), ProductPrice);
+                toString += string.Format(("\nQuantity: {0}"), Quantity);
+                toString += string.Format(("\nOrder Item Value: {0}"), OrderItemValue);
+            }
 
             return toString;
         }

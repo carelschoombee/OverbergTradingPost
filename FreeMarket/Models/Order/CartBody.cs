@@ -48,14 +48,17 @@ namespace FreeMarket.Models
                     }
                     ).ToList();
 
-                foreach (OrderDetail detail in body.OrderDetails)
+                if (body.OrderDetails != null && body.OrderDetails.Count > 0)
                 {
-                    int imageNumber = db.ProductPictures
-                        .Where(c => c.ProductNumber == detail.ProductNumber && c.Dimensions == "80x79")
-                        .Select(c => c.PictureNumber)
-                        .FirstOrDefault();
+                    foreach (OrderDetail detail in body.OrderDetails)
+                    {
+                        int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == detail.ProductNumber && c.Dimensions == "80x79")
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
 
-                    detail.MainImageNumber = imageNumber;
+                        detail.MainImageNumber = imageNumber;
+                    }
                 }
             }
 
@@ -70,15 +73,18 @@ namespace FreeMarket.Models
 
             toString += "Start Cart Body:";
 
-            foreach (OrderDetail detail in OrderDetails)
+            if (OrderDetails != null && OrderDetails.Count > 0)
             {
-                toString += string.Format("\n----------------");
-                toString += string.Format("{0}", detail.ToString());
-                toString += string.Format("\n---------------\n");
+                foreach (OrderDetail detail in OrderDetails)
+                {
+                    toString += string.Format("\n----------------");
+                    toString += string.Format("{0}", detail.ToString());
+                    toString += string.Format("\n---------------\n");
+                }
             }
 
             toString += "End Cart Body:";
-            toString += string.Format("Total Lines: {0}", OrderDetails.Count);
+            toString += string.Format("Total Items in Cart: {0}", OrderDetails.Count);
 
             return toString;
         }

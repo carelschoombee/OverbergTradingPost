@@ -80,11 +80,15 @@ namespace FreeMarket.Models
         public override string ToString()
         {
             string toString = "";
-            toString += string.Format("\n----------------");
-            toString += string.Format(("\nCustomer: {0}"), CustomerName);
-            toString += string.Format(("\nOrder: {0}"), OrderNumber);
-            toString += string.Format(("\nTotal: {0}"), TotalOrderValue);
-            toString += string.Format(("\n----------------\n: {0}"), TotalOrderValue);
+
+            if (!string.IsNullOrEmpty(CustomerName) && OrderNumber != 0)
+            {
+                toString += string.Format("\nOrder Header:\n----------------");
+                toString += string.Format(("\nCustomer: {0}"), CustomerName);
+                toString += string.Format(("\nOrder: {0}"), OrderNumber);
+                toString += string.Format(("\nTotal: {0}"), TotalOrderValue);
+                toString += "\n----------------\n";
+            }
 
             return toString;
         }

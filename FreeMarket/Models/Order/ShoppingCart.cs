@@ -45,10 +45,11 @@ namespace FreeMarket.Models
                     Product tempProduct = db.Products.Find(productNumber);
                     Supplier tempSupplier = db.Suppliers.Find(supplierNumber);
                     Courier tempCourier = db.Couriers.Find(courierNumber);
+                    ProductSupplier tempPrice = db.ProductSuppliers.Find(productNumber, supplierNumber);
 
-                    if (tempProduct == null || tempSupplier == null || tempCourier == null)
+                    if (tempProduct == null || tempSupplier == null || tempCourier == null || tempPrice == null)
                     {
-                        Debug.Write("Product, Supplier or Courier does not exist.");
+                        Debug.Write("Product, Supplier, Price or Courier does not exist.");
                         return FreeMarketResult.Failure;
                     }
 
@@ -68,12 +69,12 @@ namespace FreeMarket.Models
                             DeliveryDateActual = null,
                             DeliveryDateAgreed = null,
                             OrderItemStatus = status,
-                            OrderItemValue = tempProduct.Price * quantity,
+                            OrderItemValue = tempPrice.PricePerUnit * quantity,
                             PaidCourier = null,
                             PaidSupplier = null,
                             PayCourier = null,
                             PaySupplier = null,
-                            Price = tempProduct.Price,
+                            Price = tempPrice.PricePerUnit,
                             ProductNumber = tempProduct.ProductNumber,
                             Quantity = quantity,
                             Settled = null,
@@ -125,14 +126,19 @@ namespace FreeMarket.Models
                 {
                     Debug.Write(string.Format("Updating prices for order {0} ...", Order.OrderNumber));
 
-                    db.UpdatePrices(Order.OrderNumber);
+                    foreach (OrderDetail item in Body.OrderDetails)
+                    {
+                        item.ProductPrice = db.ProductSuppliers
+                            .Find(item.ProductNumber, item.SupplierNumber)
+                            .PricePerUnit;
+                    }
                 }
             }
         }
 
         public void Save(string userId = null)
         {
-            // Compare the Session cart to the database cart
+            // Compare the Session cart to the database cart and resolve differences
 
             Compare();
 
@@ -159,6 +165,8 @@ namespace FreeMarket.Models
             Debug.Write(string.Format("Updating Total..."));
 
             Order.TotalOrderValue = Body.OrderDetails.Sum(c => c.OrderItemValue);
+
+            // Don't persist as the user may be anonymous at this point
         }
 
         public void Checkout() { }
@@ -252,8 +260,11 @@ namespace FreeMarket.Models
         {
             string toString = "";
 
-            toString += "Shopping Cart Contents:";
-            toString += string.Format("{0}{1}", Order.ToString(), Body.ToString());
+            if (Order != null && Body != null)
+            {
+                toString += "Shopping Cart Contents:";
+                toString += string.Format("{0}{1}", Order.ToString(), Body.ToString());
+            }
 
             return toString;
         }

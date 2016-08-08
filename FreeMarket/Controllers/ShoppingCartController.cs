@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using System.Diagnostics;
+using System.Threading;
 using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
@@ -37,6 +38,13 @@ namespace FreeMarket.Controllers
         public ActionResult CartTotals(ShoppingCart cart)
         {
             return PartialView("_CartTotals", cart);
+        }
+
+        public ActionResult AddToCart()
+        {
+            Thread.Sleep(2000);
+            TempData["message"] = "The item has been added.";
+            return JavaScript("location.reload();");
         }
     }
 }
