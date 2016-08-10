@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNet.Identity;
+using System.Web;
+using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -17,7 +19,12 @@ namespace FreeMarket.Models
 
             if (cart == null)
             {
-                cart = new ShoppingCart();
+                var userId = HttpContext.Current.User.Identity.GetUserId() ?? "Anonymous";
+
+                if (userId == "Anonymous")
+                    cart = new ShoppingCart();
+                else
+                    cart = new ShoppingCart(userId);
 
                 if (controllerContext.HttpContext.Session != null)
                 {

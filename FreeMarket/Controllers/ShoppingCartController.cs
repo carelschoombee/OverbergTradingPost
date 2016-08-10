@@ -1,7 +1,8 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
@@ -40,11 +41,70 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        public ActionResult AddToCart()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddToCart(ShoppingCart cart, int productNumber, int supplierNumber, int courierNumber, int quantity)
         {
-            Thread.Sleep(2000);
-            TempData["message"] = "The item has been added.";
-            return JavaScript("location.reload();");
+            FreeMarketObject result;
+
+            string userId = User.Identity.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+                result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity);
+            else
+                result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity, userId);
+
+            if (result.Result == FreeMarketResult.Success)
+            {
+                if (result.Argument != null)
+                {
+                    TempData["message"] = string.Format("Success: {0} has been added to your cart.", ((Product)(result.Argument)).Description);
+                }
+            }
+            else
+            {
+                TempData["errorMessage"] = "Error: We could not add the item to the cart.";
+            }
+
+            return JavaScript("window.location = window.location.href;");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateCart(ShoppingCart cart, int itemNumber, int supplierNumber, int productNumber, string returnUrl)
+        {
+            FreeMarketObject result;
+
+            string userId = User.Identity.GetUserId();
+
+            List<OrderDetail> selectedItems = cart.Body.OrderDetails.Where(c => c.Selected).ToList();
+
+            if (selectedItems.Count > 0)
+            {
+                foreach (OrderDetail detail in selectedItems)
+                {
+                    if (string.IsNullOrEmpty(userId))
+                        result = cart.RemoveItem(itemNumber, productNumber, supplierNumber);
+                    else
+                        result = cart.RemoveItem(itemNumber, productNumber, supplierNumber, userId);
+                }
+
+                if (result.Result == FreeMarketResult.Success)
+                {
+                    if (result.Argument != null)
+                    {
+                        TempData["message"] = string.Format("Success: {0} has been removed from your cart.", ((Product)(result.Argument)).Description);
+                    }
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Error: We could not remove the item from the cart.";
+                }
+
+
+            }
+
+            return new EmptyResult();
         }
     }
 }

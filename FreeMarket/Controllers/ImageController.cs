@@ -10,7 +10,7 @@ namespace FreeMarket.Controllers
     {
         public FreeMarketEntities db = new FreeMarketEntities();
 
-        public async Task<ActionResult> RenderImage(int id)
+        public async Task<ActionResult> RenderImage(int id, PictureSize defaultSize = PictureSize.Large)
         {
             byte[] photoBack = new byte[5];
 
@@ -31,7 +31,13 @@ namespace FreeMarket.Controllers
             catch (System.Exception ex)
             {
                 ExceptionLogging.LogExceptionAsync(ex);
-                return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPicture.png"), "image/png");
+
+                if (defaultSize == PictureSize.Large)
+                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPicture.png"), "image/png");
+                else if (defaultSize == PictureSize.Small)
+                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureSmall.png"), "image/png");
+                else
+                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureMedium.png"), "image/png");
             }
 
             return File(photoBack, "image/png");

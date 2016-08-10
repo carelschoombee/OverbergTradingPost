@@ -160,7 +160,7 @@
           <Property Name="OrderNumber" Type="int" Nullable="false" />
           <Property Name="SupplierNumber" Type="int" Nullable="false" />
           <Property Name="ProductNumber" Type="int" Nullable="false" />
-          <Property Name="CourierNumber" Type="int" Nullable="false" />
+          <Property Name="CourierNumber" Type="int" />
           <Property Name="Settled" Type="bit" />
           <Property Name="PaySupplier" Type="bit" />
           <Property Name="PayCourier" Type="bit" />
@@ -168,7 +168,7 @@
           <Property Name="PaidCourier" Type="bit" />
           <Property Name="OrderItemStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Price" Type="money" Nullable="false" />
-          <Property Name="Quantity" Type="smallint" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="OrderItemValue" Type="money" Nullable="false" />
           <Property Name="DeliveryDateAgreed" Type="datetime" />
           <Property Name="DeliveryDateActual" Type="datetime" />
@@ -469,7 +469,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_Courier">
-          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
+          <End Role="Courier" Type="Self.Courier" Multiplicity="0..1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Courier">
@@ -603,6 +603,10 @@
         <Function Name="GetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductNumber" Type="int" Mode="In" />
+          <Parameter Name="SupplierNumber" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="FreeMarketModelStoreContainer">
           <EntitySet Name="ActivityLogging" EntityType="Self.ActivityLogging" Schema="dbo" store:Type="Tables" />
@@ -751,8 +755,8 @@
           <Property Name="Activated" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CourierLocations" Relationship="Self.FK_CourierLocation_Courier" FromRole="Courier" ToRole="CourierLocation" />
           <NavigationProperty Name="CourierStockMovementLogs" Relationship="Self.FK_CourierStockMovementLog_Courier" FromRole="Courier" ToRole="CourierStockMovementLog" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Courier" FromRole="Courier" ToRole="OrderDetail" />
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Courier" FromRole="Courier" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="CourierLocation">
           <Key>
@@ -846,34 +850,6 @@
           <NavigationProperty Name="CourierLocations" Relationship="Self.FK_CourierLocation_Location" FromRole="Location" ToRole="CourierLocation" />
           <NavigationProperty Name="CourierLocations1" Relationship="Self.FK_CourierLocation_Location1" FromRole="Location" ToRole="CourierLocation" />
           <NavigationProperty Name="Custodians" Relationship="Self.CustodianLocation" FromRole="Location" ToRole="Custodian" />
-        </EntityType>
-        <EntityType Name="OrderDetail">
-          <Key>
-            <PropertyRef Name="ItemNumber" />
-          </Key>
-          <Property Name="ItemNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderNumber" Type="Int32" Nullable="false" />
-          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
-          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
-          <Property Name="CourierNumber" Type="Int32" Nullable="false" />
-          <Property Name="Settled" Type="Boolean" />
-          <Property Name="PaySupplier" Type="Boolean" />
-          <Property Name="PayCourier" Type="Boolean" />
-          <Property Name="PaidSupplier" Type="Boolean" />
-          <Property Name="PaidCourier" Type="Boolean" />
-          <Property Name="OrderItemStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="Quantity" Type="Int16" Nullable="false" />
-          <Property Name="OrderItemValue" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="DeliveryDateAgreed" Type="DateTime" Precision="3" />
-          <Property Name="DeliveryDateActual" Type="DateTime" Precision="3" />
-          <Property Name="CourierFee" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="CustomerProductQualityRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerCourierOnTimeDeliveryRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Courier" Relationship="Self.FK_OrderDetail_Courier" FromRole="OrderDetail" ToRole="Courier" />
-          <NavigationProperty Name="Supplier" Relationship="Self.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
-          <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
         </EntityType>
         <EntityType Name="OrderStatu">
           <Key>
@@ -997,10 +973,10 @@
           <Property Name="DateAdded" Type="DateTime" Precision="3" />
           <Property Name="TrustedSupplier" Type="Boolean" Nullable="false" />
           <Property Name="Activated" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Supplier" FromRole="Supplier" ToRole="OrderDetail" />
           <NavigationProperty Name="SupplierAddresses" Relationship="Self.FK_SupplierAddress_Supplier" FromRole="Supplier" ToRole="SupplierAddress" />
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Supplier" FromRole="Supplier" ToRole="ProductSupplier" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Supplier" FromRole="Supplier" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="SupplierAddress">
           <Key>
@@ -1048,18 +1024,6 @@
               <PropertyRef Name="CourierNumber" />
             </Principal>
             <Dependent Role="CourierStockMovementLog">
-              <PropertyRef Name="CourierNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderDetail_Courier">
-          <End Role="Courier" Type="Self.Courier" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Courier">
-              <PropertyRef Name="CourierNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
               <PropertyRef Name="CourierNumber" />
             </Dependent>
           </ReferentialConstraint>
@@ -1112,18 +1076,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrderDetail_Supplier">
-          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
-          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Supplier">
-              <PropertyRef Name="SupplierNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="SupplierNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SupplierAddress_Supplier">
           <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
           <End Role="SupplierAddress" Type="Self.SupplierAddress" Multiplicity="*" />
@@ -1151,7 +1103,6 @@
           <EntitySet Name="ExceptionLoggings" EntityType="Self.ExceptionLogging" />
           <EntitySet Name="FreeMarketOwners" EntityType="Self.FreeMarketOwner" />
           <EntitySet Name="Locations" EntityType="Self.Location" />
-          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
           <EntitySet Name="OrderStatus" EntityType="Self.OrderStatu" />
           <EntitySet Name="PaymentGatewayMessages" EntityType="Self.PaymentGatewayMessage" />
           <EntitySet Name="PaymentGatewayParameters" EntityType="Self.PaymentGatewayParameter" />
@@ -1172,10 +1123,6 @@
             <End Role="Courier" EntitySet="Couriers" />
             <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderDetail_Courier" Association="Self.FK_OrderDetail_Courier">
-            <End Role="Courier" EntitySet="Couriers" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_CourierLocation_Location" Association="Self.FK_CourierLocation_Location">
             <End Role="Location" EntitySet="Locations" />
             <End Role="CourierLocation" EntitySet="CourierLocations" />
@@ -1192,10 +1139,6 @@
             <End Role="Custodian" EntitySet="Custodians" />
             <End Role="ProductCustodian" EntitySet="ProductCustodians" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderDetail_Supplier" Association="Self.FK_OrderDetail_Supplier">
-            <End Role="Supplier" EntitySet="Suppliers" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_SupplierAddress_Supplier" Association="Self.FK_SupplierAddress_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="SupplierAddress" EntitySet="SupplierAddresses" />
@@ -1206,10 +1149,6 @@
           </AssociationSet>
           <EntitySet Name="CustomerAddresses" EntityType="FreeMarketModel.CustomerAddress" />
           <EntitySet Name="OrderHeaders" EntityType="FreeMarketModel.OrderHeader" />
-          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="FreeMarketModel.FK_OrderDetail_OrderHeader">
-            <End Role="OrderHeader" EntitySet="OrderHeaders" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <EntitySet Name="SystemActions" EntityType="FreeMarketModel.SystemAction" />
           <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
           <EntitySet Name="SitePictures" EntityType="FreeMarketModel.SitePicture" />
@@ -1222,10 +1161,6 @@
           <AssociationSet Name="FK_Product_Department" Association="FreeMarketModel.FK_Product_Department">
             <End Role="Department" EntitySet="Departments" />
             <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductCustodian_Product" Association="FreeMarketModel.FK_ProductCustodian_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1247,7 +1182,28 @@
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
-        </EntityContainer>
+          <FunctionImport Name="GetProduct" ReturnType="Collection(FreeMarketModel.GetProduct_Result)">
+            <Parameter Name="ProductNumber" Mode="In" Type="Int32" />
+            <Parameter Name="SupplierNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="OrderDetails" EntityType="FreeMarketModel.OrderDetail" />
+          <AssociationSet Name="FK_OrderDetail_Courier" Association="FreeMarketModel.FK_OrderDetail_Courier">
+            <End Role="Courier" EntitySet="Couriers" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="FreeMarketModel.FK_OrderDetail_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Supplier" Association="FreeMarketModel.FK_OrderDetail_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="CustomerAddress">
           <Key>
             <PropertyRef Name="AddressNumber" />
@@ -1277,18 +1233,6 @@
           <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
         </EntityType>
-        <Association Name="FK_OrderDetail_OrderHeader">
-          <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
-          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderHeader">
-              <PropertyRef Name="OrderNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="SystemAction">
           <Key>
             <PropertyRef Name="ActionNumber" />
@@ -1328,10 +1272,10 @@
           <Property Name="Activated" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CourierStockMovementLogs" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Product" FromRole="Product" ToRole="CourierStockMovementLog" />
           <NavigationProperty Name="Department" Relationship="FreeMarketModel.FK_Product_Department" FromRole="Product" ToRole="Department" />
-          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
           <NavigationProperty Name="ProductCustodians" Relationship="FreeMarketModel.FK_ProductCustodian_Product" FromRole="Product" ToRole="ProductCustodian" />
           <NavigationProperty Name="ProductPictures" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="Product" ToRole="ProductPicture" />
           <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -1365,18 +1309,6 @@
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="DepartmentNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderDetail_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="ProductNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1491,7 +1423,99 @@
           <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
         </ComplexType>
-      </Schema>
+        <ComplexType Name="GetProduct_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="2" Scale="0" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Int32" Name="CustodianNumber" Nullable="false" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
+        </ComplexType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="ItemNumber" />
+          </Key>
+          <Property Name="ItemNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" />
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="CourierNumber" Type="Int32" />
+          <Property Name="Settled" Type="Boolean" />
+          <Property Name="PaySupplier" Type="Boolean" />
+          <Property Name="PayCourier" Type="Boolean" />
+          <Property Name="PaidSupplier" Type="Boolean" />
+          <Property Name="PaidCourier" Type="Boolean" />
+          <Property Name="OrderItemStatus" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="DeliveryDateAgreed" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryDateActual" Type="DateTime" Precision="3" />
+          <Property Name="CourierFee" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CustomerProductQualityRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerCourierOnTimeDeliveryRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Courier" Relationship="FreeMarketModel.FK_OrderDetail_Courier" FromRole="OrderDetail" ToRole="Courier" />
+          <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
+          <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
+        </EntityType>
+        <Association Name="FK_OrderDetail_Courier">
+          <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_OrderHeader">
+          <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Supplier">
+          <End Type="FreeMarketModel.Supplier" Role="Supplier" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1616,31 +1640,6 @@
                 <ScalarProperty Name="TownName" ColumnName="TownName" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderDetails">
-            <EntityTypeMapping TypeName="FreeMarketModel.OrderDetail">
-              <MappingFragment StoreEntitySet="OrderDetail">
-                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
-                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
-                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
-                <ScalarProperty Name="Settled" ColumnName="Settled" />
-                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
-                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
-                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
-                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
-                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
-                <ScalarProperty Name="DeliveryDateAgreed" ColumnName="DeliveryDateAgreed" />
-                <ScalarProperty Name="DeliveryDateActual" ColumnName="DeliveryDateActual" />
-                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
-                <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
-                <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1961,6 +1960,51 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProduct" FunctionName="FreeMarketModel.Store.GetProduct">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetProduct_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
+                <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+                <ScalarProperty Name="DeliveryDateActual" ColumnName="DeliveryDateActual" />
+                <ScalarProperty Name="DeliveryDateAgreed" ColumnName="DeliveryDateAgreed" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
+                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
+                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
+                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
+                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

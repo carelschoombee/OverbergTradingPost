@@ -229,6 +229,9 @@
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetProduct_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Identity\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLogging.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -365,7 +368,9 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\defaultPictureMedium.png" />
     <Content Include="Content\Images\defaultPicture.png" />
+    <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\google.png" />
     <Content Include="Content\Images\leaves.png">

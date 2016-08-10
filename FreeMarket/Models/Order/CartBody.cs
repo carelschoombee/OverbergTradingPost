@@ -41,10 +41,10 @@ namespace FreeMarket.Models
                         ProductWeight = c.Weight,
                         Quantity = c.Quantity,
                         QuantityOnHand = c.QuantityOnHand,
-                        Selected = false,
                         Settled = false,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumber,
+                        Selected = false
                     }
                     ).ToList();
 
@@ -65,6 +65,11 @@ namespace FreeMarket.Models
             Debug.Write(body);
 
             return body;
+        }
+
+        public CartBody()
+        {
+            OrderDetails = new List<OrderDetail>();
         }
 
         public override string ToString()

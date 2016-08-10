@@ -14,6 +14,7 @@ namespace FreeMarket.Controllers
             return View();
         }
 
+        [ChildActionOnly]
         public ActionResult GetAllProducts()
         {
             ProductCollection products = ProductCollection.GetAllProducts();

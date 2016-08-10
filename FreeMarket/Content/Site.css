@@ -91,3 +91,10 @@ a:hover {
   opacity: 0.6;
   filter: alpha(opacity=40); /* For IE8 and earlier */
 }
+
+.glyphicon {
+	font-family: inherit;
+}
+.glyphicon:before{
+	font-family:'Glyphicons Halflings';
+}

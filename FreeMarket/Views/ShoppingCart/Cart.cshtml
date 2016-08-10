@@ -35,7 +35,7 @@ else
             {
                 @Html.AntiForgeryToken();
 
-                @Html.Partial("_CartBody", Model.Cart.Body)
+                @Html.Partial("_CartBody", Model)
 
                 @Html.Partial("_CartButtons", Model)
             }

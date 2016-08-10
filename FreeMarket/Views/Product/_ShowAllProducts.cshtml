@@ -41,6 +41,13 @@
                 <td>
                     @using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts))
                     {
+                        @Html.AntiForgeryToken()
+
+                        @Html.Hidden("productNumber", Model.Products[i].ProductNumber)
+                        @Html.Hidden("supplierNumber", Model.Products[i].SupplierNumber)
+                        @Html.Hidden("courierNumber", (int)0)
+                        @Html.Hidden("quantity", (int)1)
+
                         <input type="submit" value="Add to Cart" class="btn btn-success" />
                     }
                 </td>

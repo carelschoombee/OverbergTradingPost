@@ -15,7 +15,6 @@
         <EntityTypeShape EntityType="FreeMarketModel.ExceptionLogging" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.FreeMarketOwner" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Location" Width="1.5" PointX="5.25" PointY="25.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="8.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderStatu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentGatewayMessage" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentGatewayParameter" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
@@ -30,17 +29,14 @@
         <EntityTypeShape EntityType="FreeMarketModel.sysdiagram" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Courier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Courier" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Courier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location1" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Custodian" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Custodian" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_SupplierAddress_Supplier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.CustodianLocation" ManuallyRouted="false" />
         <EntityTypeShape EntityType="FreeMarketModel.CustomerAddress" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="1.5" PointX="5.75" PointY="1" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
         <EntityTypeShape EntityType="FreeMarketModel.SystemAction" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="15.375" PointY="6.75" />
         <EntityTypeShape EntityType="FreeMarketModel.SitePicture" Width="1.5" PointX="15.375" PointY="9.75" />
@@ -48,12 +44,16 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="11.25" PointY="18.375" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_Product_Department" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductPicture_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
-      </Diagram>
+        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="8.25" PointY="8.75" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Courier" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -87,6 +87,14 @@
                 <span class="sr-only"></span>@TempData["message"]
             </div>
         }
+        else if (TempData["errorMessage"] != null)
+        {
+            <div class="alert alert-warning alert-dismissable text-center">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span class="sr-only"></span>@TempData["errorMessage"]
+            </div>
+        }
     </div>
 
     <div class="container body-content">
@@ -107,6 +115,12 @@
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
     });
+
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 8000);
     </script>
 
     @Scripts.Render("~/bundles/bootstrap")

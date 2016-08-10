@@ -37,7 +37,6 @@ namespace FreeMarket.Models
         public virtual DbSet<ExceptionLogging> ExceptionLoggings { get; set; }
         public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
         public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
         public virtual DbSet<PaymentGatewayParameter> PaymentGatewayParameters { get; set; }
@@ -57,6 +56,7 @@ namespace FreeMarket.Models
         public virtual DbSet<SitePicture> SitePictures { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {
@@ -70,6 +70,19 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
+        }
+    
+        public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("ProductNumber", productNumber) :
+                new ObjectParameter("ProductNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("SupplierNumber", supplierNumber) :
+                new ObjectParameter("SupplierNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     }
 }

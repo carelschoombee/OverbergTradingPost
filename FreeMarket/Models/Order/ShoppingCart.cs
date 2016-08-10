@@ -21,9 +21,19 @@ namespace FreeMarket.Models
             }
         }
 
-        public FreeMarketResult AddItem(int productNumber, int supplierNumber, int courierNumber, short quantity, string userId = null)
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity, string userId = null)
         {
             // Check whether the item already exists
+            FreeMarketObject res = new FreeMarketObject();
+
+            if (string.IsNullOrEmpty(userId))
+                Debug.Write(string.Format("\nAdding new item to anonymous cart..."));
+            else
+                Debug.Write(string.Format("\nAdding new item to {0}'s cart...", userId));
+
+            Debug.Write(string.Format("\nProduct Number : {0}", productNumber));
+            Debug.Write(string.Format("\nSupplier Number: {0}", supplierNumber));
+            Debug.Write(string.Format("\nQuantity       : {0}", quantity));
 
             OrderDetail existingItem = Body.OrderDetails
                 .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
@@ -42,15 +52,12 @@ namespace FreeMarket.Models
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    Product tempProduct = db.Products.Find(productNumber);
-                    Supplier tempSupplier = db.Suppliers.Find(supplierNumber);
-                    Courier tempCourier = db.Couriers.Find(courierNumber);
-                    ProductSupplier tempPrice = db.ProductSuppliers.Find(productNumber, supplierNumber);
+                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
 
-                    if (tempProduct == null || tempSupplier == null || tempCourier == null || tempPrice == null)
+                    if (productInfo == null)
                     {
-                        Debug.Write("Product, Supplier, Price or Courier does not exist.");
-                        return FreeMarketResult.Failure;
+                        Debug.Write("Product, Supplier or Price does not exist.");
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
                     }
 
                     Debug.Write(string.Format("\nAdding new item to session..."));
@@ -63,38 +70,85 @@ namespace FreeMarket.Models
                         new OrderDetail()
                         {
                             CourierFee = null,
-                            CourierNumber = tempCourier.CourierNumber,
+                            CourierNumber = null,
+                            CourierName = null,
                             CustomerCourierOnTimeDeliveryRating = null,
                             CustomerProductQualityRating = null,
                             DeliveryDateActual = null,
                             DeliveryDateAgreed = null,
                             OrderItemStatus = status,
-                            OrderItemValue = tempPrice.PricePerUnit * quantity,
+                            OrderItemValue = productInfo.PricePerUnit * quantity,
                             PaidCourier = null,
                             PaidSupplier = null,
                             PayCourier = null,
                             PaySupplier = null,
-                            Price = tempPrice.PricePerUnit,
-                            ProductNumber = tempProduct.ProductNumber,
+                            Price = productInfo.PricePerUnit,
+                            ProductNumber = productInfo.ProductNumberID,
+                            ProductDescription = productInfo.Description,
+                            ProductDepartment = productInfo.DepartmentName,
                             Quantity = quantity,
                             Settled = null,
-                            SupplierNumber = tempSupplier.SupplierNumber,
+                            SupplierNumber = productInfo.SupplierNumberID,
+                            SupplierName = productInfo.SupplierName,
                             OrderNumber = Order.OrderNumber
                         });
+
+                    res.Result = FreeMarketResult.Success;
+                    res.Argument = new Product
+                    {
+                        Activated = productInfo.Activated,
+                        CustodianNumber = productInfo.CustodianNumber,
+                        DateAdded = productInfo.DateAdded,
+                        DateModified = productInfo.DateModified,
+                        DepartmentName = productInfo.DepartmentName,
+                        DepartmentNumber = productInfo.DepartmentNumber,
+                        Description = productInfo.Description,
+                        PricePerUnit = productInfo.PricePerUnit,
+                        ProductNumber = productInfo.ProductNumberID,
+                        QuantityOnHand = productInfo.QuantityOnHand,
+                        Size = productInfo.Size,
+                        SupplierName = productInfo.SupplierName,
+                        SupplierNumber = productInfo.SupplierNumberID,
+                        Weight = productInfo.Weight
+                    };
                 }
             }
 
             // Keep the OrderTotal in sync
-
             UpdateTotal();
 
-            AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber), userId);
-
-            return FreeMarketResult.Success;
+            return res;
         }
 
-        public void RemoveItem(int itemNumber, int productNumber, int supplierNumber, int courierNumber, string userId = null)
+        public FreeMarketObject RemoveItem(int itemNumber, int productNumber, int supplierNumber, string userId = null)
         {
+            // If the item is in the database
+            FreeMarketResult resultDatabase = RemoveItemFromDatabase(itemNumber, userId);
+
+            // Remove the item from the Session as well
+            FreeMarketResult resultSession = RemoveItemFromSession(productNumber, supplierNumber);
+
+            if (resultDatabase == FreeMarketResult.Success && resultSession == FreeMarketResult.Success)
+            {
+                Product product = new Product();
+
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    product = db.Products.Find(itemNumber);
+                }
+
+                return new FreeMarketObject { Result = FreeMarketResult.Success, Argument = product };
+            }
+            else
+            {
+                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
+            }
+        }
+
+        private FreeMarketResult RemoveItemFromDatabase(int itemNumber, string userId = null)
+        {
+            FreeMarketResult result = FreeMarketResult.NoResult;
+
             if (itemNumber != 0)
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
@@ -107,15 +161,45 @@ namespace FreeMarket.Models
 
                         db.OrderDetails.Remove(item);
                         db.SaveChanges();
+
+                        AuditUser.LogAudit(8, string.Format("Order number: {0}", Order.OrderNumber), userId);
+
+                        result = FreeMarketResult.Success;
+                    }
+                    else
+                    {
+                        result = FreeMarketResult.Failure;
                     }
                 }
             }
 
+            return result;
+        }
+
+        private FreeMarketResult RemoveItemFromSession(int productNumber, int supplierNumber)
+        {
+
             Debug.Write(string.Format("Removing Product {0} from Session...", productNumber));
 
-            Body.OrderDetails.RemoveAll(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.CourierNumber == courierNumber);
+            Product product = new Product();
+            FreeMarketResult result = FreeMarketResult.NoResult;
 
-            AuditUser.LogAudit(8, string.Format("Order number: {0}", Order.OrderNumber), userId);
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                product = db.Products.Find(productNumber);
+
+                if (product != null)
+                {
+                    Body.OrderDetails.RemoveAll(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber);
+                    result = FreeMarketResult.Success;
+                }
+                else
+                {
+                    result = FreeMarketResult.Failure;
+                }
+            }
+
+            return result;
         }
 
         public void UpdatePrices()
@@ -184,10 +268,13 @@ namespace FreeMarket.Models
                     foreach (OrderDetail tempB in newItems)
                     {
                         Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
+
                         db.OrderDetails.Add(tempB);
                     }
 
                     db.SaveChanges();
+
+                    AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber));
                 }
             }
 
@@ -218,6 +305,8 @@ namespace FreeMarket.Models
 
                                 db.Entry(tempDb).State = EntityState.Modified;
                                 db.SaveChanges();
+
+                                AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber));
                             }
                         }
                     }
@@ -236,7 +325,7 @@ namespace FreeMarket.Models
                 {
                     foreach (OrderDetail tempOrderDetail in tempCart.Body.OrderDetails)
                     {
-                        AddItem(tempOrderDetail.ProductNumber, tempOrderDetail.SupplierNumber, tempOrderDetail.CourierNumber, tempOrderDetail.Quantity, userId);
+
                     }
 
                     Save(userId);
