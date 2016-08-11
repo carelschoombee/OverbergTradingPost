@@ -47,6 +47,36 @@ namespace FreeMarket.Models
 
                 existingItem.Quantity += quantity;
                 existingItem.OrderItemValue = existingItem.Price * existingItem.Quantity;
+
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
+
+                    if (productInfo == null)
+                    {
+                        Debug.Write("Product, Supplier or Price does not exist.");
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
+                    }
+
+                    res.Result = FreeMarketResult.Success;
+                    res.Argument = new Product
+                    {
+                        Activated = productInfo.Activated,
+                        CustodianNumber = productInfo.CustodianNumber,
+                        DateAdded = productInfo.DateAdded,
+                        DateModified = productInfo.DateModified,
+                        DepartmentName = productInfo.DepartmentName,
+                        DepartmentNumber = productInfo.DepartmentNumber,
+                        Description = productInfo.Description,
+                        PricePerUnit = productInfo.PricePerUnit,
+                        ProductNumber = productInfo.ProductNumberID,
+                        QuantityOnHand = productInfo.QuantityOnHand,
+                        Size = productInfo.Size,
+                        SupplierName = productInfo.SupplierName,
+                        SupplierNumber = productInfo.SupplierNumberID,
+                        Weight = productInfo.Weight
+                    };
+                }
             }
             else
             {
@@ -172,13 +202,16 @@ namespace FreeMarket.Models
                     }
                 }
             }
+            else
+            {
+                result = FreeMarketResult.Success;
+            }
 
             return result;
         }
 
         private FreeMarketResult RemoveItemFromSession(int productNumber, int supplierNumber)
         {
-
             Debug.Write(string.Format("Removing Product {0} from Session...", productNumber));
 
             Product product = new Product();
@@ -200,6 +233,33 @@ namespace FreeMarket.Models
             }
 
             return result;
+        }
+
+        public FreeMarketObject UpdateQuantities(List<OrderDetail> changedItems)
+        {
+            FreeMarketObject res = new FreeMarketObject();
+            OrderDetail temp = new OrderDetail();
+
+            if (changedItems != null && changedItems.Count > 0)
+            {
+                foreach (OrderDetail detail in changedItems)
+                {
+                    temp = Body.OrderDetails
+                        .Where(c => c.ProductNumber == detail.ProductNumber && c.SupplierNumber == detail.SupplierNumber)
+                        .FirstOrDefault();
+
+                    if (temp != null)
+                    {
+                        Body.OrderDetails
+                        .Where(c => c.ProductNumber == detail.ProductNumber && c.SupplierNumber == detail.SupplierNumber)
+                        .FirstOrDefault()
+                        .Quantity = detail.Quantity;
+                    }
+                }
+            }
+
+            res.Result = FreeMarketResult.Success;
+            return res;
         }
 
         public void UpdatePrices()
@@ -351,8 +411,8 @@ namespace FreeMarket.Models
 
             if (Order != null && Body != null)
             {
-                toString += "Shopping Cart Contents:";
-                toString += string.Format("{0}{1}", Order.ToString(), Body.ToString());
+                toString += "\nShopping Cart Contents:\n";
+                toString += string.Format("\n{0}\n{1}\n", Order.ToString(), Body.ToString());
             }
 
             return toString;

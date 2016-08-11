@@ -10,27 +10,46 @@ namespace FreeMarket.Controllers
     [RequireHttps]
     public class ShoppingCartController : Controller
     {
-        public ActionResult Cart(ShoppingCart tempCart)
-        {
-            ShoppingCartViewModel model = new ShoppingCartViewModel();
-            ShoppingCart cart;
+        public const string sessionKey = "cart";
+        public const string anonymous = "Anonymous";
 
+        private ShoppingCart GetCartFromSession(string userId)
+        {
+            userId = userId ?? anonymous;
+
+            ShoppingCart tempCart = null;
+
+            if (Session != null)
+                tempCart = (ShoppingCart)Session[sessionKey];
+
+            if (tempCart == null)
+            {
+                Debug.Write(string.Format("\nCreating Cart for user {0} ...", userId));
+
+                if (userId == anonymous)
+                {
+                    tempCart = new ShoppingCart();
+                }
+                else
+                {
+                    tempCart = new ShoppingCart(userId);
+                }
+
+                Session[sessionKey] = tempCart;
+            }
+
+            return tempCart;
+        }
+
+        public ActionResult Cart()
+        {
             string userId = User.Identity.GetUserId();
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                Debug.Write(string.Format("\nCreating Cart in Session..."));
+            ShoppingCart cart = GetCartFromSession(userId);
 
-                model = new ShoppingCartViewModel() { Cart = tempCart };
-            }
-            else
-            {
-                Debug.Write(string.Format("\nMerging Cart with Database..."));
+            ShoppingCartViewModel model = new ShoppingCartViewModel();
 
-                cart = new ShoppingCart(userId);
-                cart.Merge(tempCart, userId);
-                model = new ShoppingCartViewModel() { Cart = cart };
-            }
+            model = new ShoppingCartViewModel() { Cart = cart, ReturnUrl = Url.Action("Index", "Product") };
 
             return View(model);
         }
@@ -43,22 +62,21 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddToCart(ShoppingCart cart, int productNumber, int supplierNumber, int courierNumber, int quantity)
+        public ActionResult AddToCart(int productNumber, int supplierNumber, int quantity)
         {
-            FreeMarketObject result;
-
             string userId = User.Identity.GetUserId();
 
-            if (string.IsNullOrEmpty(userId))
-                result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity);
-            else
-                result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity, userId);
+            ShoppingCart cart = GetCartFromSession(userId);
+            FreeMarketObject result;
+
+            result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity, userId);
 
             if (result.Result == FreeMarketResult.Success)
             {
+                // New item added
                 if (result.Argument != null)
                 {
-                    TempData["message"] = string.Format("Success: {0} has been added to your cart.", ((Product)(result.Argument)).Description);
+                    TempData["message"] = string.Format("Success: {0} (1) has been added to your cart.", ((Product)(result.Argument)).Description);
                 }
             }
             else
@@ -71,40 +89,52 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateCart(ShoppingCart cart, int itemNumber, int supplierNumber, int productNumber, string returnUrl)
+        public ActionResult UpdateCart(ShoppingCart cart, string returnUrl)
         {
-            FreeMarketObject result;
-
             string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+            ShoppingCartViewModel model;
 
-            List<OrderDetail> selectedItems = cart.Body.OrderDetails.Where(c => c.Selected).ToList();
-
-            if (selectedItems.Count > 0)
+            if (ModelState.IsValid)
             {
-                foreach (OrderDetail detail in selectedItems)
-                {
-                    if (string.IsNullOrEmpty(userId))
-                        result = cart.RemoveItem(itemNumber, productNumber, supplierNumber);
-                    else
-                        result = cart.RemoveItem(itemNumber, productNumber, supplierNumber, userId);
-                }
+                FreeMarketObject resultRemove = new FreeMarketObject();
+                FreeMarketObject resultQuantity = new FreeMarketObject();
 
-                if (result.Result == FreeMarketResult.Success)
+                // Remove Items
+
+                List<OrderDetail> selectedItems = cart.Body.OrderDetails
+                    .Where(c => c.Selected || c.Quantity <= 0)
+                    .ToList();
+
+                if (selectedItems.Count > 0)
                 {
-                    if (result.Argument != null)
+                    foreach (OrderDetail detail in selectedItems)
                     {
-                        TempData["message"] = string.Format("Success: {0} has been removed from your cart.", ((Product)(result.Argument)).Description);
+                        resultRemove = sessionCart.RemoveItem(detail.ItemNumber, detail.ProductNumber, detail.SupplierNumber, userId);
                     }
                 }
-                else
+
+                // Update Quantity
+
+                List<OrderDetail> changedItems = cart.Body.OrderDetails
+                    .Where(c => !c.Selected && c.Quantity > 0)
+                    .ToList();
+
+                if (changedItems.Count > 0)
                 {
-                    TempData["errorMessage"] = "Error: We could not remove the item from the cart.";
+                    resultQuantity = sessionCart.UpdateQuantities(changedItems);
                 }
 
+                TempData["message"] = "Cart has been updated.";
 
+                model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
+
+                return RedirectToAction("Cart", "ShoppingCart");
             }
 
-            return new EmptyResult();
+            model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
+
+            return View("Cart", model);
         }
     }
 }

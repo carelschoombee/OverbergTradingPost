@@ -7,10 +7,7 @@
 
         public override string ToString()
         {
-            if (Cart != null && !string.IsNullOrEmpty(ReturnUrl))
-                return string.Format("{0}\nReturn URL: {1}", Cart.ToString(), ReturnUrl.ToString());
-            else
-                return "Shopping Cart NULL";
+            return string.Format("\n{0}\n{1}\n", Cart.ToString(), ReturnUrl.ToString());
         }
     }
 }

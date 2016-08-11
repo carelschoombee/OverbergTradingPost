@@ -1,4 +1,10 @@
 ﻿@model FreeMarket.Models.ShoppingCart
 
-@Html.DisplayFor(model => Model.Order.TotalOrderValue)
+<table class="table table-condensed table-bordered-custom text-right">
+    <tr>
+        <td><strong>Total:</strong></td>
+        <td><strong>@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
+    </tr>
+</table>
+
 

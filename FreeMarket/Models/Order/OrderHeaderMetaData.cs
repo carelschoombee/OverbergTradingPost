@@ -83,11 +83,10 @@ namespace FreeMarket.Models
 
             if (!string.IsNullOrEmpty(CustomerName) && OrderNumber != 0)
             {
-                toString += string.Format("\nOrder Header:\n----------------");
-                toString += string.Format(("\nCustomer: {0}"), CustomerName);
-                toString += string.Format(("\nOrder: {0}"), OrderNumber);
-                toString += string.Format(("\nTotal: {0}"), TotalOrderValue);
-                toString += "\n----------------\n";
+                toString += string.Format("\nOrder Header:\n");
+                toString += string.Format(("\nCustomer  :    {0}"), CustomerName);
+                toString += string.Format(("\nOrder     :    {0}"), OrderNumber);
+                toString += string.Format(("\nTotal     :    {0}\n"), TotalOrderValue);
             }
 
             return toString;

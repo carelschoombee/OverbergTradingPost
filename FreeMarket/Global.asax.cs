@@ -1,5 +1,4 @@
-﻿using FreeMarket.Models;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
@@ -13,7 +12,8 @@ namespace FreeMarket
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            ModelBinders.Binders.Add(typeof(ShoppingCart), new CartModelBinder());
+
+            // ModelBinders.Binders.Add(typeof(ShoppingCart), new CartModelBinder());
         }
     }
 }

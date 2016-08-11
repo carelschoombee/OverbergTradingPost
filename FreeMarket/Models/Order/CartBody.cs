@@ -82,9 +82,7 @@ namespace FreeMarket.Models
             {
                 foreach (OrderDetail detail in OrderDetails)
                 {
-                    toString += string.Format("\n----------------");
-                    toString += string.Format("{0}", detail.ToString());
-                    toString += string.Format("\n---------------\n");
+                    toString += string.Format("\n{0}\n", detail.ToString());
                 }
             }
 

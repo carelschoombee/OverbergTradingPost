@@ -56,5 +56,8 @@ namespace FreeMarket.Models
     }
     public class OrderDetailMetaData
     {
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive integer.")]
+        public int Quantity { get; set; }
     }
 }

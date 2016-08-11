@@ -19,12 +19,10 @@ namespace FreeMarket.Models
 
             if (ProductNumber != 0 && SupplierNumber != 0 && Description != null && PricePerUnit != 0)
             {
-                toReturn += "\n---------------------";
-                toReturn += string.Format("\nProduct Number: {0}", ProductNumber);
-                toReturn += string.Format("\nSupplier Number: {0}", SupplierNumber);
-                toReturn += string.Format("\nDescription: {0}", Description);
-                toReturn += string.Format("\nPrice Per Unit: {0}", PricePerUnit);
-                toReturn += "\n---------------------";
+                toReturn += string.Format("\nProduct Number     : {0}", ProductNumber);
+                toReturn += string.Format("\nSupplier Number    : {0}", SupplierNumber);
+                toReturn += string.Format("\nDescription        : {0}", Description);
+                toReturn += string.Format("\nPrice Per Unit     : {0}\n", PricePerUnit);
             }
 
             return toReturn;

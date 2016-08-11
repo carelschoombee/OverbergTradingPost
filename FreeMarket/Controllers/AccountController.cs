@@ -479,30 +479,7 @@ namespace FreeMarket.Controllers
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                        if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                        {
-                            AuditUser audit = new AuditUser()
-                            {
-                                Identity = user.Id,
-                                DateTime = DateTime.Now,
-                                Action = 1
-                            };
-
-                            try
-                            {
-                                using (FreeMarketEntities db = new FreeMarketEntities())
-                                {
-                                    db.AuditUsers.Add(audit);
-                                    db.SaveChanges();
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                // Could not log
-                            }
-
-                        }
+                        AuditUser.LogAudit(1, "", user.Id);
 
                         return RedirectToLocal(returnUrl);
                     }

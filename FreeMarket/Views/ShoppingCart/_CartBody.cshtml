@@ -9,7 +9,7 @@
         <th class="col-sm-1">
             Image
         </th>
-        <th class="col-sm-1">
+        <th class="col-sm-4">
             Description
         </th>
         <th class="col-sm-1">
@@ -23,26 +23,31 @@
         </th>
     </tr>
 
-    @foreach (OrderDetail item in Model.Cart.Body.OrderDetails)
+    @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
        <tr>
            <td>
-               @Html.EditorFor(model => item.Selected)
+               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
            </td>
            <td>
-               <img src="@Url.Action("RenderImage", "Image", new { id = item.MainImageNumber, defaultSize = PictureSize.Small })" />
+               <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" />
            </td>
            <td>
-               @Html.DisplayFor(model => item.ProductDescription)
+               @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription) supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
            </td>
            <td>
-               @Html.DisplayFor(model => item.Price)
+               @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Price)
            </td>
            <td>
-               @Html.EditorFor(model => item.Quantity, new { htmlAttributes = new { @style = "width: 100px", @class = "form-control" } })
+               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 100px", @class = "form-control" } })
+               @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new {@class = "text-danger" })
            </td>
            <td>
-               @Html.DisplayFor(model => item.OrderItemValue)
+               @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].OrderItemValue)
            </td>
        </tr>
     }
