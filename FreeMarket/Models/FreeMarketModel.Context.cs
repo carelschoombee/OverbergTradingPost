@@ -50,13 +50,13 @@ namespace FreeMarket.Models
         public virtual DbSet<SupplierAddress> SupplierAddresses { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
-        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<SystemAction> SystemActions { get; set; }
         public virtual DbSet<AuditUser> AuditUsers { get; set; }
         public virtual DbSet<SitePicture> SitePictures { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
     
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {

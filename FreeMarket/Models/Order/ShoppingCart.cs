@@ -167,10 +167,15 @@ namespace FreeMarket.Models
                     product = db.Products.Find(itemNumber);
                 }
 
+                // Keep the OrderTotal in sync
+                UpdateTotal();
+
                 return new FreeMarketObject { Result = FreeMarketResult.Success, Argument = product };
             }
             else
             {
+                UpdateTotal();
+
                 return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
             }
         }
@@ -258,6 +263,9 @@ namespace FreeMarket.Models
                 }
             }
 
+            // Keep the OrderTotal in sync
+            UpdateTotal();
+
             res.Result = FreeMarketResult.Success;
             return res;
         }
@@ -283,15 +291,12 @@ namespace FreeMarket.Models
         public void Save(string userId = null)
         {
             // Compare the Session cart to the database cart and resolve differences
-
             Compare();
 
             // Re-initialize the Body
-
             Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
 
             // Keep the total order value in sync
-
             UpdateTotal();
 
             // Save the Order total
@@ -308,7 +313,11 @@ namespace FreeMarket.Models
         {
             Debug.Write(string.Format("Updating Total..."));
 
-            Order.TotalOrderValue = Body.OrderDetails.Sum(c => c.OrderItemValue);
+            Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
+
+            Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
+            Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            Order.TotalOrderValue = (Order.SubTotal ?? 0) + (Order.ShippingTotal ?? 0);
 
             // Don't persist as the user may be anonymous at this point
         }
@@ -359,6 +368,7 @@ namespace FreeMarket.Models
                                 Debug.Write(string.Format("Updating item number {0} ...", tempDb.ItemNumber));
 
                                 tempDb.Quantity = temp.Quantity;
+                                tempDb.OrderItemValue = temp.OrderItemValue;
                                 tempDb.SupplierNumber = temp.SupplierNumber;
                                 tempDb.CourierNumber = temp.CourierNumber;
                                 tempDb.ProductNumber = temp.ProductNumber;

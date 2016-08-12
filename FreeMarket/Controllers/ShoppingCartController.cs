@@ -60,15 +60,43 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
+        [ChildActionOnly]
+        public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
+        {
+            string userId = User.Identity.GetUserId();
+            bool displayNamesNotPrices = (userId == null);
+            CourierViewModel model = new CourierViewModel();
+
+            if (productNumber == 0 || supplierNumber == 0)
+                return RedirectToAction("Index", "Product");
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Product product = db.Products.Find(productNumber);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                if (product == null || supplier == null)
+                    return RedirectToAction("Index", "Product");
+
+                if (displayNamesNotPrices)
+                {
+                    
+                }
+                else
+                {
+
+                }
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(int productNumber, int supplierNumber, int quantity)
         {
             string userId = User.Identity.GetUserId();
-
             ShoppingCart cart = GetCartFromSession(userId);
-            FreeMarketObject result;
 
+            FreeMarketObject result;
             result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity, userId);
 
             if (result.Result == FreeMarketResult.Success)
@@ -124,6 +152,8 @@ namespace FreeMarket.Controllers
                 {
                     resultQuantity = sessionCart.UpdateQuantities(changedItems);
                 }
+
+                sessionCart.Save();
 
                 TempData["message"] = "Cart has been updated.";
 

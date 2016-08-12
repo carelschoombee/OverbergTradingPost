@@ -20,57 +20,50 @@ namespace FreeMarket.Models
         {
             OrderHeader order = new OrderHeader();
 
-            try
-            {
-                // Find the customer's details
-                var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var user = UserManager.FindById(customerNumber);
+            // Find the customer's details
+            var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var user = UserManager.FindById(customerNumber);
 
-                using (FreeMarketEntities db = new FreeMarketEntities())
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                // Determine if the customer has an unconfirmed order
+                order = db.OrderHeaders.Where(c => c.CustomerNumber == customerNumber
+                                                    && c.OrderStatus == "Unconfirmed").FirstOrDefault();
+
+                // The customer has no unconfirmed orders
+                if (order == null)
                 {
-                    // Determine if the customer has an unconfirmed order
-                    order = db.OrderHeaders.Where(c => c.CustomerNumber == customerNumber
-                                                       && c.OrderStatus == "Unconfirmed").FirstOrDefault();
-
-                    // The customer has no unconfirmed orders
-                    if (order == null)
+                    order = new OrderHeader()
                     {
-                        order = new OrderHeader()
-                        {
-                            CustomerNumber = customerNumber,
-                            CustomerOverallSatisfactionRating = null,
-                            OrderDatePlaced = DateTime.Now,
-                            OrderDateClosed = null,
-                            OrderStatus = "Unconfirmed",
-                            PaymentReceived = false,
-                            TotalOrderValue = 0,
+                        CustomerNumber = customerNumber,
+                        CustomerOverallSatisfactionRating = null,
+                        OrderDatePlaced = DateTime.Now,
+                        OrderDateClosed = null,
+                        OrderStatus = "Unconfirmed",
+                        PaymentReceived = false,
+                        TotalOrderValue = 0,
 
-                            CustomerName = user.Name,
-                            CustomerEmail = user.Email,
-                            CustomerPrimaryContactPhone = user.PhoneNumber,
-                            CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod
-                        };
+                        CustomerName = user.Name,
+                        CustomerEmail = user.Email,
+                        CustomerPrimaryContactPhone = user.PhoneNumber,
+                        CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod
+                    };
 
-                        db.OrderHeaders.Add(order);
-                        db.SaveChanges();
+                    db.OrderHeaders.Add(order);
+                    db.SaveChanges();
 
-                        Debug.Write(string.Format("New order for shopping cart: {0}", order.ToString()));
-                    }
-                    // Set the customer details on the currently unconfirmed order
-                    else
-                    {
-                        order.CustomerName = user.Name;
-                        order.CustomerEmail = user.Email;
-                        order.CustomerPrimaryContactPhone = user.PhoneNumber;
-                        order.CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod;
-
-                        Debug.Write(string.Format("Existing order for shopping cart: {0}", order.ToString()));
-                    }
+                    Debug.Write(string.Format("New order for shopping cart: {0}", order.ToString()));
                 }
-            }
-            catch (Exception e)
-            {
-                ExceptionLogging.LogException(e);
+                // Set the customer details on the currently unconfirmed order
+                else
+                {
+                    order.CustomerName = user.Name;
+                    order.CustomerEmail = user.Email;
+                    order.CustomerPrimaryContactPhone = user.PhoneNumber;
+                    order.CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod;
+
+                    Debug.Write(string.Format("Existing order for shopping cart: {0}", order.ToString()));
+                }
             }
 
             // Return an order which can be used in a shopping cart
@@ -84,9 +77,9 @@ namespace FreeMarket.Models
             if (!string.IsNullOrEmpty(CustomerName) && OrderNumber != 0)
             {
                 toString += string.Format("\nOrder Header:\n");
-                toString += string.Format(("\nCustomer  :    {0}"), CustomerName);
-                toString += string.Format(("\nOrder     :    {0}"), OrderNumber);
-                toString += string.Format(("\nTotal     :    {0}\n"), TotalOrderValue);
+                toString += string.Format(("\nCustomer   :    {0}"), CustomerName);
+                toString += string.Format(("\nOrder      :    {0}"), OrderNumber);
+                toString += string.Format(("\nTotal      :    {0}\n"), TotalOrderValue);
             }
 
             return toString;

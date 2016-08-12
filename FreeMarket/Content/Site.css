@@ -65,8 +65,7 @@ a:hover {
 	border-color: black;
 	font-size: 12px !important;
 	/*font-family: 'Arial' !important;*/
-	font-weight: 600;
-	
+	font-weight: 600;	
 }
 
 .table-bordered-custom th {
@@ -98,3 +97,13 @@ a:hover {
 .glyphicon:before{
 	font-family:'Glyphicons Halflings';
 }
+
+.well {
+	background: rgb(204, 255, 204);
+}
+/*.well {
+	background: rgb(153, 255, 153);
+}*/
+/*.well {
+	background: rgb(153, 255, 153);
+}*/

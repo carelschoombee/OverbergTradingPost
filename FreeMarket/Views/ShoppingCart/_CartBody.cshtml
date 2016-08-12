@@ -1,8 +1,8 @@
 ﻿@using FreeMarket.Models
 @model ShoppingCartViewModel
 
-<table class="table table-bordered-custom table-responsive">
-    <tr>
+<table class="table table-bordered-custom table-condensed table-responsive">
+    <tr class="well">
         <th class="col-sm-1">
             Remove
         </th>
@@ -43,7 +43,7 @@
                @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Price)
            </td>
            <td>
-               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 100px", @class = "form-control" } })
+               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px", @class = "form-control" } })
                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new {@class = "text-danger" })
            </td>
            <td>

@@ -184,10 +184,13 @@
           <Property Name="OrderDatePlaced" Type="datetime" />
           <Property Name="OrderDateClosed" Type="datetime" />
           <Property Name="CustomerNumber" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TotalOrderValue" Type="money" Nullable="false" />
           <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
           <Property Name="CustomerOverallSatisfactionRating" Type="nvarchar(max)" />
           <Property Name="PaymentReceived" Type="bit" Nullable="false" />
+          <Property Name="TaxTotal" Type="money" />
+          <Property Name="ShippingTotal" Type="money" />
+          <Property Name="SubTotal" Type="money" />
+          <Property Name="TotalOrderValue" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderStatus">
           <Key>
@@ -1148,7 +1151,6 @@
             <End Role="Location" EntitySet="Locations" />
           </AssociationSet>
           <EntitySet Name="CustomerAddresses" EntityType="FreeMarketModel.CustomerAddress" />
-          <EntitySet Name="OrderHeaders" EntityType="FreeMarketModel.OrderHeader" />
           <EntitySet Name="SystemActions" EntityType="FreeMarketModel.SystemAction" />
           <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
           <EntitySet Name="SitePictures" EntityType="FreeMarketModel.SitePicture" />
@@ -1191,16 +1193,17 @@
             <End Role="Courier" EntitySet="Couriers" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="FreeMarketModel.FK_OrderDetail_OrderHeader">
-            <End Role="OrderHeader" EntitySet="OrderHeaders" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Supplier" Association="FreeMarketModel.FK_OrderDetail_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <EntitySet Name="OrderHeaders" EntityType="FreeMarketModel.OrderHeader" />
+          <AssociationSet Name="FK_OrderDetail_OrderHeader" Association="FreeMarketModel.FK_OrderDetail_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           </EntityContainer>
@@ -1218,20 +1221,6 @@
           <Property Name="AddressSuburb" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AddressCity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AddressPostalCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="OrderHeader">
-          <Key>
-            <PropertyRef Name="OrderNumber" />
-          </Key>
-          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderDatePlaced" Type="DateTime" Precision="3" />
-          <Property Name="OrderDateClosed" Type="DateTime" Precision="3" />
-          <Property Name="CustomerNumber" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="TotalOrderValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerOverallSatisfactionRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="SystemAction">
           <Key>
@@ -1463,9 +1452,9 @@
           <Property Name="CustomerProductQualityRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CustomerCourierOnTimeDeliveryRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Courier" Relationship="FreeMarketModel.FK_OrderDetail_Courier" FromRole="OrderDetail" ToRole="Courier" />
-          <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
           <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
+          <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
         </EntityType>
         <Association Name="FK_OrderDetail_Courier">
           <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
@@ -1476,18 +1465,6 @@
             </Principal>
             <Dependent Role="OrderDetail">
               <PropertyRef Name="CourierNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderDetail_OrderHeader">
-          <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
-          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderHeader">
-              <PropertyRef Name="OrderNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1512,6 +1489,35 @@
             </Principal>
             <Dependent Role="OrderDetail">
               <PropertyRef Name="SupplierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderDatePlaced" Type="DateTime" Precision="3" />
+          <Property Name="OrderDateClosed" Type="DateTime" Precision="3" />
+          <Property Name="CustomerNumber" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerOverallSatisfactionRating" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentReceived" Type="Boolean" Nullable="false" />
+          <Property Name="TaxTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ShippingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="SubTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TotalOrderValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetail" />
+        </EntityType>
+        <Association Name="FK_OrderDetail_OrderHeader">
+          <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1824,20 +1830,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderHeaders">
-            <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
-              <MappingFragment StoreEntitySet="OrderHeader">
-                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
-                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
-                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
-                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
-                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
-                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SystemActions">
             <EntityTypeMapping TypeName="FreeMarketModel.SystemAction">
               <MappingFragment StoreEntitySet="SystemActions">
@@ -2002,6 +1994,23 @@
                 <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
                 <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
                 <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHeaders">
+            <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
+              <MappingFragment StoreEntitySet="OrderHeader">
+                <ScalarProperty Name="TotalOrderValue" ColumnName="TotalOrderValue" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="ShippingTotal" ColumnName="ShippingTotal" />
+                <ScalarProperty Name="TaxTotal" ColumnName="TaxTotal" />
+                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
+                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

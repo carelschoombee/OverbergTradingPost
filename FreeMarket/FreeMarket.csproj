@@ -299,7 +299,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Order\CartBody.cs" />
+    <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />
+    <Compile Include="Models\Order\CourierViewModel.cs" />
     <Compile Include="Models\Order\OrderDetailMetaData.cs" />
     <Compile Include="Models\Order\OrderHeaderMetaData.cs" />
     <Compile Include="Models\Order\ProductMetaData.cs" />
@@ -485,6 +487,8 @@
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\_ShowAllProducts.cshtml" />
     <Content Include="Views\Product\_ProductCarousel.cshtml" />
+    <Content Include="Views\Product\_CourierContainer.cshtml" />
+    <Content Include="Views\ShoppingCart\_CourierSelectionModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
