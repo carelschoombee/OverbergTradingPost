@@ -23,6 +23,7 @@ namespace FreeMarket.Models
         public string PreferredCommunicationMethod { get; set; }
         public string SecondaryPhoneNumber { get; set; }
         public string UnConfirmedEmail { get; set; }
+        public string DefaultAddress { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

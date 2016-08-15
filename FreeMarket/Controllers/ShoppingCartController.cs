@@ -46,9 +46,7 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
 
             ShoppingCart cart = GetCartFromSession(userId);
-
             ShoppingCartViewModel model = new ShoppingCartViewModel();
-
             model = new ShoppingCartViewModel() { Cart = cart, ReturnUrl = Url.Action("Index", "Product") };
 
             return View(model);
@@ -60,34 +58,34 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        [ChildActionOnly]
-        public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
-        {
-            string userId = User.Identity.GetUserId();
-            bool displayNamesNotPrices = (userId == null);
-            CourierViewModel model = new CourierViewModel();
+        //[ChildActionOnly]
+        //public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
+        //{
+        //    string userId = User.Identity.GetUserId();
+        //    bool displayNamesNotPrices = (userId == null);
+        //    CourierViewModel model = new CourierViewModel();
 
-            if (productNumber == 0 || supplierNumber == 0)
-                return RedirectToAction("Index", "Product");
+        //    if (productNumber == 0 || supplierNumber == 0)
+        //        return RedirectToAction("Index", "Product");
 
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                Product product = db.Products.Find(productNumber);
-                Supplier supplier = db.Suppliers.Find(supplierNumber);
+        //    using (FreeMarketEntities db = new FreeMarketEntities())
+        //    {
+        //        Product product = db.Products.Find(productNumber);
+        //        Supplier supplier = db.Suppliers.Find(supplierNumber);
 
-                if (product == null || supplier == null)
-                    return RedirectToAction("Index", "Product");
+        //        if (product == null || supplier == null)
+        //            return RedirectToAction("Index", "Product");
 
-                if (displayNamesNotPrices)
-                {
-                    
-                }
-                else
-                {
+        //        if (displayNamesNotPrices)
+        //        {
 
-                }
-            }
-        }
+        //        }
+        //        else
+        //        {
+
+        //        }
+        //    }
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]

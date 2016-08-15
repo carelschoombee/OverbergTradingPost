@@ -222,6 +222,9 @@
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
+    <Compile Include="Models\CustomerAddress.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
     <Compile Include="Models\GetAllProducts_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -252,9 +255,6 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Custodian.cs">
-      <DependentUpon>FreeMarketModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\CustomerAddress.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer\CustomerAddressMetaData.cs" />
@@ -345,7 +345,7 @@
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SupplierAddress.cs">
+    <Compile Include="Models\SupplierLocation.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
@@ -489,6 +489,7 @@
     <Content Include="Views\Product\_ProductCarousel.cshtml" />
     <Content Include="Views\Product\_CourierContainer.cshtml" />
     <Content Include="Views\ShoppingCart\_CourierSelectionModal.cshtml" />
+    <Content Include="Views\Manage\_ValidateModifyAccountDetailsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

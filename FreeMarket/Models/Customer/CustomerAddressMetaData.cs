@@ -25,9 +25,10 @@ namespace FreeMarket.Models
                     AddressSuburb = addressSuburb
                 };
 
-                AuditUser.LogAudit(5, string.Format("Address name: {0}", addressName), userId);
-
+                db.CustomerAddresses.Add(address);
                 db.SaveChanges();
+
+                AuditUser.LogAudit(5, string.Format("Address name: {0}", addressName), userId);
             }
 
             return FreeMarketResult.Success;
@@ -56,10 +57,9 @@ namespace FreeMarket.Models
                 address.AddressSuburb = addressSuburb;
 
                 db.Entry(address).State = EntityState.Modified;
+                db.SaveChanges();
 
                 AuditUser.LogAudit(5, string.Format("Address name: {0}", addressName), userId);
-
-                db.SaveChanges();
             }
 
             return FreeMarketResult.Success;

@@ -2,8 +2,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using System;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -170,7 +168,8 @@ namespace FreeMarket.Controllers
                     Name = model.Name,
                     PhoneNumber = model.PrimaryPhoneNumber,
                     SecondaryPhoneNumber = model.SecondaryPhoneNumber,
-                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
+                    PreferredCommunicationMethod = model.PreferredCommunicationMethod,
+                    DefaultAddress = model.AddressName
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -185,32 +184,9 @@ namespace FreeMarket.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                    {
-                        AuditUser audit = new AuditUser()
-                        {
-                            Identity = user.Id,
-                            DateTime = DateTime.Now,
-                            Action = 1
-                        };
+                    AuditUser.LogAudit(1, "", user.Id);
 
-                        try
-                        {
-                            using (FreeMarketEntities db = new FreeMarketEntities())
-                            {
-                                db.AuditUsers.Add(audit);
-                                db.SaveChanges();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Could not log
-                        }
-
-                    }
-
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 }
@@ -245,30 +221,7 @@ namespace FreeMarket.Controllers
                     UserManager.Update(user);
                 }
 
-                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                {
-                    AuditUser audit = new AuditUser()
-                    {
-                        Identity = user.Id,
-                        DateTime = DateTime.Now,
-                        Action = 3
-                    };
-
-                    try
-                    {
-                        using (FreeMarketEntities db = new FreeMarketEntities())
-                        {
-                            db.AuditUsers.Add(audit);
-                            db.SaveChanges();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // Could not log
-                    }
-
-                }
+                AuditUser.LogAudit(3, "", user.Id);
             }
 
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
@@ -464,7 +417,8 @@ namespace FreeMarket.Controllers
                     Name = model.Name,
                     PhoneNumber = model.PrimaryPhoneNumber,
                     SecondaryPhoneNumber = model.SecondaryPhoneNumber,
-                    PreferredCommunicationMethod = model.PreferredCommunicationMethod
+                    PreferredCommunicationMethod = model.PreferredCommunicationMethod,
+                    DefaultAddress = model.AddressName
                 };
 
                 var result = await UserManager.CreateAsync(user);
@@ -557,7 +511,7 @@ namespace FreeMarket.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

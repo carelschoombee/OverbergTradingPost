@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -249,30 +248,7 @@ namespace FreeMarket.Controllers
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
 
-                if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                        || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                {
-                    AuditUser audit = new AuditUser()
-                    {
-                        Identity = user.Id,
-                        DateTime = DateTime.Now,
-                        Action = 4
-                    };
-
-                    try
-                    {
-                        using (FreeMarketEntities db = new FreeMarketEntities())
-                        {
-                            db.AuditUsers.Add(audit);
-                            db.SaveChanges();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // Could not log
-                    }
-
-                }
+                AuditUser.LogAudit(4, "", user.Id);
 
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
@@ -450,7 +426,8 @@ namespace FreeMarket.Controllers
                 Name = user.Name,
                 PrimaryPhoneNumber = user.PhoneNumber,
                 SecondaryPhoneNumber = user.SecondaryPhoneNumber,
-                PreferredCommunicationMethod = user.PreferredCommunicationMethod
+                PreferredCommunicationMethod = user.PreferredCommunicationMethod,
+                DefaultAddress = user.DefaultAddress
             };
 
             return View(model);
@@ -472,36 +449,14 @@ namespace FreeMarket.Controllers
                 user.PhoneNumber = model.PrimaryPhoneNumber;
                 user.SecondaryPhoneNumber = model.SecondaryPhoneNumber;
                 user.PreferredCommunicationMethod = model.PreferredCommunicationMethod;
+                user.DefaultAddress = model.DefaultAddress;
 
                 var result = await UserManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
 
-                    if (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Audit
-                            || (int.Parse(ConfigurationManager.AppSettings["loggingSeverityLevel"]) == (int)LoggingSeverityLevels.Verbose))
-                    {
-                        AuditUser audit = new AuditUser()
-                        {
-                            Identity = user.Id,
-                            DateTime = DateTime.Now,
-                            Action = 2
-                        };
-
-                        try
-                        {
-                            using (FreeMarketEntities db = new FreeMarketEntities())
-                            {
-                                db.AuditUsers.Add(audit);
-                                db.SaveChanges();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Could not log
-                        }
-
-                    }
+                    AuditUser.LogAudit(2, "", user.Id);
 
                     TempData["message"] = string.Format
                             ("Your account details have been updated.");

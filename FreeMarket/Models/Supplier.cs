@@ -17,9 +17,9 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Supplier()
         {
-            this.SupplierAddresses = new HashSet<SupplierAddress>();
             this.ProductSuppliers = new HashSet<ProductSupplier>();
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.SupplierLocations = new HashSet<SupplierLocation>();
         }
     
         public int SupplierNumber { get; set; }
@@ -39,10 +39,10 @@ namespace FreeMarket.Models
         public string UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SupplierAddress> SupplierAddresses { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SupplierLocation> SupplierLocations { get; set; }
     }
 }

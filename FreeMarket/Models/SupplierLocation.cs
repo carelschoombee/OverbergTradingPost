@@ -12,19 +12,13 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SupplierAddress
+    public partial class SupplierLocation
     {
-        public int AddressNumber { get; set; }
         public int SupplierNumber { get; set; }
-        public string AddressName { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string AddressLine3 { get; set; }
-        public string AddressLine4 { get; set; }
-        public string AddressSuburb { get; set; }
-        public string AddressCity { get; set; }
-        public string AddressPostalCode { get; set; }
+        public int LocationNumber { get; set; }
+        public string Name { get; set; }
     
+        public virtual Location Location { get; set; }
         public virtual Supplier Supplier { get; set; }
     }
 }

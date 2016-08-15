@@ -86,7 +86,12 @@ namespace FreeMarket.Models
         [Display(Name = "Preferred Communication Method")]
         public string PreferredCommunicationMethod { get; set; }
 
+        [Required]
+        [Display(Name = "Default Delivery Address")]
+        public string DefaultAddress { get; set; }
+
         public List<SelectListItem> CommunicationOptions { get; set; }
+        public List<SelectListItem> AdressNameOptions { get; set; }
 
         public ModifyAccountDetailsViewModel()
         {
@@ -97,6 +102,14 @@ namespace FreeMarket.Models
                     {
                         Text = c.CommunicationMethod,
                         Value = c.CommunicationMethod
+                    }).ToList();
+
+                AdressNameOptions = db.AddressNames.Select
+                    (c => new SelectListItem
+                    {
+                        Text = c.AddressName1,
+                        Value = c.AddressName1,
+                        Selected = (DefaultAddress == c.AddressName1 ? true : false)
                     }).ToList();
             }
         }

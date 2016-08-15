@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FreeMarket.Models
+﻿namespace FreeMarket.Models
 {
     public class CourierLocationMetaData
     {
@@ -8,12 +6,12 @@ namespace FreeMarket.Models
         public string PostalCodeOrigin { get; set; }
         public string PostalCodeDestination { get; set; }
 
-        public static List<CourierLocation> GetCourierLocations(string customerPostalCode, string supplierPostalCode)
-        {
-            if (string.IsNullOrEmpty(customerPostalCode) || string.IsNullOrEmpty(supplierPostalCode))
-                return new List<CourierLocation>();
+        //public static List<CourierLocation> GetCourierLocations(string customerPostalCode, string supplierPostalCode)
+        //{
+        //    if (string.IsNullOrEmpty(customerPostalCode) || string.IsNullOrEmpty(supplierPostalCode))
+        //        return new List<CourierLocation>();
 
-            
-        }
+
+        //}
     }
 }

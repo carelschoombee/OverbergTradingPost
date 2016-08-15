@@ -24,4 +24,10 @@
         @Html.DropDownListFor(model => model.PreferredCommunicationMethod, Model.CommunicationOptions, "Choose", new { @class = "form-control" })
     </div>
 </div>
+<div class="form-group">
+    @Html.LabelFor(m => m.DefaultAddress, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DropDownListFor(model => model.DefaultAddress, Model.AdressNameOptions, new { @class = "form-control" })
+    </div>
+</div>
 
