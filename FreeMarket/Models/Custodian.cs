@@ -17,21 +17,22 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Custodian()
         {
+            this.CourierCustodianDistances = new HashSet<CourierCustodianDistance>();
             this.CourierStockMovementLogs = new HashSet<CourierStockMovementLog>();
             this.ProductCustodians = new HashSet<ProductCustodian>();
-            this.Locations = new HashSet<Location>();
         }
     
         public int CustodianNumber { get; set; }
+        public int LocationNumber { get; set; }
         public string CustodianName { get; set; }
         public string CustodianTelephoneNumber { get; set; }
         public string CustodianCellphoneNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CourierCustodianDistance> CourierCustodianDistances { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductCustodian> ProductCustodians { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Location> Locations { get; set; }
     }
 }

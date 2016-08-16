@@ -10,16 +10,12 @@
 namespace FreeMarket.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CourierLocation
+    public partial class GetLowestDistanceBetweenCourierAndCustodian_Result
     {
-        public int CourierNumber { get; set; }
-        public int LocationNumberOrigin { get; set; }
-        public string PostalCodeDestination { get; set; }
-        public decimal CourierFee { get; set; }
-    
-        public virtual Courier Courier { get; set; }
-        public virtual Location Location { get; set; }
+        public Nullable<int> CustodianNumber { get; set; }
+        public Nullable<int> CourierNumber { get; set; }
+        public Nullable<int> QuantityOnHand { get; set; }
+        public Nullable<decimal> Distance { get; set; }
     }
 }

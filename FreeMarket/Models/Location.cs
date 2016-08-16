@@ -17,10 +17,8 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Location()
         {
-            this.CourierLocations = new HashSet<CourierLocation>();
-            this.CourierLocations1 = new HashSet<CourierLocation>();
-            this.Custodians = new HashSet<Custodian>();
             this.SupplierLocations = new HashSet<SupplierLocation>();
+            this.CourierLocations = new HashSet<CourierLocation>();
         }
     
         public int LocationNumber { get; set; }
@@ -35,12 +33,8 @@ namespace FreeMarket.Models
         public string Country { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierLocation> CourierLocations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierLocation> CourierLocations1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Custodian> Custodians { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SupplierLocation> SupplierLocations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CourierLocation> CourierLocations { get; set; }
     }
 }

@@ -10,8 +10,6 @@ namespace FreeMarket.Models
         public string SupplierName { get; set; }
         public string DepartmentName { get; set; }
         public decimal PricePerUnit { get; set; }
-        public int CustodianNumber { get; set; }
-        public int QuantityOnHand { get; set; }
 
         public override string ToString()
         {

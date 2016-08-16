@@ -62,7 +62,6 @@ namespace FreeMarket.Models
                     res.Argument = new Product
                     {
                         Activated = productInfo.Activated,
-                        CustodianNumber = productInfo.CustodianNumber,
                         DateAdded = productInfo.DateAdded,
                         DateModified = productInfo.DateModified,
                         DepartmentName = productInfo.DepartmentName,
@@ -70,7 +69,6 @@ namespace FreeMarket.Models
                         Description = productInfo.Description,
                         PricePerUnit = productInfo.PricePerUnit,
                         ProductNumber = productInfo.ProductNumberID,
-                        QuantityOnHand = productInfo.QuantityOnHand,
                         Size = productInfo.Size,
                         SupplierName = productInfo.SupplierName,
                         SupplierNumber = productInfo.SupplierNumberID,
@@ -127,7 +125,6 @@ namespace FreeMarket.Models
                     res.Argument = new Product
                     {
                         Activated = productInfo.Activated,
-                        CustodianNumber = productInfo.CustodianNumber,
                         DateAdded = productInfo.DateAdded,
                         DateModified = productInfo.DateModified,
                         DepartmentName = productInfo.DepartmentName,
@@ -135,7 +132,6 @@ namespace FreeMarket.Models
                         Description = productInfo.Description,
                         PricePerUnit = productInfo.PricePerUnit,
                         ProductNumber = productInfo.ProductNumberID,
-                        QuantityOnHand = productInfo.QuantityOnHand,
                         Size = productInfo.Size,
                         SupplierName = productInfo.SupplierName,
                         SupplierNumber = productInfo.SupplierNumberID,

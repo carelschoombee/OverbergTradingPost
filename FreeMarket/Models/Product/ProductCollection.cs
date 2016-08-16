@@ -18,7 +18,6 @@ namespace FreeMarket.Models
                     .Select(c => new Product
                     {
                         Activated = c.Activated,
-                        CustodianNumber = c.CustodianNumber,
                         DateAdded = c.DateAdded,
                         DateModified = c.DateModified,
                         DepartmentName = c.DepartmentName,
@@ -26,7 +25,6 @@ namespace FreeMarket.Models
                         Description = c.Description,
                         PricePerUnit = c.PricePerUnit,
                         ProductNumber = c.ProductNumberID,
-                        QuantityOnHand = c.QuantityOnHand,
                         Size = c.Size,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,

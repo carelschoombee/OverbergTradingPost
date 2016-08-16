@@ -30,9 +30,7 @@ namespace FreeMarket.Models
         public virtual DbSet<ActivityLogging> ActivityLoggings { get; set; }
         public virtual DbSet<AddressName> AddressNames { get; set; }
         public virtual DbSet<Courier> Couriers { get; set; }
-        public virtual DbSet<CourierLocation> CourierLocations { get; set; }
         public virtual DbSet<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
-        public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<ExceptionLogging> ExceptionLoggings { get; set; }
         public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
@@ -47,7 +45,6 @@ namespace FreeMarket.Models
         public virtual DbSet<ProductPicture> ProductPictures { get; set; }
         public virtual DbSet<SiteConfiguration> SiteConfigurations { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<SystemAction> SystemActions { get; set; }
         public virtual DbSet<AuditUser> AuditUsers { get; set; }
         public virtual DbSet<SitePicture> SitePictures { get; set; }
@@ -57,6 +54,9 @@ namespace FreeMarket.Models
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<SupplierLocation> SupplierLocations { get; set; }
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
+        public virtual DbSet<CourierCustodianDistance> CourierCustodianDistances { get; set; }
+        public virtual DbSet<Custodian> Custodians { get; set; }
+        public virtual DbSet<CourierLocation> CourierLocations { get; set; }
     
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {
@@ -65,11 +65,6 @@ namespace FreeMarket.Models
                 new ObjectParameter("OrderNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
-        }
-    
-        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
         }
     
         public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
@@ -83,6 +78,36 @@ namespace FreeMarket.Models
                 new ObjectParameter("SupplierNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetLowestDistanceBetweenCourierAndCustodian_Result> GetLowestDistanceBetweenCourierAndCustodian(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> courierNumber, Nullable<int> quantityRequested, Nullable<int> addressNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("productNumber", productNumber) :
+                new ObjectParameter("productNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("supplierNumber", supplierNumber) :
+                new ObjectParameter("supplierNumber", typeof(int));
+    
+            var courierNumberParameter = courierNumber.HasValue ?
+                new ObjectParameter("courierNumber", courierNumber) :
+                new ObjectParameter("courierNumber", typeof(int));
+    
+            var quantityRequestedParameter = quantityRequested.HasValue ?
+                new ObjectParameter("quantityRequested", quantityRequested) :
+                new ObjectParameter("quantityRequested", typeof(int));
+    
+            var addressNumberParameter = addressNumber.HasValue ?
+                new ObjectParameter("addressNumber", addressNumber) :
+                new ObjectParameter("addressNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLowestDistanceBetweenCourierAndCustodian_Result>("GetLowestDistanceBetweenCourierAndCustodian", productNumberParameter, supplierNumberParameter, courierNumberParameter, quantityRequestedParameter, addressNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
         }
     }
 }

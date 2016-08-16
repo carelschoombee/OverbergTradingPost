@@ -19,8 +19,10 @@ namespace FreeMarket.Models
         public int QuantityOnHand { get; set; }
         public Nullable<System.DateTime> DateLastIncreasedBySupplier { get; set; }
         public Nullable<int> AmountLastIncreasedBySupplier { get; set; }
+        public int SupplierNumber { get; set; }
     
-        public virtual Custodian Custodian { get; set; }
         public virtual Product Product { get; set; }
+        public virtual Custodian Custodian { get; set; }
+        public virtual Supplier Supplier { get; set; }
     }
 }

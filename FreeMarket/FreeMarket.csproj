@@ -222,6 +222,9 @@
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
+    <Compile Include="Models\CourierCustodianDistance.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CustomerAddress.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -230,6 +233,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetLowestDistanceBetweenCourierAndCustodian_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProduct_Result.cs">
@@ -305,6 +311,7 @@
     <Compile Include="Models\Order\OrderDetailMetaData.cs" />
     <Compile Include="Models\Order\OrderHeaderMetaData.cs" />
     <Compile Include="Models\Order\ProductMetaData.cs" />
+    <Compile Include="Models\Order\PurchaseAlgorithms.cs" />
     <Compile Include="Models\Order\ShoppingCart.cs" />
     <Compile Include="Models\Order\ShoppingCartViewModel.cs" />
     <Compile Include="Models\Order\SupplierMetaData.cs" />
@@ -346,9 +353,6 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SupplierLocation.cs">
-      <DependentUpon>FreeMarketModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SystemAction.cs">
@@ -438,7 +442,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

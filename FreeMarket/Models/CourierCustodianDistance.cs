@@ -12,12 +12,13 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagram
+    public partial class CourierCustodianDistance
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public int CourierNumber { get; set; }
+        public int CustodianNumber { get; set; }
+        public Nullable<decimal> Distance { get; set; }
+    
+        public virtual Courier Courier { get; set; }
+        public virtual Custodian Custodian { get; set; }
     }
 }

@@ -4,13 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4993edc9e7824870bfafaa6e32c5d051" Name="Diagram1">
+      <Diagram DiagramId="4993edc9e7824870bfafaa6e32c5d051" Name="Diagram1" ZoomLevel="101">
         <EntityTypeShape EntityType="FreeMarketModel.ActivityLogging" Width="1.5" PointX="3.125" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.AddressName" Width="1.5" PointX="7.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Courier" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.CourierLocation" Width="1.5" PointX="8.5" PointY="20.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.CourierStockMovementLog" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.Custodian" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Department" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.ExceptionLogging" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.FreeMarketOwner" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
@@ -25,14 +23,7 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductPicture" Width="1.5" PointX="5.25" PointY="22.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.SiteConfiguration" Width="1.5" PointX="12.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Supplier" Width="1.5" PointX="6" PointY="17.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.sysdiagram" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Courier" ManuallyRouted="false" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Courier" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location1" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Custodian" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Custodian" ManuallyRouted="false" />
-        <AssociationConnector Association="FreeMarketModel.CustodianLocation" ManuallyRouted="false" />
         <EntityTypeShape EntityType="FreeMarketModel.SystemAction" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="FreeMarketModel.AuditUser" Width="1.5" PointX="15.375" PointY="6.75" />
         <EntityTypeShape EntityType="FreeMarketModel.SitePicture" Width="1.5" PointX="15.375" PointY="9.75" />
@@ -54,6 +45,16 @@
         <AssociationConnector Association="FreeMarketModel.FK_SupplierLocation_Location" />
         <AssociationConnector Association="FreeMarketModel.FK_SupplierLocation_Supplier" />
         <EntityTypeShape EntityType="FreeMarketModel.CustomerAddress" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.CourierCustodianDistance" Width="1.5" PointX="5.25" PointY="13.875" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierCustodianDistance_Courier" />
+        <EntityTypeShape EntityType="FreeMarketModel.Custodian" Width="1.5" PointX="0.75" PointY="12.375" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierCustodianDistance_Custodian" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierStockMovementLog_Custodian" />
+        <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Custodian" />
+        <AssociationConnector Association="FreeMarketModel.FK_ProductCustodian_Supplier" />
+        <EntityTypeShape EntityType="FreeMarketModel.CourierLocation" Width="1.5" PointX="8.5" PointY="20.25" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Courier" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
