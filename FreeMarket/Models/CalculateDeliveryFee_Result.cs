@@ -11,11 +11,15 @@ namespace FreeMarket.Models
 {
     using System;
     
-    public partial class GetLowestDistanceBetweenCourierAndCustodian_Result
+    public partial class CalculateDeliveryFee_Result
     {
         public Nullable<int> CustodianNumber { get; set; }
+        public Nullable<int> CustodianLocation { get; set; }
         public Nullable<int> CourierNumber { get; set; }
+        public string CourierName { get; set; }
         public Nullable<int> QuantityOnHand { get; set; }
         public Nullable<decimal> Distance { get; set; }
+        public string DestinationPostalCode { get; set; }
+        public Nullable<decimal> CourierFee { get; set; }
     }
 }

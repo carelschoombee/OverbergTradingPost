@@ -91,7 +91,7 @@ namespace FreeMarket.Models
         public string DefaultAddress { get; set; }
 
         public List<SelectListItem> CommunicationOptions { get; set; }
-        public List<SelectListItem> AdressNameOptions { get; set; }
+        public List<SelectListItem> AddressNameOptions { get; set; }
 
         public ModifyAccountDetailsViewModel()
         {
@@ -104,7 +104,7 @@ namespace FreeMarket.Models
                         Value = c.CommunicationMethod
                     }).ToList();
 
-                AdressNameOptions = db.AddressNames.Select
+                AddressNameOptions = db.AddressNames.Select
                     (c => new SelectListItem
                     {
                         Text = c.AddressName1,

@@ -80,7 +80,12 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     
-        public virtual ObjectResult<GetLowestDistanceBetweenCourierAndCustodian_Result> GetLowestDistanceBetweenCourierAndCustodian(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> courierNumber, Nullable<int> quantityRequested, Nullable<int> addressNumber)
+        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
+        }
+    
+        public virtual ObjectResult<CalculateDeliveryFee_Result> CalculateDeliveryFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> addressNumber)
         {
             var productNumberParameter = productNumber.HasValue ?
                 new ObjectParameter("productNumber", productNumber) :
@@ -90,10 +95,6 @@ namespace FreeMarket.Models
                 new ObjectParameter("supplierNumber", supplierNumber) :
                 new ObjectParameter("supplierNumber", typeof(int));
     
-            var courierNumberParameter = courierNumber.HasValue ?
-                new ObjectParameter("courierNumber", courierNumber) :
-                new ObjectParameter("courierNumber", typeof(int));
-    
             var quantityRequestedParameter = quantityRequested.HasValue ?
                 new ObjectParameter("quantityRequested", quantityRequested) :
                 new ObjectParameter("quantityRequested", typeof(int));
@@ -102,12 +103,7 @@ namespace FreeMarket.Models
                 new ObjectParameter("addressNumber", addressNumber) :
                 new ObjectParameter("addressNumber", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLowestDistanceBetweenCourierAndCustodian_Result>("GetLowestDistanceBetweenCourierAndCustodian", productNumberParameter, supplierNumberParameter, courierNumberParameter, quantityRequestedParameter, addressNumberParameter);
-        }
-    
-        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateDeliveryFee_Result>("CalculateDeliveryFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, addressNumberParameter);
         }
     }
 }

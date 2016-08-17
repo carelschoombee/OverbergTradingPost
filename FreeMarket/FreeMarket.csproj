@@ -222,6 +222,9 @@
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
+    <Compile Include="Models\CalculateDeliveryFee_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CourierCustodianDistance.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -233,9 +236,6 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
-      <DependentUpon>FreeMarketModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetLowestDistanceBetweenCourierAndCustodian_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProduct_Result.cs">
@@ -305,13 +305,14 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Order\CartBody.cs" />
+    <Compile Include="Models\Order\CourierFee.cs" />
+    <Compile Include="Models\Order\CourierFeeViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />
     <Compile Include="Models\Order\CourierViewModel.cs" />
     <Compile Include="Models\Order\OrderDetailMetaData.cs" />
     <Compile Include="Models\Order\OrderHeaderMetaData.cs" />
     <Compile Include="Models\Order\ProductMetaData.cs" />
-    <Compile Include="Models\Order\PurchaseAlgorithms.cs" />
     <Compile Include="Models\Order\ShoppingCart.cs" />
     <Compile Include="Models\Order\ShoppingCartViewModel.cs" />
     <Compile Include="Models\Order\SupplierMetaData.cs" />

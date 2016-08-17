@@ -1,5 +1,6 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -58,34 +59,38 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        //[ChildActionOnly]
-        //public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
-        //{
-        //    string userId = User.Identity.GetUserId();
-        //    bool displayNamesNotPrices = (userId == null);
-        //    CourierViewModel model = new CourierViewModel();
+        [ChildActionOnly]
+        public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            string defaultAddressName = currentUser.DefaultAddress;
+            string userId = currentUser.Id;
 
-        //    if (productNumber == 0 || supplierNumber == 0)
-        //        return RedirectToAction("Index", "Product");
+            bool displayNamesNotPrices = (userId == null);
+            CourierFeeViewModel model = new CourierFeeViewModel();
 
-        //    using (FreeMarketEntities db = new FreeMarketEntities())
-        //    {
-        //        Product product = db.Products.Find(productNumber);
-        //        Supplier supplier = db.Suppliers.Find(supplierNumber);
+            if (productNumber == 0 || supplierNumber == 0)
+                return RedirectToAction("Index", "Product");
 
-        //        if (product == null || supplier == null)
-        //            return RedirectToAction("Index", "Product");
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Product product = db.Products.Find(productNumber);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
 
-        //        if (displayNamesNotPrices)
-        //        {
+                if (product == null || supplier == null)
+                    return RedirectToAction("Index", "Product");
 
-        //        }
-        //        else
-        //        {
+                if (displayNamesNotPrices)
+                {
 
-        //        }
-        //    }
-        //}
+                }
+                else
+                {
+                    model = new CourierFeeViewModel(productNumber, supplierNumber, 1, userId, defaultAddressName);
+                }
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
