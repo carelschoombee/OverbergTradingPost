@@ -1,154 +1,103 @@
 ﻿@using FreeMarket.Models
-@model 
+@model CourierFeeViewModel
+
+@{
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "cartPartial",
+        LoadingElementId = "loadingDiv"
+    };
+}
+
+@helper ListCouriers(int i)
+{
+    <tr>
+        <td>
+            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+            {
+                @Html.Label(@Model.FeeInfo[i].CourierName, new { @class="text-success" })
+            }
+            else
+            {
+                @Html.Label(@Model.FeeInfo[i].CourierName)
+            }
+            
+            @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+        </td>
+        <td>
+            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+            {
+                @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
+            }
+            else
+            {
+                @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
+            }
+        </td>
+        <td>
+            @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
+        </td>
+    </tr>
+}
 
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="EditModalLabel">Edit</h4>
-            @using (Ajax.BeginForm("EditView", "MMRollout", null, new AjaxOptions { UpdateTargetId = "newEntity" + Model.MMRolloutID }, new { @id = "editForm" }))
+            <h4 class="modal-title text-center" id="EditModalLabel">Choose a Courier for this Product</h4>
+            
+            @using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts, new { @id = "editForm" }))
             {
                 @Html.AntiForgeryToken()
 
                 <div class="modal-body">
                     <div class="form-horizontal">
+                        <hr />
 
                         @Html.ValidationSummary(true)
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.PatchNo, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-6">
-                                @Html.EditorFor(model => model.PatchNo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.PatchNo)
+                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Quantity)
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.MMRolloutDescription, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                             <div class="col-md-6">
-                                @Html.EditorFor(model => model.MMRolloutDescription, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.MMRolloutDescription)
+                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SelectedAddress)
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.RolloutType, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-6">
-                                @Html.EditorFor(model => model.RolloutType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.RolloutType)
-                            </div>
-                        </div>
+                        <hr />
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.MMRolloutKey, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-6">
-                                @Html.DropDownList("MMRolloutKey", (IEnumerable<SelectListItem>)ViewBag.RolloutKeyList, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.MMRolloutKey)
-                            </div>
-                        </div>
-
-                        @if (Model.RolloutType == "Product")
-                        {
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-6">
-                                    @Html.DropDownList("IsActive", (IEnumerable<SelectListItem>)ViewBag.isActiveList, new { @class = "form-control isActive" })
-                                    @Html.ValidationMessageFor(model => model.IsActive)
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            @Html.HiddenFor(model => Model.IsActive)
-                        }
-
-                        <table class="table">
-
+                        <table class="table table-bordered-custom text-center">
                             <tr>
-                                <td class="col-md-3">
-                                    <table class="table-bordered-light">
-                                        <tr>
-                                            <th class="col-md-1" colspan="2">Country</th>
-                                        </tr>
-                                        @foreach (KeyValuePair<Country, bool> c in Model.Linking.Countries)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <label>
-                                                        <input class="group1" type="checkbox" name="countries[]" value="@c.Key.Country1" checked="@c.Value" /> @c.Key.Country1
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        }
-
-                                    </table>
-                                </td>
-                                <td class="col-md-3">
-                                    <table class="table-bordered-light">
-                                        <tr>
-                                            <th class="col-md-1" colspan="2">Brand</th>
-                                        </tr>
-                                        @foreach (KeyValuePair<Brand, bool> b in Model.Linking.Brands)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <label>
-                                                        <input class="group2" type="checkbox" name="brands[]" value="@b.Key.BrandName.ToString()@b.Key.BrandID.ToString()" checked="@b.Value" /> @b.Key.BrandName
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        }
-
-                                    </table>
-                                </td>
-                                <td class="col-md-3">
-                                    <table class="table-bordered-light">
-                                        <tr>
-                                            <th class="col-md-1" colspan="2">Till Types</th>
-                                        </tr>
-                                        @foreach (KeyValuePair<BranchTillDescription, bool> t in Model.Linking.TillTypes)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <label>
-                                                        <input class="group3" type="checkbox" name="tillTypes[]" value="@t.Key.TillDescription@t.Key.TillDescriptionCode" checked="@t.Value" /> @t.Key.TillDescription
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </table>
-                                </td>
+                                <th class="col-sm-1 text-center">Courier Name</th>
+                                <th class="col-sm-1 text-center">Price</th>
+                                <th class="col-sm-1 text-center">Choose One</th>
                             </tr>
+
+                            @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
+                            {
+                                for (int i = 0; i < Model.FeeInfo.Count; i++)
+                                {
+                                    @ListCouriers(i);
+                                }
+                            }
+                            else
+                            {
+                                @Html.Label("Sorry, but we cannot deliver to that address.")
+                            }
+
                         </table>
-
-                        <div class="col-md-1">
-                            @Html.HiddenFor(model => model.MMRolloutID)
-                            @Html.HiddenFor(model => model.RolloutType)
-                            @Html.HiddenFor(model => model.Environment)
-                            @Html.HiddenFor(model => model.MMRolloutKey)
-                            @Html.HiddenFor(model => model.UserId)
-                            @Html.HiddenFor(model => model.ChangeDateTime)
-                            @Html.HiddenFor(model => model.BrandParameters)
-                            @Html.HiddenFor(model => model.CountryParameters)
-                            @Html.HiddenFor(model => model.MMReverseScript)
-                            @Html.HiddenFor(model => model.MMRolloutScript)
-                            @Html.HiddenFor(model => model.PatchNo)
-                            @Html.HiddenFor(model => model.TillTypeParameters)
-                        </div>
-
-                        <div class="col-md-1">
-                            @Html.HiddenFor(model => model.MMRolloutID)
-                            @Html.HiddenFor(model => model.RolloutType)
-                            @Html.HiddenFor(model => model.MMRolloutKey)
-                            @Html.HiddenFor(model => model.Environment)
-                            @Html.HiddenFor(model => model.UserId)
-                            @Html.HiddenFor(model => model.ChangeDateTime)
-                            @Html.HiddenFor(model => model.BrandParameters)
-                            @Html.HiddenFor(model => model.CountryParameters)
-                            @Html.HiddenFor(model => model.MMReverseScript)
-                            @Html.HiddenFor(model => model.MMRolloutScript)
-                            @Html.HiddenFor(model => model.PatchNo)
-                            @Html.HiddenFor(model => model.TillTypeParameters)
+                        
+                        <div>
+                            @Html.HiddenFor(model => Model.ProductNumber)
+                            @Html.HiddenFor(model => Model.SupplierNumber)
                         </div>
                     </div>
                 </div>
@@ -166,37 +115,7 @@
 
     $(document).ready(function () {
 
-        $('#IsActive').val('@Model.IsActive');
-
-        if ($('#RolloutType').val() == "Product" || $('#RolloutType').val() == "CTKProduct") {
-            $('.group2').attr('disabled', 'disabled');
-            $('.group3').attr('disabled', 'disabled');
-        }
-        else {
-            $('.group2').removeAttr('disabled');
-            $('.group3').removeAttr('disabled');
-        }
-
-        $.getJSON('@Url.Action("GetKeysForRolloutType", "MMRollout")', { id: $('#RolloutType').val() }, function (response) {
-
-            $('#MMRolloutKey').empty();
-
-            $.each(response, function (key, value) {
-                if (value.indexOf("@Model.MMRolloutKey") > -1)
-                {
-                    $('#MMRolloutKey')
-                            .append($('<option>', { value: value })
-                            .text(value)
-                            .prop('selected', true));
-                }
-                else
-                {
-                    $('#MMRolloutKey')
-                            .append($('<option>', { value: value })
-                            .text(value));
-                }
-            });
-        });
+        
     });
 
 </script>

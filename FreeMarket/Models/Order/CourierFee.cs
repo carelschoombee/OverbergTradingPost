@@ -38,7 +38,6 @@ namespace FreeMarket.Models
                 }
 
                 feeInfo = db.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, addressNumber)
-                    .OrderByDescending(c => c.CourierFee)
                     .Select(c => new CourierFee()
                     {
                         CustodianNumber = c.CustodianNumber ?? 0,
@@ -60,6 +59,22 @@ namespace FreeMarket.Models
             }
 
             return feeInfo;
+        }
+
+        public override string ToString()
+        {
+            string toString = "";
+
+            toString += string.Format(("\nCustodian Number                        : {0}"), CustodianNumber);
+            toString += string.Format(("\nCustodian Location Number               : {0}"), CustodianLocationNumber);
+            toString += string.Format(("\nCourier Number                          : {0}"), CourierNumber);
+            toString += string.Format(("\nCourier Name                            : {0}"), CourierName);
+            toString += string.Format(("\nQuantity On Hand                        : {0}"), QuantityOnHand);
+            toString += string.Format(("\nDistance Between Courier And Custodian  : {0}"), DistanceBetweenCourierAndCustodian);
+            toString += string.Format(("\nCourier Fee Value                       : {0}"), CourierFeeValue);
+            toString += string.Format(("\nCustomer Destination PostalCode         : {0}"), CustomerDestinationPostalCode);
+
+            return toString;
         }
     }
 }

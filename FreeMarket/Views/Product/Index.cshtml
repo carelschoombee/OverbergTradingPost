@@ -6,22 +6,20 @@
 
 <br />
 
-<h1 class="text-center">Nuts, seeds and dried fruit</h1>
-<hr />
-
 <div class="container">
     <div class="col-sm-12">
         <div class="row">
+            <h1 class="text-center">Nuts, seeds and dried fruit</h1>
+            <hr />
+        </div>
+        <div class="row">
             @Html.Partial("_ProductCarousel")
         </div>
+        @Html.Action("GetAllProducts")
     </div>
 </div>
 
-<br />
-
 <div id="loadingDiv" style="display:none;"></div>
-
-@Html.Action("GetAllProducts")
 
 <script type="text/javascript">
 

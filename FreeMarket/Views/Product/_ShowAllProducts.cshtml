@@ -3,11 +3,11 @@
 
 @helper ListProduct(int i)
 {
-    AjaxOptions ajaxOpts = new AjaxOptions
-    {
-        UpdateTargetId = "cartPartial",
-        LoadingElementId = "loadingDiv"
-    };
+    //AjaxOptions ajaxOpts = new AjaxOptions
+    //{
+    //    UpdateTargetId = "cartPartial",
+    //    LoadingElementId = "loadingDiv"
+    //};
 
     <div>
         <div class="col-sm-6">
@@ -39,7 +39,10 @@
             </tr>
             <tr>
                 <td>
-                    @using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts))
+                    <a data-id="@Url.Action("CourierSelectionModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
+                       class="btn btn-success editClass"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Add to Cart</span></a>
+
+                    @*@using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts))
                     {
                         @Html.AntiForgeryToken()
 
@@ -50,7 +53,7 @@
                         <button type="submit" class="btn btn-success">
                             <i class="glyphicon glyphicon-shopping-cart"></i> Add to Cart
                         </button>
-                    }
+                    }*@
                 </td>
             </tr>
 
@@ -58,32 +61,26 @@
     </div>
 }
 
-<div class="container">
-    <div class="col-sm-12">
-        @for (int i = 0; i < Model.Products.Count; i++)
-        {
-            <div class="row">
-                <div class="col-sm-12">
-                    @if (i < Model.Products.Count)
-                    {
-                        <div class="col-sm-4 well">                
-                            @ListProduct(i)
-                        </div>
-                    }
-                    @if (++i < Model.Products.Count)
-                    {
-                        <div class="col-sm-4 well">
-                             @ListProduct(i)
-                        </div>
-                    }
-                    @if (++i < Model.Products.Count)
-                    {
-                        <div class="col-sm-4 well">
-                            @ListProduct(i)
-                        </div>
-                    }
-                </div>
-            </div>
-        }
+@for (int i = 0; i < Model.Products.Count; i++)
+{
+    <div class="row">
+    @if (i < Model.Products.Count)
+    {
+        <div class="col-sm-4 well">                
+            @ListProduct(i)
+        </div>
+    }
+    @if (++i < Model.Products.Count)
+    {
+        <div class="col-sm-4 well">
+                @ListProduct(i)
+        </div>
+    }
+    @if (++i < Model.Products.Count)
+    {
+        <div class="col-sm-4 well">
+            @ListProduct(i)
+        </div>
+    }
     </div>
-</div>
+}

@@ -59,8 +59,7 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        [ChildActionOnly]
-        public ActionResult CourierSelectionModal(int productNumber, int supplierNumber)
+        public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity)
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
@@ -70,12 +69,12 @@ namespace FreeMarket.Controllers
             bool displayNamesNotPrices = (userId == null);
             CourierFeeViewModel model = new CourierFeeViewModel();
 
-            if (productNumber == 0 || supplierNumber == 0)
+            if (id == 0 || supplierNumber == 0)
                 return RedirectToAction("Index", "Product");
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                Product product = db.Products.Find(productNumber);
+                Product product = db.Products.Find(id);
                 Supplier supplier = db.Suppliers.Find(supplierNumber);
 
                 if (product == null || supplier == null)
@@ -87,20 +86,22 @@ namespace FreeMarket.Controllers
                 }
                 else
                 {
-                    model = new CourierFeeViewModel(productNumber, supplierNumber, 1, userId, defaultAddressName);
+                    model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, defaultAddressName);
                 }
             }
+
+            return PartialView("_CourierSelectionModal", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddToCart(int productNumber, int supplierNumber, int quantity)
+        public ActionResult AddToCart(CourierFeeViewModel viewModel)
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart cart = GetCartFromSession(userId);
 
             FreeMarketObject result;
-            result = cart.AddItemFromProduct(productNumber, supplierNumber, quantity, userId);
+            result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity, userId);
 
             if (result.Result == FreeMarketResult.Success)
             {

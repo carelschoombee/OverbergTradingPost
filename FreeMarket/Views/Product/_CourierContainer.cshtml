@@ -33,64 +33,15 @@
                             validating: 'glyphicon glyphicon-refresh'
                         },
                         fields: {
-                            MMRolloutDescription: {
+                            Quantity: {
                                 validators: {
                                     notEmpty: {
                                         message: 'The field is required.'
                                     },
-                                    stringLength: {
-                                        message: 'Max string length is 100.',
-                                        max: 100
-                                    },
-                                    regexp: {
-                                        regexp: /^[A-Za-z0-9\,\.\_\s]+$/,
-                                        message: 'Alphabetic characters, spaces, commas, underscores and numbers only'
-                                    }
-                                }
-                            },
-                            PatchNo: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'The field is required.'
-                                    },
-                                    stringLength: {
-                                        message: 'Max string length is 100.',
-                                        max: 100
-                                    },
-                                    regexp: {
-                                        regexp: /^[A-Za-z0-9\,\.\_\s]+$/,
-                                        message: 'Alphabetic characters, spaces, commas, underscores and numbers only'
-                                    }
-                                }
-                            },
-                            MMRolloutKey: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'The field is required.'
-                                    }
-                                }
-                            },
-                            'countries[]': {
-                                validators: {
-                                    choice: {
+                                    between: {
                                         min: 1,
-                                        message: 'Please choose at least one country'
-                                    }
-                                }
-                            },
-                            'brands[]': {
-                                validators: {
-                                    choice: {
-                                        min: 1,
-                                        message: 'Please choose at least one brand'
-                                    }
-                                }
-                            },
-                            'tillTypes[]': {
-                                validators: {
-                                    choice: {
-                                        min: 1,
-                                        message: 'Please choose at least one till type'
+                                        max: 1000,
+                                        message: 'Please choose a quantity that is greater than 0 and less than 1000.'
                                     }
                                 }
                             }

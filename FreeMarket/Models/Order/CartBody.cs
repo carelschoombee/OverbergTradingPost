@@ -76,7 +76,7 @@ namespace FreeMarket.Models
         {
             string toString = "";
 
-            toString += "Start Cart Body:";
+            toString += "\nStart Cart Body:\n";
 
             if (OrderDetails != null && OrderDetails.Count > 0)
             {
@@ -86,7 +86,7 @@ namespace FreeMarket.Models
                 }
             }
 
-            toString += "End Cart Body:";
+            toString += "\nEnd Cart Body:\n";
             toString += string.Format("Total Items in Cart: {0}", OrderDetails.Count);
 
             return toString;
