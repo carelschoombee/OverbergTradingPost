@@ -21,7 +21,7 @@ namespace FreeMarket.Models
             }
         }
 
-        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity, string userId = null)
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int addressNumber, int quantity, string userId = null)
         {
             // Check whether the item already exists
             FreeMarketObject res = new FreeMarketObject();
@@ -33,11 +33,26 @@ namespace FreeMarket.Models
 
             Debug.Write(string.Format("\nProduct Number : {0}", productNumber));
             Debug.Write(string.Format("\nSupplier Number: {0}", supplierNumber));
+            Debug.Write(string.Format("\nCourier Number : {0}", courierNumber));
             Debug.Write(string.Format("\nQuantity       : {0}", quantity));
 
             OrderDetail existingItem = Body.OrderDetails
                 .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
                 .FirstOrDefault();
+
+            decimal? courierFeeCost = 0;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                courierFeeCost = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, addressNumber)
+                    .FirstOrDefault();
+
+                if (courierFeeCost == 0)
+                {
+                    Debug.Write("ERROR::Courier fee could not be calculated.");
+                    return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
+                }
+            }
 
             if (existingItem != null)
             {
@@ -47,6 +62,8 @@ namespace FreeMarket.Models
 
                 existingItem.Quantity += quantity;
                 existingItem.OrderItemValue = existingItem.Price * existingItem.Quantity;
+                existingItem.CourierNumber = courierNumber;
+                existingItem.CourierFee = courierFeeCost;
 
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
@@ -97,8 +114,8 @@ namespace FreeMarket.Models
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
-                            CourierFee = null,
-                            CourierNumber = null,
+                            CourierFee = courierFeeCost,
+                            CourierNumber = courierNumber,
                             CourierName = null,
                             CustomerCourierOnTimeDeliveryRating = null,
                             CustomerProductQualityRating = null,
@@ -322,27 +339,6 @@ namespace FreeMarket.Models
 
         public void Compare()
         {
-            // Get a list of items that are on the Session variable but not in the database
-
-            List<OrderDetail> newItems = Body.OrderDetails.FindAll(c => c.ItemNumber == 0);
-
-            if (newItems != null && newItems.Count > 0)
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    foreach (OrderDetail tempB in newItems)
-                    {
-                        Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
-
-                        db.OrderDetails.Add(tempB);
-                    }
-
-                    db.SaveChanges();
-
-                    AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber));
-                }
-            }
-
             // Get a list of items which are on both the Session and database
 
             List<OrderDetail> existingItems = Body.OrderDetails.FindAll(c => c.ItemNumber != 0);
@@ -368,6 +364,7 @@ namespace FreeMarket.Models
                                 tempDb.SupplierNumber = temp.SupplierNumber;
                                 tempDb.CourierNumber = temp.CourierNumber;
                                 tempDb.ProductNumber = temp.ProductNumber;
+                                tempDb.CourierFee = temp.CourierFee;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
                                 db.SaveChanges();
@@ -378,6 +375,29 @@ namespace FreeMarket.Models
                     }
                 }
             }
+
+            // Get a list of items that are on the Session variable but not in the database
+
+            List<OrderDetail> newItems = Body.OrderDetails.FindAll(c => c.ItemNumber == 0);
+
+            if (newItems != null && newItems.Count > 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    foreach (OrderDetail tempB in newItems)
+                    {
+                        Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
+
+                        db.OrderDetails.Add(tempB);
+                    }
+
+                    db.SaveChanges();
+
+                    AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber));
+                }
+            }
+
+
         }
 
         public void Merge(ShoppingCart tempCart, string userId)

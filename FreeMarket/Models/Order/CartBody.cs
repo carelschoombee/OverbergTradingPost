@@ -40,7 +40,6 @@ namespace FreeMarket.Models
                         ProductPrice = c.PricePerUnit,
                         ProductWeight = c.Weight,
                         Quantity = c.Quantity,
-                        QuantityOnHand = c.QuantityOnHand,
                         Settled = false,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumber,

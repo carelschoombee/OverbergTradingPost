@@ -109,6 +109,26 @@ namespace FreeMarket.Models
                                     .FirstOrDefault() == null ? false : true;
             }
         }
+
+        public override string ToString()
+        {
+            string toReturn = "";
+
+            toReturn += string.Format("\n{0}", AddressLine1);
+            toReturn += string.Format("\n{0}", AddressLine2);
+
+            if (!string.IsNullOrEmpty(AddressLine3))
+                toReturn += string.Format("\n{0}", AddressLine3);
+
+            if (!string.IsNullOrEmpty(AddressLine4))
+                toReturn += string.Format("\n{0}", AddressLine4);
+
+            toReturn += string.Format("\n{0}", AddressSuburb);
+            toReturn += string.Format("\n{0}", AddressCity);
+            toReturn += string.Format("\n{0}", AddressPostalCode);
+
+            return toReturn;
+        }
     }
 
     public class CustomerAddressMetaData

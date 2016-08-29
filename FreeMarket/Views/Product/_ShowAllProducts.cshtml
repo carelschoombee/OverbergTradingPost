@@ -3,12 +3,6 @@
 
 @helper ListProduct(int i)
 {
-    //AjaxOptions ajaxOpts = new AjaxOptions
-    //{
-    //    UpdateTargetId = "cartPartial",
-    //    LoadingElementId = "loadingDiv"
-    //};
-
     <div>
         <div class="col-sm-6">
             <img src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="Free Market" />
@@ -41,19 +35,6 @@
                 <td>
                     <a data-id="@Url.Action("CourierSelectionModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
                        class="btn btn-success editClass"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Add to Cart</span></a>
-
-                    @*@using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts))
-                    {
-                        @Html.AntiForgeryToken()
-
-                        @Html.Hidden("productNumber", Model.Products[i].ProductNumber)
-                        @Html.Hidden("supplierNumber", Model.Products[i].SupplierNumber)
-                        @Html.Hidden("quantity", (int)1)
-
-                        <button type="submit" class="btn btn-success">
-                            <i class="glyphicon glyphicon-shopping-cart"></i> Add to Cart
-                        </button>
-                    }*@
                 </td>
             </tr>
 

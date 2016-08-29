@@ -33,16 +33,13 @@ namespace FreeMarket.Models
         public decimal Weight { get; set; }
         public string Size { get; set; }
         public bool Activated { get; set; }
-        public int PCProductNumberID { get; set; }
-        public int CustodianNumber { get; set; }
-        public int QuantityOnHand { get; set; }
         public int DepartmentNumberID { get; set; }
         public string DepartmentName { get; set; }
         public int ItemNumber { get; set; }
         public int OrderDetailOrderNumber { get; set; }
         public int SupplierNumber { get; set; }
         public int OrderDetailProductNumber { get; set; }
-        public int CourierNumber { get; set; }
+        public Nullable<int> CourierNumber { get; set; }
         public Nullable<bool> Settled { get; set; }
         public Nullable<bool> PaySupplier { get; set; }
         public Nullable<bool> PayCourier { get; set; }
@@ -50,7 +47,7 @@ namespace FreeMarket.Models
         public Nullable<bool> PaidCourier { get; set; }
         public string OrderItemStatus { get; set; }
         public decimal PriceOrderDetail { get; set; }
-        public short Quantity { get; set; }
+        public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
         public Nullable<System.DateTime> DeliveryDateAgreed { get; set; }
         public Nullable<System.DateTime> DeliveryDateActual { get; set; }

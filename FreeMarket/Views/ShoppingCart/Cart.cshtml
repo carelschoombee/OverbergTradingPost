@@ -35,7 +35,7 @@ else
             <div class="col-sm-12">
                 <div class="col-sm-12">
                     @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
+                    {
                         @Html.AntiForgeryToken();
 
                         @Html.Partial("_CartBody", Model)

@@ -9,37 +9,6 @@
     };
 }
 
-@helper ListCouriers(int i)
-{
-    <tr>
-        <td>
-            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-            {
-                @Html.Label(@Model.FeeInfo[i].CourierName, new { @class="text-success" })
-            }
-            else
-            {
-                @Html.Label(@Model.FeeInfo[i].CourierName)
-            }
-            
-            @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
-        </td>
-        <td>
-            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-            {
-                @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
-            }
-            else
-            {
-                @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
-            }
-        </td>
-        <td>
-            @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
-        </td>
-    </tr>
-}
-
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -67,7 +36,8 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                             <div class="col-md-6">
-                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @style = "width:225px", @class = "form-control-inline" })
+                                <span class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true"></span>
                                 @Html.ValidationMessageFor(model => model.SelectedAddress)
                             </div>
                         </div>
@@ -75,17 +45,42 @@
                         <hr />
 
                         <table class="table table-bordered-custom text-center">
+                            @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
+                            {
                             <tr>
                                 <th class="col-sm-1 text-center">Courier Name</th>
                                 <th class="col-sm-1 text-center">Price</th>
                                 <th class="col-sm-1 text-center">Choose One</th>
                             </tr>
-
-                            @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
-                            {
                                 for (int i = 0; i < Model.FeeInfo.Count; i++)
                                 {
-                                    @ListCouriers(i);
+                                    <tr>
+                                        <td>
+                                            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                                            {
+                                                @Html.Label(@Model.FeeInfo[i].CourierName, new { @class = "text-success" })
+                                            }
+                                            else
+                                            {
+                                                @Html.Label(@Model.FeeInfo[i].CourierName)
+                                            }
+
+                                            @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+                                        </td>
+                                        <td>
+                                            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                                            {
+                                                @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
+                                            }
+                                            else
+                                            {
+                                                @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
+                                        </td>
+                                    </tr>
                                 }
                             }
                             else
@@ -115,7 +110,11 @@
 
     $(document).ready(function () {
 
-        
+
     });
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
 </script>

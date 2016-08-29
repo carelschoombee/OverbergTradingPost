@@ -61,31 +61,34 @@ namespace FreeMarket.Controllers
 
         public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity)
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            var currentUser = manager.FindById(User.Identity.GetUserId());
-            string defaultAddressName = currentUser.DefaultAddress;
-            string userId = currentUser.Id;
-
-            bool displayNamesNotPrices = (userId == null);
             CourierFeeViewModel model = new CourierFeeViewModel();
 
-            if (id == 0 || supplierNumber == 0)
-                return RedirectToAction("Index", "Product");
+            string userId = User.Identity.GetUserId();
+            string defaultAddressName = "";
 
-            using (FreeMarketEntities db = new FreeMarketEntities())
+            bool anonymousUser = (userId == null);
+
+            if (anonymousUser)
             {
-                Product product = db.Products.Find(id);
-                Supplier supplier = db.Suppliers.Find(supplierNumber);
 
-                if (product == null || supplier == null)
+            }
+            else
+            {
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var currentUser = manager.FindById(User.Identity.GetUserId());
+                defaultAddressName = currentUser.DefaultAddress;
+
+                if (id == 0 || supplierNumber == 0)
                     return RedirectToAction("Index", "Product");
 
-                if (displayNamesNotPrices)
+                using (FreeMarketEntities db = new FreeMarketEntities())
                 {
+                    Product product = db.Products.Find(id);
+                    Supplier supplier = db.Suppliers.Find(supplierNumber);
 
-                }
-                else
-                {
+                    if (product == null || supplier == null)
+                        return RedirectToAction("Index", "Product");
+
                     model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, defaultAddressName);
                 }
             }
@@ -97,18 +100,24 @@ namespace FreeMarket.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(CourierFeeViewModel viewModel)
         {
+            if (viewModel.ProductNumber == 0 || viewModel.SupplierNumber == 0 || viewModel.SelectedCourierNumber == 0)
+            {
+                TempData["errorMessage"] = "Error: We could not add the item to the cart.";
+                return JavaScript("window.location = window.location.href;");
+            }
+
             string userId = User.Identity.GetUserId();
             ShoppingCart cart = GetCartFromSession(userId);
 
             FreeMarketObject result;
-            result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity, userId);
+            result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.SelectedCourierNumber, viewModel.SelectedAddress, viewModel.Quantity, userId);
 
             if (result.Result == FreeMarketResult.Success)
             {
                 // New item added
                 if (result.Argument != null)
                 {
-                    TempData["message"] = string.Format("Success: {0} (1) has been added to your cart.", ((Product)(result.Argument)).Description);
+                    TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
                 }
             }
             else
@@ -169,6 +178,48 @@ namespace FreeMarket.Controllers
             model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
 
             return View("Cart", model);
+        }
+
+        public ActionResult GetAddress(int AddressNumber)
+        {
+            string toReturn = "";
+            CustomerAddress address;
+
+            if (AddressNumber != 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    address = db.CustomerAddresses
+                       .Where(c => c.AddressNumber == AddressNumber)
+                       .FirstOrDefault();
+
+                    if (address != null)
+                        toReturn = address.ToString();
+                }
+            }
+
+            return Content(toReturn);
+        }
+
+        public ActionResult GetDimensions(int productNumber)
+        {
+            string toReturn = "";
+            Product product;
+
+            if (productNumber != 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    product = db.Products
+                       .Where(c => c.ProductNumber == productNumber)
+                       .FirstOrDefault();
+
+                    if (product != null)
+                        toReturn = string.Format("{0} {1}", product.Weight, product.Size);
+                }
+            }
+
+            return Content(toReturn);
         }
     }
 }
