@@ -1,0 +1,200 @@
+﻿@using FreeMarket.Models
+@model Product
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Product</h2>
+<hr />
+
+<div class="container center_div">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditProductProcess", "Admin", FormMethod.Post, new { enctype = "multi-part/form-data", @class = "form-horizontal", role = "form", @id = "productForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Description, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ProductNumber, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.ProductNumber, new { @class = "form-control" })
+                    @Html.HiddenFor(m => m.ProductNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.SupplierNumber, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.SupplierNumber, new { @class = "form-control" })
+                    @Html.HiddenFor(m => m.SupplierNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.SupplierName, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.SupplierName, new { @class = "form-control" })
+                    @Html.HiddenFor(m => m.SupplierName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Activated, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.EditorFor(m => m.Activated)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DateAdded, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.DateAdded, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DateModified, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.DateModified, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DepartmentNumber, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.DepartmentNumber, new { @class = "form-control" })
+                    @Html.HiddenFor(m => m.DepartmentNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DepartmentName, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(m => m.DepartmentName, new { @class = "form-control" })
+                    @Html.HiddenFor(m => m.DepartmentName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PricePerUnit, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @{ Html.EnableClientValidation(false); }
+                    @Html.EditorFor(m => m.PricePerUnit, new { htmlAttributes = new { @class = "form-control" } })
+                    @{ Html.EnableClientValidation(true); }
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Size, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.Size, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Weight, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @{ Html.EnableClientValidation(false); }
+                    @Html.EditorFor(m => m.Weight, new { htmlAttributes = new { @class = "form-control" } })
+                    @{ Html.EnableClientValidation(true); }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="position:relative;">
+                    <label>Image 256 x 192</label>
+                    <a class='btn' href='javascript:;'>
+                        Choose File...
+                        <input type="file" name="imagePrimary" size="40"
+                               style="position:absolute;z-index:2;top:0;
+                                left:0;filter: alpha(opacity=0); opacity:0;
+                                background-color:transparent;color:transparent;"
+                               onchange='$("#upload-file-info").html($(this).val());'>
+                    </a>
+                    <span class='label label-info' id="upload-file-info"></span>
+                </div>
+                <div class="col-sm-6">
+                    <img src="@Url.Action("RenderImage", "Image", new { id = Model.MainImageNumber})" alt="Free Market" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="position:relative;">
+                    <label>Image 80 x 79</label>
+                    <a class='btn' href='javascript:;'>
+                        Choose File...
+                        <input type="file" name="imageSecondary" size="40"
+                               style="position:absolute;z-index:2;top:0;
+                                left:0;filter: alpha(opacity=0); opacity:0;
+                                background-color:transparent;color:transparent;"
+                               onchange='$("#upload-file-info2").html($(this).val());'>
+                    </a>
+                    <span class='label label-info' id="upload-file-info2"></span>
+                </div>
+                <div class="col-sm-6">
+                    <img src="@Url.Action("RenderImage", "Image", new { id = Model.SecondaryImageNumber})" alt="Free Market" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Update" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#productForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Description': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'PricePerUnit': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                }
+                            }
+                        },
+                        'Size': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'Weight': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                }
+                            }
+                        }                     
+                    }
+                })
+    });
+
+</script>

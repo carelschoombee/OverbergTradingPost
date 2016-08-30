@@ -43,7 +43,7 @@ namespace FreeMarket.Controllers
             return File(photoBack, "image/png");
         }
 
-        //[Authorize(Roles="Admin")]
+        //[Authorize(Roles = "Administrator")]
         //public async Task<ActionResult> Manage()
         //{
 

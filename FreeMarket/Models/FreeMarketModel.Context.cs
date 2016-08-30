@@ -58,19 +58,6 @@ namespace FreeMarket.Models
         public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
     
-        public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
-        {
-            var productNumberParameter = productNumber.HasValue ?
-                new ObjectParameter("ProductNumber", productNumber) :
-                new ObjectParameter("ProductNumber", typeof(int));
-    
-            var supplierNumberParameter = supplierNumber.HasValue ?
-                new ObjectParameter("SupplierNumber", supplierNumber) :
-                new ObjectParameter("SupplierNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
-        }
-    
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
@@ -129,6 +116,19 @@ namespace FreeMarket.Models
                 new ObjectParameter("OrderNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("ProductNumber", productNumber) :
+                new ObjectParameter("ProductNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("SupplierNumber", supplierNumber) :
+                new ObjectParameter("SupplierNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     }
 }

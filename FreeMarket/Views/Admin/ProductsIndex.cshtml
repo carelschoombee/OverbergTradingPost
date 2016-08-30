@@ -1,0 +1,51 @@
+﻿@using FreeMarket.Models
+@model ProductCollection
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Products</h2>
+<hr />
+
+@if (Model.Products.Count > 0)
+{
+    <table class="table table-bordered-custom">
+
+        <tr class="well">
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1">Product Number</th>
+            <th class="col-sm-2">Description</th>
+            <th class="col-sm-2">Supplier</th>
+            <th class="col-sm-2">Price Per Unit</th>
+        </tr>
+
+    @foreach (Product product in Model.Products)
+    {
+        <tr>
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditProduct", new { productNumber = product.ProductNumber, supplierNumber = product.SupplierNumber } )
+            </td>
+            <td>
+                @Html.DisplayFor(model => product.ProductNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => product.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(model => product.SupplierName)
+            </td>
+            <td>
+                @String.Format("{0:C}", product.PricePerUnit)
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

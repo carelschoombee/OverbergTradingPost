@@ -40,14 +40,14 @@
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
            </td>
            <td>
-               @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Price)
+               @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
            </td>
            <td>
                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px", @class = "form-control" } })
                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new {@class = "text-danger" })
            </td>
            <td>
-               @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].OrderItemValue)
+               @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
            </td>
        </tr>
     }

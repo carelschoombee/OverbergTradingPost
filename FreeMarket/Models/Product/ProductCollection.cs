@@ -41,7 +41,13 @@ namespace FreeMarket.Models
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 
+                        int imageNumberSecondary = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == "80x79")
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
                         product.MainImageNumber = imageNumber;
+                        product.SecondaryImageNumber = imageNumberSecondary;
                     }
                 }
 

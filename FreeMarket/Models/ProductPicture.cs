@@ -19,6 +19,7 @@ namespace FreeMarket.Models
         public byte[] Picture { get; set; }
         public string Annotation { get; set; }
         public string Dimensions { get; set; }
+        public string PictureMimeType { get; set; }
     
         public virtual Product Product { get; set; }
     }
