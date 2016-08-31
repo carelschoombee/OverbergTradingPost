@@ -1,0 +1,34 @@
+﻿@using FreeMarket.Models
+@model Product
+@{
+    ViewBag.Title = "Create Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Create Product</h2>
+<hr />
+
+<div class="container center_div">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("CreateProductProcess", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", @id = "productForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.Partial("_ProductPartial", Model)
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Update" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+@Html.Partial("_ValidateProductPartial")

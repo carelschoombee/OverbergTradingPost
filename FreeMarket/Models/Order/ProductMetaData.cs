@@ -53,12 +53,12 @@ namespace FreeMarket.Models
                 };
 
                 product.MainImageNumber = db.ProductPictures
-                    .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == "256x192")
+                    .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Medium.ToString())
                     .Select(c => c.PictureNumber)
                     .FirstOrDefault();
 
                 product.SecondaryImageNumber = db.ProductPictures
-                    .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == "80x79")
+                    .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
                     .Select(c => c.PictureNumber)
                     .FirstOrDefault();
             }
@@ -98,15 +98,65 @@ namespace FreeMarket.Models
             }
         }
 
-        public static void SaveProductImage(int productNumber, HttpPostedFileBase image, string dimensions)
+        public static FreeMarketResult SaveProductImage(int productNumber, PictureSize size, HttpPostedFileBase image)
         {
-            if (image != null)
+            if (image != null && productNumber != 0)
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
+                    ProductPicture picture = new ProductPicture();
 
+                    Product product = db.Products.Find(productNumber);
+
+                    if (product == null)
+                        return FreeMarketResult.Failure;
+
+                    picture = db.ProductPictures
+                    .Where(c => c.ProductNumber == productNumber && c.Dimensions == size.ToString())
+                    .FirstOrDefault();
+
+                    try
+                    {
+                        // No picture exists for this dimension/product
+                        if (picture == null)
+                        {
+                            picture = new ProductPicture();
+                            picture.Picture = new byte[image.ContentLength];
+                            picture.Annotation = product.Description;
+                            picture.Dimensions = size.ToString();
+                            image.InputStream.Read(picture.Picture, 0, image.ContentLength);
+                            picture.PictureMimeType = image.ContentType;
+                            picture.ProductNumber = productNumber;
+
+                            db.ProductPictures.Add(picture);
+                            db.SaveChanges();
+
+                            AuditUser.LogAudit(9, string.Format("Product: {0}", productNumber));
+                            return FreeMarketResult.Success;
+                        }
+                        else
+                        {
+                            picture.Annotation = product.Description;
+                            picture.Picture = new byte[image.ContentLength];
+                            image.InputStream.Read(picture.Picture, 0, image.ContentLength);
+                            picture.PictureMimeType = image.ContentType;
+
+                            db.Entry(picture).State = EntityState.Modified;
+                            db.SaveChanges();
+
+                            AuditUser.LogAudit(9, string.Format("Product: {0}", productNumber));
+                            return FreeMarketResult.Success;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionLogging.LogException(e);
+                        return FreeMarketResult.Failure;
+                    }
                 }
             }
+
+            return FreeMarketResult.Failure;
         }
 
         public override string ToString()

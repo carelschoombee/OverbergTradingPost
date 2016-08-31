@@ -5,7 +5,7 @@
 {
     <div>
         <div class="col-sm-6">
-            <img src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="Free Market" />
+            <img src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" />
         </div>
     </div>
 

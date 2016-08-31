@@ -33,7 +33,7 @@
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
            </td>
            <td>
-               <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" />
+               <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription"/>
            </td>
            <td>
                @Html.Action("GetDimensions", "ShoppingCart", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>

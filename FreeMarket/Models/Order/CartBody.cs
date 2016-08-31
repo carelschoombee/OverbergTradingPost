@@ -52,7 +52,7 @@ namespace FreeMarket.Models
                     foreach (OrderDetail detail in body.OrderDetails)
                     {
                         int imageNumber = db.ProductPictures
-                            .Where(c => c.ProductNumber == detail.ProductNumber && c.Dimensions == "80x79")
+                            .Where(c => c.ProductNumber == detail.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 

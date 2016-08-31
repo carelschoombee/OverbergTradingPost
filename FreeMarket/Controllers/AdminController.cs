@@ -21,6 +21,13 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult CreateProduct()
+        {
+            Product product = new Product();
+
+            return View(product);
+        }
+
         public ActionResult EditProduct(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)
@@ -39,11 +46,19 @@ namespace FreeMarket.Controllers
             {
                 Product.SaveProduct(product);
 
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+
                 if (imagePrimary != null)
-                    Product.SaveProductImage(product.ProductNumber, "256x192", imagePrimary);
+                    resultPrimary = Product.SaveProductImage(product.ProductNumber, PictureSize.Medium, imagePrimary);
 
                 if (imageSecondary != null)
-                    Product.SaveProductImage(product.ProductNumber, "80x79", imageSecondary);
+                    resultSecondary = Product.SaveProductImage(product.ProductNumber, PictureSize.Small, imageSecondary);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                {
+                    TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
+                }
 
                 return RedirectToAction("ProductsIndex", "Admin");
             }

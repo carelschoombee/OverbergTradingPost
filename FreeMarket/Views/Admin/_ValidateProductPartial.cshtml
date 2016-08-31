@@ -1,0 +1,52 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#productForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Description': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'PricePerUnit': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                }
+                            }
+                        },
+                        'Size': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'Weight': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

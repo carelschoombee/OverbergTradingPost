@@ -1,5 +1,4 @@
 ﻿using FreeMarket.Models;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -20,10 +19,12 @@ namespace FreeMarket.Controllers
 
                 if (item == null || item.Picture == null)
                 {
-                    photoBack = db.SitePictures
-                        .Where(c => c.Description == "defaultPicture")
-                        .Select(c => c.Picture)
-                        .FirstOrDefault();
+                    if (defaultSize == PictureSize.Large)
+                        return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPicture.png"), "image/png");
+                    else if (defaultSize == PictureSize.Small)
+                        return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureSmall.png"), "image/png");
+                    else
+                        return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureMedium.png"), "image/png");
                 }
 
                 photoBack = item.Picture;
@@ -31,22 +32,9 @@ namespace FreeMarket.Controllers
             catch (System.Exception ex)
             {
                 ExceptionLogging.LogExceptionAsync(ex);
-
-                if (defaultSize == PictureSize.Large)
-                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPicture.png"), "image/png");
-                else if (defaultSize == PictureSize.Small)
-                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureSmall.png"), "image/png");
-                else
-                    return File(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/defaultPictureMedium.png"), "image/png");
             }
 
             return File(photoBack, "image/png");
         }
-
-        //[Authorize(Roles = "Administrator")]
-        //public async Task<ActionResult> Manage()
-        //{
-
-        //}
     }
 }

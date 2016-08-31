@@ -9,6 +9,8 @@
 <h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Products</h2>
 <hr />
 
+@Html.ActionLink("Create New", "CreateProduct")
+
 @if (Model.Products.Count > 0)
 {
     <table class="table table-bordered-custom">

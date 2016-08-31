@@ -109,6 +109,11 @@ namespace FreeMarket.Models
 
                     string status = "Unconfirmed";
 
+                    int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == productInfo.ProductNumberID && c.Dimensions == PictureSize.Small.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
                     // Add the new item to the Session variable
 
                     Body.OrderDetails.Add(
@@ -135,7 +140,8 @@ namespace FreeMarket.Models
                             Settled = null,
                             SupplierNumber = productInfo.SupplierNumberID,
                             SupplierName = productInfo.SupplierName,
-                            OrderNumber = Order.OrderNumber
+                            OrderNumber = Order.OrderNumber,
+                            MainImageNumber = imageNumber
                         });
 
                     res.Result = FreeMarketResult.Success;

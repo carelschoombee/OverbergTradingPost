@@ -37,12 +37,12 @@ namespace FreeMarket.Models
                     foreach (Product product in allProducts.Products)
                     {
                         int imageNumber = db.ProductPictures
-                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == "256x192")
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Medium.ToString())
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 
                         int imageNumberSecondary = db.ProductPictures
-                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == "80x79")
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 
