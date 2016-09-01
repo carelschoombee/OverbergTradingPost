@@ -1,0 +1,49 @@
+﻿@using FreeMarket.Models
+@model CourierFeeViewModel
+
+<table class="table table-bordered-custom text-center">
+    @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
+    {
+        <tr>
+            <th class="col-sm-1 text-center">Courier Name</th>
+            <th class="col-sm-1 text-center">Price</th>
+            <th class="col-sm-1 text-center">Choose One</th>
+        </tr>
+        for (int i = 0; i < Model.FeeInfo.Count; i++)
+        {
+            <tr>
+                <td>
+                    @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                    {
+                        @Html.Label(@Model.FeeInfo[i].CourierName, new { @class = "text-success" })
+                    }
+                    else
+                    {
+                        @Html.Label(@Model.FeeInfo[i].CourierName)
+                    }
+
+                    @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+                </td>
+                <td>
+                    @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                    {
+                        @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
+                    }
+                    else
+                    {
+                        @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
+                    }
+                </td>
+                <td>
+                    @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        @Html.Label("Sorry, but we cannot deliver to that address.")
+    }
+
+</table>
+

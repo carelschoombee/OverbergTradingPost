@@ -92,6 +92,53 @@ namespace FreeMarket.Models
             }
         }
 
+        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, int addressNumber)
+        {
+            if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
+            {
+                InitializeDefault();
+            }
+            else
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    ProductSupplier productSupplierTemp = db.ProductSuppliers.Find(productNumber, supplierNumber);
+
+                    if (productSupplierTemp == null)
+                    {
+                        InitializeDefault();
+                        return;
+                    }
+
+                    ProductNumber = productNumber;
+                    SupplierNumber = supplierNumber;
+
+                    AddressNameOptions = db.CustomerAddresses
+                        .Where(c => c.CustomerNumber == userId)
+                        .Select
+                        (c => new SelectListItem
+                        {
+                            Text = c.AddressName,
+                            Value = c.AddressNumber.ToString(),
+                            Selected = (c.AddressNumber == addressNumber ? true : false)
+                        }).ToList();
+
+                    SelectedAddress = addressNumber;
+                }
+
+                Quantity = quantityRequested;
+
+                FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, SelectedAddress);
+
+                Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
+
+                if (FeeInfo == null || FeeInfo.Count == 0)
+                    SelectedCourierNumber = 0;
+                else
+                    SelectedCourierNumber = FeeInfo[0].CourierNumber;
+            }
+        }
+
         public void UpdateModel(int productNumber, int supplierNumber, int quantityRequested, int selectedAddress)
         {
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested == 0 || selectedAddress == 0)

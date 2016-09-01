@@ -36,60 +36,62 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                             <div class="col-md-6">
-                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @style = "width:225px", @class = "form-control-inline" })
-                                <span class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true"></span>
+                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @style = "width:225px", @class = "form-control-inline"})
+                                <span id="addressText" class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true"></span>
                                 @Html.ValidationMessageFor(model => model.SelectedAddress)
                             </div>
                         </div>
 
                         <hr />
 
-                        <table class="table table-bordered-custom text-center">
-                            @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
-                            {
-                            <tr>
-                                <th class="col-sm-1 text-center">Courier Name</th>
-                                <th class="col-sm-1 text-center">Price</th>
-                                <th class="col-sm-1 text-center">Choose One</th>
-                            </tr>
-                                for (int i = 0; i < Model.FeeInfo.Count; i++)
+                        <div id="CourierContainer">
+                            <table class="table table-bordered-custom text-center">
+                                @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
                                 {
                                     <tr>
-                                        <td>
-                                            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-                                            {
-                                                @Html.Label(@Model.FeeInfo[i].CourierName, new { @class = "text-success" })
-                                            }
-                                            else
-                                            {
-                                                @Html.Label(@Model.FeeInfo[i].CourierName)
-                                            }
-
-                                            @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
-                                        </td>
-                                        <td>
-                                            @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-                                            {
-                                                @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
-                                            }
-                                            else
-                                            {
-                                                @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
-                                            }
-                                        </td>
-                                        <td>
-                                            @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
-                                        </td>
+                                        <th class="col-sm-1 text-center">Courier Name</th>
+                                        <th class="col-sm-1 text-center">Price</th>
+                                        <th class="col-sm-1 text-center">Choose One</th>
                                     </tr>
-                                }
-                            }
-                            else
-                            {
-                                @Html.Label("Sorry, but we cannot deliver to that address.")
-                            }
+                                    for (int i = 0; i < Model.FeeInfo.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                                                {
+                                                    @Html.Label(@Model.FeeInfo[i].CourierName, new { @class = "text-success" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.Label(@Model.FeeInfo[i].CourierName)
+                                                }
 
-                        </table>
-                        
+                                                @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+                                            </td>
+                                            <td>
+                                                @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                                                {
+                                                    @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
+                                                }
+                                                else
+                                                {
+                                                    @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.Label("Sorry, but we cannot deliver to that address.")
+                                }
+
+                            </table>
+                        </div>
+
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
@@ -108,9 +110,33 @@
 
 <script language="javascript" type="text/javascript">
 
-    $(document).ready(function () {
+    $("#SelectedAddress").change(function () {
+        $.ajax({
+            url: '@Url.Action("GetCourierData", "ShoppingCart")',
+            type: 'GET',
+            data: {
+                id: @Model.ProductNumber,
+                supplierNumber :@Model.SupplierNumber,
+                quantity: $("#Quantity").val(),
+                addressNumber: $("#SelectedAddress").val(),
+            }
+        }).done
+            (function (data) {
+                $('#CourierContainer').html(data);
+            });
 
-
+        $.ajax({
+            url: '@Url.Action("GetAddress", "ShoppingCart")',
+            type: 'GET',
+            data: {
+                AddressNumber: $('#SelectedAddress').val()
+            }
+        }).done
+            (function (data) {
+                $('#addressText').tooltip('hide')
+                    .attr('data-original-title', data)
+                    .tooltip('fixTitle');
+            });
     });
 
     $(function () {
