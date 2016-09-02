@@ -221,6 +221,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Enums.cs" />
+    <Compile Include="Infrastructure\MinAttribute.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DecimalModelBinder.cs" />
@@ -234,6 +235,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\GetAllProductsByDepartment_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllProducts_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>

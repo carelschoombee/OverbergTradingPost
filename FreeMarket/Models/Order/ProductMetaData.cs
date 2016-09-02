@@ -1,9 +1,12 @@
-﻿using System;
+﻿using FreeMarket.Infrastructure;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -26,6 +29,12 @@ namespace FreeMarket.Models
         [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         [DisplayName("Price Per Unit")]
         public decimal PricePerUnit { get; set; }
+
+        public string SelectedDepartment { get; set; }
+        public List<SelectListItem> Departments { get; set; }
+
+        public string SelectedSupplier { get; set; }
+        public List<SelectListItem> Suppliers { get; set; }
 
         public static Product GetProduct(int productNumber, int supplierNumber)
         {
@@ -61,9 +70,115 @@ namespace FreeMarket.Models
                     .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
                     .Select(c => c.PictureNumber)
                     .FirstOrDefault();
+
+                product.Departments = db.Departments
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
+                        Value = c.DepartmentNumber.ToString(),
+                        Selected = c.DepartmentNumber == product.DepartmentNumber ? true : false
+                    })
+                    .ToList();
             }
 
             return product;
+        }
+
+        public void InitializeDropDowns(string mode)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (mode == "edit")
+                {
+                    Departments = db.Departments
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
+                        Value = c.DepartmentNumber.ToString(),
+                        Selected = (c.DepartmentNumber == DepartmentNumber) ? true : false
+                    })
+                    .ToList();
+                }
+                else
+                {
+                    Departments = db.Departments
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
+                        Value = c.DepartmentNumber.ToString(),
+                    })
+                    .ToList();
+                }
+
+                if (mode == "create")
+                {
+                    Suppliers = db.Suppliers
+                        .Select(c => new SelectListItem
+                        {
+                            Text = "(" + c.SupplierNumber + ") " + c.SupplierName,
+                            Value = c.SupplierNumber.ToString()
+                        })
+                        .ToList();
+                }
+            }
+        }
+
+        public static Product GetNewProduct()
+        {
+            Product product = new Product();
+
+            product.DateAdded = DateTime.Now;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                product.Departments = db.Departments
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.DepartmentNumber + ")" + c.DepartmentName,
+                        Value = c.DepartmentNumber.ToString()
+                    })
+                    .ToList();
+
+                product.Suppliers = db.Suppliers
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.SupplierNumber + ")" + c.SupplierName,
+                        Value = c.SupplierNumber.ToString()
+                    })
+                    .ToList();
+            }
+
+            return product;
+        }
+
+        public static void CreateNewProduct(Product product)
+        {
+            try
+            {
+                product.DateAdded = DateTime.Now;
+                product.DateModified = DateTime.Now;
+                product.DepartmentNumber = int.Parse(product.SelectedDepartment);
+            }
+            catch
+            {
+                return;
+            }
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                db.Products.Add(product);
+                db.SaveChanges();
+
+                ProductSupplier productSupplierDb = new ProductSupplier()
+                {
+                    ProductNumber = product.ProductNumber,
+                    SupplierNumber = int.Parse(product.SelectedSupplier),
+                    PricePerUnit = product.PricePerUnit
+                };
+
+                db.ProductSuppliers.Add(productSupplierDb);
+                db.SaveChanges();
+            }
         }
 
         public static void SaveProduct(Product product)
@@ -79,7 +194,7 @@ namespace FreeMarket.Models
                 {
                     productDb.Activated = product.Activated;
                     productDb.DateModified = DateTime.Now;
-                    productDb.DepartmentNumber = product.DepartmentNumber;
+                    productDb.DepartmentNumber = int.Parse(product.SelectedDepartment);
                     productDb.Description = product.Description;
                     productDb.Size = product.Size;
                     productDb.Weight = product.Weight;
@@ -185,6 +300,7 @@ namespace FreeMarket.Models
         public string Size { get; set; }
 
         [Required]
+        [MinValue("0.1")]
         [DisplayName("Weight")]
         public decimal Weight { get; set; }
 

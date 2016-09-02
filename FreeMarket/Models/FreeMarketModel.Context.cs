@@ -130,5 +130,14 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
+    
+        public virtual ObjectResult<GetAllProductsByDepartment_Result> GetAllProductsByDepartment(Nullable<int> departmentNumber)
+        {
+            var departmentNumberParameter = departmentNumber.HasValue ?
+                new ObjectParameter("DepartmentNumber", departmentNumber) :
+                new ObjectParameter("DepartmentNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsByDepartment_Result>("GetAllProductsByDepartment", departmentNumberParameter);
+        }
     }
 }

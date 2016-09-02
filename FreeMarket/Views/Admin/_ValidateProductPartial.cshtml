@@ -1,6 +1,35 @@
-﻿
+﻿@using FreeMarket.Models
+@model Product
+
 <script type="text/javascript">
-    $(document).ready(function() {
+
+    function readURLPrimary(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imagePrimaryPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readURLSecondary(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imageSecondaryPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(document).ready(function () {
         $('#productForm')
                 .bootstrapValidator({
                     feedbackIcons: {
@@ -24,13 +53,11 @@
                                 numeric: {
                                     message: 'The field must be a number.',
                                     separator: ','
-                                }
-                            }
-                        },
-                        'Size': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
                                 }
                             }
                         },
@@ -42,9 +69,55 @@
                                 numeric: {
                                     message: 'The field must be a number.',
                                     separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        @if (Model.Suppliers != null)
+                        {
+                         <text>
+                        'imagePrimary': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'imageSecondary': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        </text>
+                        }
+                        'SelectedDepartment': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'SelectedSupplier': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'Size': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
                                 }
                             }
                         }
+
                     }
                 })
     });

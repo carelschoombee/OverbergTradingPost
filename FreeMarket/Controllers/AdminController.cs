@@ -23,9 +23,37 @@ namespace FreeMarket.Controllers
 
         public ActionResult CreateProduct()
         {
-            Product product = new Product();
+            Product product = Product.GetNewProduct();
 
             return View(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
+        {
+            if (ModelState.IsValid)
+            {
+                Product.CreateNewProduct(product);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = Product.SaveProductImage(product.ProductNumber, PictureSize.Medium, imagePrimary);
+
+                if (imageSecondary != null)
+                    resultSecondary = Product.SaveProductImage(product.ProductNumber, PictureSize.Small, imageSecondary);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
+
+                return RedirectToAction("ProductsIndex", "Admin");
+            }
+
+            product.InitializeDropDowns("create");
+
+            return View("CreateProduct", product);
         }
 
         public ActionResult EditProduct(int productNumber, int supplierNumber)
@@ -56,14 +84,14 @@ namespace FreeMarket.Controllers
                     resultSecondary = Product.SaveProductImage(product.ProductNumber, PictureSize.Small, imageSecondary);
 
                 if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
-                {
                     TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
-                }
 
                 return RedirectToAction("ProductsIndex", "Admin");
             }
 
-            return View(product);
+            product.InitializeDropDowns("edit");
+
+            return View("EditProduct", product);
         }
     }
 }

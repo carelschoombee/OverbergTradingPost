@@ -19,7 +19,14 @@ namespace FreeMarket.Models
             {
                 try
                 {
-                    actualValue = Convert.ToDecimal(valueResult.AttemptedValue, CultureInfo.CurrentCulture);
+                    if (valueResult.AttemptedValue.Contains("."))
+                    {
+                        actualValue = Convert.ToDecimal(valueResult.AttemptedValue, CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        actualValue = Convert.ToDecimal(valueResult.AttemptedValue, CultureInfo.CurrentCulture);
+                    }
                 }
                 catch (FormatException e)
                 {
