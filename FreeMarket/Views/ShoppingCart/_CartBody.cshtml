@@ -26,7 +26,7 @@
     @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
        <tr>
-           <td>
+           <td data-label="Remove:">
                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
@@ -36,17 +36,17 @@
                <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription"/>
            </td>
            <td>
-               @Html.Action("GetDimensions", "ShoppingCart", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
+               @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
            </td>
-           <td>
+           <td data-label="Price:">
                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
            </td>
-           <td>
-               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px", @class = "form-control" } })
+           <td class="text-center" data-label="Quantity:">
+               @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new {@class = "text-danger" })
            </td>
-           <td>
+           <td data-label="Total:">
                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
            </td>
        </tr>

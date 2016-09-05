@@ -244,6 +244,9 @@
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetOrderHistory_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetProduct_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -307,6 +310,8 @@
     <Compile Include="Models\OrderHeader.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderHistory\OrderHeaderViewModel.cs" />
+    <Compile Include="Models\OrderHistory\OrderHistoryViewModel.cs" />
     <Compile Include="Models\OrderStatu.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -510,6 +515,8 @@
     <Content Include="Views\Admin\_ProductPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateProductPartial.cshtml" />
     <Content Include="Views\ShoppingCart\_CourierData.cshtml" />
+    <Content Include="Views\Manage\ViewOrderHistory.cshtml" />
+    <Content Include="Views\Manage\ViewOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

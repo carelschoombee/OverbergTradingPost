@@ -1,0 +1,70 @@
+﻿@using FreeMarket.Models
+@model OrderHistoryViewModel
+
+@{
+    ViewBag.Title = "Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+@if (Model.Items != null && Model.Items.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+        <tr class="well">
+            <th class="col-sm-1">
+                Order #
+            </th>
+            <th class="col-sm-1">
+                Date Placed
+            </th>
+            <th class="col-sm-1">
+                Description
+            </th>
+            <th class="col-sm-1">
+                Status
+            </th>
+            <th class="col-sm-1">
+                Qty
+            </th>
+            <th class="col-sm-1">
+                Shipping
+            </th>
+            <th class="col-sm-1">
+                Price
+            </th>
+        </tr>
+
+        @foreach(GetOrderHistory_Result detail in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(detail.OrderNumber.ToString(),"ViewOrder", new { orderNumber = detail.OrderNumber })
+                </td>
+                <td>
+                    @string.Format("{0:d}", detail.OrderDatePlaced)
+                </td>
+                <td>
+                    @Html.Action("GetFullDescription", "Product", new { productNumber = detail.ProductNumber , supplierNumber = detail.SupplierNumber })
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.OrderItemStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.CourierFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.Price)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+

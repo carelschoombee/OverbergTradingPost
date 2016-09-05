@@ -239,26 +239,5 @@ namespace FreeMarket.Controllers
 
             return Content(toReturn);
         }
-
-        public ActionResult GetDimensions(int productNumber)
-        {
-            string toReturn = "";
-            Product product;
-
-            if (productNumber != 0)
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    product = db.Products
-                       .Where(c => c.ProductNumber == productNumber)
-                       .FirstOrDefault();
-
-                    if (product != null)
-                        toReturn = string.Format("{0} {1}", product.Weight, product.Size);
-                }
-            }
-
-            return Content(toReturn);
-        }
     }
 }

@@ -139,5 +139,14 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsByDepartment_Result>("GetAllProductsByDepartment", departmentNumberParameter);
         }
+    
+        public virtual ObjectResult<GetOrderHistory_Result> GetOrderHistory(string customerNumber)
+        {
+            var customerNumberParameter = customerNumber != null ?
+                new ObjectParameter("CustomerNumber", customerNumber) :
+                new ObjectParameter("CustomerNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
+        }
     }
 }

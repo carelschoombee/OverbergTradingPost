@@ -311,6 +311,36 @@ namespace FreeMarket.Controllers
             });
         }
 
+        public ActionResult ViewOrderHistory()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            OrderHistoryViewModel model = new OrderHistoryViewModel();
+
+            model = OrderHistoryViewModel.GetOrderHistory(user.Id);
+
+            return View(model);
+        }
+
+        public ActionResult ViewOrder(int orderNumber)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            OrderHistoryViewModel model = new OrderHistoryViewModel();
+
+            model = OrderHistoryViewModel.GetOrderHistory(user.Id);
+
+            return View(model);
+        }
+
         public ActionResult ModifyDeliveryDetails()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());

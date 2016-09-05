@@ -625,6 +625,9 @@
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetOrderHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GetProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductNumber" Type="int" Mode="In" />
           <Parameter Name="SupplierNumber" Type="int" Mode="In" />
@@ -1128,7 +1131,10 @@
             <Parameter Name="SupplierNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
-            <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetOrderHistory" ReturnType="Collection(FreeMarketModel.GetOrderHistory_Result)">
+            <Parameter Name="CustomerNumber" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1617,6 +1623,32 @@
           <Property Type="Boolean" Name="Activated" Nullable="false" />
           <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
+        </ComplexType>
+        <ComplexType Name="GetOrderHistory_Result">
+          <Property Type="Int32" Name="ItemNumber" Nullable="false" />
+          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
+          <Property Type="Int32" Name="ProductNumber" Nullable="false" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="Boolean" Name="Settled" Nullable="true" />
+          <Property Type="Boolean" Name="PaySupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PayCourier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidSupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidCourier" Nullable="true" />
+          <Property Type="String" Name="OrderItemStatus" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="Quantity" Nullable="false" />
+          <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
+          <Property Type="DateTime" Name="DeliveryDateAgreed" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DeliveryDateActual" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
+          <Property Type="String" Name="CustomerProductQualityRating" Nullable="true" />
+          <Property Type="String" Name="CustomerCourierOnTimeDeliveryRating" Nullable="true" />
+          <Property Type="String" Name="CustomerOverallSatisfactionRating" Nullable="true" />
+          <Property Type="DateTime" Name="OrderDatePlaced" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="OrderDateClosed" Nullable="true" Precision="23" />
+          <Property Type="String" Name="OrderStatus" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="PaymentReceived" Nullable="false" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2121,6 +2153,36 @@
                 <ScalarProperty Name="Activated" ColumnName="Activated" />
                 <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
                 <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetOrderHistory" FunctionName="FreeMarketModel.Store.GetOrderHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetOrderHistory_Result">
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
+                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
+                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
+                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
+                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="DeliveryDateAgreed" ColumnName="DeliveryDateAgreed" />
+                <ScalarProperty Name="DeliveryDateActual" ColumnName="DeliveryDateActual" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+                <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
+                <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
+                <ScalarProperty Name="CustomerOverallSatisfactionRating" ColumnName="CustomerOverallSatisfactionRating" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

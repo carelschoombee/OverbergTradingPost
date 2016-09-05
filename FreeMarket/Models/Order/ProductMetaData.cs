@@ -36,6 +36,27 @@ namespace FreeMarket.Models
         public string SelectedSupplier { get; set; }
         public List<SelectListItem> Suppliers { get; set; }
 
+        public static string GetFullDescription(int productNumber, int supplierNumber)
+        {
+            if (productNumber == 0 || supplierNumber == 0)
+                return "";
+
+            string toReturn = "";
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Product product = db.Products.Find(productNumber);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                if (product != null && supplier != null)
+                {
+                    toReturn = String.Format("{0} {1} {2} supplied by {3}", product.Weight, product.Size, product.Description, supplier.SupplierName);
+                }
+            }
+
+            return toReturn;
+        }
+
         public static Product GetProduct(int productNumber, int supplierNumber)
         {
             Product product = new Product();

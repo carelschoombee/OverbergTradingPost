@@ -125,3 +125,57 @@ a:hover {
   -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+.border-div {
+	border: thin solid black !important;
+}
+
+/* some basic table styles */
+
+table {
+  width: 100%;
+}
+
+thead {
+  border-bottom: 1px solid #000;
+}
+
+thead th {
+  text-align: left;
+}
+
+th, td {
+  padding: 2px;
+}
+
+
+@media screen and (max-width: 600px) {
+  
+  th {
+	display: none !important;
+  }
+  
+  table, tbody, tr, td {
+	display: block;
+	text-align: center;
+	align-content:center;
+  }
+  
+  td {
+	padding-left: 50%;
+	position: relative;
+	border: 1px solid #ddd !important;
+  }
+
+  td:before {
+	box-sizing: border-box;
+	position: absolute;
+	content: attr(data-label);
+	top: 0;
+	left: 0;
+	padding: 2px;
+	font-weight: bold;
+	width: 50%;
+  }
+  
+}
