@@ -37,5 +37,6 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string OrderStatus { get; set; }
         public bool PaymentReceived { get; set; }
+        public string DeliveryAddress { get; set; }
     }
 }

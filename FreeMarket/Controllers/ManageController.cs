@@ -334,14 +334,17 @@ namespace FreeMarket.Controllers
                 return View("Error");
             }
 
-            OrderHistoryViewModel model = new OrderHistoryViewModel();
+            OrderHeaderViewModel model = new OrderHeaderViewModel();
 
-            model = OrderHistoryViewModel.GetOrderHistory(user.Id);
+            model = OrderHeaderViewModel.GetOrder(orderNumber, user.Id);
+
+            if (model.Order.TotalOrderValue == 0)
+                return RedirectToAction("ViewOrderHistory");
 
             return View(model);
         }
 
-        public ActionResult ModifyDeliveryDetails()
+        public ActionResult ModifyDeliveryDetails(int addressNumber = 0)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             if (user == null)
@@ -349,7 +352,7 @@ namespace FreeMarket.Controllers
                 return View("Error");
             }
 
-            CustomerAddress address = CustomerAddress.GetCustomerAddress(user.Id);
+            CustomerAddress address = CustomerAddress.GetCustomerAddress(user.Id, addressNumber);
 
             ModifyDeliveryDetailsViewModel model = new ModifyDeliveryDetailsViewModel()
             {

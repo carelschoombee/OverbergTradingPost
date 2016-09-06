@@ -25,6 +25,8 @@ namespace FreeMarket.Models
         public int ProductNumber { get; set; }
         public int SupplierNumber { get; set; }
 
+        public bool FromCart { get; set; }
+
         public void InitializeDefault()
         {
             FeeInfo = new List<CourierFee>();
@@ -42,7 +44,7 @@ namespace FreeMarket.Models
             InitializeDefault();
         }
 
-        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, string defaultAddressName)
+        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, string defaultAddressName, string addressString = null)
         {
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
             {
@@ -63,20 +65,48 @@ namespace FreeMarket.Models
                     ProductNumber = productNumber;
                     SupplierNumber = supplierNumber;
 
-                    AddressNameOptions = db.CustomerAddresses
-                        .Where(c => c.CustomerNumber == userId)
-                        .Select
-                        (c => new SelectListItem
-                        {
-                            Text = c.AddressName,
-                            Value = c.AddressNumber.ToString(),
-                            Selected = (c.AddressName == defaultAddressName ? true : false)
-                        }).ToList();
+                    if (!string.IsNullOrEmpty(addressString))
+                    {
+                        List<CustomerAddress> allAddresses = db.CustomerAddresses
+                            .Where(c => c.CustomerNumber == userId)
+                            .ToList();
 
-                    SelectedAddress = db.CustomerAddresses
-                        .Where(c => c.CustomerNumber == userId && c.AddressName == defaultAddressName)
-                        .Select(c => c.AddressNumber)
-                        .FirstOrDefault();
+                        foreach (CustomerAddress add in allAddresses)
+                        {
+                            if (add.ToString().Replace("\n", "") == addressString)
+                            {
+                                SelectedAddress = add.AddressNumber;
+                                string selected = add.AddressName;
+
+                                AddressNameOptions = allAddresses
+                                    .Select
+                                    (c => new SelectListItem
+                                    {
+                                        Text = c.AddressName,
+                                        Value = c.AddressNumber.ToString(),
+                                        Selected = (c.AddressName == selected ? true : false)
+                                    }).ToList();
+                            }
+                        }
+                    }
+
+                    if (SelectedAddress == 0)
+                    {
+                        AddressNameOptions = db.CustomerAddresses
+                            .Where(c => c.CustomerNumber == userId)
+                            .Select
+                            (c => new SelectListItem
+                            {
+                                Text = c.AddressName,
+                                Value = c.AddressNumber.ToString(),
+                                Selected = (c.AddressName == defaultAddressName ? true : false)
+                            }).ToList();
+
+                        SelectedAddress = db.CustomerAddresses
+                            .Where(c => c.CustomerNumber == userId && c.AddressName == defaultAddressName)
+                            .Select(c => c.AddressNumber)
+                            .FirstOrDefault();
+                    }
                 }
 
                 Quantity = quantityRequested;

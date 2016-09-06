@@ -65,13 +65,17 @@ namespace FreeMarket.Models
             return FreeMarketResult.Success;
         }
 
-        public static CustomerAddress GetCustomerAddress(string userId)
+        public static CustomerAddress GetCustomerAddress(string userId, int addressNumber)
         {
             CustomerAddress address = new CustomerAddress();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId)
+                if (addressNumber != 0)
+                    address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId && c.AddressNumber == addressNumber)
+                            .FirstOrDefault();
+                else
+                    address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId)
                                     .FirstOrDefault();
             }
 
@@ -89,7 +93,29 @@ namespace FreeMarket.Models
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId && c.AddressName == addressName)
+                if (!string.IsNullOrEmpty(addressName))
+                    address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId && c.AddressName == addressName)
+                            .FirstOrDefault();
+                else
+                    address = db.CustomerAddresses.Where(c => c.CustomerNumber == userId)
+                                    .FirstOrDefault();
+            }
+
+            if (address == null)
+            {
+                address = new CustomerAddress();
+            }
+
+            return address;
+        }
+
+        public static CustomerAddress GetCustomerAddress(int addressNumber)
+        {
+            CustomerAddress address = new CustomerAddress();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                address = db.CustomerAddresses.Where(c => c.AddressNumber == addressNumber)
                                     .FirstOrDefault();
             }
 
@@ -114,7 +140,7 @@ namespace FreeMarket.Models
         {
             string toReturn = "";
 
-            toReturn += string.Format("\n{0}", AddressLine1);
+            toReturn += string.Format("{0}", AddressLine1);
             toReturn += string.Format("\n{0}", AddressLine2);
 
             if (!string.IsNullOrEmpty(AddressLine3))

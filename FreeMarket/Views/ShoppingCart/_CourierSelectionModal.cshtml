@@ -25,19 +25,33 @@
 
                         @Html.ValidationSummary(true)
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-6">
-                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.Quantity)
+                        @Html.HiddenFor(model => Model.FromCart)
+
+                        @if (!Model.FromCart)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-6">
+                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @style = "width:125px", @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Quantity)
+                                </div>
                             </div>
-                        </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                   @Html.HiddenFor(model => Model.Quantity)
+                                </div>
+                            </div>
+                        }
 
                         <div class="form-group">
                             @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                             <div class="col-md-6">
-                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @style = "width:225px", @class = "form-control-inline"})
-                                <span id="addressText" class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true"></span>
+                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @style = "width:125px", @class = "form-control-inline" })
+                                <span id="addressText" class="glyphicon glyphicon-info-sign text-info" style="white-space :pre-line" data-toggle="tooltip" data-placement="top" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true"></span>
+                                <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage", new { addressNumber = Model.SelectedAddress })"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
                                 @Html.ValidationMessageFor(model => model.SelectedAddress)
                             </div>
                         </div>
@@ -117,7 +131,18 @@
             data: {
                 id: @Model.ProductNumber,
                 supplierNumber :@Model.SupplierNumber,
+                @if (!Model.FromCart)
+                {
+                <text>
                 quantity: $("#Quantity").val(),
+                </text>
+                }
+                else
+                {
+                <text>
+                quantity: @Model.Quantity,
+                </text>
+                }
                 addressNumber: $("#SelectedAddress").val(),
             }
         }).done
@@ -137,6 +162,10 @@
                     .attr('data-original-title', data)
                     .tooltip('fixTitle');
             });
+
+        $('#addressEdit').attr('href', function () {
+            return '@Url.Action("ModifyDeliveryDetails", "Manage")' + '/addressNumber=' + $('#SelectedAddress').val();
+          });
     });
 
     $(function () {

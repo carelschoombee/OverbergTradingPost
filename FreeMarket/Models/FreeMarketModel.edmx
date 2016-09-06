@@ -178,6 +178,7 @@
           <Property Name="CourierFee" Type="money" />
           <Property Name="CustomerProductQualityRating" Type="nvarchar(max)" />
           <Property Name="CustomerCourierOnTimeDeliveryRating" Type="nvarchar(max)" />
+          <Property Name="DeliveryAddress" Type="nvarchar" MaxLength="1200" />
         </EntityType>
         <EntityType Name="OrderHeader">
           <Key>
@@ -1134,7 +1135,7 @@
           <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetOrderHistory" ReturnType="Collection(FreeMarketModel.GetOrderHistory_Result)">
-            <Parameter Name="CustomerNumber" Mode="In" Type="String" />
+          <Parameter Name="CustomerNumber" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1291,6 +1292,7 @@
           <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
           <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
+          <Property Name="DeliveryAddress" Type="String" MaxLength="1200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_OrderDetail_Courier">
           <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
@@ -1570,7 +1572,7 @@
           <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
           <Property Type="String" Name="Description" Nullable="false" />
           <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="2" Scale="0" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
           <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
           <Property Type="Boolean" Name="Activated" Nullable="false" />
           <Property Type="Int32" Name="DepartmentNumberID" Nullable="false" />
@@ -1595,6 +1597,7 @@
           <Property Type="String" Name="CustomerProductQualityRating" Nullable="true" />
           <Property Type="String" Name="CustomerCourierOnTimeDeliveryRating" Nullable="true" />
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
+          <Property Type="String" Name="DeliveryAddress" Nullable="true" MaxLength="1200" />
         </ComplexType>
         <ComplexType Name="GetProduct_Result">
           <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
@@ -1649,6 +1652,7 @@
           <Property Type="DateTime" Name="OrderDateClosed" Nullable="true" Precision="23" />
           <Property Type="String" Name="OrderStatus" Nullable="true" MaxLength="50" />
           <Property Type="Boolean" Name="PaymentReceived" Nullable="false" />
+          <Property Type="String" Name="DeliveryAddress" Nullable="true" MaxLength="1200" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1945,6 +1949,7 @@
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="FreeMarketModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
                 <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
                 <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
                 <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
@@ -2117,6 +2122,7 @@
                 <ScalarProperty Name="CustomerProductQualityRating" ColumnName="CustomerProductQualityRating" />
                 <ScalarProperty Name="CustomerCourierOnTimeDeliveryRating" ColumnName="CustomerCourierOnTimeDeliveryRating" />
                 <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2183,6 +2189,7 @@
                 <ScalarProperty Name="OrderDateClosed" ColumnName="OrderDateClosed" />
                 <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
                 <ScalarProperty Name="PaymentReceived" ColumnName="PaymentReceived" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

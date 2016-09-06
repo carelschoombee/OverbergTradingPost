@@ -128,6 +128,40 @@ namespace FreeMarket.Controllers
             return PartialView("_CourierSelectionModal", model);
         }
 
+        public ActionResult CourierSelectionModalFromCart(int id, int supplierNumber, int quantity, string addressString = null)
+        {
+            CourierFeeViewModel model = new CourierFeeViewModel();
+
+            string userId = User.Identity.GetUserId();
+            string defaultAddressName = "";
+
+            bool anonymousUser = (userId == null);
+
+            if (anonymousUser)
+            {
+
+            }
+            else
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    Product product = db.Products.Find(id);
+                    Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                    if (product == null || supplier == null)
+                        return RedirectToAction("Index", "Product");
+                }
+
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var currentUser = manager.FindById(User.Identity.GetUserId());
+                defaultAddressName = currentUser.DefaultAddress;
+                model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, defaultAddressName, addressString);
+                model.FromCart = true;
+            }
+
+            return PartialView("_CourierSelectionModal", model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(CourierFeeViewModel viewModel)
@@ -138,6 +172,11 @@ namespace FreeMarket.Controllers
                 {
                     TempData["errorMessage"] = "Error: We could not add the item to the cart.";
                     return JavaScript("window.location = window.location.href;");
+                }
+
+                if (viewModel.FromCart)
+                {
+                    viewModel.Quantity = 0;
                 }
 
                 string userId = User.Identity.GetUserId();
@@ -151,7 +190,14 @@ namespace FreeMarket.Controllers
                     // New item added
                     if (result.Argument != null)
                     {
-                        TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
+                        if (viewModel.FromCart)
+                        {
+                            TempData["message"] = string.Format("Success: Delivery address updated for {0}.", ((Product)(result.Argument)).Description);
+                        }
+                        else
+                        {
+                            TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
+                        }
                     }
                 }
                 else
@@ -233,7 +279,8 @@ namespace FreeMarket.Controllers
                        .FirstOrDefault();
 
                     if (address != null)
-                        toReturn = address.ToString();
+                        toReturn = address
+                            .ToString();
                 }
             }
 

@@ -27,10 +27,13 @@
                 Status
             </th>
             <th class="col-sm-1">
-                Qty
+                Delivery Address
             </th>
             <th class="col-sm-1">
                 Shipping
+            </th>
+            <th class="col-sm-1">
+                Qty
             </th>
             <th class="col-sm-1">
                 Price
@@ -53,10 +56,13 @@
                     @Html.DisplayFor(m => detail.OrderItemStatus)
                 </td>
                 <td>
-                    @Html.DisplayFor(m => detail.Quantity)
+                    <span style="white-space :pre-line" aria-hidden="true">@detail.DeliveryAddress</span>
                 </td>
                 <td>
                     @Html.DisplayFor(m => detail.CourierFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.Quantity)
                 </td>
                 <td>
                     @Html.DisplayFor(m => detail.Price)

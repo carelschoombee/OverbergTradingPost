@@ -1,0 +1,59 @@
+﻿<div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
+    <div id='EditContainer'>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.editClass').click(function (evt) {
+            evt.preventDefault();
+            var urlId = $(this).data('id');
+            $.ajax({
+                url: urlId,
+                cache: false
+            }).done
+            (function (data) {
+                $('#EditContainer').html(data);
+            });
+            $('.modal-content').empty();
+            $('#EditModal').removeData('bs.modal');
+            $('#EditModal').modal('show');
+        });
+    });
+
+    function editModal() {
+        $(function () {
+            $('#editForm')
+                    .bootstrapValidator({
+                        feedbackIcons: {
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {
+                            Quantity: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The field is required.'
+                                    },
+                                    between: {
+                                        min: 1,
+                                        max: 1000,
+                                        message: 'Please choose a quantity that is greater than 0 and less than 1000.'
+                                    }
+                                }
+                            }
+                        }
+                    }).on('success.form.bv', function (e) {
+                        e.preventDefault();
+                        $('.modal-backdrop').remove();
+                        $('#EditModal').modal('hide');
+                    }).on('error.form.bv', function (e) {
+                        e.preventDefault();
+                    })
+        });
+    }
+</script>
+

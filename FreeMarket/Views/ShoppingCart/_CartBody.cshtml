@@ -9,8 +9,11 @@
         <th class="col-sm-1">
             Image
         </th>
-        <th class="col-sm-4">
+        <th class="col-sm-3">
             Description
+        </th>
+        <th class="col-sm-1">
+            Deliver To
         </th>
         <th class="col-sm-1">
             Price
@@ -38,6 +41,11 @@
            <td>
                @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
+           </td>
+           <td>
+               <a data-id="@Url.Action("CourierSelectionModalFromCart", "ShoppingCart")/@Model.Cart.Body.OrderDetails[i].ProductNumber?supplierNumber=@Model.Cart.Body.OrderDetails[i].SupplierNumber&amp;quantity=@Model.Cart.Body.OrderDetails[i].Quantity&amp;addressString=@Model.Cart.Body.OrderDetails[i].DeliveryAddress"
+                  class="text-success editClass"><span style="white-space :pre-line" aria-hidden="true">@Model.Cart.Body.OrderDetails[i].DeliveryAddress</span></a>
+               
            </td>
            <td data-label="Price:">
                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)

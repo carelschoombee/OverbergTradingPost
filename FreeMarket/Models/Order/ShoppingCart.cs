@@ -41,9 +41,12 @@ namespace FreeMarket.Models
                 .FirstOrDefault();
 
             decimal? courierFeeCost = 0;
+            CustomerAddress address = new CustomerAddress();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                address = CustomerAddress.GetCustomerAddress(addressNumber);
+
                 courierFeeCost = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, addressNumber)
                     .FirstOrDefault();
 
@@ -64,6 +67,7 @@ namespace FreeMarket.Models
                 existingItem.OrderItemValue = existingItem.Price * existingItem.Quantity;
                 existingItem.CourierNumber = courierNumber;
                 existingItem.CourierFee = courierFeeCost;
+                existingItem.DeliveryAddress = address.ToString();
 
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
@@ -124,6 +128,7 @@ namespace FreeMarket.Models
                             CourierName = null,
                             CustomerCourierOnTimeDeliveryRating = null,
                             CustomerProductQualityRating = null,
+                            DeliveryAddress = address.ToString(),
                             DeliveryDateActual = null,
                             DeliveryDateAgreed = null,
                             OrderItemStatus = status,
@@ -370,6 +375,7 @@ namespace FreeMarket.Models
                                 tempDb.SupplierNumber = temp.SupplierNumber;
                                 tempDb.CourierNumber = temp.CourierNumber;
                                 tempDb.ProductNumber = temp.ProductNumber;
+                                tempDb.DeliveryAddress = temp.DeliveryAddress;
                                 tempDb.CourierFee = temp.CourierFee;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
@@ -404,26 +410,6 @@ namespace FreeMarket.Models
             }
 
 
-        }
-
-        public void Merge(ShoppingCart tempCart, string userId)
-        {
-            // This is for when a user adds items to the Session variable without logging on first
-            // When he logs on the database and Session are merged
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                if (tempCart != null && tempCart.Body.OrderDetails != null)
-                {
-                    foreach (OrderDetail tempOrderDetail in tempCart.Body.OrderDetails)
-                    {
-
-                    }
-
-                    Save(userId);
-                    Initialize(userId);
-                }
-            }
         }
 
         public ShoppingCart(string userId)

@@ -517,6 +517,7 @@
     <Content Include="Views\ShoppingCart\_CourierData.cshtml" />
     <Content Include="Views\Manage\ViewOrderHistory.cshtml" />
     <Content Include="Views\Manage\ViewOrder.cshtml" />
+    <Content Include="Views\ShoppingCart\_CourierContainer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
