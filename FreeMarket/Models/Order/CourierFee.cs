@@ -14,29 +14,34 @@ namespace FreeMarket.Models
         public decimal DistanceBetweenCourierAndCustodian { get; set; }
         public decimal CourierFeeValue { get; set; }
         public string CustomerDestinationPostalCode { get; set; }
+        public bool NoCharge { get; set; }
 
         public static List<CourierFee> GetCourierFees(int productNumber, int supplierNumber, int quantityRequested, int addressNumber)
         {
+            // Validate
             List<CourierFee> feeInfo = new List<CourierFee>();
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested == 0 || addressNumber == 0)
-                return new List<CourierFee>();
+                return feeInfo;
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                // Validate
                 ProductSupplier productSupplier = db.ProductSuppliers.Find(productNumber, supplierNumber);
                 if (productSupplier == null)
                 {
                     Debug.Write("\nGetCourierFees::The product or supplier does not exist.");
-                    return new List<CourierFee>();
+                    return feeInfo;
                 }
 
+                // Vaidate
                 CustomerAddress address = db.CustomerAddresses.Find(addressNumber);
                 if (productSupplier == null)
                 {
                     Debug.Write("\nGetCourierFees::The address does not exist.");
-                    return new List<CourierFee>();
+                    return feeInfo;
                 }
 
+                // Calculate potential fees for each courier
                 feeInfo = db.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, addressNumber)
                     .Select(c => new CourierFee()
                     {

@@ -1,4 +1,6 @@
-﻿namespace FreeMarket.Models
+﻿using System.Diagnostics;
+
+namespace FreeMarket.Models
 {
     public enum PictureSize
     {
@@ -19,11 +21,15 @@
     {
         public FreeMarketResult Result { get; set; }
         public object Argument { get; set; }
+        public string DebugMessage { get; set; }
 
         public FreeMarketObject()
         {
             Result = FreeMarketResult.NoResult;
             Argument = null;
+
+            if (!string.IsNullOrEmpty(DebugMessage))
+                Debug.Write(DebugMessage);
         }
     }
 }

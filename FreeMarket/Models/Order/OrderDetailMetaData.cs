@@ -31,6 +31,16 @@ namespace FreeMarket.Models
             return toString;
         }
 
+        public void Update(int quantity, int courierNumber, decimal? courierFeeCost, string address, int custodianNumber)
+        {
+            Quantity += quantity;
+            OrderItemValue = Price * Quantity;
+            CourierNumber = courierNumber;
+            CourierFee = courierFeeCost;
+            DeliveryAddress = address.ToString();
+            CustodianNumber = custodianNumber;
+        }
+
         // override object.Equals
         public override bool Equals(object obj)
         {

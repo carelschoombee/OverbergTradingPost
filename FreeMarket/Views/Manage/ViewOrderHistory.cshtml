@@ -12,7 +12,7 @@
 
 @if (Model.Items != null && Model.Items.Count > 0)
 {
-    <table class="table table-bordered-custom table-responsive">
+    <table class="table table-responsive">
         <tr class="well">
             <th class="col-sm-1">
                 Order #
@@ -59,13 +59,13 @@
                     <span style="white-space :pre-line" aria-hidden="true">@detail.DeliveryAddress</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(m => detail.CourierFee)
+                    @string.Format("{0:C}", detail.CourierFee)
                 </td>
                 <td>
                     @Html.DisplayFor(m => detail.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(m => detail.Price)
+                    @string.Format("{0:C}", detail.Price)
                 </td>
             </tr>
         }

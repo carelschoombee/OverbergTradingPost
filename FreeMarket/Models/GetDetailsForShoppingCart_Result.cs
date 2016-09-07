@@ -56,5 +56,6 @@ namespace FreeMarket.Models
         public string CustomerCourierOnTimeDeliveryRating { get; set; }
         public decimal PricePerUnit { get; set; }
         public string DeliveryAddress { get; set; }
+        public Nullable<int> CustodianNumber { get; set; }
     }
 }

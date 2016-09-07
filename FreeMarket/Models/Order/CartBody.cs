@@ -44,7 +44,8 @@ namespace FreeMarket.Models
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumber,
                         Selected = false,
-                        DeliveryAddress = c.DeliveryAddress
+                        DeliveryAddress = c.DeliveryAddress,
+                        CustodianNumber = c.CustodianNumber
                     }
                     ).ToList();
 

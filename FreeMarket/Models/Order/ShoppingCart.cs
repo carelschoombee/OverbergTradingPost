@@ -21,63 +21,65 @@ namespace FreeMarket.Models
             }
         }
 
-        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int addressNumber, int quantity, string userId = null)
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int addressNumber, int quantity, int custodian, bool noCharge, string userId = null)
         {
-            // Check whether the item already exists
-            FreeMarketObject res = new FreeMarketObject();
+            // Validate
+            if (productNumber == 0 || supplierNumber == 0 || courierNumber == 0 || addressNumber == 0 || custodian == 0)
+                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Parameters invalid." };
 
-            if (string.IsNullOrEmpty(userId))
-                Debug.Write(string.Format("\nAdding new item to anonymous cart..."));
-            else
-                Debug.Write(string.Format("\nAdding new item to {0}'s cart...", userId));
-
-            Debug.Write(string.Format("\nProduct Number : {0}", productNumber));
-            Debug.Write(string.Format("\nSupplier Number: {0}", supplierNumber));
-            Debug.Write(string.Format("\nCourier Number : {0}", courierNumber));
-            Debug.Write(string.Format("\nQuantity       : {0}", quantity));
-
-            OrderDetail existingItem = Body.OrderDetails
-                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                .FirstOrDefault();
-
+            // Calculate Courier Fee
             decimal? courierFeeCost = 0;
+            CalculateCourierFee_Result result;
             CustomerAddress address = new CustomerAddress();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 address = CustomerAddress.GetCustomerAddress(addressNumber);
 
-                courierFeeCost = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, addressNumber)
+                if (address != null)
+                {
+                    result = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, addressNumber)
                     .FirstOrDefault();
 
-                if (courierFeeCost == 0)
-                {
-                    Debug.Write("ERROR::Courier fee could not be calculated.");
-                    return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
+                    if (result != null)
+                    {
+                        if (noCharge)
+                            courierFeeCost = 0;
+                        else
+                            courierFeeCost = result.CourierFee;
+
+                        if (courierFeeCost == 0 && !noCharge)
+                            return new FreeMarketObject
+                            { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
+                    }
+                    else
+                    {
+                        return new FreeMarketObject
+                        { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
+                    }
                 }
+
             }
+
+            // Check whether the item already exists
+            FreeMarketObject res = new FreeMarketObject();
+
+            OrderDetail existingItem = Body.OrderDetails
+                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                .FirstOrDefault();
 
             if (existingItem != null)
             {
                 // Update the existing item
+                existingItem.Update(quantity, courierNumber, courierFeeCost, address.ToString(), custodian);
 
-                Debug.Write(string.Format("\nIncrementing quantity in session..."));
-
-                existingItem.Quantity += quantity;
-                existingItem.OrderItemValue = existingItem.Price * existingItem.Quantity;
-                existingItem.CourierNumber = courierNumber;
-                existingItem.CourierFee = courierFeeCost;
-                existingItem.DeliveryAddress = address.ToString();
-
+                // Setup return object
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
                     var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
 
                     if (productInfo == null)
-                    {
-                        Debug.Write("Product, Supplier or Price does not exist.");
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
-                    }
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
 
                     res.Result = FreeMarketResult.Success;
                     res.Argument = new Product
@@ -99,27 +101,23 @@ namespace FreeMarket.Models
             }
             else
             {
+                // A new OrderDetail must be created
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
                     var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
 
                     if (productInfo == null)
-                    {
-                        Debug.Write("Product, Supplier or Price does not exist.");
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null };
-                    }
-
-                    Debug.Write(string.Format("\nAdding new item to session..."));
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
 
                     string status = "Unconfirmed";
 
+                    // Add a small image for the CartBody
                     int imageNumber = db.ProductPictures
                             .Where(c => c.ProductNumber == productInfo.ProductNumberID && c.Dimensions == PictureSize.Small.ToString())
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 
                     // Add the new item to the Session variable
-
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
@@ -128,6 +126,7 @@ namespace FreeMarket.Models
                             CourierName = null,
                             CustomerCourierOnTimeDeliveryRating = null,
                             CustomerProductQualityRating = null,
+                            CustodianNumber = custodian,
                             DeliveryAddress = address.ToString(),
                             DeliveryDateActual = null,
                             DeliveryDateAgreed = null,
@@ -377,6 +376,7 @@ namespace FreeMarket.Models
                                 tempDb.ProductNumber = temp.ProductNumber;
                                 tempDb.DeliveryAddress = temp.DeliveryAddress;
                                 tempDb.CourierFee = temp.CourierFee;
+                                tempDb.CustodianNumber = temp.CustodianNumber;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
                                 db.SaveChanges();

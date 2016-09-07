@@ -63,52 +63,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
         }
     
-        public virtual ObjectResult<CalculateDeliveryFee_Result> CalculateDeliveryFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> addressNumber)
-        {
-            var productNumberParameter = productNumber.HasValue ?
-                new ObjectParameter("productNumber", productNumber) :
-                new ObjectParameter("productNumber", typeof(int));
-    
-            var supplierNumberParameter = supplierNumber.HasValue ?
-                new ObjectParameter("supplierNumber", supplierNumber) :
-                new ObjectParameter("supplierNumber", typeof(int));
-    
-            var quantityRequestedParameter = quantityRequested.HasValue ?
-                new ObjectParameter("quantityRequested", quantityRequested) :
-                new ObjectParameter("quantityRequested", typeof(int));
-    
-            var addressNumberParameter = addressNumber.HasValue ?
-                new ObjectParameter("addressNumber", addressNumber) :
-                new ObjectParameter("addressNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateDeliveryFee_Result>("CalculateDeliveryFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, addressNumberParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculateCourierFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> courierNumber, Nullable<int> addressNumber)
-        {
-            var productNumberParameter = productNumber.HasValue ?
-                new ObjectParameter("productNumber", productNumber) :
-                new ObjectParameter("productNumber", typeof(int));
-    
-            var supplierNumberParameter = supplierNumber.HasValue ?
-                new ObjectParameter("supplierNumber", supplierNumber) :
-                new ObjectParameter("supplierNumber", typeof(int));
-    
-            var quantityRequestedParameter = quantityRequested.HasValue ?
-                new ObjectParameter("quantityRequested", quantityRequested) :
-                new ObjectParameter("quantityRequested", typeof(int));
-    
-            var courierNumberParameter = courierNumber.HasValue ?
-                new ObjectParameter("courierNumber", courierNumber) :
-                new ObjectParameter("courierNumber", typeof(int));
-    
-            var addressNumberParameter = addressNumber.HasValue ?
-                new ObjectParameter("addressNumber", addressNumber) :
-                new ObjectParameter("addressNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateCourierFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, courierNumberParameter, addressNumberParameter);
-        }
-    
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {
             var orderNumberParameter = orderNumber.HasValue ?
@@ -147,6 +101,61 @@ namespace FreeMarket.Models
                 new ObjectParameter("CustomerNumber", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetNumberOfItemsPerAddress_Result> GetNumberOfItemsPerAddress(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("OrderNumber", orderNumber) :
+                new ObjectParameter("OrderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNumberOfItemsPerAddress_Result>("GetNumberOfItemsPerAddress", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<CalculateDeliveryFee_Result> CalculateDeliveryFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> addressNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("productNumber", productNumber) :
+                new ObjectParameter("productNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("supplierNumber", supplierNumber) :
+                new ObjectParameter("supplierNumber", typeof(int));
+    
+            var quantityRequestedParameter = quantityRequested.HasValue ?
+                new ObjectParameter("quantityRequested", quantityRequested) :
+                new ObjectParameter("quantityRequested", typeof(int));
+    
+            var addressNumberParameter = addressNumber.HasValue ?
+                new ObjectParameter("addressNumber", addressNumber) :
+                new ObjectParameter("addressNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateDeliveryFee_Result>("CalculateDeliveryFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, addressNumberParameter);
+        }
+    
+        public virtual ObjectResult<CalculateCourierFee_Result> CalculateCourierFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> courierNumber, Nullable<int> addressNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("productNumber", productNumber) :
+                new ObjectParameter("productNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("supplierNumber", supplierNumber) :
+                new ObjectParameter("supplierNumber", typeof(int));
+    
+            var quantityRequestedParameter = quantityRequested.HasValue ?
+                new ObjectParameter("quantityRequested", quantityRequested) :
+                new ObjectParameter("quantityRequested", typeof(int));
+    
+            var courierNumberParameter = courierNumber.HasValue ?
+                new ObjectParameter("courierNumber", courierNumber) :
+                new ObjectParameter("courierNumber", typeof(int));
+    
+            var addressNumberParameter = addressNumber.HasValue ?
+                new ObjectParameter("addressNumber", addressNumber) :
+                new ObjectParameter("addressNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateCourierFee_Result>("CalculateCourierFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, courierNumberParameter, addressNumberParameter);
         }
     }
 }

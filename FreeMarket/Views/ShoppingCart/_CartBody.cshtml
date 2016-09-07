@@ -34,6 +34,8 @@
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
+               @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
            </td>
            <td>
                <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription"/>

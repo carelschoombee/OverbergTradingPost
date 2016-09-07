@@ -24,6 +24,8 @@ namespace FreeMarket.Models
 
         public int ProductNumber { get; set; }
         public int SupplierNumber { get; set; }
+        public int CustodianNumber { get; set; }
+        public int OrderNumber { get; set; }
 
         public bool FromCart { get; set; }
 
@@ -46,103 +48,51 @@ namespace FreeMarket.Models
 
         public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, string defaultAddressName, string addressString = null)
         {
+            // Validate
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
-            {
                 InitializeDefault();
-            }
-            else
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                // Validate
+                ProductSupplier productSupplierTemp = db.ProductSuppliers.Find(productNumber, supplierNumber);
+
+                if (productSupplierTemp == null)
                 {
-                    ProductSupplier productSupplierTemp = db.ProductSuppliers.Find(productNumber, supplierNumber);
+                    InitializeDefault();
+                    return;
+                }
 
-                    if (productSupplierTemp == null)
+                if (!string.IsNullOrEmpty(addressString))
+                {
+                    // Get all addresses for the customer
+                    List<CustomerAddress> allAddresses = db.CustomerAddresses
+                        .Where(c => c.CustomerNumber == userId)
+                        .ToList();
+
+                    foreach (CustomerAddress add in allAddresses)
                     {
-                        InitializeDefault();
-                        return;
-                    }
-
-                    ProductNumber = productNumber;
-                    SupplierNumber = supplierNumber;
-
-                    if (!string.IsNullOrEmpty(addressString))
-                    {
-                        List<CustomerAddress> allAddresses = db.CustomerAddresses
-                            .Where(c => c.CustomerNumber == userId)
-                            .ToList();
-
-                        foreach (CustomerAddress add in allAddresses)
+                        // Show the selected address first to the customer on the modal
+                        if (add.ToString().Replace("\n", "") == addressString)
                         {
-                            if (add.ToString().Replace("\n", "") == addressString)
-                            {
-                                SelectedAddress = add.AddressNumber;
-                                string selected = add.AddressName;
+                            SelectedAddress = add.AddressNumber;
+                            string selected = add.AddressName;
 
-                                AddressNameOptions = allAddresses
-                                    .Select
-                                    (c => new SelectListItem
-                                    {
-                                        Text = c.AddressName,
-                                        Value = c.AddressNumber.ToString(),
-                                        Selected = (c.AddressName == selected ? true : false)
-                                    }).ToList();
-                            }
+                            AddressNameOptions = allAddresses
+                                .Select
+                                (c => new SelectListItem
+                                {
+                                    Text = c.AddressName,
+                                    Value = c.AddressNumber.ToString(),
+                                    Selected = (c.AddressName == selected ? true : false)
+                                }).ToList();
                         }
-                    }
-
-                    if (SelectedAddress == 0)
-                    {
-                        AddressNameOptions = db.CustomerAddresses
-                            .Where(c => c.CustomerNumber == userId)
-                            .Select
-                            (c => new SelectListItem
-                            {
-                                Text = c.AddressName,
-                                Value = c.AddressNumber.ToString(),
-                                Selected = (c.AddressName == defaultAddressName ? true : false)
-                            }).ToList();
-
-                        SelectedAddress = db.CustomerAddresses
-                            .Where(c => c.CustomerNumber == userId && c.AddressName == defaultAddressName)
-                            .Select(c => c.AddressNumber)
-                            .FirstOrDefault();
                     }
                 }
 
-                Quantity = quantityRequested;
-
-                FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, SelectedAddress);
-
-                Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
-
-                if (FeeInfo == null || FeeInfo.Count == 0)
-                    SelectedCourierNumber = 0;
-                else
-                    SelectedCourierNumber = FeeInfo[0].CourierNumber;
-            }
-        }
-
-        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, int addressNumber)
-        {
-            if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
-            {
-                InitializeDefault();
-            }
-            else
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                // If the user has not yet chosen an address on the modal display the default address
+                if (SelectedAddress == 0)
                 {
-                    ProductSupplier productSupplierTemp = db.ProductSuppliers.Find(productNumber, supplierNumber);
-
-                    if (productSupplierTemp == null)
-                    {
-                        InitializeDefault();
-                        return;
-                    }
-
-                    ProductNumber = productNumber;
-                    SupplierNumber = supplierNumber;
-
                     AddressNameOptions = db.CustomerAddresses
                         .Where(c => c.CustomerNumber == userId)
                         .Select
@@ -150,38 +100,58 @@ namespace FreeMarket.Models
                         {
                             Text = c.AddressName,
                             Value = c.AddressNumber.ToString(),
-                            Selected = (c.AddressNumber == addressNumber ? true : false)
+                            Selected = (c.AddressName == defaultAddressName ? true : false)
                         }).ToList();
 
-                    SelectedAddress = addressNumber;
+                    SelectedAddress = db.CustomerAddresses
+                        .Where(c => c.CustomerNumber == userId && c.AddressName == defaultAddressName)
+                        .Select(c => c.AddressNumber)
+                        .FirstOrDefault();
                 }
 
-                Quantity = quantityRequested;
-
-                FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, SelectedAddress);
-
-                Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
-
-                if (FeeInfo == null || FeeInfo.Count == 0)
-                    SelectedCourierNumber = 0;
-                else
-                    SelectedCourierNumber = FeeInfo[0].CourierNumber;
+                SetModel(productNumber, supplierNumber, quantityRequested, userId);
             }
         }
 
-        public void UpdateModel(int productNumber, int supplierNumber, int quantityRequested, int selectedAddress)
+        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, int addressNumber)
         {
-            if (productNumber == 0 || supplierNumber == 0 || quantityRequested == 0 || selectedAddress == 0)
-                return;
+            // Validate
+            if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
+                InitializeDefault();
 
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductSupplier productSupplierTemp = db.ProductSuppliers.Find(productNumber, supplierNumber);
+
+                if (productSupplierTemp == null)
+                {
+                    InitializeDefault();
+                    return;
+                }
+
+                AddressNameOptions = db.CustomerAddresses
+                    .Where(c => c.CustomerNumber == userId)
+                    .Select
+                    (c => new SelectListItem
+                    {
+                        Text = c.AddressName,
+                        Value = c.AddressNumber.ToString(),
+                        Selected = (c.AddressNumber == addressNumber ? true : false)
+                    }).ToList();
+
+                SelectedAddress = addressNumber;
+            }
+
+            SetModel(productNumber, supplierNumber, quantityRequested, userId);
+        }
+
+        public void SetModel(int productNumber, int supplierNumber, int quantityRequested, string userId)
+        {
             Quantity = quantityRequested;
-            SelectedAddress = selectedAddress;
             ProductNumber = productNumber;
             SupplierNumber = supplierNumber;
 
-            Debug.Write("CourierFeeViewModel::Updating model.");
-
-            FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, selectedAddress);
+            FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, SelectedAddress);
 
             Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
 

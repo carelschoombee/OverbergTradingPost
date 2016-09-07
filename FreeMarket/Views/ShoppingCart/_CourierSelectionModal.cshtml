@@ -81,9 +81,15 @@
                                                 }
 
                                                 @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+                                                @Html.HiddenFor(model => Model.FeeInfo[i].CustodianNumber)
+                                                @Html.HiddenFor(model => Model.FeeInfo[i].NoCharge)
                                             </td>
                                             <td>
-                                                @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
+                                                @if (Model.FeeInfo[i].NoCharge)
+                                                {
+                                                    @Html.Label("Free!", new { @class = "text-success" })
+                                                }
+                                                else if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
                                                 {
                                                     @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
                                                 }
@@ -109,6 +115,7 @@
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
+                            @Html.HiddenFor(model => Model.OrderNumber)
                         </div>
                     </div>
                 </div>
@@ -143,7 +150,7 @@
                 quantity: @Model.Quantity,
                 </text>
                 }
-                addressNumber: $("#SelectedAddress").val(),
+                addressNumber: $("#SelectedAddress").val()
             }
         }).done
             (function (data) {

@@ -10,65 +10,91 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-<div class="container">
-    <div class="col-sm-12">
-        <div class="row">
-            <div class="col-sm-4">
-                <div>
-                    @Model.Order.CustomerName
-                </div>
-                <div>
-                    @Model.Order.CustomerEmail
-                </div>
-                <div>
-                    @Model.Order.CustomerPrimaryContactPhone
-                </div>
-                <div>
-                    @Model.DeliveryAddress
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    @Html.LabelFor(c => Model.Order.OrderNumber, new { @class = "col-md-4 control-label" })
-                    <div class="col-sm-6">
+<div class="container center_div text-center">
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-responsive">
+                <tr>
+                    <td>
+                        @Model.Order.CustomerName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Model.Order.CustomerEmail
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Model.Order.CustomerPrimaryContactPhone
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-responsive well">
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Order.OrderNumber)
+                    </td>
+                    <td>
                         @Html.DisplayFor(c => Model.Order.OrderNumber)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(c => Model.NumberOfItemsInOrder, new { @class = "col-md-4 control-label" })
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(c => Model.NumberOfItemsInOrder)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(c => Model.Order.OrderDatePlaced, new { @class = "col-md-4 control-label" })
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(c => Model.Order.OrderDatePlaced)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(c => Model.Order.OrderStatus, new { @class = "col-md-4 control-label" })
-                    <div class="col-sm-6">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Order.OrderDatePlaced)
+                    </td>
+                    <td>
+                        @string.Format("{0:D}", Model.Order.OrderDatePlaced)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Order.OrderStatus)
+                    </td>
+                    <td>
                         @Html.DisplayFor(c => Model.Order.OrderStatus)
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <table class="table table-condensed table-bordered-custom well">
-                    <tr>
-                        <td class="col-sm-2 text-left"><strong>Sub-Total:</strong></td>
-                        <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.SubTotal)</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
-                        <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.ShippingTotal)</strong></td>
-                    </tr>
-                    <tr class="text-primary">
-                        <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
-                        <td class="col-sm-2 text-right"><strong style="font-size: 20px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
-                    </tr>
-                </table>
-            </div>
+                    </td>
+                </tr>
+
+
+                @if (Model.DeliveryDetails != null)
+                {
+                    foreach (GetNumberOfItemsPerAddress_Result address in Model.DeliveryDetails)
+                    {
+                        <tr>
+                            <td>@address.NumberOfItems items to be delivered to:</td>
+
+                            <td>
+                                <span style="white-space :pre-line" aria-hidden="true">@address.DeliveryAddress</span>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-condensed table-bordered-custom well">
+                <tr>
+                    <td class="col-sm-2 text-left"><strong>Sub-Total:</strong></td>
+                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Order.SubTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
+                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Order.ShippingTotal)</strong></td>
+                </tr>
+                <tr class="text-primary">
+                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
+                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

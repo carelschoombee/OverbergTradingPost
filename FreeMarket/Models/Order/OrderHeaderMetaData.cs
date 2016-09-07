@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
@@ -87,5 +88,10 @@ namespace FreeMarket.Models
     }
     public class OrderHeaderMetaData
     {
+        [DisplayName("Order Date Placed")]
+        public DateTime OrderDatePlaced { get; set; }
+
+        [DisplayName("Order Status")]
+        public string OrderStatus { get; set; }
     }
 }

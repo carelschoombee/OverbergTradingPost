@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 
 namespace FreeMarket.Models
 {
     public class OrderHeaderViewModel
     {
-        public string DeliveryAddress { get; set; }
-
-        [DisplayName("Number of Items")]
-        public int NumberOfItemsInOrder { get; set; }
+        public List<GetNumberOfItemsPerAddress_Result> DeliveryDetails { get; set; }
 
         public OrderHeader Order { get; set; }
 
@@ -31,6 +29,8 @@ namespace FreeMarket.Models
                 if (order.CustomerNumber != userId)
                     return model;
 
+                model.Order = order;
+
                 // Find the customer's details
                 var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 var user = UserManager.FindById(userId);
@@ -39,7 +39,11 @@ namespace FreeMarket.Models
                 model.Order.CustomerEmail = user.Email;
                 model.Order.CustomerPrimaryContactPhone = user.PhoneNumber;
 
+                model.DeliveryDetails = db.GetNumberOfItemsPerAddress(model.Order.OrderNumber)
+                    .ToList();
 
+                if (model.DeliveryDetails == null || model.DeliveryDetails.Count == 0)
+                    model.DeliveryDetails = new List<GetNumberOfItemsPerAddress_Result>();
             }
 
             return model;
