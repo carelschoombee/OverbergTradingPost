@@ -150,7 +150,9 @@
                 quantity: @Model.Quantity,
                 </text>
                 }
-                addressNumber: $("#SelectedAddress").val()
+                addressNumber: $("#SelectedAddress").val(),
+                isAjax: true
+
             }
         }).done
             (function (data) {

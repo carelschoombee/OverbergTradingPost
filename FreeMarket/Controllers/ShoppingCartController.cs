@@ -59,11 +59,11 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        public ActionResult GetCourierData(int id, int supplierNumber, int quantity, int addressNumber)
+        public CourierFeeViewModel GetCourierDataDoWork(int id, int supplierNumber, int quantity, int addressNumber, string addressString = null, bool isAjax = false)
         {
-            // Prepare
             CourierFeeViewModel model = new CourierFeeViewModel();
             string userId = User.Identity.GetUserId();
+            string defaultAddressName = "";
             bool anonymousUser = (userId == null);
 
             if (anonymousUser)
@@ -72,6 +72,10 @@ namespace FreeMarket.Controllers
             }
             else
             {
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var currentUser = manager.FindById(User.Identity.GetUserId());
+                defaultAddressName = currentUser.DefaultAddress;
+
                 // Validate
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
@@ -79,102 +83,73 @@ namespace FreeMarket.Controllers
                     Supplier supplier = db.Suppliers.Find(supplierNumber);
 
                     if (product == null || supplier == null)
-                        return RedirectToAction("Index", "Product");
+                        return null;
                 }
 
-                model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, addressNumber);
+                ShoppingCart cart = GetCartFromSession(userId);
+                OrderDetail detail = cart.GetOrderDetail(id, supplierNumber);
+                int courierNumber = 0;
 
-                SetNoCharge(userId, model);
+                if (!isAjax)
+                {
+                    if (detail == null)
+                        courierNumber = 0;
+                    else
+                        courierNumber = (int)detail.CourierNumber;
+                }
+
+                if (!string.IsNullOrEmpty(addressString))
+                {
+                    model = new CourierFeeViewModel(id, supplierNumber, courierNumber, quantity, userId, defaultAddressName, addressString);
+                    SetNoCharge(userId, model, defaultAddressName);
+
+                    // Set a boolean to show that the modal is being accessed from the shopping cart page.
+                    model.FromCart = true;
+                }
+                else if (addressNumber == 0)
+                {
+                    model = new CourierFeeViewModel(id, supplierNumber, courierNumber, quantity, userId, defaultAddressName);
+                    SetNoCharge(userId, model, defaultAddressName);
+                }
+                else
+                {
+                    model = new CourierFeeViewModel(id, supplierNumber, courierNumber, quantity, userId, addressNumber);
+                    SetNoCharge(userId, model, addressNumber);
+                }
             }
+
+            return model;
+        }
+
+        public ActionResult GetCourierData(int id, int supplierNumber, int quantity, int addressNumber, bool isAjax)
+        {
+            // Prepare
+            CourierFeeViewModel model = GetCourierDataDoWork(id, supplierNumber, quantity, addressNumber, null, true);
+            if (model == null)
+                return RedirectToAction("Index", "Product");
 
             return PartialView("_CourierData", model);
         }
 
         public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity, int addressNumber = 0)
         {
-            // Prepare
-            CourierFeeViewModel model = new CourierFeeViewModel();
-            string userId = User.Identity.GetUserId();
-            string defaultAddressName = "";
-            bool anonymousUser = (userId == null);
-
-            if (anonymousUser)
-            {
-
-            }
-            else
-            {
-                // Validate
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    Product product = db.Products.Find(id);
-                    Supplier supplier = db.Suppliers.Find(supplierNumber);
-
-                    if (product == null || supplier == null)
-                        return RedirectToAction("Index", "Product");
-                }
-
-                ShoppingCart cart = GetCartFromSession(userId);
-
-                if (addressNumber == 0)
-                {
-                    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                    var currentUser = manager.FindById(User.Identity.GetUserId());
-                    defaultAddressName = currentUser.DefaultAddress;
-
-                    model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, defaultAddressName);
-                }
-                else
-                {
-                    model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, addressNumber);
-                }
-
-                SetNoCharge(userId, model);
-            }
+            CourierFeeViewModel model = GetCourierDataDoWork(id, supplierNumber, quantity, addressNumber);
+            if (model == null)
+                return RedirectToAction("Index", "Product");
 
             return PartialView("_CourierSelectionModal", model);
         }
 
         public ActionResult CourierSelectionModalFromCart(int id, int supplierNumber, int quantity, string addressString = null)
         {
-            // Prepare
-            CourierFeeViewModel model = new CourierFeeViewModel();
-            string userId = User.Identity.GetUserId();
-            string defaultAddressName = "";
-            bool anonymousUser = (userId == null);
-
-            if (anonymousUser)
-            {
-
-            }
-            else
-            {
-                // Validate
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    Product product = db.Products.Find(id);
-                    Supplier supplier = db.Suppliers.Find(supplierNumber);
-
-                    if (product == null || supplier == null)
-                        return RedirectToAction("Index", "Product");
-                }
-
-                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                var currentUser = manager.FindById(User.Identity.GetUserId());
-                defaultAddressName = currentUser.DefaultAddress;
-
-                model = new CourierFeeViewModel(id, supplierNumber, quantity, userId, defaultAddressName, addressString);
-
-                SetNoCharge(userId, model);
-
-                // Set a boolean to show that the modal is being accessed from the shopping cart page.
-                model.FromCart = true;
-            }
+            CourierFeeViewModel model = GetCourierDataDoWork(id, supplierNumber, quantity, 0, addressString);
+            if (model == null)
+                return RedirectToAction("Index", "Product");
 
             return PartialView("_CourierSelectionModal", model);
         }
 
-        public void SetNoCharge(string userId, CourierFeeViewModel model)
+        public void SetNoCharge(string userId, CourierFeeViewModel model, int addressNumber)
         {
             ShoppingCart cart = GetCartFromSession(userId);
 
@@ -182,9 +157,47 @@ namespace FreeMarket.Controllers
             {
                 foreach (CourierFee info in model.FeeInfo)
                 {
-                    if (info.CustodianNumber == temp.CustodianNumber && info.CourierNumber == temp.CourierNumber)
+                    using (FreeMarketEntities db = new FreeMarketEntities())
                     {
-                        info.NoCharge = true;
+                        CustomerAddress address = db.CustomerAddresses.Find(addressNumber);
+
+                        if (address != null)
+                        {
+                            if (info.CustodianNumber == temp.CustodianNumber &&
+                                info.CourierNumber == temp.CourierNumber &&
+                                address.AddressPostalCode == temp.DeliveryPostalCode)
+                            {
+                                info.NoCharge = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void SetNoCharge(string userId, CourierFeeViewModel model, string defaultAddressName)
+        {
+            ShoppingCart cart = GetCartFromSession(userId);
+
+            foreach (OrderDetail temp in cart.Body.OrderDetails)
+            {
+                foreach (CourierFee info in model.FeeInfo)
+                {
+                    using (FreeMarketEntities db = new FreeMarketEntities())
+                    {
+                        CustomerAddress address = db.CustomerAddresses
+                            .Where(c => c.AddressName == defaultAddressName && c.CustomerNumber == userId)
+                            .FirstOrDefault();
+
+                        if (address != null)
+                        {
+                            if (info.CustodianNumber == temp.CustodianNumber &&
+                                info.CourierNumber == temp.CourierNumber &&
+                                address.AddressPostalCode == temp.DeliveryPostalCode)
+                            {
+                                info.NoCharge = true;
+                            }
+                        }
                     }
                 }
             }
@@ -261,6 +274,9 @@ namespace FreeMarket.Controllers
                 FreeMarketObject resultRemove = new FreeMarketObject();
                 FreeMarketObject resultQuantity = new FreeMarketObject();
 
+                // Update Selected Property
+                sessionCart.UpdateSelectedProperty(cart, false);
+
                 // Remove selected Items
                 List<OrderDetail> selectedItems = cart.Body.OrderDetails
                     .Where(c => c.Selected || c.Quantity <= 0)
@@ -274,18 +290,27 @@ namespace FreeMarket.Controllers
                         // to to the selected item. If an item is found the courier fee of the selected item is moved to the match
                         // so that it no longer has a courier fee of zero. This is to prevent a customer from getting free delivery
                         // by accident.
-                        if (sessionCart.Body.OrderDetails
-                            .Where(c => !c.Selected && c.CustodianNumber == detail.CustodianNumber
-                                && c.CourierNumber == detail.CourierNumber && c.CourierFee == 0)
-                            .FirstOrDefault() != null)
-                        {
-                            OrderDetail temp = sessionCart.Body.OrderDetails
-                                .Where(c => c.ProductNumber == detail.ProductNumber && c.SupplierNumber == detail.SupplierNumber)
+
+                        OrderDetail temp = sessionCart.Body.OrderDetails
+                                .Where(c => c.ProductNumber == detail.ProductNumber &&
+                                            c.SupplierNumber == detail.SupplierNumber)
                                 .FirstOrDefault();
 
+                        if (sessionCart.Body.OrderDetails
+                                .Where(c => !c.Selected &&
+                                    c.CustodianNumber == temp.CustodianNumber &&
+                                    c.CourierNumber == temp.CourierNumber &&
+                                    c.DeliveryPostalCode == temp.DeliveryPostalCode &&
+                                    c.CourierFee == 0)
+                                .FirstOrDefault() != null)
+                        {
+
                             sessionCart.Body.OrderDetails
-                                .Where(c => !c.Selected && c.CustodianNumber == detail.CustodianNumber
-                                    && c.CourierNumber == detail.CourierNumber && c.CourierFee == 0)
+                                .Where(c => !c.Selected &&
+                                    c.CustodianNumber == temp.CustodianNumber &&
+                                    c.CourierNumber == temp.CourierNumber &&
+                                    c.DeliveryPostalCode == temp.DeliveryPostalCode &&
+                                    c.CourierFee == 0)
                                 .FirstOrDefault().CourierFee = temp.CourierFee;
                         }
 
@@ -303,6 +328,8 @@ namespace FreeMarket.Controllers
 
                 sessionCart.Save();
 
+                sessionCart.UpdateSelectedProperty(cart, true);
+
                 TempData["message"] = "Cart has been updated.";
 
                 model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
@@ -313,6 +340,15 @@ namespace FreeMarket.Controllers
             model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
 
             return View("Cart", model);
+        }
+
+        public ActionResult SaveCartModal()
+        {
+            SaveCartViewModel model = new SaveCartViewModel();
+            if (model == null)
+                return RedirectToAction("Index", "Product");
+
+            return PartialView("_SaveCartModal", model);
         }
 
         public ActionResult GetAddress(int AddressNumber)

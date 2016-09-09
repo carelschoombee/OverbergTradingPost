@@ -46,7 +46,7 @@ namespace FreeMarket.Models
             InitializeDefault();
         }
 
-        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, string defaultAddressName, string addressString = null)
+        public CourierFeeViewModel(int productNumber, int supplierNumber, int courierNumber, int quantityRequested, string userId, string defaultAddressName, string addressString = null)
         {
             // Validate
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
@@ -109,11 +109,11 @@ namespace FreeMarket.Models
                         .FirstOrDefault();
                 }
 
-                SetModel(productNumber, supplierNumber, quantityRequested, userId);
+                SetModel(productNumber, supplierNumber, courierNumber, quantityRequested, userId);
             }
         }
 
-        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, string userId, int addressNumber)
+        public CourierFeeViewModel(int productNumber, int supplierNumber, int courierNumber, int quantityRequested, string userId, int addressNumber)
         {
             // Validate
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1 || string.IsNullOrEmpty(userId))
@@ -142,10 +142,10 @@ namespace FreeMarket.Models
                 SelectedAddress = addressNumber;
             }
 
-            SetModel(productNumber, supplierNumber, quantityRequested, userId);
+            SetModel(productNumber, supplierNumber, courierNumber, quantityRequested, userId);
         }
 
-        public void SetModel(int productNumber, int supplierNumber, int quantityRequested, string userId)
+        public void SetModel(int productNumber, int supplierNumber, int courierNumber, int quantityRequested, string userId)
         {
             Quantity = quantityRequested;
             ProductNumber = productNumber;
@@ -155,10 +155,17 @@ namespace FreeMarket.Models
 
             Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
 
-            if (FeeInfo == null || FeeInfo.Count == 0)
-                SelectedCourierNumber = 0;
+            if (courierNumber == 0)
+            {
+                if (FeeInfo == null || FeeInfo.Count == 0)
+                    SelectedCourierNumber = 0;
+                else
+                    SelectedCourierNumber = FeeInfo[0].CourierNumber;
+            }
             else
-                SelectedCourierNumber = FeeInfo[0].CourierNumber;
+            {
+                SelectedCourierNumber = courierNumber;
+            }
         }
 
         public override string ToString()

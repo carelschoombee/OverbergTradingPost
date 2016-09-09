@@ -1,0 +1,45 @@
+﻿@using FreeMarket.Models
+@model SaveCartViewModel
+
+@{
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "cartPartial",
+        LoadingElementId = "loadingDiv"
+    };
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title text-center" id="EditModalLabel">Choose Delivery Time</h4>
+            
+            @using (Ajax.BeginForm("UpdateDeliveryDate", "ShoppingCart", null, ajaxOpts, new { @id = "saveForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <hr />
+
+                        @Html.ValidationSummary(true)
+
+                       
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" onclick="editModal()">Save</button>
+                    <button type="button" class="btn btn-link-disabled-color" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+   
+
+</script>

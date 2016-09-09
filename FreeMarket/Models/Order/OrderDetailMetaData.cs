@@ -31,13 +31,15 @@ namespace FreeMarket.Models
             return toString;
         }
 
-        public void Update(int quantity, int courierNumber, decimal? courierFeeCost, string address, int custodianNumber)
+        public void Update(int quantity, int courierNumber, decimal? courierFeeCost, string address, string addressPostalCode, int custodianNumber)
         {
             Quantity += quantity;
             OrderItemValue = Price * Quantity;
             CourierNumber = courierNumber;
-            CourierFee = courierFeeCost;
+            if (courierFeeCost != 0)
+                CourierFee = courierFeeCost;
             DeliveryAddress = address.ToString();
+            DeliveryPostalCode = addressPostalCode;
             CustodianNumber = custodianNumber;
         }
 

@@ -10,6 +10,36 @@ namespace FreeMarket.Models
         public OrderHeader Order { get; set; }
         public CartBody Body { get; set; }
 
+        public OrderDetail GetOrderDetail(int productNumber, int supplierNumber)
+        {
+            return Body.OrderDetails
+                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                .FirstOrDefault();
+        }
+
+        public void UpdateSelectedProperty(ShoppingCart cart, bool clear)
+        {
+            if (clear)
+            {
+                foreach (OrderDetail thisDetail in Body.OrderDetails)
+                {
+                    thisDetail.Selected = false;
+                }
+            }
+            else
+            {
+                foreach (OrderDetail thisDetail in Body.OrderDetails)
+                {
+                    bool selected = cart.Body.OrderDetails
+                        .Where(c => c.ProductNumber == thisDetail.ProductNumber && c.SupplierNumber == thisDetail.SupplierNumber)
+                        .FirstOrDefault()
+                        .Selected;
+
+                    thisDetail.Selected = selected;
+                }
+            }
+        }
+
         public void Initialize(string userId)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -71,7 +101,7 @@ namespace FreeMarket.Models
             if (existingItem != null)
             {
                 // Update the existing item
-                existingItem.Update(quantity, courierNumber, courierFeeCost, address.ToString(), custodian);
+                existingItem.Update(quantity, courierNumber, courierFeeCost, address.ToString(), address.AddressPostalCode, custodian);
 
                 // Setup return object
                 using (FreeMarketEntities db = new FreeMarketEntities())
@@ -121,6 +151,7 @@ namespace FreeMarket.Models
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
+                            AddressNumber = address.AddressNumber,
                             CourierFee = courierFeeCost,
                             CourierNumber = courierNumber,
                             CourierName = null,
@@ -128,6 +159,7 @@ namespace FreeMarket.Models
                             CustomerProductQualityRating = null,
                             CustodianNumber = custodian,
                             DeliveryAddress = address.ToString(),
+                            DeliveryPostalCode = address.AddressPostalCode,
                             DeliveryDateActual = null,
                             DeliveryDateAgreed = null,
                             OrderItemStatus = status,

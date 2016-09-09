@@ -23,41 +23,54 @@ textarea {
 	max-width: 280px;
 }
 
-.carousel{
-	background: #ffffff;
+.carousel {
+	background: inherit;
 	margin-top: 20px;
 }
-.carousel .item img{
-	margin: 0 auto; /* Align slide image horizontally center */
-}
-.bs-example{
+
+	.carousel .item img {
+		margin: 0 auto; /* Align slide image horizontally center */
+	}
+
+.bs-example {
 	margin: 20px;
 }
 
-.center_div{
+.center_div {
 	margin: 0 auto;
-	width: 50% /* value of your choice which suits your alignment */
+	width: 50%; /* value of your choice which suits your alignment */
 }
 
+/*body {
+	background-image: url('Images/background1.jpg');
+	margin: 0;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}*/
+
 hr {
-  border-top: 1px solid black !important;
+	border-top: 1px solid black !important;
 }
 
 .navbar-nav > li > a, .navbar-brand {
-	padding-top:4px !important; 
-	padding-bottom:0 !important;
-	height: 47px;
+	padding-top: 4px !important;
+	padding-bottom: 0 !important;
+	height: 45px;
 }
-.navbar {min-height:47px !important;}
+
+.navbar {
+	min-height: 45px !important;
+}
 
 a:hover {
- cursor:pointer;
+	cursor: pointer;
 }
 
 .form-control:focus {
-		border-color: darkslateblue;
-		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
-	}
+	border-color: darkslateblue;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
+}
 
 .table-bordered-custom td {
 	/*border: 1px solid #ddd !important;*/
@@ -65,7 +78,7 @@ a:hover {
 	border-color: black;
 	font-size: 12px !important;
 	/*font-family: 'Arial' !important;*/
-	font-weight: 600;	
+	font-weight: 600;
 }
 
 .table-bordered-custom th {
@@ -76,27 +89,28 @@ a:hover {
 	font-weight: 700;
 }
 
-#loadingDiv{
-  position:fixed;
-  top:0px;
-  right:0px;
-  width:100%;
-  height:100%;
-  background-color:#666;
-  background-image:url('Images/ajax-loader.gif');
-  background-repeat:no-repeat;
-  background-position:center;
-  z-index:10000000;
-  opacity: 0.6;
-  filter: alpha(opacity=40); /* For IE8 and earlier */
+#loadingDiv {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #666;
+	background-image: url('Images/ajax-loader.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	z-index: 10000000;
+	opacity: 0.6;
+	filter: alpha(opacity=40); /* For IE8 and earlier */
 }
 
 .glyphicon {
 	font-family: inherit;
 }
-.glyphicon:before{
-	font-family:'Glyphicons Halflings';
-}
+
+	.glyphicon:before {
+		font-family: 'Glyphicons Halflings';
+	}
 
 /*.well {
 	background: rgb(204, 255, 204);
@@ -109,21 +123,21 @@ a:hover {
 }*/
 
 .form-control-inline {
-  width: 100%;
-  height: 40px;
-  padding: 8px 12px;
-  font-size: 16px;
-  line-height: 1.42857143;
-  color: #333333;
-  background-color: #ffffff;
-  background-image: none;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	width: 100%;
+	height: 40px;
+	padding: 8px 12px;
+	font-size: 16px;
+	line-height: 1.42857143;
+	color: #333333;
+	background-color: #ffffff;
+	background-image: none;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 .border-div {
@@ -133,87 +147,110 @@ a:hover {
 /* some basic table styles */
 
 table {
-  width: 100%;
+	width: 100%;
 }
 
 thead {
-  border-bottom: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 
-thead th {
-  text-align: left;
-}
+	thead th {
+		text-align: left;
+	}
 
 th, td {
-  padding: 2px;
+	padding: 2px;
 }
 
 
 @media screen and (max-width: 600px) {
-  
-  th {
-	display: none !important;
-  }
-  
-  table, tbody, tr, td {
-	display: block;
-	text-align: center;
-	align-content:center;
-  }
-  
-  td {
-	padding-left: 50%;
-	position: relative;
-	border: 1px solid #ddd !important;
-  }
 
-  td:before {
-	box-sizing: border-box;
-	position: absolute;
-	content: attr(data-label);
-	top: 0;
-	left: 0;
-	padding: 2px;
-	font-weight: bold;
-	width: 50%;
-  }
-  
+	th {
+		display: none !important;
+	}
+
+	table, tbody, tr, td {
+		display: block;
+		text-align: center;
+		align-content: center;
+	}
+
+	td {
+		padding-left: 50%;
+		position: relative;
+		border: 1px solid #ddd !important;
+	}
+
+		td:before {
+			box-sizing: border-box;
+			position: absolute;
+			content: attr(data-label);
+			top: 0;
+			left: 0;
+			padding: 2px;
+			font-weight: bold;
+			width: 50%;
+		}
 }
 
 @media (max-width: 1199px) {
 	.navbar-header {
 		float: none;
 	}
+
 	.navbar-toggle {
 		display: block;
 	}
+
 	.navbar-collapse {
 		border-top: 1px solid transparent;
 		box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 	}
-	.navbar-collapse.collapse {
-		display: none!important;
-	}
+
+		.navbar-collapse.collapse {
+			display: none !important;
+		}
+
 	.navbar-nav {
-		float: none!important;
+		float: none !important;
 		margin: 7.5px -15px;
 	}
-	.navbar-nav>li {
-		float: none;
-	}
-	.navbar-nav>li>a {
-		padding-top: 10px;
-		padding-bottom: 10px;
-	}
+
+		.navbar-nav > li {
+			float: none;
+		}
+
+			.navbar-nav > li > a {
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
 	.navbar-text {
 		float: none;
 		margin: 15px 0;
 	}
 	/* since 3.1.0 */
-	.navbar-collapse.collapse.in { 
-		display: block!important;
+	.navbar-collapse.collapse.in {
+		display: block !important;
 	}
+
 	.collapsing {
-		overflow: hidden!important;
+		overflow: hidden !important;
 	}
+}
+
+.icon-input-btn {
+	display: inline-block;
+	position: relative;
+}
+
+.icon-input-btn input[type="submit"] {
+	padding-left: 2em;
+}
+
+.icon-input-btn .glyphicon {
+	display: inline-block;
+	position: absolute;
+	left: 0.65em;
+	top: 30%;
 }

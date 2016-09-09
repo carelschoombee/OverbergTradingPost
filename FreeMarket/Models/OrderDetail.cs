@@ -35,6 +35,8 @@ namespace FreeMarket.Models
         public string CustomerCourierOnTimeDeliveryRating { get; set; }
         public string DeliveryAddress { get; set; }
         public Nullable<int> CustodianNumber { get; set; }
+        public Nullable<int> AddressNumber { get; set; }
+        public string DeliveryPostalCode { get; set; }
     
         public virtual Courier Courier { get; set; }
         public virtual Product Product { get; set; }
