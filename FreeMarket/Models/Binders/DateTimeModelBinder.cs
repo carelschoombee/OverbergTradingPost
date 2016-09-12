@@ -4,9 +4,9 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
-    public class DateTimeModelBinder : System.Web.Mvc.DefaultModelBinder
+    public class DateTimeModelBinder : DefaultModelBinder
     {
-        public override object BindModel(ControllerContext controllerContext, System.Web.Mvc.ModelBindingContext bindingContext)
+        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             var displayFormat = bindingContext.ModelMetadata.DisplayFormatString;
             var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
