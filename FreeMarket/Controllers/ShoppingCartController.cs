@@ -351,6 +351,19 @@ namespace FreeMarket.Controllers
             return PartialView("_SaveCartModal", model);
         }
 
+        [HttpPost]
+        public ActionResult UpdateDeliveryDate(SaveCartViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return JavaScript("window.location = window.location.href;");
+            }
+            else
+            {
+                return PartialView("_SaveCartModal", model);
+            }
+        }
+
         public ActionResult GetAddress(int AddressNumber)
         {
             string toReturn = "";

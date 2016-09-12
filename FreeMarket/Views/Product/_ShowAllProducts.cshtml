@@ -4,8 +4,8 @@
 @helper ListProduct(int i)
 {
     <div>
-        <div class="col-sm-6">
-            <img src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" />
+        <div class="col-sm-9">
+            <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" />
         </div>
     </div>
 
@@ -47,19 +47,25 @@
     <div class="row">
     @if (i < Model.Products.Count)
     {
-        <div class="col-sm-4 well">                
+        <div class="col-sm-3 well">                
             @ListProduct(i)
         </div>
     }
     @if (++i < Model.Products.Count)
     {
-        <div class="col-sm-4 well">
+        <div class="col-sm-3 well">
                 @ListProduct(i)
         </div>
     }
     @if (++i < Model.Products.Count)
     {
-        <div class="col-sm-4 well">
+        <div class="col-sm-3 well">
+            @ListProduct(i)
+        </div>
+    }
+    @if (++i < Model.Products.Count)
+    {
+        <div class="col-sm-3 well">
             @ListProduct(i)
         </div>
     }

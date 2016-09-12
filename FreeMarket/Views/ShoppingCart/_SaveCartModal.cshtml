@@ -9,6 +9,8 @@
     };
 }
 
+<link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" type="text/css" />
+
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -25,7 +27,27 @@
 
                         @Html.ValidationSummary(true)
 
-                       
+                        <style type="text/css">
+                            /* Override feedback icon position */
+                            .form-horizontal .has-feedback .input-group .form-control-feedback {
+                                top: 0;
+                                right: -30px;
+                            }
+                        </style>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Preferred Delivery Time</label>
+                            <div class="col-sm-6">
+                                <div class="input-group date" id="datetimePicker">
+                                    <input type="text" class="form-control" name="prefDeliveryDateTime" style="width: 250px" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                                <span id="temp" class="help-block">DD/MM/YYYY h:m A</span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -38,8 +60,80 @@
     </div>
 </div>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
 
-   
+<script>
 
+    $(document).ready(function () {
+        $('#datetimePicker').datetimepicker({
+            format: 'DD/MM/YYYY h:m A'
+        }
+        );
+    });
+
+    $('#saveForm').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            prefDeliveryDateTime: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please select a date and time'
+                    },
+                    date: {
+                        format: 'DD/MM/YYYY h:m A',
+                        message: 'The value is not a valid date'
+                    }
+                }
+            }
+        }
+    });
+
+    function editModal() {
+        $(function () {
+            $('#saveForm').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    prefDeliveryDateTime: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Please select a date and time'
+                            },
+                            date: {
+                                format: 'DD/MM/YYYY h:m A',
+                                message: 'The value is not a valid date'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function (e) {
+                e.preventDefault();
+                $('.modal-backdrop').remove();
+                $('#EditModal').modal('hide');
+            }).on('error.form.bv', function (e) {
+                e.preventDefault();
+            })
+        });
+    }
+
+    $('#datetimePicker')
+        .on('dp.change dp.show', function (e) {
+            // Validate the date when user change it
+            $('#saveForm')
+                // Get the bootstrapValidator instance
+                .data('bootstrapValidator')
+                // Mark the field as not validated, so it'll be re-validated when the user change date
+                .updateStatus('prefDeliveryDateTime', 'NOT_VALIDATED', null)
+                // Validate the field
+                .validateField('prefDeliveryDateTime');
+        });
+
+ 
 </script>

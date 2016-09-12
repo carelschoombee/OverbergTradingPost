@@ -1,7 +1,7 @@
 ﻿@using FreeMarket.Models
 @model ShoppingCartViewModel
 
-<table class="table table-bordered-custom table-condensed table-responsive">
+<table class="table table-bordered-custom table-condensed table-responsive table-striped">
     <tr class="well">
         <th class="col-sm-1">
             Remove
@@ -28,7 +28,7 @@
 
     @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
-       <tr>
+       <tr class="well">
            <td data-label="Remove:">
                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
@@ -38,7 +38,7 @@
                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
            </td>
            <td>
-               <img src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription"/>
+               <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription"/>
            </td>
            <td>
                @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
@@ -52,7 +52,7 @@
            <td data-label="Price:">
                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
            </td>
-           <td class="text-center" data-label="Quantity:">
+           <td class="text-center" data-label="Qty:">
                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new {@class = "text-danger" })
            </td>

@@ -26,10 +26,14 @@ namespace FreeMarket
                       "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrapValidator").Include(
-                      "~/Scripts/bootstrapValidator.min.js"));
+                      "~/Scripts/bootstrapValidator.min.js",
+                      "~/Scripts/moment.min.js",
+                      "~/Scripts/bootstrap-datetimepicker.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      //"~/Content/bootstrap-theme.min.css",
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.datetimepicker.min.css",
                       "~/Content/site.css"));
         }
     }
