@@ -279,6 +279,7 @@
           <Property Name="DateAdded" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LongDescription" Type="nvarchar(max)" />
           <Property Name="DepartmentNumber" Type="int" Nullable="false" />
           <Property Name="Weight" Type="decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Size" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -1190,6 +1191,7 @@
           <NavigationProperty Name="ProductPictures" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="Product" ToRole="ProductPicture" />
           <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
           <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
+          <Property Name="LongDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -1955,6 +1957,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="FreeMarketModel.Product">
               <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
                 <ScalarProperty Name="Activated" ColumnName="Activated" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
                 <ScalarProperty Name="Weight" ColumnName="Weight" />

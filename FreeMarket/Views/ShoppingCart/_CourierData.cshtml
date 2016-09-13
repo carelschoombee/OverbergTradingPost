@@ -1,57 +1,31 @@
 ﻿@using FreeMarket.Models
 @model CourierFeeViewModel
 
-<table class="table table-bordered-custom text-center">
-    @if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
+@if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
+{
+    for (int i = 0; i < Model.FeeInfo.Count; i++)
     {
-        <tr>
-            <th class="col-sm-1 text-center">Courier Name</th>
-            <th class="col-sm-1 text-center">Price</th>
-            <th class="col-sm-1 text-center">Choose One</th>
-        </tr>
-        for (int i = 0; i < Model.FeeInfo.Count; i++)
+        if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
         {
-            <tr>
-                <td>
-                    @if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-                    {
-                        @Html.Label(@Model.FeeInfo[i].CourierName, new { @class = "text-success" })
-                    }
-                    else
-                    {
-                        @Html.Label(@Model.FeeInfo[i].CourierName)
-                    }
-
-                    @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
-                    @Html.HiddenFor(model => Model.FeeInfo[i].CustodianNumber)
-                    @Html.HiddenFor(model => Model.FeeInfo[i].NoCharge)
-                </td>
-                <td>
-                    @if (Model.FeeInfo[i].NoCharge)
-                    {
-                        @Html.Label("Free!", new { @class = "text-success" })
-                    }
-                    else if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-                    {
-                        @Html.Label(@String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue), new { @class = "text-success" })
-                    }
-                    else
-                    {
-                        @String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)
-                    }
-                </td>
-                <td>
-                    @Html.RadioButtonFor(c => Model.SelectedCourierNumber, Model.FeeInfo[i].CourierNumber)
-                </td>
-            </tr>
+            string message1 = "";
+            string message2 = "";
+            message1 = Model.FeeInfo[i].CourierName + " can deliver this item to your ";
+            message2 = "for " + (Model.FeeInfo[i].NoCharge ? "free." : String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)); 
+            @Html.Label(message1)
+            <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true">default address</span>
+            @Html.Label(message2)
+            <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage", new { addressNumber = Model.SelectedAddress })"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
         }
-    }
-    else
-    {
-        @Html.Label("Sorry, but we cannot deliver to that address.")
-    }
 
-</table>
+        @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
+        @Html.HiddenFor(model => Model.FeeInfo[i].CustodianNumber)
+        @Html.HiddenFor(model => Model.FeeInfo[i].NoCharge)
+    }
+}
+else
+{
+    @Html.Label("Sorry, but we do not currently deliver to that address.")
+}
 
 
 

@@ -5,12 +5,12 @@
 {
     <div>
         <div class="col-sm-9">
-            <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" />
+            <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
         </div>
     </div>
 
     <div>
-        <table class="table">
+        <table class="table table-responsive">
             <tr>
                 <td>
                     <strong>@Html.DisplayFor(model => Model.Products[i].Description)</strong>
@@ -18,12 +18,7 @@
             </tr>
             <tr>
                 <td>
-                    @String.Format("{0:C}", Model.Products[i].PricePerUnit)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;@Html.DisplayFor(model => Model.Products[i].Size)
+                    @String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;@Html.DisplayFor(model => Model.Products[i].Size)
                 </td>
             </tr>
             <tr>
@@ -33,7 +28,6 @@
             </tr>
             <tr>
                 <td>
-                    @*@Html.EditorFor(m => m.Products[i]., new { htmlAttributes = new { @class = "form-control" } })*@
                     <a data-id="@Url.Action("CourierSelectionModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
                        class="btn btn-success editClass"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Add to Cart</span></a>
                 </td>

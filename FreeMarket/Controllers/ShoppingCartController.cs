@@ -66,6 +66,16 @@ namespace FreeMarket.Controllers
             string defaultAddressName = "";
             bool anonymousUser = (userId == null);
 
+            // Validate
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Product product = db.Products.Find(id);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                if (product == null || supplier == null)
+                    return null;
+            }
+
             if (anonymousUser)
             {
 
@@ -75,16 +85,6 @@ namespace FreeMarket.Controllers
                 var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                 var currentUser = manager.FindById(User.Identity.GetUserId());
                 defaultAddressName = currentUser.DefaultAddress;
-
-                // Validate
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    Product product = db.Products.Find(id);
-                    Supplier supplier = db.Suppliers.Find(supplierNumber);
-
-                    if (product == null || supplier == null)
-                        return null;
-                }
 
                 ShoppingCart cart = GetCartFromSession(userId);
                 OrderDetail detail = cart.GetOrderDetail(id, supplierNumber);
@@ -207,16 +207,15 @@ namespace FreeMarket.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(CourierFeeViewModel viewModel)
         {
+            // Validate
+            if (viewModel.ProductNumber == 0 || viewModel.SupplierNumber == 0 || viewModel.SelectedCourierNumber == 0)
+            {
+                TempData["errorMessage"] = "Error: We could not add the item to the cart.";
+                return JavaScript("window.location = window.location.href;");
+            }
+
             if (ModelState.IsValid)
             {
-                // Validate
-                if (viewModel.ProductNumber == 0 || viewModel.SupplierNumber == 0 || viewModel.SelectedCourierNumber == 0)
-                {
-                    TempData["errorMessage"] = "Error: We could not add the item to the cart.";
-                    return JavaScript("window.location = window.location.href;");
-                }
-
-                // Prepare
                 string userId = User.Identity.GetUserId();
                 ShoppingCart cart = GetCartFromSession(userId);
 
@@ -256,7 +255,12 @@ namespace FreeMarket.Controllers
             }
             // Validation Error
             else
+            {
+                // Prepare
+                viewModel.SetInstances(viewModel.ProductNumber, viewModel.SupplierNumber);
+
                 return PartialView("_CourierSelectionModal", viewModel);
+            }
         }
 
         [HttpPost]

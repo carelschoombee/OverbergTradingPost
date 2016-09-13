@@ -27,6 +27,9 @@ namespace FreeMarket.Models
         public int CustodianNumber { get; set; }
         public int OrderNumber { get; set; }
 
+        public Product ProductInstance { get; set; }
+        public Supplier SupplierInstance { get; set; }
+
         public bool FromCart { get; set; }
 
         public void InitializeDefault()
@@ -151,6 +154,8 @@ namespace FreeMarket.Models
             ProductNumber = productNumber;
             SupplierNumber = supplierNumber;
 
+            SetInstances(productNumber, supplierNumber);
+
             FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, SelectedAddress);
 
             Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
@@ -165,6 +170,21 @@ namespace FreeMarket.Models
             else
             {
                 SelectedCourierNumber = courierNumber;
+            }
+        }
+
+        public void SetInstances(int productNumber, int supplierNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Product product = Product.GetProduct(productNumber, supplierNumber);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                if (product == null || supplier == null)
+                    return;
+
+                ProductInstance = product;
+                SupplierInstance = supplier;
             }
         }
 

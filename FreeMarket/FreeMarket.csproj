@@ -404,6 +404,7 @@
     <Content Include="Content\Images\defaultPicture.png" />
     <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
+    <Content Include="siteIcon.ico" />
     <Content Include="Content\Images\google.png" />
     <Content Include="Content\Images\leaves.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -428,7 +429,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="siteIcon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Models\FreeMarketModel.Context.tt">
@@ -575,7 +575,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>siteIcon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

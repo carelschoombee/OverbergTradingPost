@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -371,10 +372,34 @@ namespace FreeMarket.Models
             Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
 
             Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
-            Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+
+            CalculateShippingTotal();
+
             Order.TotalOrderValue = (Order.SubTotal ?? 0) + (Order.ShippingTotal ?? 0);
 
             // Don't persist as the user may be anonymous at this point
+        }
+
+        public void CalculateShippingTotal()
+        {
+            if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
+            {
+                decimal threshold = 0;
+
+                try
+                {
+                    threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
+                }
+                catch
+                {
+
+                }
+
+                if (threshold != 0 && Order.SubTotal > threshold)
+                    Order.ShippingTotal = 0;
+                else
+                    Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
         }
 
         public void Checkout() { }

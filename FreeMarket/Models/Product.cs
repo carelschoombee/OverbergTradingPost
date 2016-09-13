@@ -32,6 +32,7 @@ namespace FreeMarket.Models
         public decimal Weight { get; set; }
         public string Size { get; set; }
         public bool Activated { get; set; }
+        public string LongDescription { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
