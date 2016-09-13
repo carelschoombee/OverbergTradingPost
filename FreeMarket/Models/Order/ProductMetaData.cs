@@ -77,11 +77,12 @@ namespace FreeMarket.Models
                     DepartmentNumber = productInfo.DepartmentNumber,
                     Description = productInfo.Description,
                     PricePerUnit = productInfo.PricePerUnit,
-                    ProductNumber = productInfo.ProductNumberID,
+                    ProductNumber = productInfo.ProductNumber,
                     Size = productInfo.Size,
                     SupplierName = productInfo.SupplierName,
                     SupplierNumber = productInfo.SupplierNumberID,
-                    Weight = productInfo.Weight
+                    Weight = productInfo.Weight,
+                    LongDescription = productInfo.LongDescription
                 };
 
                 product.MainImageNumber = db.ProductPictures

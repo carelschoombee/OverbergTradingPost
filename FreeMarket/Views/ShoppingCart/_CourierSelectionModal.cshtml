@@ -68,11 +68,17 @@
                             </div>
                         }
 
+                        <div>
+                            @Model.ProductInstance.LongDescription
+                        </div>
+
+                        <br />
+
                         <div id="CourierContainer">
                             @Html.Partial("_CourierData", Model)
                         </div>
                         <div>
-                            <input id="input-id" name="input-id" value="4" class="rating-loading" data-show-caption="true">
+                            <input id="input-id" name="input-id" value="@Model.ProductInstance.Reviews.AverageReviewRating" data-min="0" data-max="5" class="rating-loading" data-show-caption="true">
                         </div>
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
@@ -95,7 +101,7 @@
 
 <script language="javascript" type="text/javascript">
 
-    $('#input-id').rating({displayOnly: true, step: 0.5, clearCaption: 'Not yet rated'});
+    $('#input-id').rating({displayOnly: true, step: 0.1, clearCaption: 'Not yet rated'});
 
     $("#Quantity").change(function () {
         $.ajax({

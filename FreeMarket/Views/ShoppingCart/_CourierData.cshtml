@@ -9,12 +9,23 @@
         {
             string message1 = "";
             string message2 = "";
+            string message3 = "";
             message1 = Model.FeeInfo[i].CourierName + " can deliver this item to your ";
-            message2 = "for " + (Model.FeeInfo[i].NoCharge ? "free." : String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue)); 
-            @Html.Label(message1)
-            <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true">default address</span>
-            @Html.Label(message2)
-            <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage", new { addressNumber = Model.SelectedAddress })"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
+            if (Model.FeeInfo[i].NoCharge)
+            {
+                message3 = "free.";
+            }
+            else
+            {
+                message3 = String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue);
+            }
+            message2 = "for " + message3;
+            <strong>
+                @message1
+                <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true">default address</span>
+                @message2
+                <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage", new { addressNumber = Model.SelectedAddress })"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
+            </strong>
         }
 
         @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)

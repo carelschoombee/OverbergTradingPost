@@ -15,10 +15,11 @@ namespace FreeMarket.Models
     {
         public int SupplierNumberID { get; set; }
         public string SupplierName { get; set; }
-        public int ProductNumberID { get; set; }
+        public int ProductNumber { get; set; }
         public System.DateTime DateAdded { get; set; }
         public Nullable<System.DateTime> DateModified { get; set; }
         public string Description { get; set; }
+        public string LongDescription { get; set; }
         public int DepartmentNumber { get; set; }
         public decimal Weight { get; set; }
         public string Size { get; set; }

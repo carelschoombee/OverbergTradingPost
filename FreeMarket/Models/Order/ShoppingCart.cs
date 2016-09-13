@@ -122,7 +122,7 @@ namespace FreeMarket.Models
                         DepartmentNumber = productInfo.DepartmentNumber,
                         Description = productInfo.Description,
                         PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumberID,
+                        ProductNumber = productInfo.ProductNumber,
                         Size = productInfo.Size,
                         SupplierName = productInfo.SupplierName,
                         SupplierNumber = productInfo.SupplierNumberID,
@@ -144,7 +144,7 @@ namespace FreeMarket.Models
 
                     // Add a small image for the CartBody
                     int imageNumber = db.ProductPictures
-                            .Where(c => c.ProductNumber == productInfo.ProductNumberID && c.Dimensions == PictureSize.Small.ToString())
+                            .Where(c => c.ProductNumber == productInfo.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
                             .Select(c => c.PictureNumber)
                             .FirstOrDefault();
 
@@ -170,7 +170,7 @@ namespace FreeMarket.Models
                             PayCourier = null,
                             PaySupplier = null,
                             Price = productInfo.PricePerUnit,
-                            ProductNumber = productInfo.ProductNumberID,
+                            ProductNumber = productInfo.ProductNumber,
                             ProductDescription = productInfo.Description,
                             ProductDepartment = productInfo.DepartmentName,
                             Quantity = quantity,
@@ -191,7 +191,7 @@ namespace FreeMarket.Models
                         DepartmentNumber = productInfo.DepartmentNumber,
                         Description = productInfo.Description,
                         PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumberID,
+                        ProductNumber = productInfo.ProductNumber,
                         Size = productInfo.Size,
                         SupplierName = productInfo.SupplierName,
                         SupplierNumber = productInfo.SupplierNumberID,
