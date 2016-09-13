@@ -28,13 +28,15 @@ namespace FreeMarket
             bundles.Add(new ScriptBundle("~/bundles/bootstrapValidator").Include(
                       "~/Scripts/bootstrapValidator.min.js",
                       "~/Scripts/moment.min.js",
-                      "~/Scripts/bootstrap-datetimepicker.min.js"));
+                      "~/Scripts/bootstrap-datetimepicker.min.js",
+                      "~/Scripts/star-rating.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       //"~/Content/bootstrap-theme.min.css",
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap.datetimepicker.min.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/star-rating.css"));
         }
     }
 }

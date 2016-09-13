@@ -21,6 +21,7 @@ namespace FreeMarket.Models
             this.OrderDetails = new HashSet<OrderDetail>();
             this.CourierCustodianDistances = new HashSet<CourierCustodianDistance>();
             this.CourierLocations = new HashSet<CourierLocation>();
+            this.CourierReviews = new HashSet<CourierReview>();
         }
     
         public int CourierNumber { get; set; }
@@ -48,5 +49,7 @@ namespace FreeMarket.Models
         public virtual ICollection<CourierCustodianDistance> CourierCustodianDistances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierLocation> CourierLocations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CourierReview> CourierReviews { get; set; }
     }
 }

@@ -70,6 +70,19 @@
           <Property Name="PostalCodeDestination" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CourierFee" Type="money" Nullable="false" />
         </EntityType>
+        <EntityType Name="CourierReview">
+          <Key>
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ReviewId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourierNumber" Type="int" />
+          <Property Name="OrderNumber" Type="int" />
+          <Property Name="Author" Type="nvarchar" MaxLength="256" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="ReviewContent" Type="nvarchar(max)" />
+          <Property Name="StarRating" Type="smallint" />
+        </EntityType>
         <EntityType Name="CourierStockMovementLog">
           <Key>
             <PropertyRef Name="StockMovementNumber" />
@@ -309,6 +322,20 @@
           <Property Name="Dimensions" Type="nvarchar" MaxLength="50" />
           <Property Name="PictureMimeType" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="ProductReview">
+          <Key>
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ReviewId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductNumber" Type="int" />
+          <Property Name="SupplierNumber" Type="int" />
+          <Property Name="OrderNumber" Type="int" />
+          <Property Name="Author" Type="nvarchar" MaxLength="256" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="StarRating" Type="smallint" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="ReviewContent" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
             <PropertyRef Name="ProductNumber" />
@@ -415,6 +442,18 @@
             </Principal>
             <Dependent Role="CourierLocation">
               <PropertyRef Name="LocationNumberOrigin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourierReview_Courier">
+          <End Role="Courier" Type="Self.Courier" Multiplicity="0..1" />
+          <End Role="CourierReview" Type="Self.CourierReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierReview">
+              <PropertyRef Name="CourierNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -562,6 +601,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductReview_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="ProductReview" Type="Self.ProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductReview">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductSupplier_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
           <End Role="ProductSupplier" Type="Self.ProductSupplier" Multiplicity="*" />
@@ -647,6 +698,7 @@
           <EntitySet Name="Courier" EntityType="Self.Courier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierCustodianDistance" EntityType="Self.CourierCustodianDistance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierLocation" EntityType="Self.CourierLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourierReview" EntityType="Self.CourierReview" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierStockMovementLog" EntityType="Self.CourierStockMovementLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Custodian" EntityType="Self.Custodian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomerAddress" EntityType="Self.CustomerAddress" Schema="dbo" store:Type="Tables" />
@@ -665,6 +717,7 @@
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductCustodian" EntityType="Self.ProductCustodian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductPicture" EntityType="Self.ProductPicture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductReview" EntityType="Self.ProductReview" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductSupplier" EntityType="Self.ProductSupplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SiteConfiguration" EntityType="Self.SiteConfiguration" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SitePictures" EntityType="Self.SitePictures" Schema="dbo" store:Type="Tables" />
@@ -686,6 +739,10 @@
           <AssociationSet Name="FK_CourierLocation_Location" Association="Self.FK_CourierLocation_Location">
             <End Role="Location" EntitySet="Location" />
             <End Role="CourierLocation" EntitySet="CourierLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourierReview_Courier" Association="Self.FK_CourierReview_Courier">
+            <End Role="Courier" EntitySet="Courier" />
+            <End Role="CourierReview" EntitySet="CourierReview" />
           </AssociationSet>
           <AssociationSet Name="FK_CourierStockMovementLog_Courier" Association="Self.FK_CourierStockMovementLog_Courier">
             <End Role="Courier" EntitySet="Courier" />
@@ -734,6 +791,10 @@
           <AssociationSet Name="FK_ProductPicture_Product" Association="Self.FK_ProductPicture_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductPicture" EntitySet="ProductPicture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductReview_Product" Association="Self.FK_ProductReview_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductReview" EntitySet="ProductReview" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductSupplier_Product" Association="Self.FK_ProductSupplier_Product">
             <End Role="Product" EntitySet="Product" />
@@ -794,6 +855,7 @@
           <NavigationProperty Name="CourierCustodianDistances" Relationship="FreeMarketModel.FK_CourierCustodianDistance_Courier" FromRole="Courier" ToRole="CourierCustodianDistance" />
           <Property Name="LocationNumber" Type="Int32" />
           <NavigationProperty Name="CourierLocations" Relationship="FreeMarketModel.FK_CourierLocation_Courier" FromRole="Courier" ToRole="CourierLocation" />
+          <NavigationProperty Name="CourierReviews" Relationship="FreeMarketModel.FK_CourierReview_Courier" FromRole="Courier" ToRole="CourierReview" />
         </EntityType>
         <EntityType Name="CourierStockMovementLog">
           <Key>
@@ -1147,6 +1209,16 @@
           <FunctionImport Name="GetDetailsForShoppingCart" ReturnType="Collection(FreeMarketModel.GetDetailsForShoppingCart_Result)">
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="CourierReviews" EntityType="FreeMarketModel.CourierReview" />
+          <EntitySet Name="ProductReviews" EntityType="FreeMarketModel.ProductReview" />
+          <AssociationSet Name="FK_CourierReview_Courier" Association="FreeMarketModel.FK_CourierReview_Courier">
+            <End Role="Courier" EntitySet="Couriers" />
+            <End Role="CourierReview" EntitySet="CourierReviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductReview_Product" Association="FreeMarketModel.FK_ProductReview_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductReview" EntitySet="ProductReviews" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1192,6 +1264,7 @@
           <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
           <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
           <Property Name="LongDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProductReviews" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="Product" ToRole="ProductReview" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -1685,6 +1758,59 @@
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
           <Property Type="String" Name="DeliveryPostalCode" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="CourierReview">
+          <Key>
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ReviewId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourierNumber" Type="Int32" />
+          <Property Name="OrderNumber" Type="Int32" />
+          <Property Name="Author" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="ReviewContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StarRating" Type="Int16" />
+          <NavigationProperty Name="Courier" Relationship="FreeMarketModel.FK_CourierReview_Courier" FromRole="CourierReview" ToRole="Courier" />
+        </EntityType>
+        <EntityType Name="ProductReview">
+          <Key>
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ReviewId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductNumber" Type="Int32" />
+          <Property Name="OrderNumber" Type="Int32" />
+          <Property Name="Author" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="StarRating" Type="Int16" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="ReviewContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="ProductReview" ToRole="Product" />
+          <Property Name="SupplierNumber" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_CourierReview_Courier">
+          <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
+          <End Type="FreeMarketModel.CourierReview" Role="CourierReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courier">
+              <PropertyRef Name="CourierNumber" />
+            </Principal>
+            <Dependent Role="CourierReview">
+              <PropertyRef Name="CourierNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductReview_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="FreeMarketModel.ProductReview" Role="ProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductReview">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2252,6 +2378,35 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="CourierReviews">
+            <EntityTypeMapping TypeName="FreeMarketModel.CourierReview">
+              <MappingFragment StoreEntitySet="CourierReview">
+                <ScalarProperty Name="StarRating" ColumnName="StarRating" />
+                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductReviews">
+            <EntityTypeMapping TypeName="FreeMarketModel.ProductReview">
+              <MappingFragment StoreEntitySet="ProductReview">
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="StarRating" ColumnName="StarRating" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -55,6 +55,10 @@
         <EntityTypeShape EntityType="FreeMarketModel.CourierLocation" Width="1.5" PointX="8.5" PointY="20.25" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Courier" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierLocation_Location" />
+        <EntityTypeShape EntityType="FreeMarketModel.CourierReview" Width="1.5" PointX="5.25" PointY="34.625" />
+        <EntityTypeShape EntityType="FreeMarketModel.ProductReview" Width="1.5" PointX="5.25" PointY="30.5" />
+        <AssociationConnector Association="FreeMarketModel.FK_CourierReview_Courier" />
+        <AssociationConnector Association="FreeMarketModel.FK_ProductReview_Product" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

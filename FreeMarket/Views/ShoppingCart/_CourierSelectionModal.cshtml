@@ -39,7 +39,7 @@
                                         <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
                                     </td>
                                     <td>
-                                        @String.Format("{0:C}", Model.ProductInstance.PricePerUnit)&nbsp;per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })
+                                        <span style="font-size:larger; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)&nbsp;per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -71,7 +71,9 @@
                         <div id="CourierContainer">
                             @Html.Partial("_CourierData", Model)
                         </div>
-
+                        <div>
+                            <input id="input-id" name="input-id" value="4" class="rating-loading" data-show-caption="true">
+                        </div>
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
@@ -92,6 +94,8 @@
 </div>
 
 <script language="javascript" type="text/javascript">
+
+    $('#input-id').rating({displayOnly: true, step: 0.5, clearCaption: 'Not yet rated'});
 
     $("#Quantity").change(function () {
         $.ajax({

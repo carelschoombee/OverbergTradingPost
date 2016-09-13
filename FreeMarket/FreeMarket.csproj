@@ -235,6 +235,9 @@
     <Compile Include="Models\CourierCustodianDistance.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CourierReview.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CustomerAddress.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -359,10 +362,15 @@
     <Compile Include="Models\ProductPicture.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductReview.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductSupplier.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product\ProductCollection.cs" />
+    <Compile Include="Models\Review\ProductReviewsMetaData.cs" />
+    <Compile Include="Models\Review\ReviewsCollection.cs" />
     <Compile Include="Models\SiteConfiguration.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -404,6 +412,11 @@
     <Content Include="Content\Images\defaultPicture.png" />
     <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
+    <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\star-rating.css" />
+    <Content Include="Content\star-rating.min.css" />
+    <Content Include="Scripts\star-rating.js" />
+    <Content Include="Scripts\star-rating.min.js" />
     <Content Include="siteIcon.ico" />
     <Content Include="Content\Images\google.png" />
     <Content Include="Content\Images\leaves.png">
@@ -550,6 +563,7 @@
     <Content Include="Views\ShoppingCart\_CartContainer.cshtml" />
     <Content Include="Views\ShoppingCart\_SaveCartModal.cshtml" />
     <Content Include="Views\Product\_AddToCartContainer.cshtml" />
+    <Content Include="Views\Product\_RatingPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

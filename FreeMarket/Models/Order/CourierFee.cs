@@ -33,7 +33,7 @@ namespace FreeMarket.Models
                     return feeInfo;
                 }
 
-                // Vaidate
+                // Validate
                 CustomerAddress address = db.CustomerAddresses.Find(addressNumber);
                 if (productSupplier == null)
                 {

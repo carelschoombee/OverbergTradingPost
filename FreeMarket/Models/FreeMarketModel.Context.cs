@@ -57,6 +57,8 @@ namespace FreeMarket.Models
         public virtual DbSet<CourierCustodianDistance> CourierCustodianDistances { get; set; }
         public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
+        public virtual DbSet<CourierReview> CourierReviews { get; set; }
+        public virtual DbSet<ProductReview> ProductReviews { get; set; }
     
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
