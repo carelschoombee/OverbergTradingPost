@@ -50,8 +50,6 @@ namespace FreeMarket.Models
         public virtual DbSet<SitePicture> SitePictures { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<SupplierLocation> SupplierLocations { get; set; }
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
         public virtual DbSet<CourierCustodianDistance> CourierCustodianDistances { get; set; }
@@ -59,6 +57,8 @@ namespace FreeMarket.Models
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
         public virtual DbSet<CourierReview> CourierReviews { get; set; }
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
     
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
@@ -72,15 +72,6 @@ namespace FreeMarket.Models
                 new ObjectParameter("DepartmentNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsByDepartment_Result>("GetAllProductsByDepartment", departmentNumberParameter);
-        }
-    
-        public virtual ObjectResult<GetOrderHistory_Result> GetOrderHistory(string customerNumber)
-        {
-            var customerNumberParameter = customerNumber != null ?
-                new ObjectParameter("CustomerNumber", customerNumber) :
-                new ObjectParameter("CustomerNumber", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
         }
     
         public virtual ObjectResult<GetNumberOfItemsPerAddress_Result> GetNumberOfItemsPerAddress(Nullable<int> orderNumber)
@@ -138,15 +129,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateCourierFee_Result>("CalculateCourierFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, courierNumberParameter, addressNumberParameter);
         }
     
-        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
-        {
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("OrderNumber", orderNumber) :
-                new ObjectParameter("OrderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
-        }
-    
         public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
         {
             var productNumberParameter = productNumber.HasValue ?
@@ -158,6 +140,24 @@ namespace FreeMarket.Models
                 new ObjectParameter("SupplierNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("OrderNumber", orderNumber) :
+                new ObjectParameter("OrderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetOrderHistory_Result> GetOrderHistory(string customerNumber)
+        {
+            var customerNumberParameter = customerNumber != null ?
+                new ObjectParameter("CustomerNumber", customerNumber) :
+                new ObjectParameter("CustomerNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
         }
     }
 }

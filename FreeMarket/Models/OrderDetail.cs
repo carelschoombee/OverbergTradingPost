@@ -19,6 +19,7 @@ namespace FreeMarket.Models
         public int SupplierNumber { get; set; }
         public int ProductNumber { get; set; }
         public Nullable<int> CourierNumber { get; set; }
+        public Nullable<int> CustodianNumber { get; set; }
         public Nullable<bool> Settled { get; set; }
         public Nullable<bool> PaySupplier { get; set; }
         public Nullable<bool> PayCourier { get; set; }
@@ -28,15 +29,7 @@ namespace FreeMarket.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
-        public Nullable<System.DateTime> DeliveryDateAgreed { get; set; }
-        public Nullable<System.DateTime> DeliveryDateActual { get; set; }
         public Nullable<decimal> CourierFee { get; set; }
-        public string CustomerProductQualityRating { get; set; }
-        public string CustomerCourierOnTimeDeliveryRating { get; set; }
-        public string DeliveryAddress { get; set; }
-        public Nullable<int> CustodianNumber { get; set; }
-        public Nullable<int> AddressNumber { get; set; }
-        public string DeliveryPostalCode { get; set; }
     
         public virtual Courier Courier { get; set; }
         public virtual Product Product { get; set; }

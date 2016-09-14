@@ -7,6 +7,19 @@ namespace FreeMarket.Models
     [MetadataType(typeof(CustomerAddressMetaData))]
     public partial class CustomerAddress
     {
+        public CustomerAddress()
+        {
+            CustomerNumber = "";
+            AddressName = "";
+            AddressLine1 = "";
+            AddressLine2 = "";
+            AddressLine3 = "";
+            AddressLine4 = "";
+            AddressCity = "";
+            AddressPostalCode = "";
+            AddressSuburb = "";
+        }
+
         public static FreeMarketResult AddAddress(string userId, string addressName, string addressLine1, string addressLine2,
             string addressLine3, string addressLine4, string addressSuburb, string addressCity, string addressPostalCode)
         {

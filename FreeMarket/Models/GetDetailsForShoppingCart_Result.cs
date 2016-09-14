@@ -17,10 +17,22 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> OrderDatePlaced { get; set; }
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string CustomerNumber { get; set; }
-        public decimal TotalOrderValue { get; set; }
         public string OrderStatus { get; set; }
-        public string CustomerOverallSatisfactionRating { get; set; }
         public bool PaymentReceived { get; set; }
+        public string DeliveryAddress { get; set; }
+        public string DeliveryAddressLine1 { get; set; }
+        public string DeliveryAddressLine2 { get; set; }
+        public string DeliveryAddressLine3 { get; set; }
+        public string DeliveryAddressLine4 { get; set; }
+        public string DeliveryAddressLSuburb { get; set; }
+        public string DeliveryAddressCity { get; set; }
+        public string DeliveryAddressPostalCode { get; set; }
+        public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public Nullable<System.DateTime> DeliveryDateAgreed { get; set; }
+        public Nullable<decimal> TaxTotal { get; set; }
+        public Nullable<decimal> ShippingTotal { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
+        public decimal TotalOrderValue { get; set; }
         public int SupplierNumberID { get; set; }
         public string SupplierName { get; set; }
         public int CourierNumberID { get; set; }
@@ -49,15 +61,8 @@ namespace FreeMarket.Models
         public decimal PriceOrderDetail { get; set; }
         public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
-        public Nullable<System.DateTime> DeliveryDateAgreed { get; set; }
-        public Nullable<System.DateTime> DeliveryDateActual { get; set; }
         public Nullable<decimal> CourierFee { get; set; }
-        public string CustomerProductQualityRating { get; set; }
-        public string CustomerCourierOnTimeDeliveryRating { get; set; }
-        public string DeliveryAddress { get; set; }
         public Nullable<int> CustodianNumber { get; set; }
-        public Nullable<int> AddressNumber { get; set; }
         public decimal PricePerUnit { get; set; }
-        public string DeliveryPostalCode { get; set; }
     }
 }

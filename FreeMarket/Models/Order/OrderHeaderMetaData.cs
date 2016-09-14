@@ -20,6 +20,7 @@ namespace FreeMarket.Models
         public static OrderHeader GetOrderForShoppingCart(string customerNumber)
         {
             OrderHeader order = new OrderHeader();
+            CustomerAddress address = new CustomerAddress();
 
             // Find the customer's details
             var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -31,18 +32,36 @@ namespace FreeMarket.Models
                 order = db.OrderHeaders.Where(c => c.CustomerNumber == customerNumber
                                                     && c.OrderStatus == "Unconfirmed").FirstOrDefault();
 
+                address = db.CustomerAddresses
+                    .Where(c => c.CustomerNumber == customerNumber && c.AddressName == user.DefaultAddress)
+                    .FirstOrDefault();
+
+                if (address == null)
+                {
+                    address = new CustomerAddress();
+                }
+
                 // The customer has no unconfirmed orders
                 if (order == null)
                 {
                     order = new OrderHeader()
                     {
                         CustomerNumber = customerNumber,
-                        CustomerOverallSatisfactionRating = null,
                         OrderDatePlaced = DateTime.Now,
                         OrderDateClosed = null,
                         OrderStatus = "Unconfirmed",
                         PaymentReceived = false,
                         TotalOrderValue = 0,
+
+                        DeliveryAddress = address.ToString(),
+                        DeliveryAddressLine1 = address.AddressLine1,
+                        DeliveryAddressLine2 = address.AddressLine2,
+                        DeliveryAddressLine3 = address.AddressLine3,
+                        DeliveryAddressLine4 = address.AddressLine4,
+                        DeliveryAddressSuburb = address.AddressSuburb,
+                        DeliveryAddressPostalCode = address.AddressPostalCode,
+                        DeliveryDate = null,
+                        DeliveryDateAgreed = null,
 
                         CustomerName = user.Name,
                         CustomerEmail = user.Email,

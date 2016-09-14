@@ -165,7 +165,7 @@ namespace FreeMarket.Controllers
                         {
                             if (info.CustodianNumber == temp.CustodianNumber &&
                                 info.CourierNumber == temp.CourierNumber &&
-                                address.AddressPostalCode == temp.DeliveryPostalCode)
+                                address.AddressPostalCode == cart.Order.DeliveryAddressPostalCode)
                             {
                                 info.NoCharge = true;
                             }
@@ -193,7 +193,7 @@ namespace FreeMarket.Controllers
                         {
                             if (info.CustodianNumber == temp.CustodianNumber &&
                                 info.CourierNumber == temp.CourierNumber &&
-                                address.AddressPostalCode == temp.DeliveryPostalCode)
+                                address.AddressPostalCode == cart.Order.DeliveryAddressPostalCode)
                             {
                                 info.NoCharge = true;
                             }
@@ -304,7 +304,6 @@ namespace FreeMarket.Controllers
                                 .Where(c => !c.Selected &&
                                     c.CustodianNumber == temp.CustodianNumber &&
                                     c.CourierNumber == temp.CourierNumber &&
-                                    c.DeliveryPostalCode == temp.DeliveryPostalCode &&
                                     c.CourierFee == 0)
                                 .FirstOrDefault() != null)
                         {
@@ -313,7 +312,6 @@ namespace FreeMarket.Controllers
                                 .Where(c => !c.Selected &&
                                     c.CustodianNumber == temp.CustodianNumber &&
                                     c.CourierNumber == temp.CourierNumber &&
-                                    c.DeliveryPostalCode == temp.DeliveryPostalCode &&
                                     c.CourierFee == 0)
                                 .FirstOrDefault().CourierFee = temp.CourierFee;
                         }

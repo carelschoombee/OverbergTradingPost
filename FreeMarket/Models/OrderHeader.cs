@@ -25,8 +25,17 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string CustomerNumber { get; set; }
         public string OrderStatus { get; set; }
-        public string CustomerOverallSatisfactionRating { get; set; }
         public bool PaymentReceived { get; set; }
+        public string DeliveryAddress { get; set; }
+        public string DeliveryAddressLine1 { get; set; }
+        public string DeliveryAddressLine2 { get; set; }
+        public string DeliveryAddressLine3 { get; set; }
+        public string DeliveryAddressLine4 { get; set; }
+        public string DeliveryAddressSuburb { get; set; }
+        public string DeliveryAddressCity { get; set; }
+        public string DeliveryAddressPostalCode { get; set; }
+        public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public Nullable<System.DateTime> DeliveryDateAgreed { get; set; }
         public Nullable<decimal> TaxTotal { get; set; }
         public Nullable<decimal> ShippingTotal { get; set; }
         public Nullable<decimal> SubTotal { get; set; }

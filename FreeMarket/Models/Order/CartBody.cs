@@ -17,17 +17,10 @@ namespace FreeMarket.Models
                 body.OrderDetails = db.GetDetailsForShoppingCart(orderNumber)
                     .Select(c => new OrderDetail
                     {
-                        AddressNumber = c.AddressNumber,
                         CourierName = c.CourierName,
                         CourierFee = c.CourierFee,
                         CourierNumber = c.CourierNumber,
-                        CustomerCourierOnTimeDeliveryRating = c.CustomerCourierOnTimeDeliveryRating,
-                        CustomerProductQualityRating = c.CustomerProductQualityRating,
                         CustodianNumber = c.CustodianNumber,
-                        DeliveryDateActual = c.DeliveryDateActual,
-                        DeliveryDateAgreed = c.DeliveryDateAgreed,
-                        DeliveryAddress = c.DeliveryAddress,
-                        DeliveryPostalCode = c.DeliveryPostalCode,
                         ItemNumber = c.ItemNumber,
                         MainImageNumber = 0,
                         OrderItemStatus = c.OrderItemStatus,

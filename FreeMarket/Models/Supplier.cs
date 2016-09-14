@@ -18,9 +18,9 @@ namespace FreeMarket.Models
         public Supplier()
         {
             this.ProductSuppliers = new HashSet<ProductSupplier>();
-            this.OrderDetails = new HashSet<OrderDetail>();
             this.SupplierLocations = new HashSet<SupplierLocation>();
             this.ProductCustodians = new HashSet<ProductCustodian>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
     
         public int SupplierNumber { get; set; }
@@ -42,10 +42,10 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SupplierLocation> SupplierLocations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductCustodian> ProductCustodians { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
