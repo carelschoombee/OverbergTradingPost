@@ -348,7 +348,12 @@ namespace FreeMarket.Controllers
 
         public ActionResult SaveCartModal()
         {
-            SaveCartViewModel model = new SaveCartViewModel();
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            string defaultAddressName = currentUser.DefaultAddress;
+            string userId = User.Identity.GetUserId();
+
+            SaveCartViewModel model = new SaveCartViewModel(userId, );
             if (model == null)
                 return RedirectToAction("Index", "Product");
 

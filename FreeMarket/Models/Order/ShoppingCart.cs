@@ -397,8 +397,10 @@ namespace FreeMarket.Models
 
                 if (threshold != 0 && Order.SubTotal > threshold)
                     Order.ShippingTotal = 0;
-                else
-                    Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
+            else
+            {
+                Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
             }
         }
 

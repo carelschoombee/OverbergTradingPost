@@ -122,7 +122,17 @@
             $(this).remove();
         });
     }, 8000);
+
+    $(document).ajaxStart(function () {
+        $("#loadingDiv").show();
+    });
+
+    $(document).ajaxStop(function () {
+        $("#loadingDiv").hide();
+    });
+
     </script>
+
 
     @Scripts.Render("~/bundles/bootstrap")
 

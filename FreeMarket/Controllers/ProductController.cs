@@ -1,4 +1,6 @@
 ﻿using FreeMarket.Models;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -51,6 +53,64 @@ namespace FreeMarket.Controllers
             }
 
             return Content(toReturn);
+        }
+
+        public ActionResult GetAverageRating(int productNumber, int supplierNumber)
+        {
+            return Content(ProductReviewsCollection.CalculateAverageRatingOnly(productNumber, supplierNumber).ToString());
+        }
+
+        public ActionResult GetReviews(int productNumber, int supplierNumber, int size = 4)
+        {
+            ProductReviewsCollection reviews = ProductReviewsCollection.GetReviewsOnly(productNumber, supplierNumber, size);
+
+            return PartialView("_RatingPartial", reviews);
+        }
+
+        [HttpPost]
+        public JsonResult LoadMoreReviews(int productNumber, int supplierNumber, int size)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductReviewsCollection model = new ProductReviewsCollection();
+
+                model.ProductNumber = productNumber;
+                model.SupplierNumber = supplierNumber;
+
+                List<ProductReview> collection = db.ProductReviews
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .OrderByDescending(p => p.StarRating)
+                    .Skip(size)
+                    .Take(size)
+                    .ToList();
+
+                model.Reviews = collection;
+
+                int modelCount = db.ProductReviews
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .Count();
+
+                if (model.Reviews.Any())
+                {
+                    string modelString = RenderRazorViewToString("_RatingPartialLoadMore", model);
+                    return Json(new { ModelString = modelString, ModelCount = modelCount });
+                }
+                return Json(model);
+            }
+        }
+
+        public string RenderRazorViewToString(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                var viewContext =
+                     new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
+                return sw.GetStringBuilder().ToString();
+            }
         }
     }
 }

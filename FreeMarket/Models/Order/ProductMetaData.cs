@@ -36,8 +36,6 @@ namespace FreeMarket.Models
         public string SelectedSupplier { get; set; }
         public List<SelectListItem> Suppliers { get; set; }
 
-        public ProductReviewsCollection Reviews { get; set; }
-
         public static string GetFullDescription(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)
@@ -103,8 +101,6 @@ namespace FreeMarket.Models
                         Selected = c.DepartmentNumber == product.DepartmentNumber ? true : false
                     })
                     .ToList();
-
-                product.Reviews = new ProductReviewsCollection(productNumber, supplierNumber);
             }
 
             return product;

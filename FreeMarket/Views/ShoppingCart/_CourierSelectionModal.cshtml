@@ -14,7 +14,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h2 class="modal-title text-center" id="EditModalLabel">@Model.ProductInstance.Description</h2>
-            
+
             @using (Ajax.BeginForm("AddToCart", "ShoppingCart", null, ajaxOpts, new { @id = "editForm" }))
             {
                 @Html.AntiForgeryToken()
@@ -35,7 +35,7 @@
                                     <th class="col-sm-6"></th>
                                 </tr>
                                 <tr>
-                                    <td rowspan="3">
+                                    <td rowspan="4">
                                         <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
                                     </td>
                                     <td>
@@ -56,30 +56,41 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <div id="CourierContainer">
+                                            @Html.Partial("_CourierData", Model)
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
-                            
+
                         }
                         else
                         {
                             <div class="form-group">
                                 <div class="col-md-6">
-                                   @Html.HiddenFor(model => Model.Quantity)
+                                    @Html.HiddenFor(model => Model.Quantity)
                                 </div>
                             </div>
                         }
 
                         <div>
-                            @Model.ProductInstance.LongDescription
+                            <i>@Model.ProductInstance.LongDescription</i>
                         </div>
 
                         <br />
 
-                        <div id="CourierContainer">
-                            @Html.Partial("_CourierData", Model)
-                        </div>
                         <div>
-                            <input id="input-id" name="input-id" value="@Model.ProductInstance.Reviews.AverageReviewRating" data-min="0" data-max="5" class="rating-loading" data-show-caption="true">
+                            <strong>Average Rating:</strong>
+                            <input id="input-id" name="input-id" value="@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber })" data-min="0" data-max="5" class="rating-loading" data-show-caption="true" data-size="sm">
+                            <a id="readReviews"><span class="glyphicon glyphicon-plus-sign text-success">Read Reviews</span></a> <a id="closeReviews"><span class="glyphicon glyphicon-minus-sign text-info">Close Reviews</span></a>
                         </div>
+
+                        <div id="ReviewsContainer">
+                            
+                        </div>
+
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
@@ -109,7 +120,7 @@
             type: 'GET',
             data: {
                 id: @Model.ProductNumber,
-                supplierNumber :@Model.SupplierNumber,
+                supplierNumber: @Model.SupplierNumber,
                 @if (!Model.FromCart)
                 {
                 <text>
@@ -130,6 +141,25 @@
             (function (data) {
                 $('#CourierContainer').html(data);
             });
+    });
+
+    $("#readReviews").click(function () {
+        $.ajax({
+            url: '@Url.Action("GetReviews", "Product")',
+            type: 'GET',
+            data: {
+                productNumber: @Model.ProductNumber,
+                supplierNumber: @Model.SupplierNumber,
+                size: @Model.ReviewPageSize,
+            }
+        }).done
+            (function (data) {
+                $('#ReviewsContainer').html(data).hide().fadeIn(2000);
+            });
+    });
+
+    $("#closeReviews").click(function () {
+        $('#ReviewsContainer').empty();
     });
 
     $(function () {

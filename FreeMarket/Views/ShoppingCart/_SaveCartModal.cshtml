@@ -15,7 +15,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title text-center" id="EditModalLabel">Choose Delivery Time</h4>
+            <h4 class="modal-title text-center" id="EditModalLabel">Delivery Details</h4>
             
             @using (Ajax.BeginForm("UpdateDeliveryDate", "ShoppingCart", null, ajaxOpts, new { @id = "saveForm" }))
             {
@@ -39,12 +39,13 @@
                             <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                             <div class="col-sm-6">
                                 <div class="input-group date" id="datetimePicker">
-                                    <input type="text" class="form-control" name="prefDeliveryDateTime" style="width: 250px" />
+                                    @Html.EditorFor(m => m.PrefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control", @style = "width: 250px" } }))
+                                    @*<input type="text" class="form-control" name="prefDeliveryDateTime" style="width: 250px" />*@
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
-                                <span id="temp" class="help-block">DD/MM/YYYY h:m A</span>
+                                <span id="temp" class="help-block">Example: 18/03/2024 11:00</span>
                             </div>
                         </div>
 

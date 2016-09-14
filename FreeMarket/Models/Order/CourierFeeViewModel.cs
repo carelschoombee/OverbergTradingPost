@@ -30,6 +30,8 @@ namespace FreeMarket.Models
         public Product ProductInstance { get; set; }
         public Supplier SupplierInstance { get; set; }
 
+        public int ReviewPageSize { get; set; }
+
         public bool FromCart { get; set; }
 
         public void InitializeDefault()
@@ -153,6 +155,8 @@ namespace FreeMarket.Models
             Quantity = quantityRequested;
             ProductNumber = productNumber;
             SupplierNumber = supplierNumber;
+
+            ReviewPageSize = 1;
 
             SetInstances(productNumber, supplierNumber);
 
