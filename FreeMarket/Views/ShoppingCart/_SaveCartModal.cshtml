@@ -16,8 +16,8 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title text-center" id="EditModalLabel">Delivery Details</h4>
-            
-            @using (Ajax.BeginForm("UpdateDeliveryDate", "ShoppingCart", null, ajaxOpts, new { @id = "saveForm" }))
+
+            @using (Ajax.BeginForm("UpdateDeliveryDetails", "ShoppingCart", null, ajaxOpts, new { @id = "saveForm" }))
             {
                 @Html.AntiForgeryToken()
 
@@ -35,18 +35,28 @@
                             }
                         </style>
 
-                        <div class="form-group">
+                        <div class="form-group well">
                             <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                             <div class="col-sm-6">
                                 <div class="input-group date" id="datetimePicker">
-                                    @Html.EditorFor(m => m.PrefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control", @style = "width: 250px" } }))
-                                    @*<input type="text" class="form-control" name="prefDeliveryDateTime" style="width: 250px" />*@
+                                    @Html.EditorFor(m => m.prefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control", @style = "width: 250px" } })
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
-                                <span id="temp" class="help-block">Example: 18/03/2024 11:00</span>
+                                <span id="temp" class="help-block">Example: 18/03/2024 12:00</span>
                             </div>
+                        </div>
+
+                        <div class="form-group well">
+                            @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div id="AddressContainer" class="well">
+                            @Html.Partial("_CartModifyDeliveryDetails", Model)
                         </div>
 
                     </div>
@@ -61,80 +71,147 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
-
-<script>
+<script type="text/javascript">
 
     $(document).ready(function () {
         $('#datetimePicker').datetimepicker({
-            format: 'DD/MM/YYYY H:m'
+            format: 'DD/MM/YYYY HH:mm',
+            daysOfWeekDisabled: [0, 6],
+            minDate: moment().add(1, 'days')
         }
         );
     });
 
-    $('#saveForm').bootstrapValidator({
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            prefDeliveryDateTime: {
-                validators: {
-                    notEmpty: {
-                        message: 'Please select a date and time'
-                    },
-                    date: {
-                        format: 'DD/MM/YYYY H:m',
-                        message: 'The value is not a valid date'
-                    }
-                }
-            }
-        }
+    $('#datetimePicker')
+    .on('dp.change dp.show', function (e) {
+        // Validate the date when user change it
+        $('#saveForm')
+            // Get the bootstrapValidator instance
+            .data('bootstrapValidator')
+            // Mark the field as not validated, so it'll be re-validated when the user change date
+            .updateStatus('prefDeliveryDateTime', 'NOT_VALIDATED', null)
+            // Validate the field
+            .validateField('prefDeliveryDateTime');
     });
 
-    function editModal() {
-        $(function () {
-            $('#saveForm').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
+    $('#saveForm')
+        .bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                prefDeliveryDateTime: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select a date and time'
+                        },
+                        date: {
+                            format: 'DD/MM/YYYY HH:mm',
+                            message: 'The value is not a valid date'
+                        }
+                    }
                 },
-                fields: {
-                    prefDeliveryDateTime: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Please select a date and time'
-                            },
-                            date: {
-                                format: 'DD/MM/YYYY H:m',
-                                message: 'The value is not a valid date'
-                            }
+                'Address.AddressLine1': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The field is required.'
+                        },
+                        stringLength: {
+                            message: 'Max string length is 250.',
+                            max: 250
+                        }
+                    }
+                },
+                'Address.AddressLine2': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The field is required.'
+                        },
+                        stringLength: {
+                            message: 'Max string length is 250.',
+                            max: 250
+                        }
+                    }
+                },
+                'Address.AddressLine3': {
+                    validators: {
+                        stringLength: {
+                            message: 'Max string length is 250.',
+                            max: 250
+                        }
+                    }
+                },
+                'Address.AddressLine4': {
+                    validators: {
+                        stringLength: {
+                            message: 'Max string length is 250.',
+                            max: 250
+                        }
+                    }
+                },
+                'Address.AddressSuburb': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The field is required.'
+                        },
+                        stringLength: {
+                            message: 'Max string length is 50.',
+                            max: 50
+                        }
+                    }
+                },
+                'Address.AddressCity': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The field is required.'
+                        },
+                        stringLength: {
+                            message: 'Max string length is 50.',
+                            max: 50
+                        }
+                    }
+                },
+                'Address.AddressPostalCode': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The field is required.'
+                        },
+                        stringLength: {
+                            message: 'Max string length is 50.',
+                            max: 50
                         }
                     }
                 }
-            }).on('success.form.bv', function (e) {
-                e.preventDefault();
-                $('.modal-backdrop').remove();
-                $('#EditModal').modal('hide');
-            }).on('error.form.bv', function (e) {
-                e.preventDefault();
-            })
-        });
-    }
-
-    $('#datetimePicker')
-        .on('dp.change dp.show', function (e) {
-            // Validate the date when user change it
-            $('#saveForm')
-                // Get the bootstrapValidator instance
-                .data('bootstrapValidator')
-                // Mark the field as not validated, so it'll be re-validated when the user change date
-                .updateStatus('prefDeliveryDateTime', 'NOT_VALIDATED', null)
-                // Validate the field
-                .validateField('prefDeliveryDateTime');
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            $('.modal-backdrop').remove();
+            $('#SaveModal').modal('hide');
+        }).on('error.form.bv', function (e) {
+            e.preventDefault();
         });
 
- 
+        $("#SelectedAddress").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetAddressPartial", "ShoppingCart")',
+                type: 'GET',
+                data: {
+                    id: $("#SelectedAddress").val(),
+                }
+            }).done
+                (function (data) {
+                    $('#AddressContainer').html(data);
+                    var validator = $('#saveForm').data('bootstrapValidator');
+                    validator.addField($('#Address_AddressLine1'));
+                    validator.addField($('#Address_AddressLine2'));
+                    validator.addField($('#Address_AddressLine3'));
+                    validator.addField($('#Address_AddressLine4'));
+                    validator.addField($('#Address_AddressCity'));
+                    validator.addField($('#Address_AddressSuburb'));
+                    validator.addField($('#Address_AddressPostalCode'));
+                });
+        });
+
 </script>

@@ -38,8 +38,6 @@ namespace FreeMarket.Models
             CourierNumber = courierNumber;
             if (courierFeeCost != 0)
                 CourierFee = courierFeeCost;
-            DeliveryAddress = address.ToString();
-            DeliveryPostalCode = addressPostalCode;
             CustodianNumber = custodianNumber;
         }
 

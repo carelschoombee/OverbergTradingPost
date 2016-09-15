@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -346,29 +347,72 @@ namespace FreeMarket.Controllers
 
         public ActionResult SaveCartModal()
         {
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            var currentUser = manager.FindById(User.Identity.GetUserId());
-            string defaultAddressName = currentUser.DefaultAddress;
             string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
 
-            SaveCartViewModel model = new SaveCartViewModel(userId, );
+            SaveCartViewModel model = new SaveCartViewModel(userId, sessionCart.Order);
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
             return PartialView("_SaveCartModal", model);
         }
 
-        [HttpPost]
-        public ActionResult UpdateDeliveryDate(SaveCartViewModel model)
+        public ActionResult GetAddressPartial(int id)
         {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+            CustomerAddress address = new CustomerAddress();
+
+            if (id == 0)
+            {
+                address = new CustomerAddress
+                {
+                    AddressCity = sessionCart.Order.DeliveryAddressCity,
+                    AddressLine1 = sessionCart.Order.DeliveryAddressLine1,
+                    AddressLine2 = sessionCart.Order.DeliveryAddressLine2,
+                    AddressLine3 = sessionCart.Order.DeliveryAddressLine3,
+                    AddressLine4 = sessionCart.Order.DeliveryAddressLine3,
+                    AddressName = "Current",
+                    AddressNumber = 0,
+                    AddressPostalCode = sessionCart.Order.DeliveryAddressPostalCode,
+                    AddressSuburb = sessionCart.Order.DeliveryAddressSuburb,
+                    CustomerNumber = userId
+                };
+            }
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                address = db.CustomerAddresses
+                    .Where(c => c.CustomerNumber == userId && c.AddressNumber == id)
+                    .FirstOrDefault();
+            }
+
+            SaveCartViewModel model = new SaveCartViewModel { Address = address };
+
+            return PartialView("_CartModifyDeliveryDetails", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateDeliveryDetails(SaveCartViewModel model)
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+
             if (ModelState.IsValid)
             {
+                if (model.prefDeliveryDateTime < DateTime.Now.AddDays(1))
+                {
+                    ModelState.AddModelError("", "The date must be at least one day in the future.");
+                    model.SetAddressNameOptions(userId, model.SelectedAddress);
+
+                    return PartialView("_SaveCartModal", model);
+                }
                 return JavaScript("window.location = window.location.href;");
             }
-            else
-            {
-                return PartialView("_SaveCartModal", model);
-            }
+
+            model.SetAddressNameOptions(userId, model.SelectedAddress);
+
+            return PartialView("_SaveCartModal", model);
         }
 
         public ActionResult GetAddress(int AddressNumber)

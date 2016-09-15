@@ -24,7 +24,7 @@ namespace FreeMarket.Models
         public string DeliveryAddressLine2 { get; set; }
         public string DeliveryAddressLine3 { get; set; }
         public string DeliveryAddressLine4 { get; set; }
-        public string DeliveryAddressLSuburb { get; set; }
+        public string DeliveryAddressSuburb { get; set; }
         public string DeliveryAddressCity { get; set; }
         public string DeliveryAddressPostalCode { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }

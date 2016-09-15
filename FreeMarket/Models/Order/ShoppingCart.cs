@@ -152,17 +152,10 @@ namespace FreeMarket.Models
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
-                            AddressNumber = address.AddressNumber,
                             CourierFee = courierFeeCost,
                             CourierNumber = courierNumber,
                             CourierName = null,
-                            CustomerCourierOnTimeDeliveryRating = null,
-                            CustomerProductQualityRating = null,
                             CustodianNumber = custodian,
-                            DeliveryAddress = address.ToString(),
-                            DeliveryPostalCode = address.AddressPostalCode,
-                            DeliveryDateActual = null,
-                            DeliveryDateAgreed = null,
                             OrderItemStatus = status,
                             OrderItemValue = productInfo.PricePerUnit * quantity,
                             PaidCourier = null,
@@ -433,7 +426,6 @@ namespace FreeMarket.Models
                                 tempDb.SupplierNumber = temp.SupplierNumber;
                                 tempDb.CourierNumber = temp.CourierNumber;
                                 tempDb.ProductNumber = temp.ProductNumber;
-                                tempDb.DeliveryAddress = temp.DeliveryAddress;
                                 tempDb.CourierFee = temp.CourierFee;
                                 tempDb.CustodianNumber = temp.CustodianNumber;
 

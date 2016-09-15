@@ -1,0 +1,44 @@
+﻿@model FreeMarket.Models.SaveCartViewModel
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressLine1, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressLine1, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressLine2, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressLine2, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressLine3, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressLine3, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressLine4, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressLine4, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressSuburb, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressSuburb, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressCity, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressCity, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Address.AddressPostalCode, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Address.AddressPostalCode, new { @class = "form-control" })
+    </div>
+</div>

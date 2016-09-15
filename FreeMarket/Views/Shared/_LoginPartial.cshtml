@@ -8,9 +8,9 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink(User.FullName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a href="@Url.Action("Index", "Manage")/"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>@User.FullName()</a>
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>Log off</a></li>
     </ul>
     }
 }

@@ -142,15 +142,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     
-        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
-        {
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("OrderNumber", orderNumber) :
-                new ObjectParameter("OrderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
-        }
-    
         public virtual ObjectResult<GetOrderHistory_Result> GetOrderHistory(string customerNumber)
         {
             var customerNumberParameter = customerNumber != null ?
@@ -158,6 +149,15 @@ namespace FreeMarket.Models
                 new ObjectParameter("CustomerNumber", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("OrderNumber", orderNumber) :
+                new ObjectParameter("OrderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
         }
     }
 }

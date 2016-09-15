@@ -1,5 +1,5 @@
-﻿<div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
-    <div id='EditContainer'>
+﻿<div class="modal fade" id="SaveModal" tabindex="-1" role="dialog">
+    <div id='SaveContainer'>
     </div>
 </div>
 
@@ -15,14 +15,12 @@
                 cache: false
             }).done
             (function (data) {
-                $('#EditContainer').html(data);
+                $('#SaveContainer').html(data);
             });
             $('.modal-content').empty();
-            $('#EditModal').removeData('bs.modal');
-            $('#EditModal').modal('show');
+            $('#SaveModal').removeData('bs.modal');
+            $('#SaveModal').modal('show');
         });
     });
-
-
 </script>
 
