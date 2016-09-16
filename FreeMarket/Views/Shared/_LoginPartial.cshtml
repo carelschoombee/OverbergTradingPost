@@ -23,7 +23,14 @@ else
 }
 
 <ul class="nav navbar-nav navbar-right">
-    <li>
-        <a href="@Url.Action("Cart", "ShoppingCart")/"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>Cart</a>
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <span id ="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
+        </a>
+        <ul class="dropdown-menu dropdown-cart" role="menu">
+            @Html.Action("SmallCartBody", "ShoppingCart")
+            <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
+        </ul>
+        
     </li>
 </ul>

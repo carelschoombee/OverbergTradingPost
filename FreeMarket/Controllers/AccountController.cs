@@ -454,6 +454,10 @@ namespace FreeMarket.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+            // Destroy the session
+            Session["cart"] = null;
+
             return RedirectToAction("Index", "Product");
         }
 

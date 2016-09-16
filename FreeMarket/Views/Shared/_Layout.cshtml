@@ -26,8 +26,8 @@
                 </button>
                 <div>
                     <img src="~/Content/Images/logoSmall.png" />
-                    @Html.ActionLink("Free Market", "Index", "Product", new { area = "" }, new { @class = "navbar-brand" })                  
-                </div>                
+                    @Html.ActionLink("Free Market", "Index", "Product", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -37,7 +37,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("Nuts, seeds and dried fruit", "", "", new { area = "" }, null)</li>                            
+                            <li>@Html.ActionLink("Nuts, seeds and dried fruit", "", "", new { area = "" }, null)</li>
                         </ul>
                     </li>
                     <li>
@@ -73,7 +73,7 @@
                         </ul>
                     </li>
                 </ul>
-                
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -101,35 +101,53 @@
     <div class="container body-content">
         @*<div id="categories" class="col-xs-3">
 
-        </div>
-        <div class="col-xs-8">*@
-            @RenderBody()
-            <hr />   
-            <footer>
-                <p class="text-center">&copy; @DateTime.Now.Year - The Free Market</p>
-            </footer>
+            </div>
+            <div class="col-xs-8">*@
+        @RenderBody()
+        <hr />
+        <footer>
+            <p class="text-center">&copy; @DateTime.Now.Year - The Free Market</p>
+        </footer>
         @*</div>*@
-           
+
     </div>
 
     <script type="text/javascript">
-    $(document).ready(function () {
-        $('.dropdown-toggle').dropdown();
-    });
-
-    window.setTimeout(function () {
-        $(".alert").fadeTo(500, 0).slideUp(500, function () {
-            $(this).remove();
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
         });
-    }, 8000);
 
-    $(document).ajaxStart(function () {
-        $("#loadingDiv").show();
-    });
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 8000);
 
-    $(document).ajaxStop(function () {
-        $("#loadingDiv").hide();
-    });
+        $(document).ajaxStart(function () {
+            $("#loadingDiv").show();
+        });
+
+        $(document).ajaxStop(function () {
+            $("#loadingDiv").hide();
+        });
+
+        $('.dropdown').hover(
+            function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn();
+            },
+            function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut();
+            }
+        );
+
+        $('.dropdown-menu').hover(
+            function () {
+                $(this).stop(true, true);
+            },
+            function () {
+                $(this).stop(true, true).delay(200).fadeOut();
+            }
+        );
 
     </script>
 

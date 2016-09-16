@@ -90,6 +90,20 @@ namespace FreeMarket.Models
             return order;
         }
 
+        public void UpdateDeliveryDetails(SaveCartViewModel model)
+        {
+            DeliveryDate = model.prefDeliveryDateTime;
+
+            DeliveryAddress = model.Address.ToString();
+            DeliveryAddressCity = model.Address.AddressCity;
+            DeliveryAddressSuburb = model.Address.AddressSuburb;
+            DeliveryAddressPostalCode = model.Address.AddressPostalCode;
+            DeliveryAddressLine1 = model.Address.AddressLine1;
+            DeliveryAddressLine2 = model.Address.AddressLine2;
+            DeliveryAddressLine3 = model.Address.AddressLine3;
+            DeliveryAddressLine4 = model.Address.AddressLine4;
+        }
+
         public override string ToString()
         {
             string toString = "";

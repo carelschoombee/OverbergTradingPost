@@ -87,6 +87,11 @@ namespace FreeMarket.Models
                     prefDeliveryDateTime = order.DeliveryDate;
                 }
 
+                AddressName = AddressNameOptions
+                    .Where(c => c.Selected == true)
+                    .Select(c => c.Text)
+                    .FirstOrDefault();
+
                 SelectedAddress = selectedAddressNumber;
             }
         }
@@ -104,6 +109,11 @@ namespace FreeMarket.Models
                            Value = c.AddressNumber.ToString(),
                            Selected = (c.AddressNumber == selectedAddressNumber ? true : false)
                        }).ToList();
+
+                AddressName = AddressNameOptions
+                   .Where(c => c.Selected == true)
+                   .Select(c => c.Text)
+                   .FirstOrDefault();
             }
         }
     }

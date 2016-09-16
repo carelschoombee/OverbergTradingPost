@@ -1,0 +1,46 @@
+﻿@using FreeMarket.Models
+@model ShoppingCartViewModel
+
+@if (Model.Cart.Body.OrderDetails.Any())
+{
+    <li>
+        There are <b>@Model.Cart.Body.OrderDetails.Count items</b> in your cart.
+    </li>
+
+    for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
+    {
+        <li>
+            <table>
+                <tr>
+                    <td>
+                        <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="Model.Cart.Body.OrderDetails[i].ProductDescription" />
+                    </td>
+                    <td>
+                        <table style="text-align:left !important">
+                            <tr>
+                                <td><b>@Model.Cart.Body.OrderDetails[i].ProductDescription</b></td>
+                            </tr>
+                            <tr>
+                                <td>Unit Price: @string.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)</td>
+                            </tr>
+                            <tr>
+                                <td>Quantity: @Model.Cart.Body.OrderDetails[i].Quantity</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </li>
+    }
+
+    <li>
+        Subtotal: <b style="font-size:large">@string.Format("{0:C}", Model.Cart.Order.SubTotal)</b>
+    </li>
+
+}
+else
+{
+    <li>There are no items in your cart yet.</li>
+}
+
+

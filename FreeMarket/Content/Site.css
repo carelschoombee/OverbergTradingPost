@@ -345,3 +345,8 @@ th, td {
   color: #18bc9c
 }
 
+.dropdown-cart>li>a { padding:15px 100px; }
+
+.dropdown-cart {
+  text-align: center;
+}

@@ -566,6 +566,7 @@
     <Content Include="Views\Product\_RatingPartial.cshtml" />
     <Content Include="Views\Product\_RatingPartialLoadMore.cshtml" />
     <Content Include="Views\ShoppingCart\_CartModifyDeliveryDetails.cshtml" />
+    <Content Include="Views\ShoppingCart\_SmallCartBody.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,7 +1,6 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -386,7 +385,7 @@ namespace FreeMarket.Controllers
                     .FirstOrDefault();
             }
 
-            SaveCartViewModel model = new SaveCartViewModel { Address = address };
+            SaveCartViewModel model = new SaveCartViewModel { Address = address, AddressName = address.AddressName };
 
             return PartialView("_CartModifyDeliveryDetails", model);
         }
@@ -400,13 +399,38 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                if (model.prefDeliveryDateTime < DateTime.Now.AddDays(1))
-                {
-                    ModelState.AddModelError("", "The date must be at least one day in the future.");
-                    model.SetAddressNameOptions(userId, model.SelectedAddress);
+                sessionCart.Order.UpdateDeliveryDetails(model);
+                sessionCart.Save();
 
-                    return PartialView("_SaveCartModal", model);
+                if (CustomerAddress.AddressExists(userId, model.AddressName))
+                {
+                    FreeMarketResult result = CustomerAddress.UpdateAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                           , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                    if (result == FreeMarketResult.Success)
+                        TempData["message"] = string.Format
+                            ("Your {0} delivery details have been updated.",
+                            model.AddressName);
+                    else
+                        TempData["message"] = string.Format
+                            ("Sorry, we could not process your request at this time, please try again later.");
                 }
+                else
+                {
+                    FreeMarketResult result = CustomerAddress.AddAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                           , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                    if (result == FreeMarketResult.Success)
+                        TempData["message"] = string.Format
+                            ("Your {0} delivery details have been updated.",
+                            model.AddressName);
+                    else
+                        TempData["message"] = string.Format
+                            ("Sorry, we could not process your request at this time, please try again later.");
+                }
+
                 return JavaScript("window.location = window.location.href;");
             }
 
@@ -435,6 +459,24 @@ namespace FreeMarket.Controllers
             }
 
             return Content(toReturn);
+        }
+
+        public ActionResult SmallCartBody()
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart cart = GetCartFromSession(userId);
+            ShoppingCartViewModel model = new ShoppingCartViewModel();
+            model = new ShoppingCartViewModel() { Cart = cart, ReturnUrl = Url.Action("Index", "Product") };
+
+            return PartialView("_SmallCartBody", model);
+        }
+
+        public ActionResult GetItemsCount()
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart cart = GetCartFromSession(userId);
+
+            return Content(cart.Body.OrderDetails.Count().ToString());
         }
     }
 }
