@@ -50,6 +50,16 @@ namespace FreeMarket.Controllers
             }
         }
 
+        public void SetShoppingCartSession(string userId)
+        {
+            var controller = DependencyResolver.Current.GetService<ShoppingCartController>();
+            controller.ControllerContext = new ControllerContext(this.Request.RequestContext, controller);
+            ShoppingCart tempCart = controller.GetCartFromSession(userId);
+            CartBody tempBody = tempCart.Body;
+            tempCart.Initialize(userId);
+            tempCart.Merge(userId, tempBody);
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -88,6 +98,7 @@ namespace FreeMarket.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    SetShoppingCartSession(user.Id);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -179,6 +190,8 @@ namespace FreeMarket.Controllers
                         , model.AddressCity, model.AddressPostalCode);
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    SetShoppingCartSession(user.Id);
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
@@ -375,6 +388,8 @@ namespace FreeMarket.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var user = await UserManager.FindByEmailAsync(loginInfo.Email);
+                    SetShoppingCartSession(user.Id);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -432,6 +447,8 @@ namespace FreeMarket.Controllers
                            , model.AddressCity, model.AddressPostalCode);
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        SetShoppingCartSession(user.Id);
 
                         AuditUser.LogAudit(1, "", user.Id);
 

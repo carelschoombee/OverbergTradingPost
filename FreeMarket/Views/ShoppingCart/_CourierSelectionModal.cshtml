@@ -59,7 +59,14 @@
                                 <tr>
                                     <td>
                                         <div id="CourierContainer">
-                                            @Html.Partial("_CourierData", Model)
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                @Html.Partial("_CourierData", Model);
+                                            }
+                                            else
+                                            {
+                                                <text>Please login to view approximate courier costs.</text>
+                                            }
                                         </div>
                                     </td>
                                 </tr>
@@ -95,7 +102,6 @@
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
                             @Html.HiddenFor(model => Model.OrderNumber)
-                            @Html.HiddenFor(model => Model.SelectedAddress)
                             @Html.HiddenFor(model => Model.SelectedCourierNumber)
                         </div>
                     </div>
@@ -114,7 +120,7 @@
 
     $('#input-id').rating({displayOnly: true, step: 0.1, clearCaption: 'Not yet rated'});
 
-    $("#Quantity").change(function () {
+    @*$("#Quantity").change(function () {
         $.ajax({
             url: '@Url.Action("GetCourierData", "ShoppingCart")',
             type: 'GET',
@@ -135,13 +141,12 @@
                 }
                 addressNumber: @Model.SelectedAddress,
                 isAjax: true
-
             }
         }).done
             (function (data) {
                 $('#CourierContainer').html(data);
             });
-    });
+    });*@
 
     $("#readReviews").click(function () {
         $.ajax({

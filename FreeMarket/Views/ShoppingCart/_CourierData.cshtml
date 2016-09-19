@@ -22,9 +22,9 @@
             message2 = "for " + message3;
             <strong>
                 @message1
-                <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetAddress", "ShoppingCart", new { AddressNumber = Model.SelectedAddress })" aria-hidden="true">default address</span>
+                <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetDeliveryAddress", "ShoppingCart")" aria-hidden="true">delivery address</span>
                 @message2
-                <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage", new { addressNumber = Model.SelectedAddress })"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
+                <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage")"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
             </strong>
         }
 

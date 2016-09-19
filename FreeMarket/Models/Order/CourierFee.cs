@@ -16,11 +16,11 @@ namespace FreeMarket.Models
         public string CustomerDestinationPostalCode { get; set; }
         public bool NoCharge { get; set; }
 
-        public static List<CourierFee> GetCourierFees(int productNumber, int supplierNumber, int quantityRequested, int addressNumber)
+        public static List<CourierFee> GetCourierFees(int productNumber, int supplierNumber, int quantityRequested, int orderNumber)
         {
             // Validate
             List<CourierFee> feeInfo = new List<CourierFee>();
-            if (productNumber == 0 || supplierNumber == 0 || quantityRequested == 0 || addressNumber == 0)
+            if (productNumber == 0 || supplierNumber == 0 || quantityRequested == 0)
                 return feeInfo;
 
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -33,16 +33,8 @@ namespace FreeMarket.Models
                     return feeInfo;
                 }
 
-                // Validate
-                CustomerAddress address = db.CustomerAddresses.Find(addressNumber);
-                if (productSupplier == null)
-                {
-                    Debug.Write("\nGetCourierFees::The address does not exist.");
-                    return feeInfo;
-                }
-
                 // Calculate potential fees for each courier
-                feeInfo = db.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, addressNumber)
+                feeInfo = db.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, orderNumber)
                     .Select(c => new CourierFee()
                     {
                         CustodianNumber = c.CustodianNumber ?? 0,

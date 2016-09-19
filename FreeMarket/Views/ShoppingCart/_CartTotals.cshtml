@@ -1,5 +1,17 @@
 ﻿@model FreeMarket.Models.ShoppingCart
 
+@{ 
+    string shippingMessage = "";
+
+    if (Model.Body.OrderDetails != null && (Model.Body.OrderDetails.All(c => c.CourierNumber == 0)))
+    {
+        shippingMessage = "Please Log in to calculate Shipping costs.";
+    }
+    else
+    {
+        shippingMessage = string.Format("{0:C}", Model.Order.ShippingTotal);
+    }
+}
 <table class="table table-condensed table-bordered-custom well">
     <tr>
         <td class="col-sm-2 text-left"><strong>Sub-Total:</strong></td>
@@ -7,7 +19,7 @@
     </tr>
     <tr>
         <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
-        <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.ShippingTotal)</strong></td>
+        <td class="col-sm-2 text-right"><strong>@shippingMessage</strong></td>
     </tr>
     <tr class="text-primary" >
         <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>

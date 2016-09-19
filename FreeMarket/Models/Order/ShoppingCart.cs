@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -52,10 +54,126 @@ namespace FreeMarket.Models
             }
         }
 
-        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int addressNumber, int quantity, int custodian, bool noCharge, string userId = null)
+        // Anonymous user
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity)
         {
             // Validate
-            if (productNumber == 0 || supplierNumber == 0 || courierNumber == 0 || addressNumber == 0 || custodian == 0)
+            if (productNumber == 0 || supplierNumber == 0)
+                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Parameters invalid." };
+
+            decimal? courierFeeCost = 0;
+
+            // Check whether the item already exists
+            FreeMarketObject res = new FreeMarketObject();
+
+            OrderDetail existingItem = Body.OrderDetails
+                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+                // Update the existing item
+                existingItem.Update(quantity);
+
+                // Setup return object
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
+
+                    if (productInfo == null)
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
+
+                    res.Result = FreeMarketResult.Success;
+                    res.Argument = new Product
+                    {
+                        Activated = productInfo.Activated,
+                        DateAdded = productInfo.DateAdded,
+                        DateModified = productInfo.DateModified,
+                        DepartmentName = productInfo.DepartmentName,
+                        DepartmentNumber = productInfo.DepartmentNumber,
+                        Description = productInfo.Description,
+                        PricePerUnit = productInfo.PricePerUnit,
+                        ProductNumber = productInfo.ProductNumber,
+                        Size = productInfo.Size,
+                        SupplierName = productInfo.SupplierName,
+                        SupplierNumber = productInfo.SupplierNumberID,
+                        Weight = productInfo.Weight
+                    };
+                }
+            }
+            else
+            {
+                // A new OrderDetail must be created
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
+
+                    if (productInfo == null)
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
+
+                    string status = "Unconfirmed";
+
+                    // Add a small image for the CartBody
+                    int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == productInfo.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                    // Add the new item to the Session variable
+                    Body.OrderDetails.Add(
+                        new OrderDetail()
+                        {
+                            CourierFee = courierFeeCost,
+                            CourierNumber = 0,
+                            CourierName = null,
+                            CustodianNumber = 0,
+                            OrderItemStatus = status,
+                            OrderItemValue = productInfo.PricePerUnit * quantity,
+                            PaidCourier = null,
+                            PaidSupplier = null,
+                            PayCourier = null,
+                            PaySupplier = null,
+                            Price = productInfo.PricePerUnit,
+                            ProductNumber = productInfo.ProductNumber,
+                            ProductDescription = productInfo.Description,
+                            ProductDepartment = productInfo.DepartmentName,
+                            Quantity = quantity,
+                            Settled = null,
+                            SupplierNumber = productInfo.SupplierNumberID,
+                            SupplierName = productInfo.SupplierName,
+                            OrderNumber = Order.OrderNumber,
+                            MainImageNumber = imageNumber
+                        });
+
+                    res.Result = FreeMarketResult.Success;
+                    res.Argument = new Product
+                    {
+                        Activated = productInfo.Activated,
+                        DateAdded = productInfo.DateAdded,
+                        DateModified = productInfo.DateModified,
+                        DepartmentName = productInfo.DepartmentName,
+                        DepartmentNumber = productInfo.DepartmentNumber,
+                        Description = productInfo.Description,
+                        PricePerUnit = productInfo.PricePerUnit,
+                        ProductNumber = productInfo.ProductNumber,
+                        Size = productInfo.Size,
+                        SupplierName = productInfo.SupplierName,
+                        SupplierNumber = productInfo.SupplierNumberID,
+                        Weight = productInfo.Weight
+                    };
+                }
+            }
+
+            // Keep the OrderTotal in sync
+            UpdateTotal();
+
+            return res;
+        }
+
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int quantity, int custodian, bool noCharge, string userId = null)
+        {
+            // Validate
+            if (productNumber == 0 || supplierNumber == 0 || courierNumber == 0 || custodian == 0)
                 return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Parameters invalid." };
 
             // Calculate Courier Fee
@@ -65,31 +183,25 @@ namespace FreeMarket.Models
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                address = CustomerAddress.GetCustomerAddress(addressNumber);
+                result = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, Order.OrderNumber)
+                .FirstOrDefault();
 
-                if (address != null)
+                if (result != null)
                 {
-                    result = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, addressNumber)
-                    .FirstOrDefault();
-
-                    if (result != null)
-                    {
-                        if (noCharge)
-                            courierFeeCost = 0;
-                        else
-                            courierFeeCost = result.CourierFee;
-
-                        if (courierFeeCost == 0 && !noCharge)
-                            return new FreeMarketObject
-                            { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
-                    }
+                    if (noCharge)
+                        courierFeeCost = 0;
                     else
-                    {
+                        courierFeeCost = result.CourierFee;
+
+                    if (courierFeeCost == 0 && !noCharge)
                         return new FreeMarketObject
                         { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
-                    }
                 }
-
+                else
+                {
+                    return new FreeMarketObject
+                    { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
+                }
             }
 
             // Check whether the item already exists
@@ -397,8 +509,6 @@ namespace FreeMarket.Models
             }
         }
 
-        public void Checkout() { }
-
         public void Compare()
         {
             // Get a list of items which are on both the Session and database
@@ -449,9 +559,60 @@ namespace FreeMarket.Models
                 {
                     foreach (OrderDetail tempB in newItems)
                     {
-                        Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
+                        bool skip = false;
 
-                        db.OrderDetails.Add(tempB);
+                        Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
+                        tempB.OrderNumber = Order.OrderNumber;
+
+                        if (tempB.CourierNumber == 0)
+                        {
+                            string defaultAddressName = "";
+                            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                            var currentUser = manager.FindById(Order.CustomerNumber);
+                            defaultAddressName = currentUser.DefaultAddress;
+                            bool noCharge = false;
+                            CustomerAddress address = db.CustomerAddresses
+                                .Where(c => c.CustomerNumber == Order.CustomerNumber && c.AddressName == defaultAddressName)
+                                .FirstOrDefault();
+
+                            CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
+                                .FirstOrDefault();
+
+                            if (result != null)
+                            {
+                                tempB.CourierNumber = result.CourierNumber;
+                                tempB.CustodianNumber = result.CustodianNumber;
+
+                                foreach (OrderDetail temp in existingItems)
+                                {
+                                    if (tempB.CustodianNumber == temp.CustodianNumber &&
+                                        tempB.CourierNumber == temp.CourierNumber)
+                                    {
+                                        noCharge = true;
+                                    }
+                                }
+
+                                if (noCharge)
+                                {
+                                    tempB.CourierFee = 0;
+                                }
+                                else
+                                {
+                                    tempB.CourierFee = result.CourierFee;
+                                }
+                            }
+                            else
+                            {
+                                tempB.Highlighted = true;
+                                skip = true;
+                            }
+                        }
+
+                        if (!skip)
+                        {
+                            db.OrderDetails.Add(tempB);
+                            existingItems.Add(tempB);
+                        }
                     }
 
                     db.SaveChanges();
@@ -459,8 +620,43 @@ namespace FreeMarket.Models
                     AuditUser.LogAudit(7, string.Format("Order number: {0}", Order.OrderNumber));
                 }
             }
+        }
 
+        public void Merge(string userId, CartBody tempBody)
+        {
+            if (Order.OrderNumber != 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    List<OrderDetail> databaseItems = db.OrderDetails
+                        .Where(c => c.OrderNumber == Order.OrderNumber)
+                        .ToList();
 
+                    if (databaseItems != null && databaseItems.Count != 0)
+                    {
+                        foreach (OrderDetail item in tempBody.OrderDetails)
+                        {
+                            OrderDetail existingItem = databaseItems
+                                .Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
+                                .FirstOrDefault();
+
+                            if (existingItem == null)
+                            {
+                                Body.OrderDetails.Add(item);
+                            }
+                            else
+                            {
+                                Body.OrderDetails.Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
+                                    .FirstOrDefault()
+                                    .Quantity += existingItem.Quantity;
+                            }
+                        }
+                    }
+                }
+            }
+
+            UpdateTotal();
+            Save();
         }
 
         public ShoppingCart(string userId)
@@ -473,6 +669,8 @@ namespace FreeMarket.Models
             Body = new CartBody();
             Order = new OrderHeader();
         }
+
+        public void Checkout() { }
 
         public override string ToString()
         {

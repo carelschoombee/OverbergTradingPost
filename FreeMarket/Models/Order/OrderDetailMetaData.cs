@@ -14,6 +14,7 @@ namespace FreeMarket.Models
         public int QuantityOnHand { get; set; }
         public int MainImageNumber { get; set; }
         public bool Selected { get; set; }
+        public bool Highlighted { get; set; }
 
         public override string ToString()
         {
@@ -39,6 +40,14 @@ namespace FreeMarket.Models
             if (courierFeeCost != 0)
                 CourierFee = courierFeeCost;
             CustodianNumber = custodianNumber;
+        }
+
+        public void Update(int quantity)
+        {
+            Quantity += quantity;
+            OrderItemValue = Price * Quantity;
+            CourierNumber = 0;
+            CustodianNumber = 0;
         }
 
         // override object.Equals
