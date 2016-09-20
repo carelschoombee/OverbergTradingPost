@@ -1,7 +1,7 @@
 ﻿@using FreeMarket.Models
 @model ShoppingCartViewModel
 
-<table class="table table-bordered-custom table-condensed table-responsive table-striped">
+<table class="table table-bordered-custom table-condensed table-responsive">
     <tr class="well">
         <th class="col-sm-1">
             Remove
@@ -11,6 +11,9 @@
         </th>
         <th class="col-sm-3">
             Description
+        </th>
+        <th class="col-sm-1">
+            Courier Info
         </th>
         <th class="col-sm-1">
             Price
@@ -25,7 +28,7 @@
 
     @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
-        if (Model.Cart.Body.OrderDetails[i].Highlighted == true)
+        if (Model.Cart.Body.OrderDetails[i].CannotDeliver == true)
         {
             <tr class="well-red">
                 <td data-label="Remove:">
@@ -40,7 +43,7 @@
                     <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="Model.Cart.Body.OrderDetails[i].ProductDescription" />
                 </td>
                 <td>
-                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
+                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span> <br /> <span class="text-danger">Sorry, but we cannot deliver this item to your preferred delivery address. Try choosing a different address.</span>
                     @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
                 </td>
                 <td data-label="Price:">
@@ -67,11 +70,26 @@
                     @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
                 </td>
                 <td>
-                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="Model.Cart.Body.OrderDetails[i].ProductDescription" />
+                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
                 </td>
                 <td>
                     @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
                     @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
+                </td>
+                <td data-label="Courier:">
+                    <span>Courier Name: @Model.Cart.Body.OrderDetails[i].CourierName</span>
+                    <br />
+                    <span>Courier Number: @Model.Cart.Body.OrderDetails[i].CourierNumber</span>
+                    <br />
+                    <span>Custodian: @Model.Cart.Body.OrderDetails[i].CustodianNumber</span>
+                    <br />
+                    <span>Fee: @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].CourierFee)</span>
+                    <br />
+                    <span>Product: @Model.Cart.Body.OrderDetails[i].ProductNumber</span>
+                    <br />
+                    <span>Supplier: @Model.Cart.Body.OrderDetails[i].SupplierNumber</span>
+                    <br />
+                    <span>Order: @Model.Cart.Body.OrderDetails[i].OrderNumber</span>
                 </td>
                 <td data-label="Price:">
                     @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)

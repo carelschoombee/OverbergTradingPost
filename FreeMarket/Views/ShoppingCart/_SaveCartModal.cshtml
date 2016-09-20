@@ -64,7 +64,7 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Save</button>
-                    <button type="button" class="btn btn-link-disabled-color" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                 </div>
             }
         </div>
@@ -123,7 +123,7 @@
                                     return false;
                                 }
                                 // Check if the date in our range
-                                return m.isAfter(moment().add(1, 'days')) && m.isBefore(moment().add(30, 'days')) && m.isBetween(hb, ha, 'minutes', '[]');
+                                return m.isAfter(moment().add(23, 'hours')) && m.isBefore(moment().add(30, 'days')) && m.isBetween(hb, ha, 'minutes', '[]');
                             }
                         }
                     }

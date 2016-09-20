@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -446,6 +444,9 @@ namespace FreeMarket.Models
                             .PricePerUnit;
                     }
                 }
+
+                // Keep the OrderTotal in sync
+                UpdateTotal();
             }
         }
 
@@ -472,8 +473,6 @@ namespace FreeMarket.Models
 
         public void UpdateTotal()
         {
-            Debug.Write(string.Format("Updating Total..."));
-
             Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
 
             Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
@@ -538,6 +537,7 @@ namespace FreeMarket.Models
                                 tempDb.ProductNumber = temp.ProductNumber;
                                 tempDb.CourierFee = temp.CourierFee;
                                 tempDb.CustodianNumber = temp.CustodianNumber;
+                                tempDb.CannotDeliver = temp.CannotDeliver;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
                                 db.SaveChanges();
@@ -557,62 +557,17 @@ namespace FreeMarket.Models
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
+                    // Do not include the item being compared
                     foreach (OrderDetail tempB in newItems)
                     {
-                        bool skip = false;
-
                         Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
                         tempB.OrderNumber = Order.OrderNumber;
 
+                        // If the user had added items in anonymous mode and now switches to account mode
                         if (tempB.CourierNumber == 0)
-                        {
-                            string defaultAddressName = "";
-                            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                            var currentUser = manager.FindById(Order.CustomerNumber);
-                            defaultAddressName = currentUser.DefaultAddress;
-                            bool noCharge = false;
-                            CustomerAddress address = db.CustomerAddresses
-                                .Where(c => c.CustomerNumber == Order.CustomerNumber && c.AddressName == defaultAddressName)
-                                .FirstOrDefault();
+                            UpdateCourier(tempB);
 
-                            CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
-                                .FirstOrDefault();
-
-                            if (result != null)
-                            {
-                                tempB.CourierNumber = result.CourierNumber;
-                                tempB.CustodianNumber = result.CustodianNumber;
-
-                                foreach (OrderDetail temp in existingItems)
-                                {
-                                    if (tempB.CustodianNumber == temp.CustodianNumber &&
-                                        tempB.CourierNumber == temp.CourierNumber)
-                                    {
-                                        noCharge = true;
-                                    }
-                                }
-
-                                if (noCharge)
-                                {
-                                    tempB.CourierFee = 0;
-                                }
-                                else
-                                {
-                                    tempB.CourierFee = result.CourierFee;
-                                }
-                            }
-                            else
-                            {
-                                tempB.Highlighted = true;
-                                skip = true;
-                            }
-                        }
-
-                        if (!skip)
-                        {
-                            db.OrderDetails.Add(tempB);
-                            existingItems.Add(tempB);
-                        }
+                        db.OrderDetails.Add(tempB);
                     }
 
                     db.SaveChanges();
@@ -628,35 +583,93 @@ namespace FreeMarket.Models
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    List<OrderDetail> databaseItems = db.OrderDetails
-                        .Where(c => c.OrderNumber == Order.OrderNumber)
-                        .ToList();
-
-                    if (databaseItems != null && databaseItems.Count != 0)
+                    // Compare the session body with the database
+                    foreach (OrderDetail item in tempBody.OrderDetails)
                     {
-                        foreach (OrderDetail item in tempBody.OrderDetails)
-                        {
-                            OrderDetail existingItem = databaseItems
-                                .Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
-                                .FirstOrDefault();
+                        OrderDetail existingItem = Body.OrderDetails
+                            .Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
+                            .FirstOrDefault();
 
-                            if (existingItem == null)
-                            {
-                                Body.OrderDetails.Add(item);
-                            }
-                            else
-                            {
-                                Body.OrderDetails.Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
-                                    .FirstOrDefault()
-                                    .Quantity += existingItem.Quantity;
-                            }
-                        }
+                        // If the item does not exist, add it
+                        if (existingItem == null)
+                            Body.OrderDetails.Add(item);
+                        // Otherwise update the quantity only
+                        else
+                            Body.OrderDetails.Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber)
+                                .FirstOrDefault()
+                                .Quantity += item.Quantity;
                     }
                 }
             }
 
+            UpdateAllCouriers();
             UpdateTotal();
             Save();
+        }
+
+        public bool UpdateCourier(OrderDetail tempB)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                bool noCharge = false;
+
+                // Calculate the delivery fee
+                CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
+                    .FirstOrDefault();
+
+                List<OrderDetail> otherItems = Body.OrderDetails.ToList();
+
+                if (result != null)
+                {
+                    // Set the order detail
+                    tempB.CourierNumber = result.CourierNumber;
+                    tempB.CustodianNumber = result.CustodianNumber;
+
+                    if (otherItems != null && otherItems.Count > 0)
+                    {
+                        // Determine noCharge
+                        foreach (OrderDetail temp in otherItems)
+                        {
+                            if (temp.ProductNumber == tempB.ProductNumber && temp.SupplierNumber == tempB.SupplierNumber)
+                                continue;
+
+                            if (tempB.CustodianNumber == temp.CustodianNumber &&
+                                tempB.CourierNumber == temp.CourierNumber &&
+                                temp.CourierFee > 0)
+                            {
+                                noCharge = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    tempB.CannotDeliver = false;
+
+                    if (noCharge)
+                        tempB.CourierFee = 0;
+                    else
+                        tempB.CourierFee = result.CourierFee;
+                }
+                else
+                {
+                    // The courier could not deliver to that postal code.
+                    tempB.CannotDeliver = true;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void UpdateAllCouriers()
+        {
+            foreach (OrderDetail item in Body.OrderDetails)
+            {
+                UpdateCourier(item);
+            }
+
+            UpdateTotal();
         }
 
         public ShoppingCart(string userId)

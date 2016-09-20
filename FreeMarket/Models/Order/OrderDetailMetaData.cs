@@ -14,7 +14,6 @@ namespace FreeMarket.Models
         public int QuantityOnHand { get; set; }
         public int MainImageNumber { get; set; }
         public bool Selected { get; set; }
-        public bool Highlighted { get; set; }
 
         public override string ToString()
         {

@@ -1,7 +1,6 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -24,16 +23,10 @@ namespace FreeMarket.Controllers
 
             if (tempCart == null)
             {
-                Debug.Write(string.Format("\nCreating Cart for user {0} ...", userId));
-
                 if (userId == anonymous)
-                {
                     tempCart = new ShoppingCart();
-                }
                 else
-                {
                     tempCart = new ShoppingCart(userId);
-                }
 
                 Session[sessionKey] = tempCart;
             }
@@ -58,113 +51,26 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        public CourierFeeViewModel GetCourierDataDoWork(int id, int supplierNumber, int quantity, int addressNumber, string addressString = null, bool isAjax = false)
+        //public ActionResult GetCourierData(int id, int supplierNumber, int quantity, int addressNumber)
+        //{
+        //    // Prepare
+        //    CourierFeeViewModel model = CourierFeeViewModel.GetCourierDataDoWork(id, supplierNumber, quantity);
+        //    if (model == null)
+        //        return RedirectToAction("Index", "Product");
+
+        //    return PartialView("_CourierData", model);
+        //}
+
+        public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity)
         {
-            CourierFeeViewModel model = new CourierFeeViewModel();
             string userId = User.Identity.GetUserId();
-            bool anonymousUser = (userId == null);
+            ShoppingCart cart = GetCartFromSession(userId);
 
-            // Validate
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                Product product = db.Products.Find(id);
-                Supplier supplier = db.Suppliers.Find(supplierNumber);
-
-                if (product == null || supplier == null)
-                    return null;
-            }
-
-            if (anonymousUser)
-            {
-                model = new CourierFeeViewModel(id, supplierNumber, quantity);
-                return model;
-            }
-            else
-            {
-                ShoppingCart cart = GetCartFromSession(userId);
-                OrderDetail detail = cart.GetOrderDetail(id, supplierNumber);
-                int courierNumber = 0;
-
-                if (!isAjax)
-                {
-                    if (detail == null)
-                        courierNumber = 0;
-                    else
-                        courierNumber = (int)detail.CourierNumber;
-                }
-
-                model = new CourierFeeViewModel(id, supplierNumber, courierNumber, quantity, cart.Order.OrderNumber, userId);
-                SetNoCharge(userId, model);
-            }
-
-            return model;
-        }
-
-        public ActionResult GetCourierData(int id, int supplierNumber, int quantity, int addressNumber, bool isAjax)
-        {
-            // Prepare
-            CourierFeeViewModel model = GetCourierDataDoWork(id, supplierNumber, quantity, addressNumber, null, true);
-            if (model == null)
-                return RedirectToAction("Index", "Product");
-
-            return PartialView("_CourierData", model);
-        }
-
-        public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity, int addressNumber = 0)
-        {
-            CourierFeeViewModel model = GetCourierDataDoWork(id, supplierNumber, quantity, addressNumber);
+            CourierFeeViewModel model = CourierFeeViewModel.GetCourierDataDoWork(id, supplierNumber, quantity, cart, userId);
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
             return PartialView("_CourierSelectionModal", model);
-        }
-
-        public void SetNoCharge(string userId, CourierFeeViewModel model)
-        {
-            ShoppingCart cart = GetCartFromSession(userId);
-
-            foreach (OrderDetail temp in cart.Body.OrderDetails)
-            {
-                foreach (CourierFee info in model.FeeInfo)
-                {
-                    using (FreeMarketEntities db = new FreeMarketEntities())
-                    {
-                        if (info.CustodianNumber == temp.CustodianNumber &&
-                            info.CourierNumber == temp.CourierNumber)
-                        {
-                            info.NoCharge = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void SetNoCharge(string userId, CourierFeeViewModel model, string defaultAddressName)
-        {
-            ShoppingCart cart = GetCartFromSession(userId);
-
-            foreach (OrderDetail temp in cart.Body.OrderDetails)
-            {
-                foreach (CourierFee info in model.FeeInfo)
-                {
-                    using (FreeMarketEntities db = new FreeMarketEntities())
-                    {
-                        CustomerAddress address = db.CustomerAddresses
-                            .Where(c => c.AddressName == defaultAddressName && c.CustomerNumber == userId)
-                            .FirstOrDefault();
-
-                        if (address != null)
-                        {
-                            if (info.CustodianNumber == temp.CustodianNumber &&
-                                info.CourierNumber == temp.CourierNumber &&
-                                address.AddressPostalCode == cart.Order.DeliveryAddressPostalCode)
-                            {
-                                info.NoCharge = true;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         [HttpPost]
@@ -193,13 +99,7 @@ namespace FreeMarket.Controllers
                     {
                         // New item added
                         if (result.Argument != null)
-                        {
-                            // If the modal was called from the shopping cart page show a different message.
-                            if (viewModel.FromCart)
-                                TempData["message"] = string.Format("Success: Delivery address updated for {0}.", ((Product)(result.Argument)).Description);
-                            else
-                                TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
-                        }
+                            TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
                     }
                     else
                         TempData["errorMessage"] = "Error: We could not add the item to the cart.";
@@ -208,10 +108,6 @@ namespace FreeMarket.Controllers
                 }
                 else
                 {
-                    // If this request comes from the ShoppingCart page then do not display quantity on the modal
-                    if (viewModel.FromCart)
-                        viewModel.Quantity = 0;
-
                     int custodian = viewModel.FeeInfo
                         .Where(c => c.CourierNumber == viewModel.SelectedCourierNumber)
                         .Select(c => c.CustodianNumber)
@@ -230,11 +126,7 @@ namespace FreeMarket.Controllers
                         // New item added
                         if (result.Argument != null)
                         {
-                            // If the modal was called from the shopping cart page show a different message.
-                            if (viewModel.FromCart)
-                                TempData["message"] = string.Format("Success: Delivery address updated for {0}.", ((Product)(result.Argument)).Description);
-                            else
-                                TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
+                            TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
                         }
                     }
                     else
@@ -332,13 +224,9 @@ namespace FreeMarket.Controllers
                 sessionCart.UpdateSelectedProperty(cart, true);
 
                 if (sessionCart.Body.OrderDetails.Any(c => c.ItemNumber == 0))
-                {
                     TempData["message"] = "We cannot deliver all the items to your default address.";
-                }
                 else
-                {
                     TempData["message"] = "Cart has been updated.";
-                }
 
                 model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
                 return RedirectToAction("Cart", "ShoppingCart");
@@ -361,41 +249,8 @@ namespace FreeMarket.Controllers
             return PartialView("_SaveCartModal", model);
         }
 
-        public ActionResult GetAddressPartial(int id)
-        {
-            string userId = User.Identity.GetUserId();
-            ShoppingCart sessionCart = GetCartFromSession(userId);
-            CustomerAddress address = new CustomerAddress();
-
-            if (id == 0)
-            {
-                address = new CustomerAddress
-                {
-                    AddressCity = sessionCart.Order.DeliveryAddressCity,
-                    AddressLine1 = sessionCart.Order.DeliveryAddressLine1,
-                    AddressLine2 = sessionCart.Order.DeliveryAddressLine2,
-                    AddressLine3 = sessionCart.Order.DeliveryAddressLine3,
-                    AddressLine4 = sessionCart.Order.DeliveryAddressLine3,
-                    AddressName = "Current",
-                    AddressNumber = 0,
-                    AddressPostalCode = sessionCart.Order.DeliveryAddressPostalCode,
-                    AddressSuburb = sessionCart.Order.DeliveryAddressSuburb,
-                    CustomerNumber = userId
-                };
-            }
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                address = db.CustomerAddresses
-                    .Where(c => c.CustomerNumber == userId && c.AddressNumber == id)
-                    .FirstOrDefault();
-            }
-
-            SaveCartViewModel model = new SaveCartViewModel { Address = address, AddressName = address.AddressName };
-
-            return PartialView("_CartModifyDeliveryDetails", model);
-        }
-
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult UpdateDeliveryDetails(SaveCartViewModel model)
         {
@@ -405,6 +260,7 @@ namespace FreeMarket.Controllers
             if (ModelState.IsValid)
             {
                 sessionCart.Order.UpdateDeliveryDetails(model);
+                sessionCart.UpdateAllCouriers();
                 sessionCart.Save();
 
                 if (CustomerAddress.AddressExists(userId, model.AddressName))
@@ -485,6 +341,40 @@ namespace FreeMarket.Controllers
             toReturn = cart.Order.DeliveryAddress.ToString();
 
             return Content(toReturn);
+        }
+
+        public ActionResult GetAddressPartial(int id)
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+            CustomerAddress address = new CustomerAddress();
+
+            if (id == 0)
+            {
+                address = new CustomerAddress
+                {
+                    AddressCity = sessionCart.Order.DeliveryAddressCity,
+                    AddressLine1 = sessionCart.Order.DeliveryAddressLine1,
+                    AddressLine2 = sessionCart.Order.DeliveryAddressLine2,
+                    AddressLine3 = sessionCart.Order.DeliveryAddressLine3,
+                    AddressLine4 = sessionCart.Order.DeliveryAddressLine3,
+                    AddressName = "Current",
+                    AddressNumber = 0,
+                    AddressPostalCode = sessionCart.Order.DeliveryAddressPostalCode,
+                    AddressSuburb = sessionCart.Order.DeliveryAddressSuburb,
+                    CustomerNumber = userId
+                };
+            }
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                address = db.CustomerAddresses
+                    .Where(c => c.CustomerNumber == userId && c.AddressNumber == id)
+                    .FirstOrDefault();
+            }
+
+            SaveCartViewModel model = new SaveCartViewModel { Address = address, AddressName = address.AddressName };
+
+            return PartialView("_CartModifyDeliveryDetails", model);
         }
 
         public ActionResult SmallCartBody()

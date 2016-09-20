@@ -40,7 +40,8 @@ namespace FreeMarket.Models
                         Settled = false,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumber,
-                        Selected = false
+                        Selected = false,
+                        CannotDeliver = c.CannotDeliver
                     }
                     ).ToList();
 

@@ -2,8 +2,14 @@
 
 <div class="col-md-12 well">
 	<span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save" class="btn btn-primary btn-sm" /></span>
-	<a data-id="@Url.Action("SaveCartModal", "ShoppingCart")" class="btn btn-primary btn-sm saveClass"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;Delivery Details</a>
 	<span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
+	
+	@if (User.Identity.IsAuthenticated)
+	{
+		<a data-id="@Url.Action("SaveCartModal", "ShoppingCart")" class="btn btn-primary btn-sm saveClass"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;Delivery Details</a>
+		<span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <a class="btn btn-success btn-sm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secure Check Out</a></span>
+	}
+ 
 </div>
 
 <script type="text/javascript">

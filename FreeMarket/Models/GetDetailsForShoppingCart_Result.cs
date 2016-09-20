@@ -63,6 +63,7 @@ namespace FreeMarket.Models
         public decimal OrderItemValue { get; set; }
         public Nullable<decimal> CourierFee { get; set; }
         public Nullable<int> CustodianNumber { get; set; }
+        public Nullable<bool> CannotDeliver { get; set; }
         public decimal PricePerUnit { get; set; }
     }
 }

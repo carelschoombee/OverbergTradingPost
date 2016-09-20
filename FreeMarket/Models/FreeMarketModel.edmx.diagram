@@ -53,12 +53,12 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductReview" Width="1.5" PointX="5.25" PointY="30.5" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierReview_Courier" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductReview_Product" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="8.25" PointY="8.875" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Courier" />
+        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="2.625" PointX="15.375" PointY="13.125" />
+        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="18.75" PointY="13" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="2.625" PointX="15.375" PointY="13.125" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Courier" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

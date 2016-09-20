@@ -25,62 +25,48 @@
 
                         @Html.ValidationSummary(true)
 
-                        @Html.HiddenFor(model => Model.FromCart)
-
-                        @if (!Model.FromCart)
-                        {
-                            <table class="table">
-                                <tr>
-                                    <th class="col-sm-6"></th>
-                                    <th class="col-sm-6"></th>
-                                </tr>
-                                <tr>
-                                    <td rowspan="4">
-                                        <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
-                                    </td>
-                                    <td>
-                                        <span style="font-size:larger; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)&nbsp;per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>@Model.ProductInstance.SupplierName</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
-                                            <div class="col-md-6">
-                                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @style = "width:125px", @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.Quantity)
-                                            </div>
+                        <table class="table">
+                            <tr>
+                                <th class="col-sm-6"></th>
+                                <th class="col-sm-6"></th>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">
+                                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                                </td>
+                                <td>
+                                    <span style="font-size:larger; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)&nbsp;per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>@Model.ProductInstance.SupplierName</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @style = "width:125px", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Quantity)
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div id="CourierContainer">
-                                            @if (User.Identity.IsAuthenticated)
-                                            {
-                                                @Html.Partial("_CourierData", Model);
-                                            }
-                                            else
-                                            {
-                                                <text>Please login to view approximate courier costs.</text>
-                                            }
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-
-                        }
-                        else
-                        {
-                            <div class="form-group">
-                                <div class="col-md-6">
-                                    @Html.HiddenFor(model => Model.Quantity)
-                                </div>
-                            </div>
-                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="CourierContainer">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            @Html.Partial("_CourierData", Model);
+                                        }
+                                        else
+                                        {
+                                            <text>Please login to view approximate courier costs.</text>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
                         <div>
                             <i>@Model.ProductInstance.LongDescription</i>

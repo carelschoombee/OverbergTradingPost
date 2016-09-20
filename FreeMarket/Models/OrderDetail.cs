@@ -30,10 +30,11 @@ namespace FreeMarket.Models
         public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
         public Nullable<decimal> CourierFee { get; set; }
+        public Nullable<bool> CannotDeliver { get; set; }
     
-        public virtual Courier Courier { get; set; }
+        public virtual OrderHeader OrderHeader { get; set; }
         public virtual Product Product { get; set; }
         public virtual Supplier Supplier { get; set; }
-        public virtual OrderHeader OrderHeader { get; set; }
+        public virtual Courier Courier { get; set; }
     }
 }

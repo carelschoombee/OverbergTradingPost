@@ -57,8 +57,8 @@ namespace FreeMarket.Models
         public virtual DbSet<CourierLocation> CourierLocations { get; set; }
         public virtual DbSet<CourierReview> CourierReviews { get; set; }
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
@@ -105,15 +105,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
         }
     
-        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
-        {
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("OrderNumber", orderNumber) :
-                new ObjectParameter("OrderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
-        }
-    
         public virtual ObjectResult<CalculateCourierFee_Result> CalculateCourierFee(Nullable<int> productNumber, Nullable<int> supplierNumber, Nullable<int> quantityRequested, Nullable<int> courierNumber, Nullable<int> orderNumber)
         {
             var productNumberParameter = productNumber.HasValue ?
@@ -158,6 +149,15 @@ namespace FreeMarket.Models
                 new ObjectParameter("orderNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateDeliveryFee_Result>("CalculateDeliveryFee", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("OrderNumber", orderNumber) :
+                new ObjectParameter("OrderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailsForShoppingCart_Result>("GetDetailsForShoppingCart", orderNumberParameter);
         }
     }
 }

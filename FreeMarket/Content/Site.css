@@ -108,8 +108,8 @@ a:hover {
         font-family: 'Glyphicons Halflings';
     }
 
-well-red {
-    background: rgb(255, 0, 0);
+.well-red {
+    background: rgb(218, 219, 41);
 }
 /*.well {
     background: rgb(153, 255, 153);

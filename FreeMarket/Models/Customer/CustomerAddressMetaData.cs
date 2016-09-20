@@ -144,7 +144,7 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                return db.CustomerAddresses.Where(c => c.CustomerNumber == userId && c.AddressName == addressName)
+                return db.CustomerAddresses.Where(c => c.CustomerNumber == userId && c.AddressName == addressName && c.AddressName != "Current")
                                     .FirstOrDefault() == null ? false : true;
             }
         }

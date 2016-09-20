@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -39,7 +38,6 @@ namespace FreeMarket.Models
 
         public CourierFeeViewModel()
         {
-            Debug.Write("CourierFeeViewModel::Initializing empty.");
             InitializeDefault();
         }
 
@@ -77,6 +75,7 @@ namespace FreeMarket.Models
             }
         }
 
+        // Logged in user
         public CourierFeeViewModel(int productNumber, int supplierNumber, int courierNumber, int quantityRequested, int orderNumber, string userId)
         {
             // Validate
@@ -94,35 +93,81 @@ namespace FreeMarket.Models
                     return;
                 }
 
-                SetModel(productNumber, supplierNumber, courierNumber, quantityRequested, orderNumber);
+                Quantity = quantityRequested;
+                ProductNumber = productNumber;
+                SupplierNumber = supplierNumber;
+
+                ReviewPageSize = 4;
+
+                SetInstances(productNumber, supplierNumber);
+
+                FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, orderNumber);
+
+                if (courierNumber == 0)
+                {
+                    if (FeeInfo == null || FeeInfo.Count == 0)
+                        SelectedCourierNumber = 0;
+                    else
+                        SelectedCourierNumber = FeeInfo[0].CourierNumber;
+                }
+                else
+                {
+                    SelectedCourierNumber = courierNumber;
+                }
             }
         }
 
-        public void SetModel(int productNumber, int supplierNumber, int courierNumber, int quantityRequested, int orderNumber)
+        public static CourierFeeViewModel GetCourierDataDoWork(int id, int supplierNumber, int quantity, ShoppingCart cart, string userId)
         {
-            Quantity = quantityRequested;
-            ProductNumber = productNumber;
-            SupplierNumber = supplierNumber;
+            CourierFeeViewModel model = new CourierFeeViewModel();
+            bool anonymousUser = (userId == null);
 
-            ReviewPageSize = 4;
-
-            SetInstances(productNumber, supplierNumber);
-
-            FeeInfo = CourierFee.GetCourierFees(productNumber, supplierNumber, quantityRequested, orderNumber);
-
-            Debug.Write(string.Format("Model::{0}", FeeInfo.ToString()));
-
-            if (courierNumber == 0)
+            // Validate
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                if (FeeInfo == null || FeeInfo.Count == 0)
-                    SelectedCourierNumber = 0;
-                else
-                    SelectedCourierNumber = FeeInfo[0].CourierNumber;
+                Product product = db.Products.Find(id);
+                Supplier supplier = db.Suppliers.Find(supplierNumber);
+
+                if (product == null || supplier == null)
+                    return null;
+            }
+
+            if (anonymousUser)
+            {
+                model = new CourierFeeViewModel(id, supplierNumber, quantity);
+                return model;
             }
             else
             {
-                SelectedCourierNumber = courierNumber;
+                // If this item is already in the basket, assign the courier used for this item in the ui message.
+                OrderDetail detail = cart.GetOrderDetail(id, supplierNumber);
+                int courierNumber = 0;
+
+                if (detail == null)
+                    courierNumber = 0;
+                else
+                    courierNumber = (int)detail.CourierNumber;
+
+                model = new CourierFeeViewModel(id, supplierNumber, courierNumber, quantity, cart.Order.OrderNumber, userId);
+
+                // Determine no charge
+                foreach (OrderDetail temp in cart.Body.OrderDetails)
+                {
+                    foreach (CourierFee info in model.FeeInfo)
+                    {
+                        using (FreeMarketEntities db = new FreeMarketEntities())
+                        {
+                            if (info.CustodianNumber == temp.CustodianNumber &&
+                                info.CourierNumber == temp.CourierNumber)
+                            {
+                                info.NoCharge = true;
+                            }
+                        }
+                    }
+                }
             }
+
+            return model;
         }
 
         public void SetInstances(int productNumber, int supplierNumber)

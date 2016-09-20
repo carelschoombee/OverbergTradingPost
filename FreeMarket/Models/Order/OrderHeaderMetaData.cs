@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -102,6 +103,12 @@ namespace FreeMarket.Models
             DeliveryAddressLine2 = model.Address.AddressLine2;
             DeliveryAddressLine3 = model.Address.AddressLine3;
             DeliveryAddressLine4 = model.Address.AddressLine4;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                db.Entry(this).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
 
         public override string ToString()
