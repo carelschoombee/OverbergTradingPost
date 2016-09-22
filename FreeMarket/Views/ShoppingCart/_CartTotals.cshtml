@@ -3,7 +3,7 @@
 @{ 
     string shippingMessage = "";
 
-    if (Model.Body.OrderDetails != null && (Model.Body.OrderDetails.All(c => c.CourierNumber == 0)))
+    if (Model.Order.OrderNumber == 0)
     {
         shippingMessage = "Please Log in to calculate Shipping costs.";
     }
@@ -18,7 +18,7 @@
         <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.SubTotal)</strong></td>
     </tr>
     <tr>
-        <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
+        <td class="col-sm-2 text-left"><strong>Approximate Shipping (excluding items that are not available):</strong></td>
         <td class="col-sm-2 text-right"><strong>@shippingMessage</strong></td>
     </tr>
     <tr class="text-primary" >

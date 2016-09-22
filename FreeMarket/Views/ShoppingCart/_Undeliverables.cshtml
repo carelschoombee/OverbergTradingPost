@@ -1,0 +1,53 @@
+﻿@using FreeMarket.Models
+@model ShoppingCartViewModel
+
+@if (Model.Cart.Undeliverables != null && Model.Cart.Undeliverables.Count > 0)
+{
+    <table class="table table-bordered-custom table-condensed table-responsive">
+        <tr class="well">
+            <th class="col-sm-1">
+                Remove
+            </th>
+            <th class="col-sm-1">
+                Image
+            </th>
+            <th class="col-sm-3">
+                Description
+            </th>
+            <th class="col-sm-1">
+                Price
+            </th>
+            <th class="col-sm-1">
+                Quantity
+            </th>
+            <th class="col-sm-1">
+                Total
+            </th>
+        </tr>
+        @for (int i = 0; i < Model.Cart.Undeliverables.Count; i++)
+        {
+            <tr class="well-red">
+                <td data-label="Remove:">
+                    @Html.EditorFor(model => Model.Cart.Undeliverables[i].Selected)
+                </td>
+                <td>
+                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Undeliverables[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Undeliverables[i].ProductDescription" title="@Model.Cart.Undeliverables[i].ProductDescription" />
+                </td>
+                <td>
+                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Undeliverables[i].ProductNumber })&nbsp;@Model.Cart.Undeliverables[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Undeliverables[i].SupplierName</span><span class="text-danger">This item could not be added to your cart because we do not deliver to your default postal code. Please try changing the postal code in the delivery details.</span>
+                </td>
+                <td data-label="Price:">
+                    @String.Format("{0:C}", Model.Cart.Undeliverables[i].Price)
+                </td>
+                <td class="text-center" data-label="Qty:">
+                    @Html.DisplayFor(model => Model.Cart.Undeliverables[i].Quantity)
+                </td>
+                <td data-label="Total:">
+                    @String.Format("{0:C}", Model.Cart.Undeliverables[i].OrderItemValue)
+                </td>
+            </tr>
+        }
+    </table>
+
+    <span class="icon-input-btn"><span class="glyphicon glyphicon-remove-circle"></span> <input type="submit" value="Remove" class="btn btn-danger btn-sm" /></span>
+}

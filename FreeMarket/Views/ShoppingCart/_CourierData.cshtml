@@ -1,41 +1,19 @@
 ﻿@using FreeMarket.Models
 @model CourierFeeViewModel
 
-@if (Model.FeeInfo != null && Model.FeeInfo.Count > 0)
-{
-    for (int i = 0; i < Model.FeeInfo.Count; i++)
-    {
-        if (Model.SelectedCourierNumber == Model.FeeInfo[i].CourierNumber)
-        {
-            string message1 = "";
-            string message2 = "";
-            string message3 = "";
-            message1 = Model.FeeInfo[i].CourierName + " can deliver this item to your ";
-            if (Model.FeeInfo[i].NoCharge)
-            {
-                message3 = "free.";
-            }
-            else
-            {
-                message3 = String.Format("{0:C}", Model.FeeInfo[i].CourierFeeValue);
-            }
-            message2 = "for " + message3;
-            <strong>
-                @message1
-                <span class="btn-link" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetDeliveryAddress", "ShoppingCart")" aria-hidden="true">delivery address</span>
-                @message2
-                <a id="addressEdit" href="@Url.Action("ModifyDeliveryDetails", "Manage")"><span class="glyphicon glyphicon-edit text-success" data-toggle="tooltip" data-placement="right" title="Edit Address" aria-hidden="true"></span></a>
-            </strong>
-        }
+<strong>Availability:</strong>
 
-        @Html.HiddenFor(c => Model.FeeInfo[i].CourierNumber)
-        @Html.HiddenFor(model => Model.FeeInfo[i].CustodianNumber)
-        @Html.HiddenFor(model => Model.FeeInfo[i].NoCharge)
-    }
+@if (Model.CannotDeliver == null)
+{
+    <span class="glyphicon glyphicon-warning-sign text-warning">Please log in to check availability of this item.</span>
+}
+else if (Model.CannotDeliver == true)
+{
+    <span class="glyphicon glyphicon-remove-circle text-danger">This item is either out of stock or cannot be delivered to your current address.</span>
 }
 else
 {
-    @Html.Label("Sorry, but we do not currently deliver to that address.")
+    <span class="glyphicon glyphicon-ok-circle text-success" style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetDeliveryAddress", "ShoppingCart")" aria-hidden="true">Available to be delivered and in stock.</span>
 }
 
 

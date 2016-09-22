@@ -51,22 +51,12 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        //public ActionResult GetCourierData(int id, int supplierNumber, int quantity, int addressNumber)
-        //{
-        //    // Prepare
-        //    CourierFeeViewModel model = CourierFeeViewModel.GetCourierDataDoWork(id, supplierNumber, quantity);
-        //    if (model == null)
-        //        return RedirectToAction("Index", "Product");
-
-        //    return PartialView("_CourierData", model);
-        //}
-
         public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity)
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart cart = GetCartFromSession(userId);
 
-            CourierFeeViewModel model = CourierFeeViewModel.GetCourierDataDoWork(id, supplierNumber, quantity, cart, userId);
+            CourierFeeViewModel model = new CourierFeeViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
@@ -90,50 +80,18 @@ namespace FreeMarket.Controllers
                 bool anonymousUser = (userId == null);
                 ShoppingCart cart = GetCartFromSession(userId);
 
-                if (anonymousUser)
-                {
-                    FreeMarketObject result;
-                    result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity);
+                FreeMarketObject result;
+                result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity);
 
-                    if (result.Result == FreeMarketResult.Success)
-                    {
-                        // New item added
-                        if (result.Argument != null)
-                            TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
-                    }
+                if (result.Result == FreeMarketResult.Success)
+                    // New item added
+                    if (!string.IsNullOrEmpty(result.Message))
+                        TempData["message"] = result.Message;
                     else
-                        TempData["errorMessage"] = "Error: We could not add the item to the cart.";
+                    if (!string.IsNullOrEmpty(result.Message))
+                        TempData["errorMessage"] = result.Message;
 
-                    return JavaScript("window.location = window.location.href;");
-                }
-                else
-                {
-                    int custodian = viewModel.FeeInfo
-                        .Where(c => c.CourierNumber == viewModel.SelectedCourierNumber)
-                        .Select(c => c.CustodianNumber)
-                        .FirstOrDefault();
-
-                    bool noCharge = viewModel.FeeInfo
-                        .Where(c => c.CourierNumber == viewModel.SelectedCourierNumber)
-                        .FirstOrDefault()
-                        .NoCharge;
-
-                    FreeMarketObject result;
-                    result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.SelectedCourierNumber, viewModel.Quantity, custodian, noCharge, userId);
-
-                    if (result.Result == FreeMarketResult.Success)
-                    {
-                        // New item added
-                        if (result.Argument != null)
-                        {
-                            TempData["message"] = string.Format("Success: {0} ({1}) has been added to your cart.", ((Product)(result.Argument)).Description, viewModel.Quantity);
-                        }
-                    }
-                    else
-                        TempData["errorMessage"] = "Error: We could not add the item to the cart.";
-
-                    return JavaScript("window.location = window.location.href;");
-                }
+                return JavaScript("window.location = window.location.href;");
             }
             // Validation Error
             else
@@ -172,44 +130,10 @@ namespace FreeMarket.Controllers
 
                 if (selectedItems.Count > 0)
                 {
-                    if (anonymousUser)
+                    foreach (OrderDetail detail in selectedItems)
                     {
-                        // Do nothing, the user has no courier fees assigned.
+                        resultRemove = sessionCart.RemoveItem(detail.ItemNumber, detail.ProductNumber, detail.SupplierNumber, userId);
                     }
-                    else
-                    {
-                        foreach (OrderDetail detail in selectedItems)
-                        {
-                            // Find an order detail which is not selected, has a courier fee of zero and a matching custodian and courier number
-                            // to to the selected item. If an item is found the courier fee of the selected item is moved to the match
-                            // so that it no longer has a courier fee of zero. This is to prevent a customer from getting free delivery
-                            // by accident.
-
-                            OrderDetail temp = sessionCart.Body.OrderDetails
-                                    .Where(c => c.ProductNumber == detail.ProductNumber &&
-                                                c.SupplierNumber == detail.SupplierNumber)
-                                    .FirstOrDefault();
-
-                            if (sessionCart.Body.OrderDetails
-                                    .Where(c => !c.Selected &&
-                                        c.CustodianNumber == temp.CustodianNumber &&
-                                        c.CourierNumber == temp.CourierNumber &&
-                                        c.CourierFee == 0)
-                                    .FirstOrDefault() != null)
-                            {
-
-                                sessionCart.Body.OrderDetails
-                                    .Where(c => !c.Selected &&
-                                        c.CustodianNumber == temp.CustodianNumber &&
-                                        c.CourierNumber == temp.CourierNumber &&
-                                        c.CourierFee == 0)
-                                    .FirstOrDefault().CourierFee = temp.CourierFee;
-                            }
-
-                            resultRemove = sessionCart.RemoveItem(detail.ItemNumber, detail.ProductNumber, detail.SupplierNumber, userId);
-                        }
-                    }
-
                 }
 
                 // Update Quantity
@@ -256,43 +180,19 @@ namespace FreeMarket.Controllers
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
+            FreeMarketObject result;
 
             if (ModelState.IsValid)
             {
-                sessionCart.Order.UpdateDeliveryDetails(model);
-                sessionCart.UpdateAllCouriers();
-                sessionCart.Save();
+                sessionCart.UpdateDeliveryDetails(model);
+                result = CustomerAddress.AddOrUpdateAddress(model, userId);
 
-                if (CustomerAddress.AddressExists(userId, model.AddressName))
-                {
-                    FreeMarketResult result = CustomerAddress.UpdateAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
-                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
-                           , model.Address.AddressCity, model.Address.AddressPostalCode);
-
-                    if (result == FreeMarketResult.Success)
-                        TempData["message"] = string.Format
-                            ("Your {0} delivery details have been updated.",
-                            model.AddressName);
-                    else
-                        TempData["message"] = string.Format
-                            ("Sorry, we could not process your request at this time, please try again later.");
-                }
+                if (result.Result == FreeMarketResult.Success)
+                    TempData["message"] = result.Message;
                 else
-                {
-                    FreeMarketResult result = CustomerAddress.AddAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
-                           , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
-                           , model.Address.AddressCity, model.Address.AddressPostalCode);
+                    TempData["errorMessage"] = result.Message;
 
-                    if (result == FreeMarketResult.Success)
-                        TempData["message"] = string.Format
-                            ("Your {0} delivery details have been updated.",
-                            model.AddressName);
-                    else
-                        TempData["errorMessage"] = string.Format
-                            ("Sorry, we could not process your request at this time, please try again later.");
-                }
-
-                return JavaScript("window.location = window.location.href;");
+                return JavaScript("window.location.reload();");
             }
 
             model.SetAddressNameOptions(userId, model.SelectedAddress);

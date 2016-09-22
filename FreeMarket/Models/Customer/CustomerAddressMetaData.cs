@@ -20,6 +20,38 @@ namespace FreeMarket.Models
             AddressSuburb = "";
         }
 
+        public static FreeMarketObject AddOrUpdateAddress(SaveCartViewModel model, string userId)
+        {
+            string message = "";
+            FreeMarketResult result;
+
+            if (AddressExists(userId, model.AddressName))
+            {
+                result = CustomerAddress.UpdateAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                      , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                      , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                if (result == FreeMarketResult.Success)
+                    message = string.Format("Your {0} address has been updated.", model.AddressName);
+                else
+                    message = string.Format("Your {0} address could not be updated.", model.AddressName);
+
+            }
+            else
+            {
+                result = CustomerAddress.AddAddress(userId, model.AddressName, model.Address.AddressLine1, model.Address.AddressLine2
+                      , model.Address.AddressLine3, model.Address.AddressLine4, model.Address.AddressSuburb
+                      , model.Address.AddressCity, model.Address.AddressPostalCode);
+
+                if (result == FreeMarketResult.Success)
+                    message = string.Format("Your {0} address has been added.", model.AddressName);
+                else
+                    message = string.Format("Your {0} address could not be added.", model.AddressName);
+            }
+
+            return new FreeMarketObject { Result = result, Message = message };
+        }
+
         public static FreeMarketResult AddAddress(string userId, string addressName, string addressLine1, string addressLine2,
             string addressLine3, string addressLine4, string addressSuburb, string addressCity, string addressPostalCode)
         {

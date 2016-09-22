@@ -61,7 +61,7 @@
                                         }
                                         else
                                         {
-                                            <text>Please login to view approximate courier costs.</text>
+                                            <text>Please log in to check availability of this item.</text>
                                         }
                                     </div>
                                 </td>
@@ -87,8 +87,6 @@
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
-                            @Html.HiddenFor(model => Model.OrderNumber)
-                            @Html.HiddenFor(model => Model.SelectedCourierNumber)
                         </div>
                     </div>
                 </div>
@@ -105,34 +103,6 @@
 <script language="javascript" type="text/javascript">
 
     $('#input-id').rating({displayOnly: true, step: 0.1, clearCaption: 'Not yet rated'});
-
-    @*$("#Quantity").change(function () {
-        $.ajax({
-            url: '@Url.Action("GetCourierData", "ShoppingCart")',
-            type: 'GET',
-            data: {
-                id: @Model.ProductNumber,
-                supplierNumber: @Model.SupplierNumber,
-                @if (!Model.FromCart)
-                {
-                <text>
-                quantity: $("#Quantity").val(),
-                </text>
-                }
-                else
-                {
-                <text>
-                quantity: @Model.Quantity,
-                </text>
-                }
-                addressNumber: @Model.SelectedAddress,
-                isAjax: true
-            }
-        }).done
-            (function (data) {
-                $('#CourierContainer').html(data);
-            });
-    });*@
 
     $("#readReviews").click(function () {
         $.ajax({

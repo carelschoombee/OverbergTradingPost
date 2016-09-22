@@ -21,15 +21,15 @@ namespace FreeMarket.Models
     {
         public FreeMarketResult Result { get; set; }
         public object Argument { get; set; }
-        public string DebugMessage { get; set; }
+        public string Message { get; set; }
 
         public FreeMarketObject()
         {
             Result = FreeMarketResult.NoResult;
             Argument = null;
 
-            if (!string.IsNullOrEmpty(DebugMessage))
-                Debug.Write(DebugMessage);
+            if (!string.IsNullOrEmpty(Message))
+                Debug.Write(Message);
         }
     }
 }

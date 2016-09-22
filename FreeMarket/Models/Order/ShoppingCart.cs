@@ -52,62 +52,61 @@ namespace FreeMarket.Models
             }
         }
 
-        // Anonymous user
         public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity)
         {
             // Validate
             if (productNumber == 0 || supplierNumber == 0)
-                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Parameters invalid." };
+                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, Message = "No products could be found." };
 
+            // Assign a courier. The cost will be calculated later.
+            int courierNumber = 0;
             decimal? courierFeeCost = 0;
-
-            // Check whether the item already exists
+            bool undeliverableItem = false;
+            CalculateDeliveryFee_Result result;
             FreeMarketObject res = new FreeMarketObject();
 
-            OrderDetail existingItem = Body.OrderDetails
-                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                .FirstOrDefault();
-
-            if (existingItem != null)
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                // Update the existing item
-                existingItem.Update(quantity);
+                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, Order.OrderNumber)
+                    .FirstOrDefault();
 
-                // Setup return object
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                if (result != null)
+                    courierNumber = (int)result.CourierNumber;
+                else
                 {
+                    // If no courier could be found this item is undeliverable and must be marked as such.
+                    // Assign a default courier to keep database constraints happy.
+                    undeliverableItem = true;
+                    courierNumber = db.Couriers.FirstOrDefault().CourierNumber;
+                }
+
+                // Check whether the item already exists
+                OrderDetail existingItem = Body.OrderDetails
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .FirstOrDefault();
+
+                if (existingItem != null)
+                {
+                    // Update the existing item
+                    existingItem.Update(quantity);
+
+                    // Setup return object
                     var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
 
                     if (productInfo == null)
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, Message = "Product, Supplier or Price does not exist." };
 
                     res.Result = FreeMarketResult.Success;
-                    res.Argument = new Product
-                    {
-                        Activated = productInfo.Activated,
-                        DateAdded = productInfo.DateAdded,
-                        DateModified = productInfo.DateModified,
-                        DepartmentName = productInfo.DepartmentName,
-                        DepartmentNumber = productInfo.DepartmentNumber,
-                        Description = productInfo.Description,
-                        PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumber,
-                        Size = productInfo.Size,
-                        SupplierName = productInfo.SupplierName,
-                        SupplierNumber = productInfo.SupplierNumberID,
-                        Weight = productInfo.Weight
-                    };
+                    res.Message = string.Format("{0} ({1}) has been added to your cart.", productInfo.Description, quantity);
                 }
-            }
-            else
-            {
-                // A new OrderDetail must be created
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                else
                 {
-                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
+                    // A new OrderDetail must be created
+                    var productInfo = db.GetProduct(productNumber, supplierNumber)
+                        .FirstOrDefault();
 
                     if (productInfo == null)
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
+                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, Message = "No products could be found." };
 
                     string status = "Unconfirmed";
 
@@ -121,12 +120,13 @@ namespace FreeMarket.Models
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
-                            CourierFee = courierFeeCost,
-                            CourierNumber = 0,
+                            CourierFee = courierFeeCost, // Will always be zero at this point.
+                            CourierNumber = courierNumber, // May be a default value at this point.
                             CourierName = null,
                             CustodianNumber = 0,
                             OrderItemStatus = status,
                             OrderItemValue = productInfo.PricePerUnit * quantity,
+                            OrderNumber = Order.OrderNumber,
                             PaidCourier = null,
                             PaidSupplier = null,
                             PayCourier = null,
@@ -139,168 +139,14 @@ namespace FreeMarket.Models
                             Settled = null,
                             SupplierNumber = productInfo.SupplierNumberID,
                             SupplierName = productInfo.SupplierName,
-                            OrderNumber = Order.OrderNumber,
-                            MainImageNumber = imageNumber
+                            MainImageNumber = imageNumber,
+                            CannotDeliver = undeliverableItem // Must this item be marked as undeliverable?
                         });
 
                     res.Result = FreeMarketResult.Success;
-                    res.Argument = new Product
-                    {
-                        Activated = productInfo.Activated,
-                        DateAdded = productInfo.DateAdded,
-                        DateModified = productInfo.DateModified,
-                        DepartmentName = productInfo.DepartmentName,
-                        DepartmentNumber = productInfo.DepartmentNumber,
-                        Description = productInfo.Description,
-                        PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumber,
-                        Size = productInfo.Size,
-                        SupplierName = productInfo.SupplierName,
-                        SupplierNumber = productInfo.SupplierNumberID,
-                        Weight = productInfo.Weight
-                    };
+                    res.Message = string.Format("{0} ({1}) has been added to your cart.", productInfo.Description, quantity);
                 }
-            }
 
-            // Keep the OrderTotal in sync
-            UpdateTotal();
-
-            return res;
-        }
-
-        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int courierNumber, int quantity, int custodian, bool noCharge, string userId = null)
-        {
-            // Validate
-            if (productNumber == 0 || supplierNumber == 0 || courierNumber == 0 || custodian == 0)
-                return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Parameters invalid." };
-
-            // Calculate Courier Fee
-            decimal? courierFeeCost = 0;
-            CalculateCourierFee_Result result;
-            CustomerAddress address = new CustomerAddress();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                result = db.CalculateCourierFee(productNumber, supplierNumber, quantity, courierNumber, Order.OrderNumber)
-                .FirstOrDefault();
-
-                if (result != null)
-                {
-                    if (noCharge)
-                        courierFeeCost = 0;
-                    else
-                        courierFeeCost = result.CourierFee;
-
-                    if (courierFeeCost == 0 && !noCharge)
-                        return new FreeMarketObject
-                        { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
-                }
-                else
-                {
-                    return new FreeMarketObject
-                    { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "ERROR::Courier fee could not be calculated." };
-                }
-            }
-
-            // Check whether the item already exists
-            FreeMarketObject res = new FreeMarketObject();
-
-            OrderDetail existingItem = Body.OrderDetails
-                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-                // Update the existing item
-                existingItem.Update(quantity, courierNumber, courierFeeCost, address.ToString(), address.AddressPostalCode, custodian);
-
-                // Setup return object
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
-
-                    if (productInfo == null)
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
-
-                    res.Result = FreeMarketResult.Success;
-                    res.Argument = new Product
-                    {
-                        Activated = productInfo.Activated,
-                        DateAdded = productInfo.DateAdded,
-                        DateModified = productInfo.DateModified,
-                        DepartmentName = productInfo.DepartmentName,
-                        DepartmentNumber = productInfo.DepartmentNumber,
-                        Description = productInfo.Description,
-                        PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumber,
-                        Size = productInfo.Size,
-                        SupplierName = productInfo.SupplierName,
-                        SupplierNumber = productInfo.SupplierNumberID,
-                        Weight = productInfo.Weight
-                    };
-                }
-            }
-            else
-            {
-                // A new OrderDetail must be created
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    var productInfo = db.GetProduct(productNumber, supplierNumber).FirstOrDefault();
-
-                    if (productInfo == null)
-                        return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, DebugMessage = "Product, Supplier or Price does not exist." };
-
-                    string status = "Unconfirmed";
-
-                    // Add a small image for the CartBody
-                    int imageNumber = db.ProductPictures
-                            .Where(c => c.ProductNumber == productInfo.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
-                            .Select(c => c.PictureNumber)
-                            .FirstOrDefault();
-
-                    // Add the new item to the Session variable
-                    Body.OrderDetails.Add(
-                        new OrderDetail()
-                        {
-                            CourierFee = courierFeeCost,
-                            CourierNumber = courierNumber,
-                            CourierName = null,
-                            CustodianNumber = custodian,
-                            OrderItemStatus = status,
-                            OrderItemValue = productInfo.PricePerUnit * quantity,
-                            PaidCourier = null,
-                            PaidSupplier = null,
-                            PayCourier = null,
-                            PaySupplier = null,
-                            Price = productInfo.PricePerUnit,
-                            ProductNumber = productInfo.ProductNumber,
-                            ProductDescription = productInfo.Description,
-                            ProductDepartment = productInfo.DepartmentName,
-                            Quantity = quantity,
-                            Settled = null,
-                            SupplierNumber = productInfo.SupplierNumberID,
-                            SupplierName = productInfo.SupplierName,
-                            OrderNumber = Order.OrderNumber,
-                            MainImageNumber = imageNumber
-                        });
-
-                    res.Result = FreeMarketResult.Success;
-                    res.Argument = new Product
-                    {
-                        Activated = productInfo.Activated,
-                        DateAdded = productInfo.DateAdded,
-                        DateModified = productInfo.DateModified,
-                        DepartmentName = productInfo.DepartmentName,
-                        DepartmentNumber = productInfo.DepartmentNumber,
-                        Description = productInfo.Description,
-                        PricePerUnit = productInfo.PricePerUnit,
-                        ProductNumber = productInfo.ProductNumber,
-                        Size = productInfo.Size,
-                        SupplierName = productInfo.SupplierName,
-                        SupplierNumber = productInfo.SupplierNumberID,
-                        Weight = productInfo.Weight
-                    };
-                }
             }
 
             // Keep the OrderTotal in sync
@@ -471,52 +317,14 @@ namespace FreeMarket.Models
             AuditUser.LogAudit(6, string.Format("Order number: {0}", Order.OrderNumber), userId);
         }
 
-        public void UpdateTotal()
-        {
-            Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
-
-            Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
-
-            CalculateShippingTotal();
-
-            Order.TotalOrderValue = (Order.SubTotal ?? 0) + (Order.ShippingTotal ?? 0);
-
-            // Don't persist as the user may be anonymous at this point
-        }
-
-        public void CalculateShippingTotal()
-        {
-            if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
-            {
-                decimal threshold = 0;
-
-                try
-                {
-                    threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
-                }
-                catch
-                {
-
-                }
-
-                if (threshold != 0 && Order.SubTotal > threshold)
-                    Order.ShippingTotal = 0;
-            }
-            else
-            {
-                Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
-            }
-        }
-
         public void Compare()
         {
-            // Get a list of items which are on both the Session and database
-
-            List<OrderDetail> existingItems = Body.OrderDetails.FindAll(c => c.ItemNumber != 0);
-
-            if (existingItems != null && existingItems.Count > 0)
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                // Get a list of items which are on both the Session and database
+                List<OrderDetail> existingItems = Body.OrderDetails.FindAll(c => c.ItemNumber != 0);
+
+                if (existingItems != null && existingItems.Count > 0)
                 {
                     foreach (OrderDetail temp in existingItems)
                     {
@@ -527,16 +335,8 @@ namespace FreeMarket.Models
                             if (!temp.Equals(tempDb))
                             {
                                 // If the item has changed update it
-
-                                Debug.Write(string.Format("Updating item number {0} ...", tempDb.ItemNumber));
-
                                 tempDb.Quantity = temp.Quantity;
                                 tempDb.OrderItemValue = temp.OrderItemValue;
-                                tempDb.SupplierNumber = temp.SupplierNumber;
-                                tempDb.CourierNumber = temp.CourierNumber;
-                                tempDb.ProductNumber = temp.ProductNumber;
-                                tempDb.CourierFee = temp.CourierFee;
-                                tempDb.CustodianNumber = temp.CustodianNumber;
                                 tempDb.CannotDeliver = temp.CannotDeliver;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
@@ -546,27 +346,18 @@ namespace FreeMarket.Models
                             }
                         }
                     }
+
                 }
-            }
 
-            // Get a list of items that are on the Session variable but not in the database
+                // Get a list of items that are on the Session variable but not in the database
+                List<OrderDetail> newItems = Body.OrderDetails.FindAll(c => c.ItemNumber == 0);
 
-            List<OrderDetail> newItems = Body.OrderDetails.FindAll(c => c.ItemNumber == 0);
-
-            if (newItems != null && newItems.Count > 0)
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                if (newItems != null && newItems.Count > 0)
                 {
                     // Do not include the item being compared
                     foreach (OrderDetail tempB in newItems)
                     {
-                        Debug.Write(string.Format("Adding product number {0} to database ...", tempB.ProductNumber));
                         tempB.OrderNumber = Order.OrderNumber;
-
-                        // If the user had added items in anonymous mode and now switches to account mode
-                        if (tempB.CourierNumber == 0)
-                            UpdateCourier(tempB);
-
                         db.OrderDetails.Add(tempB);
                     }
 
@@ -670,6 +461,156 @@ namespace FreeMarket.Models
             }
 
             UpdateTotal();
+        }
+
+        public void UpdateDeliveryDetails(SaveCartViewModel model)
+        {
+            Order.UpdateDeliveryDetails(model);
+            UpdateAllDeliverableStatus();
+            Save();
+        }
+
+        public static bool CalculateDeliverableStatus(int productNumber, int supplierNumber, int quantity, int orderNumber)
+        {
+            CalculateDeliveryFee_Result result;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, orderNumber)
+                    .FirstOrDefault();
+
+                if (result == null)
+                    // If no courier could be found this item is undeliverable and must be marked as such.
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public void UpdateAllDeliverableStatus()
+        {
+            foreach (OrderDetail detail in Body.OrderDetails)
+            {
+                detail.CannotDeliver = ShoppingCart.CalculateDeliverableStatus(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber);
+            }
+        }
+
+        public decimal CalculateApproximateDeliveryFee()
+        {
+            // If the user is logged in
+            if (Order.OrderNumber != 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    List<OrderDetail> deliverableItems = Body.OrderDetails
+                        .Where(c => c.CannotDeliver == false)
+                        .ToList();
+
+                    List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
+
+                    deliverableItems.ForEach((item) =>
+                    {
+                        clonedList.Add(new OrderDetail(item));
+                    });
+
+                    OrderHeader order = Order;
+
+                    ShoppingCart virtualCart = new ShoppingCart
+                    {
+                        Body = new CartBody { OrderDetails = clonedList },
+                        Order = order
+                    };
+
+                    foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
+                    {
+                        bool noCharge = false;
+
+                        // Calculate the delivery fee
+                        CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)
+                            .FirstOrDefault();
+
+                        // Set the order detail
+                        detail.CourierNumber = result.CourierNumber;
+                        detail.CustodianNumber = result.CustodianNumber;
+
+                        // Determine noCharge
+                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
+                        {
+                            // Do not compare against itself
+                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
+                                continue;
+
+                            if (detail.CustodianNumber == temp.CustodianNumber &&
+                                detail.CourierNumber == temp.CourierNumber &&
+                                temp.CourierFee > 0)
+                            {
+                                noCharge = true;
+                                break;
+                            }
+                        }
+
+                        if (noCharge)
+                            detail.CourierFee = 0;
+                        else
+                            detail.CourierFee = result.CourierFee;
+                    }
+
+                    if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
+                    {
+                        decimal threshold = 0;
+
+                        try
+                        {
+                            threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
+                        }
+                        catch
+                        {
+
+                        }
+
+                        if (threshold != 0 && Order.SubTotal > threshold)
+                            return 0;
+                        else
+                            return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                    }
+                    else
+                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                }
+            }
+            else
+                return Order.ShippingTotal ?? 0;
+        }
+
+        public void UpdateTotal()
+        {
+            Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
+            Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
+            Order.ShippingTotal = CalculateApproximateDeliveryFee();
+            Order.TotalOrderValue = (Order.SubTotal ?? 0) + (Order.ShippingTotal ?? 0);
+        }
+
+        public void CalculateShippingTotal()
+        {
+            if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
+            {
+                decimal threshold = 0;
+
+                try
+                {
+                    threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
+                }
+                catch
+                {
+
+                }
+
+                if (threshold != 0 && Order.SubTotal > threshold)
+                    Order.ShippingTotal = 0;
+            }
+            else
+            {
+                Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
         }
 
         public ShoppingCart(string userId)

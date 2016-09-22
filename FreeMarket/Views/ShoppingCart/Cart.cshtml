@@ -7,7 +7,7 @@
 }
 
 <br />
-<h2 class="text-center">Shopping Cart</h2>
+<h1 class="text-center">Shopping Cart</h1>
 <hr />
 
 
@@ -62,3 +62,8 @@ else
 
 @Html.Partial("_CartContainer")
 
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

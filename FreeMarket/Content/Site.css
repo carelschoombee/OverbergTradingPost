@@ -1,4 +1,17 @@
-﻿body {
+﻿
+h1 {
+    color:white;
+}
+
+hr {
+    border-top: 1px solid gray !important;
+}
+
+footer {
+    color:white;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -38,15 +51,11 @@ textarea {
 }
 
 body {
-    background-image: url('Images/background1.jpg');
+    background-image: url('Images/background3.jpg');
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-}
-
-hr {
-    border-top: 1px solid black !important;
 }
 
 .navbar-nav > li > a, .navbar-brand {
@@ -70,7 +79,7 @@ a:hover {
 
 .table-bordered-custom td {
     /*border: 1px solid #ddd !important;*/
-    border: 1px solid black !important;
+    border: 1px solid !important;
     border-color: black;
     font-size: 12px !important;
     /*font-family: 'Arial' !important;*/
@@ -83,6 +92,10 @@ a:hover {
     font-size: 14px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 700;
+}
+
+.table-striped td {
+  text-align: center;
 }
 
 #loadingDiv {

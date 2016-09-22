@@ -31,14 +31,38 @@ namespace FreeMarket.Models
             return toString;
         }
 
-        public void Update(int quantity, int courierNumber, decimal? courierFeeCost, string address, string addressPostalCode, int custodianNumber)
+        public OrderDetail()
         {
-            Quantity += quantity;
-            OrderItemValue = Price * Quantity;
-            CourierNumber = courierNumber;
-            if (courierFeeCost != 0)
-                CourierFee = courierFeeCost;
-            CustodianNumber = custodianNumber;
+
+        }
+
+        public OrderDetail(OrderDetail temp)
+        {
+            CourierName = temp.CourierName;
+            CourierFee = temp.CourierFee;
+            CourierNumber = temp.CourierNumber;
+            CustodianNumber = temp.CustodianNumber;
+            ItemNumber = temp.ItemNumber;
+            MainImageNumber = temp.MainImageNumber;
+            OrderItemStatus = temp.OrderItemStatus;
+            OrderItemValue = temp.OrderItemValue;
+            OrderNumber = temp.OrderNumber;
+            PaidCourier = temp.PaidCourier;
+            PaidSupplier = temp.PaidSupplier;
+            PayCourier = temp.PayCourier;
+            PaySupplier = temp.PaySupplier;
+            Price = temp.Price;
+            ProductDepartment = temp.ProductDepartment;
+            ProductDescription = temp.ProductDescription;
+            ProductNumber = temp.ProductNumber;
+            ProductPrice = temp.Price;
+            ProductWeight = temp.ProductWeight;
+            Quantity = temp.Quantity;
+            Settled = temp.Settled;
+            SupplierName = temp.SupplierName;
+            SupplierNumber = temp.SupplierNumber;
+            Selected = temp.Selected;
+            CannotDeliver = temp.CannotDeliver;
         }
 
         public void Update(int quantity)
@@ -60,7 +84,7 @@ namespace FreeMarket.Models
             }
 
             if (this.ProductNumber == item.ProductNumber && this.Quantity == item.Quantity
-                && this.SupplierNumber == item.SupplierNumber && this.CourierNumber == item.CourierNumber)
+                && this.SupplierNumber == item.SupplierNumber && this.CannotDeliver == item.CannotDeliver)
                 return true;
             else
                 return false;

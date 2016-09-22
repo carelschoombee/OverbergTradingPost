@@ -12,9 +12,9 @@
         <th class="col-sm-3">
             Description
         </th>
-        <th class="col-sm-1">
+        @*<th class="col-sm-1">
             Courier Info
-        </th>
+        </th>*@
         <th class="col-sm-1">
             Price
         </th>
@@ -24,86 +24,72 @@
         <th class="col-sm-1">
             Total
         </th>
+        <th class="col-sm-1">
+            Status
+        </th>
     </tr>
 
     @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
-        if (Model.Cart.Body.OrderDetails[i].CannotDeliver == true)
-        {
-            <tr class="well-red">
-                <td data-label="Remove:">
-                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
-                </td>
-                <td>
-                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="Model.Cart.Body.OrderDetails[i].ProductDescription" />
-                </td>
-                <td>
-                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span> <br /> <span class="text-danger">Sorry, but we cannot deliver this item to your preferred delivery address. Try choosing a different address.</span>
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
-                </td>
-                <td data-label="Price:">
-                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
-                </td>
-                <td class="text-center" data-label="Qty:">
-                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
-                    @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
-                </td>
-                <td data-label="Total:">
-                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
-                </td>
-            </tr>
-        }
-        else
-        {
-            <tr class="well">
-                <td data-label="Remove:">
-                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
-                </td>
-                <td>
-                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
-                </td>
-                <td>
-                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
-                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
-                </td>
-                <td data-label="Courier:">
-                    <span>Courier Name: @Model.Cart.Body.OrderDetails[i].CourierName</span>
-                    <br />
-                    <span>Courier Number: @Model.Cart.Body.OrderDetails[i].CourierNumber</span>
-                    <br />
-                    <span>Custodian: @Model.Cart.Body.OrderDetails[i].CustodianNumber</span>
-                    <br />
-                    <span>Fee: @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].CourierFee)</span>
-                    <br />
-                    <span>Product: @Model.Cart.Body.OrderDetails[i].ProductNumber</span>
-                    <br />
-                    <span>Supplier: @Model.Cart.Body.OrderDetails[i].SupplierNumber</span>
-                    <br />
-                    <span>Order: @Model.Cart.Body.OrderDetails[i].OrderNumber</span>
-                </td>
-                <td data-label="Price:">
-                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
-                </td>
-                <td class="text-center" data-label="Qty:">
-                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
-                    @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
-                </td>
-                <td data-label="Total:">
-                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
-                </td>
-            </tr>
-        }
-    }
+        <tr class="well">
+            <td data-label="Remove:" class="text-center">
+                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
+            </td>
+            <td>
+                <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
+            </td>
+            <td>
+                @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by <span class="text-info">@Model.Cart.Body.OrderDetails[i].SupplierName</span>
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
+            </td>
+            @*<td data-label="Courier:">
+                <span>Courier Name: @Model.Cart.Body.OrderDetails[i].CourierName</span>
+                <br />
+                <span>Courier Number: @Model.Cart.Body.OrderDetails[i].CourierNumber</span>
+                <br />
+                <span>Custodian: @Model.Cart.Body.OrderDetails[i].CustodianNumber</span>
+                <br />
+                <span>Fee: @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].CourierFee)</span>
+                <br />
+                <span>Product: @Model.Cart.Body.OrderDetails[i].ProductNumber</span>
+                <br />
+                <span>Supplier: @Model.Cart.Body.OrderDetails[i].SupplierNumber</span>
+                <br />
+                <span>Order: @Model.Cart.Body.OrderDetails[i].OrderNumber</span>
+            </td>*@
+            <td data-label="Price:">
+                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
+            </td>
+            <td class="text-center" data-label="Qty:">
+                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
+                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
+            </td>
+            <td data-label="Total:">
+                @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
+            </td>
+            <td data-label="Status:">
+                @if (Model.Cart.Body.OrderDetails[i].CannotDeliver ?? false)
+                {
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="glyphicon glyphicon-remove text-warning" data-toggle="tooltip" data-placement="right" title="We cannot deliver this to postal code @Model.Cart.Order.DeliveryAddressPostalCode" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-warning-sign text-warning" data-toggle="tooltip" data-placement="right" title="Item not saved." aria-hidden="true"></span>
+                    }
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-ok text-success" data-toggle="tooltip" data-placement="right" title="This item is in stock and available for purchase." aria-hidden="true"></span>
+                }
+            </td>
+        </tr>
     }
 </table>
 
