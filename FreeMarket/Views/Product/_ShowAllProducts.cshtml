@@ -3,22 +3,22 @@
 
 @helper ListProduct(int i)
 {
-    <div>
+    @*<div>
         <div class="col-sm-9">
             <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
         </div>
-    </div>
+    </div>*@
 
     <div>
-        <table class="table table-responsive">
+        <table class="table table-responsive well">
             <tr>
                 <td>
-                    <strong>@Html.DisplayFor(model => Model.Products[i].Description)</strong>
+                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
                 </td>
             </tr>
             <tr>
-                <td>
-                    @String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;@Html.DisplayFor(model => Model.Products[i].Size)
+                <td style="font-size: 16px; color:black">
+                    <i><strong>@Html.DisplayFor(model => Model.Products[i].Description)</strong></i>
                 </td>
             </tr>
             <tr>
@@ -26,6 +26,12 @@
                     @Html.DisplayFor(model => Model.Products[i].SupplierName)
                 </td>
             </tr>
+            <tr>
+                <td style="font-size: 20px">
+                    @String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;@Html.DisplayFor(model => Model.Products[i].Size)
+                </td>
+            </tr>
+            
             <tr>
                 <td>
                     <a data-id="@Url.Action("CourierSelectionModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
@@ -42,25 +48,25 @@
     <div class="row">
     @if (i < Model.Products.Count)
     {
-        <div class="col-sm-3 well">                
+        <div class="col-sm-3">                
             @ListProduct(i)
         </div>
     }
     @if (++i < Model.Products.Count)
     {
-        <div class="col-sm-3 well">
+        <div class="col-sm-3">
                 @ListProduct(i)
         </div>
     }
     @if (++i < Model.Products.Count)
     {
-        <div class="col-sm-3 well">
+        <div class="col-sm-3">
             @ListProduct(i)
         </div>
     }
     @if (++i < Model.Products.Count)
     {
-        <div class="col-sm-3 well">
+        <div class="col-sm-3">
             @ListProduct(i)
         </div>
     }

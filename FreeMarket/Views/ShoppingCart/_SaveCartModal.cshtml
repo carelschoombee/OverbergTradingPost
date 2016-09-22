@@ -35,7 +35,7 @@
                             }
                         </style>
 
-                        <div class="form-group well">
+                        <div class="form-group">
                             <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                             <div class="col-sm-6">
                                 <div class="input-group date" id="datetimePicker">
@@ -44,18 +44,18 @@
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
-                                <span id="temp" class="help-block">Example: 18/03/2024 12:00</span>
+                                <span id="temp">Example: 18/03/2024 12:00</span>
                             </div>
                         </div>
 
-                        <div class="form-group well">
+                        <div class="form-group">
                             @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                             <div class="col-md-6">
                                 @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @class = "form-control" })
                             </div>
                         </div>
 
-                        <div id="AddressContainer" class="well">
+                        <div id="AddressContainer">
                             @Html.Partial("_CartModifyDeliveryDetails", Model)
                         </div>
 

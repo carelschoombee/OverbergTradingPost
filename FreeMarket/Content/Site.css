@@ -56,6 +56,12 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
+    color: white;
+}
+
+.date{
+background-color: #fff ;
+color: #333 ;
 }
 
 .navbar-nav > li > a, .navbar-brand {
@@ -79,8 +85,8 @@ a:hover {
 
 .table-bordered-custom td {
     /*border: 1px solid #ddd !important;*/
-    border: 1px solid !important;
-    border-color: black;
+    border: 2px solid !important;
+    border-color: white;
     font-size: 12px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 600;
@@ -88,7 +94,7 @@ a:hover {
 
 .table-bordered-custom th {
     /*border: 1px solid #ddd !important;*/
-    border: 1px solid black !important;
+    border: 2px solid white !important;
     font-size: 14px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 700;
@@ -117,13 +123,26 @@ a:hover {
     font-family: inherit;
 }
 
-    .glyphicon:before {
-        font-family: 'Glyphicons Halflings';
-    }
-
-.well-red {
-    background: rgb(218, 219, 41);
+.glyphicon:before {
+    font-family: 'Glyphicons Halflings';
 }
+
+.well {
+    background: #76b852; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #76b852 , #8DC26F); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #76b852 , #8DC26F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.modal-content {
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+input, select, text {
+    color: black;
+}
+
 /*.well {
     background: rgb(153, 255, 153);
 }
@@ -171,8 +190,13 @@ th, td {
     padding: 2px;
 }
 
-
 @media screen and (max-width: 600px) {
+
+    .table-bordered-custom-no-collapse td {
+        border: 2px solid white !important;
+        font-size: 12px !important;
+        font-weight: 600;
+    }
 
     th {
         display: none !important;
@@ -190,16 +214,16 @@ th, td {
         border: 1px solid #ddd !important;
     }
 
-        td:before {
-            box-sizing: border-box;
-            position: absolute;
-            content: attr(data-label);
-            top: 0;
-            left: 0;
-            padding: 2px;
-            font-weight: bold;
-            width: 50%;
-        }
+    td:before {
+        box-sizing: border-box;
+        position: absolute;
+        content: attr(data-label);
+        top: 0;
+        left: 0;
+        padding: 2px;
+        font-weight: bold;
+        width: 50%;
+    }   
 }
 
 @media (max-width: 1199px) {

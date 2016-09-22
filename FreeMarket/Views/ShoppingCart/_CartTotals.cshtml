@@ -18,10 +18,10 @@
         <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.SubTotal)</strong></td>
     </tr>
     <tr>
-        <td class="col-sm-2 text-left"><strong>Approximate Shipping (excluding items that are not available):</strong></td>
+        <td class="col-sm-2 text-left"><strong>Approximate Shipping:</strong></td>
         <td class="col-sm-2 text-right"><strong>@shippingMessage</strong></td>
     </tr>
-    <tr class="text-primary" >
+    <tr>
         <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
         <td class="col-sm-2 text-right" ><strong style="font-size: 20px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
     </tr>

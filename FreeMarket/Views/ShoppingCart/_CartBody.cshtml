@@ -72,21 +72,21 @@
             <td data-label="Total:">
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
             </td>
-            <td data-label="Status:">
+            <td data-label="Status:" class="text-center">
                 @if (Model.Cart.Body.OrderDetails[i].CannotDeliver ?? false)
                 {
                     if (User.Identity.IsAuthenticated)
                     {
-                        <span class="glyphicon glyphicon-remove text-warning" data-toggle="tooltip" data-placement="right" title="We cannot deliver this to postal code @Model.Cart.Order.DeliveryAddressPostalCode" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="right" title="We cannot deliver this to postal code @Model.Cart.Order.DeliveryAddressPostalCode" aria-hidden="true"></span>
                     }
                     else
                     {
-                        <span class="glyphicon glyphicon-warning-sign text-warning" data-toggle="tooltip" data-placement="right" title="Item not saved." aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="right" title="Item not saved." aria-hidden="true"></span>
                     }
                 }
                 else
                 {
-                    <span class="glyphicon glyphicon-ok text-success" data-toggle="tooltip" data-placement="right" title="This item is in stock and available for purchase." aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="right" title="This item is in stock and available for purchase." aria-hidden="true"></span>
                 }
             </td>
         </tr>

@@ -27,7 +27,7 @@ else
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span id ="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
         </a>
-        <ul class="dropdown-menu dropdown-cart" role="menu">
+        <ul class="dropdown-menu dropdown-cart well hidden-xs hidden-sm" role="menu">
             @Html.Action("SmallCartBody", "ShoppingCart")
             <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
         </ul>
