@@ -546,7 +546,6 @@
     <Content Include="Views\ShoppingCart\Cart.cshtml" />
     <Content Include="Views\ShoppingCart\_CartBody.cshtml" />
     <Content Include="Views\ShoppingCart\_CartButtons.cshtml" />
-    <Content Include="Views\ShoppingCart\_CartShipping.cshtml" />
     <Content Include="Views\ShoppingCart\_CartTotals.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\_ShowAllProducts.cshtml" />
@@ -572,7 +571,6 @@
     <Content Include="Views\ShoppingCart\_CartModifyDeliveryDetails.cshtml" />
     <Content Include="Views\ShoppingCart\_SmallCartBody.cshtml" />
     <Content Include="Views\ShoppingCart\CheckoutDeliveryDetails.cshtml" />
-    <Content Include="Views\Product\IndexPlain.cshtml" />
     <Content Include="Views\ShoppingCart\ConfirmShoppingCart.cshtml" />
     <Content Include="Views\Account\_SmallLogin.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartialSmall.cshtml" />

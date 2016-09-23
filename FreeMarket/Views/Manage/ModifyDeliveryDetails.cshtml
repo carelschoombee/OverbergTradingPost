@@ -9,7 +9,7 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-<div class="container center_div well well-modal">
+<div id="parent" class="container center_div well well-modal">
 
 @using (Html.BeginForm("ModifyDeliveryDetailsByName", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) 
 {

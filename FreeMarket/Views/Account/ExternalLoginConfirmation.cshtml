@@ -5,7 +5,7 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <h3 class="text-center">Associate your @ViewBag.LoginProvider account.</h3>
 
-<div class="container center_div">
+<div id="parent" class="container center_div">
 
     @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "registerForm" }))
     {

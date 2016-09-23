@@ -8,10 +8,18 @@
 
 <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" type="text/css" />
 
+<style type="text/css">
+    /* Override feedback icon position */
+    .form-horizontal .has-feedback .input-group .form-control-feedback {
+        top: 0;
+        right: -40px;
+    }
+</style>
+
 <h2 class="text-center"><span class="glyphicon glyphicon-lock"></span>@ViewBag.Title</h2>
 <hr />
 
- <div class="container center_div well well-modal">
+ <div id="parent" class="container center_div well well-modal">
 
     @using (Html.BeginForm("UpdateDeliveryDetails", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "saveForm" }))
     {
@@ -21,20 +29,12 @@
 
             @Html.ValidationSummary(true)
 
-            <style type="text/css">
-                /* Override feedback icon position */
-                .form-horizontal .has-feedback .input-group .form-control-feedback {
-                    top: 0;
-                    right: -40px;
-                }
-            </style>
-
             <div class="form-group">
                 <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                 <div class="col-sm-6">
                     <div class="input-group date" id="datetimePicker">
                         @{ Html.EnableClientValidation(false); }
-                        @Html.EditorFor(m => m.prefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control", @style = "width: 275px" } })
+                        @Html.EditorFor(m => m.prefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.prefDeliveryDateTime)
                         @{ Html.EnableClientValidation(true); }
                         <span class="input-group-addon">
@@ -67,6 +67,7 @@
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
         $(".icon-input-btn").each(function () {
             var btnFont = $(this).find(".btn").css("font-size");
@@ -83,7 +84,11 @@
         format: 'DD/MM/YYYY HH:mm',
         daysOfWeekDisabled: [0, 6],
         minDate: moment().add(1, 'days'),
-        maxDate: moment().add(30, 'days')
+        maxDate: moment().add(30, 'days'),
+        widgetPositioning: {
+        horizontal: 'auto',
+        vertical: 'bottom'
+        }
     }
     );
 

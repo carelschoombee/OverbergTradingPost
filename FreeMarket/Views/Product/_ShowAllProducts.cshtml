@@ -3,12 +3,6 @@
 
 @helper ListProduct(int i)
 {
-    @*<div>
-        <div class="col-sm-9">
-            <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
-        </div>
-    </div>*@
-
     <div>
         <table class="table table-responsive well">
             <tr>

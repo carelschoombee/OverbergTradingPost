@@ -190,7 +190,8 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime && model.prefDeliveryDateTime.Value.TimeOfDay < endTime))
+                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime && model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
+                    model.prefDeliveryDateTime > DateTime.Now))
                 {
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 

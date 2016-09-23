@@ -186,8 +186,24 @@
             });
         });
 
-    </script>
+        (function ($) {
+            var $window = $(window),
+                $html = $('#parent');
 
+            function resize() {
+                if ($window.width() > 600) {
+                    return $html.addClass('center_div');
+                }
+
+                $html.removeClass('center_div');
+            }
+
+            $window
+                .resize(resize)
+                .trigger('resize');
+        })(jQuery);
+
+    </script>
 
     @Scripts.Render("~/bundles/bootstrap")
 

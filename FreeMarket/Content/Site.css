@@ -1,4 +1,11 @@
-﻿
+﻿input::-webkit-calendar-picker-indicator{
+    display: none;
+}
+
+input[type="date"]::-webkit-input-placeholder{ 
+    visibility: hidden !important;
+}
+
 h1 {
     color:white;
     background: #5A3F37; /* fallback for old browsers */
@@ -221,24 +228,40 @@ th, td {
 
 @media screen and (max-width: 600px) {
 
-    th {
-        display: none !important;
-        
+    .table-bordered-custom th{
+        display: none !important; 
     }
 
-    table, tbody, tr, td {
+    .table-bordered-custom table{
         display: block;
         text-align: center;
         align-content: center;
     }
 
-    td {
+    .table-bordered-custom tbody{
+        display: block;
+        text-align: center;
+        align-content: center;
+    }
+
+    .table-bordered-custom tr{
+        display: block;
+        text-align: center;
+        align-content: center;
+    }
+
+    .table-bordered-custom td{
+        display: block;
+        text-align: center;
+        align-content: center;
+    }
+    .table-bordered-custom td {
         padding-left: 50%;
         position: relative;
         border: 1px solid #ddd !important;
     }
 
-    td:before {
+    .table-bordered-custom td:before {
         box-sizing: border-box;
         position: absolute;
         content: attr(data-label);
@@ -247,7 +270,7 @@ th, td {
         padding: 2px;
         font-weight: bold;
         width: 50%;
-    }   
+    }
 }
 
 @media (max-width: 1199px) {
