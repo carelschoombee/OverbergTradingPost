@@ -8,7 +8,7 @@
 
 <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" type="text/css" />
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center"><span class="glyphicon glyphicon-lock"></span>@ViewBag.Title</h2>
 <hr />
 
  <div class="container center_div well well-modal">
@@ -33,7 +33,10 @@
                 <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                 <div class="col-sm-6">
                     <div class="input-group date" id="datetimePicker">
+                        @{ Html.EnableClientValidation(false); }
                         @Html.EditorFor(m => m.prefDeliveryDateTime, new { htmlAttributes = new { @class = "form-control", @style = "width: 275px" } })
+                        @Html.ValidationMessageFor(m => m.prefDeliveryDateTime)
+                        @{ Html.EnableClientValidation(true); }
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -53,12 +56,12 @@
                 @Html.Partial("_CartModifyDeliveryDetails", Model)
             </div>
 
-        </div>
+            <div class="center_div">
+                <span class="icon-input-btn"><span class="glyphicon glyphicon-arrow-right"></span> <input type="submit" value="Next" class="btn btn-success btn-sm" /></span>
+                <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Cart", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back to Cart</a></span>
+            </div>
 
-        <div class="center_div">
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-arrow-right"></span> <input type="submit" value="Next" class="btn btn-success btn-sm" /></span>
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Cart", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back to Cart</a></span>
-        </div>
+        </div>  
     }
 
 </div>
@@ -202,13 +205,7 @@
                         }
                     }
                 }
-            }).on('success.form.bv', function (e) {
-                e.preventDefault();
-                $('.modal-backdrop').remove();
-                $('#SaveModal').modal('hide');
-            }).on('error.form.bv', function (e) {
-                e.preventDefault();
-            });
+            })
     });
 
     $("#SelectedAddress").change(function () {

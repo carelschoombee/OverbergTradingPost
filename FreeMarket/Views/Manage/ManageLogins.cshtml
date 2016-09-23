@@ -30,18 +30,18 @@
                     <tbody>
                     @foreach (var account in Model.CurrentLogins)
                     {
+                        if (account.LoginProvider == "Google")
+                        {
                             <tr>
                                 <td>
                                     @account.LoginProvider
 
-                                    @if (account.LoginProvider == "Google")
-                                    {
-                                        <img src="~/Content/Images/google.png" />
-                                    }
-                                    else if (account.LoginProvider == "Facebook")
+                                    <img src="~/Content/Images/google.png" />
+
+                                    @*else if (account.LoginProvider == "Facebook")
                                     {
                                         <img src="~/Content/Images/facebook.png" />
-                                    }
+                                    }*@
                                 </td>
                                 <td>
                                     @if (ViewBag.ShowRemoveButton)
@@ -62,6 +62,7 @@
                                 }
                                 </td>
                             </tr>
+                            }
                         }
                     </tbody>
                 </table>

@@ -17,6 +17,11 @@ namespace FreeMarket.Controllers
             return View();
         }
 
+        public ActionResult IndexPlain()
+        {
+            return View();
+        }
+
         [ChildActionOnly]
         public ActionResult GetAllProducts()
         {

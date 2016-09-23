@@ -10,7 +10,7 @@ namespace FreeMarket.Models
     public class SaveCartViewModel
     {
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
-        public Nullable<System.DateTime> prefDeliveryDateTime { get; set; }
+        public Nullable<DateTime> prefDeliveryDateTime { get; set; }
 
         [DisplayName("Delivery Address")]
         public int SelectedAddress { get; set; }

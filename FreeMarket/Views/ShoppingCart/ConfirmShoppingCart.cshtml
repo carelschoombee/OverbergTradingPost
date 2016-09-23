@@ -1,0 +1,91 @@
+﻿@using FreeMarket.Models
+@model ConfirmOrderViewModel
+
+@{
+    ViewBag.Title = "Secure Checkout - Confirm Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container text-center">
+    <div class="row well well-modal">
+        <div class="col-sm-12">
+            <table class="table table-responsive">
+                <tr>
+                    <td>
+                        @Model.Cart.Order.CustomerName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Model.Cart.Order.CustomerEmail
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Model.Cart.Order.CustomerPrimaryContactPhone
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row well well-modal">
+        <div class="col-sm-12">
+            <table class="table table-responsive">
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Cart.Order.OrderNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(c => Model.Cart.Order.OrderNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Cart.Order.OrderDatePlaced)
+                    </td>
+                    <td>
+                        @string.Format("{0:D}", Model.Cart.Order.OrderDatePlaced)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(c => Model.Cart.Order.OrderStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(c => Model.Cart.Order.OrderStatus)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Model.Cart.Body.OrderDetails.Count() items to be delivered to:</td>
+
+                    <td>
+                        <span style="white-space :pre-line" aria-hidden="true">@Model.Cart.Order.DeliveryAddress</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row well well-modal">
+        <div class="col-sm-12">
+            <table class="table table-condensed table-bordered-custom well">
+                <tr>
+                    <td class="col-sm-2 text-left"><strong>Sub-Total:</strong></td>
+                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Cart.Order.SubTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
+                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Cart.Order.ShippingTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
+                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">@string.Format("{0:C}", Model.Cart.Order.TotalOrderValue)</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

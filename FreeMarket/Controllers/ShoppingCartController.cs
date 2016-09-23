@@ -162,7 +162,8 @@ namespace FreeMarket.Controllers
             return View("Cart", model);
         }
 
-        public ActionResult SaveCartModal()
+        [Authorize]
+        public ActionResult SecureDeliveryDetails()
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
@@ -171,14 +172,7 @@ namespace FreeMarket.Controllers
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_SaveCartModal", model);
-            }
-            else
-            {
-                return View("CheckoutDeliveryDetails", model);
-            }
+            return View("CheckoutDeliveryDetails", model);
         }
 
         [HttpPost]
@@ -223,7 +217,25 @@ namespace FreeMarket.Controllers
 
             model.SetAddressNameOptions(userId, model.SelectedAddress);
 
-            return PartialView("_SaveCartModal", model);
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_SaveCartModal", model);
+            }
+            else
+            {
+                return View("CheckoutDeliveryDetails", model);
+            }
+        }
+
+        [Authorize]
+        public ActionResult ConfirmShoppingCart()
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+
+            ConfirmOrderViewModel model = new ConfirmOrderViewModel { Cart = sessionCart };
+
+            return View("ConfirmShoppingCart", model);
         }
 
         public ActionResult UpdateCart()
@@ -237,6 +249,7 @@ namespace FreeMarket.Controllers
             return View("Cart", model);
         }
 
+        [ChildActionOnly]
         public ActionResult GetAddress(int AddressNumber)
         {
             string toReturn = "";
@@ -259,6 +272,7 @@ namespace FreeMarket.Controllers
             return Content(toReturn);
         }
 
+        [ChildActionOnly]
         public ActionResult GetDeliveryAddress()
         {
             string toReturn = "";
@@ -269,6 +283,7 @@ namespace FreeMarket.Controllers
             return Content(toReturn);
         }
 
+        [ChildActionOnly]
         public ActionResult GetAddressPartial(int id)
         {
             string userId = User.Identity.GetUserId();

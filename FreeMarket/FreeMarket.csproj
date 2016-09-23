@@ -325,6 +325,7 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Order\CartBody.cs" />
+    <Compile Include="Models\Checkout\ConfirmOrderViewModel.cs" />
     <Compile Include="Models\Order\CourierFee.cs" />
     <Compile Include="Models\Order\CourierFeeViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
@@ -405,6 +406,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\animsition.css" />
+    <Content Include="Content\animsition.min.css" />
     <Content Include="Content\Images\background1.jpg" />
     <Content Include="Content\Images\background2.jpg" />
     <Content Include="Content\Images\defaultPictureMedium.png" />
@@ -414,6 +417,8 @@
     <Content Include="Content\Images\background3.jpg" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
+    <Content Include="Scripts\animsition.js" />
+    <Content Include="Scripts\animsition.min.js" />
     <Content Include="Scripts\star-rating.js" />
     <Content Include="Scripts\star-rating.min.js" />
     <Content Include="siteIcon.ico" />
@@ -567,6 +572,10 @@
     <Content Include="Views\ShoppingCart\_CartModifyDeliveryDetails.cshtml" />
     <Content Include="Views\ShoppingCart\_SmallCartBody.cshtml" />
     <Content Include="Views\ShoppingCart\CheckoutDeliveryDetails.cshtml" />
+    <Content Include="Views\Product\IndexPlain.cshtml" />
+    <Content Include="Views\ShoppingCart\ConfirmShoppingCart.cshtml" />
+    <Content Include="Views\Account\_SmallLogin.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartialSmall.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,45 @@
+﻿@using FreeMarket.Models
+@using Microsoft.Owin.Security
+@model LoginViewModel
+
+<li>
+    Use a local account to log in
+</li>
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <li>
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.Email, new { @style = "Width: 125px" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                </td>
+                <td>
+                    @Html.PasswordFor(m => m.Password, new { @style = "Width: 125px" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                     <input type="submit" value="Log in" class="btn btn-primary" />
+                </td>
+            </tr>
+        </table>
+    </li>
+}
+
+<section id="socialLoginFormSmall">
+    @Html.Partial("_ExternalLoginsListPartialSmall", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+</section>
+

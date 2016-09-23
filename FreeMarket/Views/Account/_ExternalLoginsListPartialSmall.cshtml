@@ -1,0 +1,27 @@
+﻿@model FreeMarket.Models.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
+
+@{
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    if (loginProviders.Count() == 0) {
+
+    }
+    else {
+        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
+            @Html.AntiForgeryToken()
+            <div id="socialLoginListSmall" class="text-center">
+                <p>
+                    @foreach (AuthenticationDescription p in loginProviders)
+                    {
+                        if (p.AuthenticationType == "Google")
+                        {
+                            <div>Or, login with your google account.</div>
+                            
+                            <input type="image" src="~/Content/Images/google.png" alt="Submit"  id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" width="48" height="48">
+                        }
+                    }
+                </p>
+            </div>
+        }
+    }
+}

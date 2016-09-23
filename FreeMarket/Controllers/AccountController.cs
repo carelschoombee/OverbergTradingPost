@@ -69,6 +69,13 @@ namespace FreeMarket.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ActionResult LoginSmall(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return PartialView("_SmallLogin");
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]
