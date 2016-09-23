@@ -1,6 +1,30 @@
 ﻿
 h1 {
     color:white;
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+h2 {
+    color:white;
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+h3 {
+    color:white;
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+h4 {
+    color:white;
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 hr {
@@ -133,6 +157,12 @@ a:hover {
     background: linear-gradient(to left, #76b852 , #8DC26F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
+.well-modal {
+    background: #5A3F37; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
 .modal-content {
     background: #5A3F37; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
@@ -192,14 +222,9 @@ th, td {
 
 @media screen and (max-width: 600px) {
 
-    .table-bordered-custom-no-collapse td {
-        border: 2px solid white !important;
-        font-size: 12px !important;
-        font-weight: 600;
-    }
-
     th {
         display: none !important;
+        
     }
 
     table, tbody, tr, td {

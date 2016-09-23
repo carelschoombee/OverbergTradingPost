@@ -13,7 +13,7 @@
 @if (Model.Items != null && Model.Items.Count > 0)
 {
     <table class="table table-responsive">
-        <tr class="well">
+        <tr>
             <th class="col-sm-1">
                 Order #
             </th>
@@ -25,9 +25,6 @@
             </th>
             <th class="col-sm-1">
                 Status
-            </th>
-            <th class="col-sm-1">
-                Delivery Address
             </th>
             <th class="col-sm-1">
                 Shipping
@@ -42,7 +39,7 @@
 
         @foreach(GetOrderHistory_Result detail in Model.Items)
         {
-            <tr>
+            <tr class="well well-modal">
                 <td>
                     @Html.ActionLink(detail.OrderNumber.ToString(),"ViewOrder", new { orderNumber = detail.OrderNumber })
                 </td>
@@ -54,9 +51,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(m => detail.OrderItemStatus)
-                </td>
-                <td>
-                    <span style="white-space :pre-line" aria-hidden="true">@detail.DeliveryAddress</span>
                 </td>
                 <td>
                     @string.Format("{0:C}", detail.CourierFee)

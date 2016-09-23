@@ -11,7 +11,7 @@
 <hr />
 
 <div class="container center_div text-center">
-    <div class="row">
+    <div class="row well well-modal">
         <div class="col-sm-12">
             <table class="table table-responsive">
                 <tr>
@@ -32,9 +32,9 @@
             </table>
         </div>
     </div>
-    <div class="row">
+    <div class="row well well-modal">
         <div class="col-sm-12">
-            <table class="table table-responsive well">
+            <table class="table table-responsive">
                 <tr>
                     <td>
                         @Html.LabelFor(c => Model.Order.OrderNumber)
@@ -59,27 +59,18 @@
                         @Html.DisplayFor(c => Model.Order.OrderStatus)
                     </td>
                 </tr>
+                <tr>
+                    <td>@Model.NumberOfItemsInOrder items to be delivered to:</td>
 
-
-                @if (Model.DeliveryDetails != null)
-                {
-                    foreach (GetNumberOfItemsPerAddress_Result address in Model.DeliveryDetails)
-                    {
-                        <tr>
-                            <td>@address.NumberOfItems items to be delivered to:</td>
-
-                            <td>
-                                <span style="white-space :pre-line" aria-hidden="true">@address.DeliveryAddress</span>
-                            </td>
-                        </tr>
-                    }
-                }
-
+                    <td>
+                        <span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row well well-modal">
         <div class="col-sm-12">
             <table class="table table-condensed table-bordered-custom well">
                 <tr>
@@ -90,7 +81,7 @@
                     <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
                     <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Order.ShippingTotal)</strong></td>
                 </tr>
-                <tr class="text-primary">
+                <tr>
                     <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
                     <td class="col-sm-2 text-left"><strong style="font-size: 20px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
                 </tr>

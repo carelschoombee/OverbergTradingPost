@@ -1,5 +1,6 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -170,7 +171,14 @@ namespace FreeMarket.Controllers
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
-            return PartialView("_SaveCartModal", model);
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_SaveCartModal", model);
+            }
+            else
+            {
+                return View("CheckoutDeliveryDetails", model);
+            }
         }
 
         [HttpPost]
@@ -182,8 +190,19 @@ namespace FreeMarket.Controllers
             ShoppingCart sessionCart = GetCartFromSession(userId);
             FreeMarketObject result;
 
+            TimeSpan startTime = new TimeSpan(8, 0, 0);
+            TimeSpan endTime = new TimeSpan(17, 0, 0);
+
+
             if (ModelState.IsValid)
             {
+                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime && model.prefDeliveryDateTime.Value.TimeOfDay < endTime))
+                {
+                    model.SetAddressNameOptions(userId, model.SelectedAddress);
+
+                    return PartialView("_SaveCartModal", model);
+                }
+
                 sessionCart.UpdateDeliveryDetails(model);
                 result = CustomerAddress.AddOrUpdateAddress(model, userId);
 
@@ -192,7 +211,14 @@ namespace FreeMarket.Controllers
                 else
                     TempData["errorMessage"] = result.Message;
 
-                return JavaScript("window.location.reload();");
+                if (Request.IsAjaxRequest())
+                {
+                    return JavaScript("window.location.reload();");
+                }
+                else
+                {
+                    return RedirectToAction("ConfirmShoppingCart", "ShoppingCart");
+                }
             }
 
             model.SetAddressNameOptions(userId, model.SelectedAddress);

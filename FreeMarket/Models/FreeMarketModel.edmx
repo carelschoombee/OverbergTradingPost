@@ -684,7 +684,7 @@
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetNumberOfItemsPerAddress" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="GetNumberOfItemsInOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="GetOrderHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1168,9 +1168,6 @@
           <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
           <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetNumberOfItemsPerAddress" ReturnType="Collection(FreeMarketModel.GetNumberOfItemsPerAddress_Result)">
-          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="CourierReviews" EntityType="FreeMarketModel.CourierReview" />
           <EntitySet Name="ProductReviews" EntityType="FreeMarketModel.ProductReview" />
           <AssociationSet Name="FK_CourierReview_Courier" Association="FreeMarketModel.FK_CourierReview_Courier">
@@ -1222,6 +1219,9 @@
             <End Role="Courier" EntitySet="Couriers" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
+          <FunctionImport Name="GetNumberOfItemsInOrder" ReturnType="Collection(Int32)">
+            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1550,10 +1550,6 @@
           <Property Type="Boolean" Name="Activated" Nullable="false" />
           <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="10" />
-        </ComplexType>
-        <ComplexType Name="GetNumberOfItemsPerAddress_Result">
-          <Property Type="String" Name="DeliveryAddress" Nullable="true" MaxLength="1200" />
-          <Property Type="Int32" Name="NumberOfItems" Nullable="true" />
         </ComplexType>
         <EntityType Name="CourierReview">
           <Key>
@@ -2203,14 +2199,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetNumberOfItemsPerAddress" FunctionName="FreeMarketModel.Store.GetNumberOfItemsPerAddress">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetNumberOfItemsPerAddress_Result">
-                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
-                <ScalarProperty Name="NumberOfItems" ColumnName="NumberOfItems" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="CourierReviews">
             <EntityTypeMapping TypeName="FreeMarketModel.CourierReview">
               <MappingFragment StoreEntitySet="CourierReview">
@@ -2420,6 +2408,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetNumberOfItemsInOrder" FunctionName="FreeMarketModel.Store.GetNumberOfItemsInOrder" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

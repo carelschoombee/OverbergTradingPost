@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
@@ -8,8 +7,7 @@ namespace FreeMarket.Models
 {
     public class OrderHeaderViewModel
     {
-        public List<GetNumberOfItemsPerAddress_Result> DeliveryDetails { get; set; }
-
+        public int NumberOfItemsInOrder { get; set; }
         public OrderHeader Order { get; set; }
 
         public static OrderHeaderViewModel GetOrder(int orderNumber, string userId)
@@ -39,11 +37,9 @@ namespace FreeMarket.Models
                 model.Order.CustomerEmail = user.Email;
                 model.Order.CustomerPrimaryContactPhone = user.PhoneNumber;
 
-                model.DeliveryDetails = db.GetNumberOfItemsPerAddress(model.Order.OrderNumber)
-                    .ToList();
-
-                if (model.DeliveryDetails == null || model.DeliveryDetails.Count == 0)
-                    model.DeliveryDetails = new List<GetNumberOfItemsPerAddress_Result>();
+                model.NumberOfItemsInOrder = db.GetNumberOfItemsInOrder(model.Order.OrderNumber)
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
             }
 
             return model;
