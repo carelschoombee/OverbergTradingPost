@@ -118,7 +118,7 @@ a:hover {
     /*border: 1px solid #ddd !important;*/
     border: 2px solid !important;
     border-color: white;
-    font-size: 12px !important;
+    font-size: 18px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 600;
 }
@@ -126,7 +126,7 @@ a:hover {
 .table-bordered-custom th {
     /*border: 1px solid #ddd !important;*/
     border: 2px solid white !important;
-    font-size: 14px !important;
+    font-size: 20px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 700;
 }

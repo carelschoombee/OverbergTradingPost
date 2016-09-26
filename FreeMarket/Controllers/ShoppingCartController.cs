@@ -81,6 +81,15 @@ namespace FreeMarket.Controllers
                 bool anonymousUser = (userId == null);
                 ShoppingCart cart = GetCartFromSession(userId);
 
+
+                // CheckQuantity
+                if (!(PerformStockCheck(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity) >= viewModel.Quantity))
+                {
+                    viewModel.SetInstances(viewModel.ProductNumber, viewModel.SupplierNumber);
+
+                    return PartialView("_CourierSelectionModal", viewModel);
+                }
+
                 FreeMarketObject result;
                 result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity);
 
@@ -317,6 +326,31 @@ namespace FreeMarket.Controllers
             SaveCartViewModel model = new SaveCartViewModel { Address = address, AddressName = address.AddressName };
 
             return PartialView("_CartModifyDeliveryDetails", model);
+        }
+
+        public int PerformStockCheck(int id, int supplierNumber, int quantityRequested)
+        {
+            int currentStock = 0;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                currentStock = db.ProductCustodians
+                    .Where(c => c.ProductNumber == id && c.SupplierNumber == supplierNumber && c.QuantityOnHand >= quantityRequested)
+                    .Select(c => c.QuantityOnHand)
+                    .FirstOrDefault();
+            }
+
+            return currentStock;
+        }
+
+        public ActionResult CheckStock(int id, int supplierNumber, int quantityRequested)
+        {
+            int currentStock = PerformStockCheck(id, supplierNumber, quantityRequested);
+
+            List<string> response = new List<string>();
+            response.Add(currentStock.ToString());
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SmallCartBody()

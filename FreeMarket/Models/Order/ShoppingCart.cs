@@ -529,30 +529,33 @@ namespace FreeMarket.Models
                         CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)
                             .FirstOrDefault();
 
-                        // Set the order detail
-                        detail.CourierNumber = result.CourierNumber;
-                        detail.CustodianNumber = result.CustodianNumber;
-
-                        // Determine noCharge
-                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
+                        if (result != null)
                         {
-                            // Do not compare against itself
-                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
-                                continue;
+                            // Set the order detail
+                            detail.CourierNumber = result.CourierNumber;
+                            detail.CustodianNumber = result.CustodianNumber;
 
-                            if (detail.CustodianNumber == temp.CustodianNumber &&
-                                detail.CourierNumber == temp.CourierNumber &&
-                                temp.CourierFee > 0)
+                            // Determine noCharge
+                            foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
                             {
-                                noCharge = true;
-                                break;
-                            }
-                        }
+                                // Do not compare against itself
+                                if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
+                                    continue;
 
-                        if (noCharge)
-                            detail.CourierFee = 0;
-                        else
-                            detail.CourierFee = result.CourierFee;
+                                if (detail.CustodianNumber == temp.CustodianNumber &&
+                                    detail.CourierNumber == temp.CourierNumber &&
+                                    temp.CourierFee > 0)
+                                {
+                                    noCharge = true;
+                                    break;
+                                }
+                            }
+
+                            if (noCharge)
+                                detail.CourierFee = 0;
+                            else
+                                detail.CourierFee = result.CourierFee;
+                        }
                     }
 
                     if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")

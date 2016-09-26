@@ -415,6 +415,8 @@
     <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\background3.jpg" />
+    <Content Include="Content\Images\logoBig.jpg" />
+    <Content Include="Content\Images\ramLogo.jpg" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
     <Content Include="Scripts\animsition.js" />

@@ -16,6 +16,7 @@ namespace FreeMarket.Models
         public Product ProductInstance { get; set; }
         public Supplier SupplierInstance { get; set; }
         public int ReviewPageSize { get; set; }
+        public int CustodianQuantityOnHand { get; set; }
 
         public void InitializeDefault()
         {
@@ -29,7 +30,6 @@ namespace FreeMarket.Models
             InitializeDefault();
         }
 
-        //Anonymous User
         public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, int orderNumber = 0)
         {
             // Validate
