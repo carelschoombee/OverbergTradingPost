@@ -87,12 +87,14 @@
                         <div>
                             @Html.HiddenFor(model => Model.ProductNumber)
                             @Html.HiddenFor(model => Model.SupplierNumber)
+                            @Html.HiddenFor(model => Model.CustodianQuantityOnHand)
+                            @Html.HiddenFor(model => Model.CustodianNumber)
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" onclick="getStock()">Add to Cart</button>
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                 </div>
             }
@@ -127,42 +129,37 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    function getStock () {
-        setLimit();
-
-        $('#editForm').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                Quantity: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The field is required.'
-                        },
-                        between: {
-                            min: 1,
-                            max: 1000,
-                            message: 'Please choose a quantity that is greater than 0 and less than 1000.'
-                        },
-                        callback: {
-                            message: "There is not enough stock. Please try a smaller quantity.",
-                            callback: function (value, validator) {
-                                return value <= @Model.CustodianQuantityOnHand;
-                            }
+    $('#editForm').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            Quantity: {
+                validators: {
+                    notEmpty: {
+                        message: 'The field is required.'
+                    },
+                    between: {
+                        min: 1,
+                        max: 1000,
+                        message: 'Please choose a quantity that is greater than 0 and less than 1000.'
+                    },
+                    callback: {
+                        message: "There is not enough stock. Please try a smaller quantity or choose a different product.",
+                        callback: function (value, validator) {
+                            return value <= @Model.CustodianQuantityOnHand;
                         }
                     }
                 }
             }
-        }).on('success.form.bv', function (e) {
-            e.preventDefault();
-            $('.modal-backdrop').remove();
-            $('#EditModal').modal('hide');
-        }).on('error.form.bv', function (e) {
-            e.preventDefault();
-            setLimit();           
-        });
-    }
+        }
+    }).on('success.form.bv', function (e) {
+        e.preventDefault();
+        $('.modal-backdrop').remove();
+        $('#EditModal').modal('hide');
+    }).on('error.form.bv', function (e) {
+        e.preventDefault();        
+    });
 </script>

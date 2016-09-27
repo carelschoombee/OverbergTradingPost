@@ -4,9 +4,6 @@
 <table class="table table-bordered-custom table-condensed table-responsive">
     <tr>
         <th class="col-sm-1">
-            Remove
-        </th>
-        <th class="col-sm-1">
             Image
         </th>
         <th class="col-sm-3">
@@ -27,19 +24,14 @@
         <th class="col-sm-1">
             Status
         </th>
+        <th class="col-sm-1">
+            Remove
+        </th>
     </tr>
 
     @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
     {
         <tr class="well">
-            <td data-label="Remove:" class="text-center">
-                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
-                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
-                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
-                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
-                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
-                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
-            </td>
             <td>
                 <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
             </td>
@@ -66,8 +58,15 @@
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
             </td>
             <td class="text-center" data-label="Qty:">
-                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
-                @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
+                    @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
+                }
+                else
+                {
+                    @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
+                }
             </td>
             <td data-label="Total:">
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
@@ -88,6 +87,14 @@
                 {
                     <span class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="right" title="This item is in stock and available for purchase." aria-hidden="true"></span>
                 }
+            </td>
+            <td data-label="Remove:" class="text-center">
+                @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
+                @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
             </td>
         </tr>
     }

@@ -34,7 +34,7 @@ else
         <div class="row">
             <div class="col-sm-12">
                 <div class="col-sm-12">
-                    @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "cartForm" }))
                     {
                         @Html.AntiForgeryToken();
 
@@ -50,7 +50,7 @@ else
         <div class="row">
             <div class="col-sm-12">
                 <div class="col-sm-9">
-                    @*@Html.Action("CartShipping", Model.Cart.Body)*@
+                    
                 </div>
                 <div class="col-sm-3">
                     @Html.Action("CartTotals", Model.Cart)
@@ -59,8 +59,6 @@ else
         </div>
     </div>
 }
-
-@Html.Partial("_CartContainer")
 
 <script type="text/javascript">
     $(function () {

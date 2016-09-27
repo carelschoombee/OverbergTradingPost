@@ -17,6 +17,7 @@ namespace FreeMarket.Models
         public Supplier SupplierInstance { get; set; }
         public int ReviewPageSize { get; set; }
         public int CustodianQuantityOnHand { get; set; }
+        public int CustodianNumber { get; set; }
 
         public void InitializeDefault()
         {
@@ -51,10 +52,52 @@ namespace FreeMarket.Models
                 ProductNumber = productNumber;
                 SupplierNumber = supplierNumber;
 
-                if (orderNumber != 0)
-                    CannotDeliver = ShoppingCart.CalculateDeliverableStatus(productNumber, supplierNumber, quantityRequested, orderNumber);
-                else
+                if (orderNumber == 0)
+                {
                     CannotDeliver = null;
+
+                    ProductCustodian custodian = ShoppingCart.GetStockAvailable(productNumber, supplierNumber, quantityRequested);
+                    if (custodian != null)
+                    {
+                        CannotDeliver = false;
+                        CustodianQuantityOnHand = custodian.QuantityOnHand;
+                        CustodianNumber = custodian.CustodianNumber;
+                    }
+                    else
+                    {
+                        CannotDeliver = true;
+                        CustodianQuantityOnHand = 0;
+                        CustodianNumber = 0;
+                    }
+                }
+                else
+                {
+                    CalculateDeliveryFee_Result result = ShoppingCart.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, orderNumber);
+                    if (result == null)
+                    {
+                        CannotDeliver = true;
+                        ProductCustodian custodian = ShoppingCart.GetStockAvailable(productNumber, supplierNumber, quantityRequested);
+                        if (custodian != null)
+                        {
+                            CannotDeliver = false;
+                            CustodianQuantityOnHand = custodian.QuantityOnHand;
+                            CustodianNumber = custodian.CustodianNumber;
+                        }
+                        else
+                        {
+                            CannotDeliver = true;
+                            CustodianQuantityOnHand = 0;
+                            CustodianNumber = 0;
+                        }
+                    }
+                    else
+                    {
+                        CannotDeliver = false;
+                        CustodianQuantityOnHand = (int)result.QuantityOnHand;
+                        CustodianNumber = (int)result.CustodianNumber;
+                    }
+
+                }
 
                 SetInstances(productNumber, supplierNumber);
                 ReviewPageSize = 4;

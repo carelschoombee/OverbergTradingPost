@@ -19,12 +19,14 @@ namespace FreeMarket.Models
         public string Name { get; set; }
 
         [Required]
+        [RegularExpression(@"^[0-9\s\(\)-]+$", ErrorMessage = "Entered phone format is not valid.")]
         [Display(Name = "Primary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
         [Phone]
         public string PrimaryPhoneNumber { get; set; }
 
         [Required]
+        [RegularExpression(@"^[0-9\s\(\)-]+$", ErrorMessage = "Entered phone format is not valid.")]
         [Display(Name = "Confirm Primary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
 
@@ -32,6 +34,7 @@ namespace FreeMarket.Models
         public string ConfirmPrimaryPhoneNumber { get; set; }
 
         [Required]
+        [RegularExpression(@"^[0-9\s\(\)-]+$", ErrorMessage = "Entered phone format is not valid.")]
         [Display(Name = "Secondary Phone Number")]
         [StringLength(50, ErrorMessage = "The Phone Number field may not contain more than 50 characters.")]
         [Phone]
@@ -64,7 +67,6 @@ namespace FreeMarket.Models
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine1 { get; set; }
 
-        [Required]
         [Display(Name = "Address Line 2")]
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine2 { get; set; }
@@ -77,7 +79,6 @@ namespace FreeMarket.Models
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine4 { get; set; }
 
-        [Required]
         [Display(Name = "Suburb")]
         [StringLength(50, ErrorMessage = "The Suburb field may not contain more than 50 characters.")]
         public string AddressSuburb { get; set; }

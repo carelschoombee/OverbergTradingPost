@@ -52,7 +52,7 @@ namespace FreeMarket.Models
             }
         }
 
-        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity)
+        public FreeMarketObject AddItemFromProduct(int productNumber, int supplierNumber, int quantity, int custodianNumber)
         {
             // Validate
             if (productNumber == 0 || supplierNumber == 0)
@@ -123,7 +123,7 @@ namespace FreeMarket.Models
                             CourierFee = courierFeeCost, // Will always be zero at this point.
                             CourierNumber = courierNumber, // May be a default value at this point.
                             CourierName = null,
-                            CustodianNumber = 0,
+                            CustodianNumber = custodianNumber,
                             OrderItemStatus = status,
                             OrderItemValue = productInfo.PricePerUnit * quantity,
                             OrderNumber = Order.OrderNumber,
@@ -197,7 +197,7 @@ namespace FreeMarket.Models
 
                     if (item != null)
                     {
-                        Debug.Write(string.Format("Removing Item {0} from database...", itemNumber));
+                        FreeStock(item.ProductNumber, item.SupplierNumber, (int)item.CustodianNumber, item.Quantity);
 
                         db.OrderDetails.Remove(item);
                         db.SaveChanges();
@@ -245,6 +245,20 @@ namespace FreeMarket.Models
             return result;
         }
 
+        public void SetQuantityOnHand(List<OrderDetail> items)
+        {
+            foreach (OrderDetail item in items)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    item.QuantityOnHand = db.ProductCustodians
+                        .Where(c => c.ProductNumber == item.ProductNumber && c.SupplierNumber == item.SupplierNumber && c.CustodianNumber == item.CustodianNumber)
+                        .Select(c => c.QuantityOnHand)
+                        .FirstOrDefault();
+                }
+            }
+        }
+
         public FreeMarketObject UpdateQuantities(List<OrderDetail> changedItems)
         {
             FreeMarketObject res = new FreeMarketObject();
@@ -252,6 +266,8 @@ namespace FreeMarket.Models
 
             if (changedItems != null && changedItems.Count > 0)
             {
+                SetQuantityOnHand(changedItems);
+
                 foreach (OrderDetail detail in changedItems)
                 {
                     temp = Body.OrderDetails
@@ -260,6 +276,28 @@ namespace FreeMarket.Models
 
                     if (temp != null)
                     {
+                        int oldQuantity = temp.Quantity;
+
+                        if (oldQuantity > detail.Quantity)
+                        {
+                            int difference = oldQuantity - detail.Quantity;
+
+                            FreeStock(detail.ProductNumber, detail.SupplierNumber, (int)detail.CustodianNumber, difference);
+                        }
+                        else
+                        {
+                            int difference = detail.Quantity - oldQuantity;
+
+                            if (detail.QuantityOnHand > difference)
+                                ReserveStock(detail.ProductNumber, detail.SupplierNumber, (int)detail.CustodianNumber, difference);
+                            else
+                            {
+                                res.Result = FreeMarketResult.Failure;
+                                res.Message += string.Format("\n {0} is out of stock. Please try a smaller quantity.", detail.ProductDescription);
+                                continue;
+                            }
+                        }
+
                         Body.OrderDetails
                         .Where(c => c.ProductNumber == detail.ProductNumber && c.SupplierNumber == detail.SupplierNumber)
                         .FirstOrDefault()
@@ -271,7 +309,6 @@ namespace FreeMarket.Models
             // Keep the OrderTotal in sync
             UpdateTotal();
 
-            res.Result = FreeMarketResult.Success;
             return res;
         }
 
@@ -354,10 +391,19 @@ namespace FreeMarket.Models
 
                 if (newItems != null && newItems.Count > 0)
                 {
-                    // Do not include the item being compared
                     foreach (OrderDetail tempB in newItems)
                     {
                         tempB.OrderNumber = Order.OrderNumber;
+                        CalculateDeliveryFee_Result result = CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, tempB.OrderNumber);
+                        if (result == null)
+                        {
+                            tempB.CustodianNumber = null;
+                        }
+                        else
+                        {
+                            tempB.CustodianNumber = result.CustodianNumber;
+                            ReserveStock(tempB.ProductNumber, tempB.SupplierNumber, (int)tempB.CustodianNumber, tempB.Quantity);
+                        }
                         db.OrderDetails.Add(tempB);
                     }
 
@@ -393,7 +439,7 @@ namespace FreeMarket.Models
                 }
             }
 
-            UpdateAllCouriers();
+            UpdateAllDeliverableStatus();
             UpdateTotal();
             Save();
         }
@@ -455,7 +501,11 @@ namespace FreeMarket.Models
 
         public void UpdateAllCouriers()
         {
-            foreach (OrderDetail item in Body.OrderDetails)
+            List<OrderDetail> items = Body.OrderDetails
+                .Where(c => c.CannotDeliver == false)
+                .ToList();
+
+            foreach (OrderDetail item in items)
             {
                 UpdateCourier(item);
             }
@@ -467,6 +517,7 @@ namespace FreeMarket.Models
         {
             Order.UpdateDeliveryDetails(model);
             UpdateAllDeliverableStatus();
+            UpdateAllCouriers();
             Save();
         }
 
@@ -487,11 +538,30 @@ namespace FreeMarket.Models
             }
         }
 
+        public static CalculateDeliveryFee_Result CalculateDeliveryFee(int productNumber, int supplierNumber, int quantity, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, orderNumber)
+                    .FirstOrDefault();
+            }
+        }
+
         public void UpdateAllDeliverableStatus()
         {
             foreach (OrderDetail detail in Body.OrderDetails)
             {
                 detail.CannotDeliver = ShoppingCart.CalculateDeliverableStatus(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber);
+            }
+        }
+
+        public static ProductCustodian GetStockAvailable(int productNumber, int supplierNumber, int quantity)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.ProductCustodians
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.QuantityOnHand >= quantity)
+                    .FirstOrDefault();
             }
         }
 
@@ -613,6 +683,59 @@ namespace FreeMarket.Models
             else
             {
                 Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
+        }
+
+        public FreeMarketResult ReserveStock(int productNumber, int supplierNumber, int custodianNumber, int quantityRequested)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductCustodian custodian = db.ProductCustodians.Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.CustodianNumber == custodianNumber)
+                    .FirstOrDefault();
+
+                if (custodian == null)
+                    return FreeMarketResult.Failure;
+
+                if (custodian.QuantityOnHand >= quantityRequested)
+                {
+                    if (custodian.StockReservedForOrders == null)
+                        custodian.StockReservedForOrders = 0;
+
+                    custodian.QuantityOnHand -= quantityRequested;
+                    custodian.StockReservedForOrders += quantityRequested;
+
+                    db.Entry(custodian).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    return FreeMarketResult.Success;
+                }
+                else
+                {
+                    return FreeMarketResult.Failure;
+                }
+            }
+        }
+
+        public FreeMarketResult FreeStock(int productNumber, int supplierNumber, int custodianNumber, int quantityRequested)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductCustodian custodian = db.ProductCustodians.Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.CustodianNumber == custodianNumber)
+                    .FirstOrDefault();
+
+                if (custodian == null)
+                    return FreeMarketResult.Failure;
+
+                if (custodian.StockReservedForOrders == null)
+                    custodian.StockReservedForOrders = 0;
+
+                custodian.QuantityOnHand += quantityRequested;
+                custodian.StockReservedForOrders -= quantityRequested;
+
+                db.Entry(custodian).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return FreeMarketResult.Success;
             }
         }
 

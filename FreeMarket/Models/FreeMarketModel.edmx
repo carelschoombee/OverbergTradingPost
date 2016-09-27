@@ -114,10 +114,10 @@
           <Property Name="CustomerNumber" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AddressLine1" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="AddressLine2" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="AddressLine2" Type="nvarchar" MaxLength="250" />
           <Property Name="AddressLine3" Type="nvarchar" MaxLength="250" />
           <Property Name="AddressLine4" Type="nvarchar" MaxLength="250" />
-          <Property Name="AddressSuburb" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddressSuburb" Type="nvarchar" MaxLength="50" />
           <Property Name="AddressCity" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AddressPostalCode" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -311,6 +311,7 @@
           <Property Name="SupplierNumber" Type="int" Nullable="false" />
           <Property Name="CustodianNumber" Type="int" Nullable="false" />
           <Property Name="QuantityOnHand" Type="int" Nullable="false" />
+          <Property Name="StockReservedForOrders" Type="int" />
           <Property Name="DateLastIncreasedBySupplier" Type="datetime" />
           <Property Name="AmountLastIncreasedBySupplier" Type="int" />
         </EntityType>
@@ -1013,6 +1014,7 @@
           <NavigationProperty Name="Custodian" Relationship="FreeMarketModel.FK_ProductCustodian_Custodian" FromRole="ProductCustodian" ToRole="Custodian" />
           <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_ProductCustodian_Supplier" FromRole="ProductCustodian" ToRole="Supplier" />
+          <Property Name="StockReservedForOrders" Type="Int32" />
         </EntityType>
         <EntityType Name="ProductPicture">
           <Key>
@@ -1220,7 +1222,7 @@
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <FunctionImport Name="GetNumberOfItemsInOrder" ReturnType="Collection(Int32)">
-            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1395,10 +1397,10 @@
           <Property Name="CustomerNumber" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="AddressName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine2" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="AddressLine3" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="AddressLine4" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="AddressSuburb" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressSuburb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AddressCity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AddressPostalCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
@@ -2005,6 +2007,7 @@
           <EntitySetMapping Name="ProductCustodians">
             <EntityTypeMapping TypeName="FreeMarketModel.ProductCustodian">
               <MappingFragment StoreEntitySet="ProductCustodian">
+                <ScalarProperty Name="StockReservedForOrders" ColumnName="StockReservedForOrders" />
                 <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
                 <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
                 <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />

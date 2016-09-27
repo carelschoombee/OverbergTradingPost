@@ -83,7 +83,7 @@ namespace FreeMarket.Controllers
 
 
                 // CheckQuantity
-                if (!(PerformStockCheck(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity) >= viewModel.Quantity))
+                if (viewModel.CustodianQuantityOnHand < viewModel.Quantity)
                 {
                     viewModel.SetInstances(viewModel.ProductNumber, viewModel.SupplierNumber);
 
@@ -91,7 +91,7 @@ namespace FreeMarket.Controllers
                 }
 
                 FreeMarketObject result;
-                result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity);
+                result = cart.AddItemFromProduct(viewModel.ProductNumber, viewModel.SupplierNumber, viewModel.Quantity, viewModel.CustodianNumber);
 
                 if (result.Result == FreeMarketResult.Success)
                     // New item added
@@ -157,10 +157,10 @@ namespace FreeMarket.Controllers
                 sessionCart.Save();
                 sessionCart.UpdateSelectedProperty(cart, true);
 
-                if (sessionCart.Body.OrderDetails.Any(c => c.ItemNumber == 0))
-                    TempData["message"] = "We cannot deliver all the items to your default address.";
-                else
+                if (string.IsNullOrEmpty(resultQuantity.Message))
                     TempData["message"] = "Cart has been updated.";
+                else
+                    TempData["errorMessage"] = resultQuantity.Message;
 
                 model = new ShoppingCartViewModel { Cart = sessionCart, ReturnUrl = returnUrl };
                 return RedirectToAction("Cart", "ShoppingCart");

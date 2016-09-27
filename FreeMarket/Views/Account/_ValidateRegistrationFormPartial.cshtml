@@ -69,6 +69,10 @@
                                     message: 'Max string length is 50.',
                                     max: 50
                                 },
+                                regexp: {
+                                    message: 'Please enter a valid phone number',
+                                    regexp: /^[0-9\-\s\(\)]+$/
+                                },
                                 identical: {
                                     field: 'ConfirmPrimaryPhoneNumber',
                                     message: 'The phone number must match its confirmation field'
@@ -84,6 +88,10 @@
                                     message: 'Max string length is 50.',
                                     max: 50
                                 },
+                                regexp: {
+                                    message: 'Please enter a valid phone number',
+                                    regexp: /^[0-9\-\s\(\)]+$/
+                                },
                                 identical: {
                                     field: 'PrimaryPhoneNumber',
                                     message: 'The phone numbers must match'
@@ -98,7 +106,11 @@
                                 stringLength: {
                                     message: 'Max string length is 50.',
                                     max: 50
-                                }
+                                },
+                                regexp: {
+                                    message: 'Please enter a valid phone number',
+                                    regexp: /^[0-9\-\s\(\)]+$/
+                                },
                             }
                         },
                         PreferredCommunicationMethod: {
@@ -128,9 +140,6 @@
                         },
                         AddressLine2: {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max string length is 250.',
                                     max: 250
@@ -155,9 +164,6 @@
                         },
                         AddressSuburb: {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max string length is 50.',
                                     max: 50

@@ -209,7 +209,6 @@ namespace FreeMarket.Models
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine1 { get; set; }
 
-        [Required]
         [Display(Name = "Address Line 2")]
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine2 { get; set; }
@@ -222,7 +221,6 @@ namespace FreeMarket.Models
         [StringLength(250, ErrorMessage = "The Address field may not contain more than 250 characters.")]
         public string AddressLine4 { get; set; }
 
-        [Required]
         [Display(Name = "Suburb")]
         [StringLength(50, ErrorMessage = "The Suburb field may not contain more than 50 characters.")]
         public string AddressSuburb { get; set; }
