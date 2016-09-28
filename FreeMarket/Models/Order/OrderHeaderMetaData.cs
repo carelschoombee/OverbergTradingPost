@@ -133,5 +133,8 @@ namespace FreeMarket.Models
 
         [DisplayName("Order Status")]
         public string OrderStatus { get; set; }
+
+        [DisplayName("Order Number")]
+        public int OrderNumber { get; set; }
     }
 }

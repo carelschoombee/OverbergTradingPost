@@ -129,6 +129,14 @@ a:hover {
     font-size: 20px !important;
     /*font-family: 'Arial' !important;*/
     font-weight: 700;
+    text-align:center;
+}
+
+.table-bordered-totals td {
+    border: 2px solid !important;
+    border-color: white;
+    font-size: 18px !important;
+    font-weight: 600;
 }
 
 .table-striped td {
@@ -167,6 +175,12 @@ a:hover {
     background: #5A3F37; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #5A3F37 , #2C7744); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #5A3F37 , #2C7744); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.well-banner {
+    background: #52c234; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #52c234 , #061700); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #52c234 , #061700); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .modal-content {

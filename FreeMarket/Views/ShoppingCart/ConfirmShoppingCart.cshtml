@@ -7,60 +7,102 @@
 }
 
 <br />
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center"><span class="glyphicon glyphicon-lock"></span>@ViewBag.Title</h2>
 <hr />
 
 <div class="container text-center">
+
     <div class="row well well-modal">
-        <div class="col-sm-12">
-            <table class="table table-responsive">
+        <div class="col-sm-6">
+            <table class="table table-bordered-custom table-responsive" >
                 <tr>
-                    <td>
+                    <td colspan="2">
+                        Customer Details
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
                         @Model.Cart.Order.CustomerName
                     </td>
-                </tr>
-                <tr>
                     <td>
-                        @Model.Cart.Order.CustomerEmail
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Cart.Order.CustomerEmail
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        @Model.Cart.Order.CustomerPrimaryContactPhone
+                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Cart.Order.CustomerPrimaryContactPhone
                     </td>
                 </tr>
             </table>
+            @if (Model.Couriers != null && Model.Couriers.Count > 0)
+            {
+                if (Model.Couriers.Count > 1)
+                {
+                    <div>Please note that we have assigned more than one courier to deliver your order.</div>
+                }
+
+                foreach (Courier courier in Model.Couriers)
+                {
+                    <table class="table table-bordered-custom table-responsive">
+                        <tr>
+                            <td colspan="2">
+                                Courier/Shipping Information
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Courier Name:
+                            </th>
+                            <td>
+                                @courier.CourierName
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Email Address:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@courier.MainContactEmailAddress
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Contact Number:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;@courier.MainContactTelephoneNumber
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+
         </div>
-    </div>
-    <div class="row well well-modal">
-        <div class="col-sm-12">
-            <table class="table table-responsive">
+        <div class="col-sm-6">
+            <table class="table table-bordered-custom table-responsive">
                 <tr>
-                    <td>
-                        @Html.LabelFor(c => Model.Cart.Order.OrderNumber)
+                    <td colspan="2">
+                        Order Information
                     </td>
-                    <td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.LabelFor(c => Model.Cart.Order.OrderNumber)
+                    </th>
+                    <td data-label="Order:">
                         @Html.DisplayFor(c => Model.Cart.Order.OrderNumber)
                     </td>
                 </tr>
                 <tr>
+                    <th>
+                        Preferred Delivery Date
+                    </th>
                     <td>
-                        @Html.LabelFor(c => Model.Cart.Order.OrderDatePlaced)
-                    </td>
-                    <td>
-                        @string.Format("{0:D}", Model.Cart.Order.OrderDatePlaced)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(c => Model.Cart.Order.OrderStatus)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(c => Model.Cart.Order.OrderStatus)
+                        @string.Format("{0:f}", Model.Cart.Order.DeliveryDate)
                     </td>
                 </tr>
                 <tr>
-                    <td>@Model.Cart.Body.OrderDetails.Count() items to be delivered to:</td>
+                    <th>Delivery Address <span class="glyphicon glyphicon-home"></span>&nbsp; </th>
 
                     <td>
                         <span style="white-space :pre-line" aria-hidden="true">@Model.Cart.Order.DeliveryAddress</span>
@@ -69,21 +111,50 @@
             </table>
         </div>
     </div>
-
-    <div class="row well well-modal">
-        <div class="col-sm-12">
-            <table class="table table-condensed table-bordered-custom well">
+    <div class="row">
+        <div class="col-sm-6">
+            <div>To proceed to payment please review and acknowledge our terms and conditions: <input type="checkbox" /></div>
+            <div>Please allow one business day for processing of orders.</div>
+            @Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://secure.paygate.co.za/payweb3/initiate.trans" })
+            {
+                @Html.Hidden("PAYGATE_ID", Model.Integration.PayGate_ID)
+                @Html.Hidden("REFERENCE", Model.Integration.Reference)
+                @Html.Hidden("AMOUNT", Model.Integration.Amount)
+                @Html.Hidden("CURRENCY", Model.Integration.Currency)
+                @Html.Hidden("RETURN_URL", Model.Integration.Currency)
+                @Html.Hidden("TRANSACTION_DATE", Model.Integration.TransactionDate)
+                @Html.Hidden("LOCALE", Model.Integration.Locale)
+                @Html.Hidden("COUNTRY", Model.Integration.Country)
+                @Html.Hidden("EMAIL", Model.Integration.Email)
+                @Html.Hidden("PAY_METHOD", Model.Integration.PayMethod)
+                @Html.Hidden("PAY_METHOD_DETAIL", Model.Integration.PayMethodDetail)
+                @Html.Hidden("NOTIFY_URL", Model.Integration.NotifyUrl)
+                @Html.Hidden("USER1", Model.Integration.User1)
+                @Html.Hidden("USER2", Model.Integration.User2)
+                @Html.Hidden("USER3", Model.Integration.User3)
+                @Html.Hidden("VAULT", Model.Integration.Vault)
+                @Html.Hidden("VAULT_ID", Model.Integration.VaultId)
+                @Html.Hidden("CHECKSUM", Model.Integration.CheckSum)
+            }
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-bordered-totals well well-banner">
                 <tr>
-                    <td class="col-sm-2 text-left"><strong>Sub-Total:</strong></td>
-                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Cart.Order.SubTotal)</strong></td>
+                    <td colspan="2">
+                        Total Costs
+                    </td>
                 </tr>
                 <tr>
-                    <td class="col-sm-2 text-left"><strong>Shipping:</strong></td>
-                    <td class="col-sm-2 text-left"><strong>@string.Format("{0:C}", Model.Cart.Order.ShippingTotal)</strong></td>
+                    <td class="col-sm-2 text-right"><strong>Sub-Total:</strong></td>
+                    <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Cart.Order.SubTotal)</strong></td>
                 </tr>
                 <tr>
-                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">Total:</strong></td>
-                    <td class="col-sm-2 text-left"><strong style="font-size: 20px">@string.Format("{0:C}", Model.Cart.Order.TotalOrderValue)</strong></td>
+                    <td class="col-sm-2 text-right"><strong>Shipping:</strong></td>
+                    <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Cart.Order.ShippingTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-right"><strong style="font-size: 24px">Total:</strong></td>
+                    <td class="col-sm-2 text-right"><strong style="font-size: 24px">@string.Format("{0:C}", Model.Cart.Order.TotalOrderValue)</strong></td>
                 </tr>
             </table>
         </div>

@@ -243,7 +243,7 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
-            ConfirmOrderViewModel model = new ConfirmOrderViewModel { Cart = sessionCart };
+            ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
 
             return View("ConfirmShoppingCart", model);
         }
@@ -259,7 +259,7 @@ namespace FreeMarket.Controllers
             return View("Cart", model);
         }
 
-        [ChildActionOnly]
+        [HttpPost]
         public ActionResult GetAddress(int AddressNumber)
         {
             string toReturn = "";
@@ -282,7 +282,7 @@ namespace FreeMarket.Controllers
             return Content(toReturn);
         }
 
-        [ChildActionOnly]
+        [HttpPost]
         public ActionResult GetDeliveryAddress()
         {
             string toReturn = "";
@@ -293,7 +293,7 @@ namespace FreeMarket.Controllers
             return Content(toReturn);
         }
 
-        [ChildActionOnly]
+        [HttpPost]
         public ActionResult GetAddressPartial(int id)
         {
             string userId = User.Identity.GetUserId();

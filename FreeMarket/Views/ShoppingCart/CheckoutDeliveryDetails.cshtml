@@ -151,9 +151,6 @@
                     },
                     'Address.AddressLine2': {
                         validators: {
-                            notEmpty: {
-                                message: 'The field is required.'
-                            },
                             stringLength: {
                                 message: 'Max string length is 250.',
                                 max: 250
@@ -178,9 +175,6 @@
                     },
                     'Address.AddressSuburb': {
                         validators: {
-                            notEmpty: {
-                                message: 'The field is required.'
-                            },
                             stringLength: {
                                 message: 'Max string length is 50.',
                                 max: 50
@@ -216,7 +210,7 @@
     $("#SelectedAddress").change(function () {
         $.ajax({
             url: '@Url.Action("GetAddressPartial", "ShoppingCart")',
-            type: 'GET',
+            type: 'POST',
             data: {
                 id: $("#SelectedAddress").val(),
             }
