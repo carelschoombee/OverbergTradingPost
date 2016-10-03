@@ -217,6 +217,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="FreeMarketDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FreeMarketDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -234,6 +239,7 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Checkout\CheckOutViewModel.cs" />
+    <Compile Include="Models\Checkout\PaymentGatewayIntegration.cs" />
     <Compile Include="Models\CourierCustodianDistance.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -254,6 +260,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderHistory_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetOrderReport_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProduct_Result.cs">
@@ -338,6 +347,7 @@
     <Compile Include="Models\Order\ShoppingCart.cs" />
     <Compile Include="Models\Order\ShoppingCartViewModel.cs" />
     <Compile Include="Models\Order\SupplierMetaData.cs" />
+    <Compile Include="Models\Order\ThankYouViewModel.cs" />
     <Compile Include="Models\PaymentGatewayMessage.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -482,6 +492,17 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="FreeMarketDataSet.xsc">
+      <DependentUpon>FreeMarketDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="FreeMarketDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>FreeMarketDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="FreeMarketDataSet.xss">
+      <DependentUpon>FreeMarketDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FreeMarketDeploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -576,6 +597,7 @@
     <Content Include="Views\ShoppingCart\ConfirmShoppingCart.cshtml" />
     <Content Include="Views\Account\_SmallLogin.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartialSmall.cshtml" />
+    <Content Include="Views\ShoppingCart\ThankYou.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -593,7 +615,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Quote.rdlc" />
+    <EmbeddedResource Include="Reports\Report1.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

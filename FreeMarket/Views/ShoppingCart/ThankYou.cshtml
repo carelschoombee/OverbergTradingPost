@@ -1,0 +1,26 @@
+﻿@using FreeMarket.Model
+@model ThankYouViewModel
+@{
+    ViewBag.Title = "Thank You";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h1 class="text-center">Order Complete</h1>
+<hr />
+
+<div id="parent" class="well well-modal">
+    @if(Model.TransactionStatus == 1)
+    {
+        <div style="font-size:18px">
+            Your order has been approved and submitted. An email has been sent to you with the order details.
+        </div>
+    }
+    else
+    {
+        <div style="font-size:18px" class="text-danger">
+            We cannot process your order.
+        </div>
+    }
+</div>
+

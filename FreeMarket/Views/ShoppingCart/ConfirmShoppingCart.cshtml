@@ -114,27 +114,12 @@
     <div class="row">
         <div class="col-sm-6">
             <div>To proceed to payment please review and acknowledge our terms and conditions: <input type="checkbox" /></div>
-            <div>Please allow one business day for processing of orders.</div>
-            @Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://secure.paygate.co.za/payweb3/initiate.trans" })
+            <div>Delivery may take up to five business days.</div>
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://secure.paygate.co.za/payweb3/process.trans" }))
             {
-                @Html.Hidden("PAYGATE_ID", Model.Integration.PayGate_ID)
-                @Html.Hidden("REFERENCE", Model.Integration.Reference)
-                @Html.Hidden("AMOUNT", Model.Integration.Amount)
-                @Html.Hidden("CURRENCY", Model.Integration.Currency)
-                @Html.Hidden("RETURN_URL", Model.Integration.Currency)
-                @Html.Hidden("TRANSACTION_DATE", Model.Integration.TransactionDate)
-                @Html.Hidden("LOCALE", Model.Integration.Locale)
-                @Html.Hidden("COUNTRY", Model.Integration.Country)
-                @Html.Hidden("EMAIL", Model.Integration.Email)
-                @Html.Hidden("PAY_METHOD", Model.Integration.PayMethod)
-                @Html.Hidden("PAY_METHOD_DETAIL", Model.Integration.PayMethodDetail)
-                @Html.Hidden("NOTIFY_URL", Model.Integration.NotifyUrl)
-                @Html.Hidden("USER1", Model.Integration.User1)
-                @Html.Hidden("USER2", Model.Integration.User2)
-                @Html.Hidden("USER3", Model.Integration.User3)
-                @Html.Hidden("VAULT", Model.Integration.Vault)
-                @Html.Hidden("VAULT_ID", Model.Integration.VaultId)
-                @Html.Hidden("CHECKSUM", Model.Integration.CheckSum)
+                @Html.HiddenFor(model => Model.Pay_Request_Id)
+                @Html.HiddenFor(model => Model.Checksum)
+                <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <input type="submit" value="Confirm and Pay" class="btn btn-success btn-sm" /></span>
             }
         </div>
         <div class="col-sm-6">

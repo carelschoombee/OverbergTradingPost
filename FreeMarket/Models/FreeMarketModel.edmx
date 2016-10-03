@@ -253,6 +253,7 @@
           <Property Name="Risk_Indicator" Type="char" MaxLength="2" />
           <Property Name="Pay_Vault_Data1" Type="varchar" MaxLength="50" />
           <Property Name="Pay_Vault_Data2" Type="varchar" MaxLength="50" />
+          <Property Name="Checksum_Passed" Type="bit" />
         </EntityType>
         <EntityType Name="PaymentGatewayParameter">
           <Key>
@@ -265,6 +266,7 @@
           <Property Name="Return_Url" Type="varchar" MaxLength="255" />
           <Property Name="Notify_Url" Type="varchar" MaxLength="255" />
           <Property Name="RedirectToSecurePayment_Url" Type="varchar" MaxLength="255" />
+          <Property Name="Key" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="PaymentGatewayPaymentMethods">
           <Key>
@@ -691,6 +693,9 @@
         <Function Name="GetOrderHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="GetOrderReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrderNumber" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductNumber" Type="int" Mode="In" />
           <Parameter Name="SupplierNumber" Type="int" Mode="In" />
@@ -965,6 +970,7 @@
           <Property Name="Risk_Indicator" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
           <Property Name="Pay_Vault_Data1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Pay_Vault_Data2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Checksum_Passed" Type="Boolean" />
         </EntityType>
         <EntityType Name="PaymentGatewayParameter">
           <Key>
@@ -977,6 +983,7 @@
           <Property Name="Return_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Notify_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="RedirectToSecurePayment_Url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Key" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="PaymentGatewayPaymentMethod">
           <Key>
@@ -1223,6 +1230,9 @@
           </AssociationSet>
           <FunctionImport Name="GetNumberOfItemsInOrder" ReturnType="Collection(Int32)">
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetOrderReport" ReturnType="Collection(FreeMarketModel.GetOrderReport_Result)">
+            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1817,6 +1827,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetOrderReport_Result">
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="ItemNumber" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1937,6 +1952,7 @@
           <EntitySetMapping Name="PaymentGatewayMessages">
             <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayMessage">
               <MappingFragment StoreEntitySet="PaymentGatewayMessage">
+                <ScalarProperty Name="Checksum_Passed" ColumnName="Checksum_Passed" />
                 <ScalarProperty Name="MessageNumber" ColumnName="MessageNumber" />
                 <ScalarProperty Name="Reference" ColumnName="Reference" />
                 <ScalarProperty Name="Pay_Request_ID" ColumnName="Pay_Request_ID" />
@@ -1970,6 +1986,7 @@
           <EntitySetMapping Name="PaymentGatewayParameters">
             <EntityTypeMapping TypeName="FreeMarketModel.PaymentGatewayParameter">
               <MappingFragment StoreEntitySet="PaymentGatewayParameter">
+                <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="PaymentGatewayNumber" ColumnName="PaymentGatewayNumber" />
                 <ScalarProperty Name="PaymentGatewayName" ColumnName="PaymentGatewayName" />
                 <ScalarProperty Name="PaymentGatewayID" ColumnName="PaymentGatewayID" />
@@ -2412,6 +2429,15 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetNumberOfItemsInOrder" FunctionName="FreeMarketModel.Store.GetNumberOfItemsInOrder" />
+          <FunctionImportMapping FunctionImportName="GetOrderReport" FunctionName="FreeMarketModel.Store.GetOrderReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetOrderReport_Result">
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

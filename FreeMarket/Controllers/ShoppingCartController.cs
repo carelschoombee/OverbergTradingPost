@@ -1,8 +1,16 @@
-﻿using FreeMarket.Models;
+﻿using FreeMarket.Infrastructure;
+using FreeMarket.Model;
+using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
@@ -42,6 +50,16 @@ namespace FreeMarket.Controllers
             ShoppingCart cart = GetCartFromSession(userId);
             ShoppingCartViewModel model = new ShoppingCartViewModel();
             model = new ShoppingCartViewModel() { Cart = cart, ReturnUrl = Url.Action("Index", "Product") };
+
+            MemoryStream orderSummary = GetOrderReport(cart.Order.OrderNumber);
+
+            EmailService email = new EmailService();
+            IdentityMessage iMessage = new IdentityMessage();
+            iMessage.Destination = "carelschoombee@gmail.com";
+            iMessage.Body = "test";
+            iMessage.Subject = String.Format("test");
+
+            email.SendAsync(iMessage, orderSummary);
 
             return View(model);
         }
@@ -243,10 +261,155 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
-            ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
+            string reference = sessionCart.Order.OrderNumber.ToString();
+            decimal amount = sessionCart.Order.TotalOrderValue * 100;
+            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
-            return View("ConfirmShoppingCart", model);
+            PaymentGatewayIntegration payObject = new PaymentGatewayIntegration(reference, amount, user.Email);
+
+            payObject.Execute();
+
+            if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
+            {
+                ConfirmOrderViewModel model = new ConfirmOrderViewModel
+                {
+                    Cart = sessionCart,
+                    Pay_Request_Id = payObject.Pay_Request_Id,
+                    Checksum = payObject.Checksum
+                };
+
+                return View("ConfirmShoppingCart", model);
+            }
+            else
+            {
+                ConfirmOrderViewModel model = new ConfirmOrderViewModel
+                {
+                    Cart = sessionCart,
+                };
+
+                return View("ConfirmShoppingCart", model);
+            }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Notify(int PAYGATE_ID, string PAY_REQUEST_ID, string REFERENCE, int TRANSACTION_STATUS,
+            int RESULT_CODE, string AUTH_CODE, string CURRENCY, decimal AMOUNT, string RESULT_DESC, int TRANSACTION_ID,
+            string RISK_INDICATOR, string PAY_METHOD, string PAY_METHOD_DETAIL, string USER1, string USER2, string USER3,
+            string VAULT_ID, string PAYVAULT_DATA_1, string PAYVAULT_DATA_2, string CHECKSUM)
+        {
+            bool checksumPassed = false;
+
+            PaymentGatewayParameter param = PaymentGatewayIntegration.GetParameters();
+
+            string check = PAYGATE_ID.ToString() + PAY_REQUEST_ID + REFERENCE + TRANSACTION_STATUS.ToString()
+                + RESULT_CODE.ToString() + AUTH_CODE + CURRENCY + AMOUNT + RESULT_DESC + TRANSACTION_ID
+                + RISK_INDICATOR + PAY_METHOD + PAY_METHOD_DETAIL + USER1 + USER2 + USER3
+                + VAULT_ID + PAYVAULT_DATA_1 + PAYVAULT_DATA_2 + param.Key;
+
+            string checksum = Extensions.CreateMD5(check);
+
+            if (CHECKSUM == checksum)
+                checksumPassed = true;
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (!string.IsNullOrEmpty(REFERENCE))
+                {
+                    int orderNumber = int.Parse(REFERENCE);
+
+                    ShoppingCart.SetOrderConfirmed(orderNumber);
+
+                    PaymentGatewayMessage message = new PaymentGatewayMessage
+                    {
+                        PayGate_ID = PAYGATE_ID,
+                        Pay_Request_ID = PAY_REQUEST_ID,
+                        Reference = REFERENCE,
+                        TransactionStatus = TRANSACTION_STATUS,
+                        Result_Code = RESULT_CODE,
+                        Auth_Code = AUTH_CODE,
+                        Currency = CURRENCY,
+                        Amount = AMOUNT,
+                        Result_Desc = RESULT_DESC,
+                        Transaction_ID = TRANSACTION_ID,
+                        Risk_Indicator = RISK_INDICATOR,
+                        Pay_Method = PAY_METHOD,
+                        Pay_Method_Detail = PAY_METHOD_DETAIL,
+                        User1 = USER1,
+                        User2 = USER2,
+                        User3 = USER3,
+                        Vault_ID = VAULT_ID,
+                        Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                        Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                        Checksum_Passed = checksumPassed
+                    };
+
+                    db.PaymentGatewayMessages.Add(message);
+                    db.SaveChanges();
+
+                    string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
+                        .FirstOrDefault()
+                        .CustomerNumber;
+
+                    if (!string.IsNullOrEmpty(customerNumber))
+                    {
+                        MemoryStream orderSummary = GetOrderReport(orderNumber);
+
+                        EmailService email = new EmailService();
+                        IdentityMessage iMessage = new IdentityMessage();
+                        iMessage.Destination = "carelschoombee@gmail.com";
+                        iMessage.Body = "test";
+                        iMessage.Subject = String.Format("test");
+
+                        await email.SendAsync(iMessage, orderSummary);
+                    }
+                }
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        public ActionResult TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM)
+        {
+            ThankYouViewModel model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
+            return View("ThankYou", model);
+        }
+
+        public MemoryStream GetOrderReport(int orderNumber)
+        {
+            byte[] quotebytes;
+
+            ReportViewer ReportViewer1 = new ReportViewer();
+
+            ReportViewer1.Reset();
+            ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
+            ReportViewer1.LocalReport.DataSources.Clear();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ReportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DataSet1", db.GetOrderReport(orderNumber)));
+            }
+
+            byte[] streamBytes = null;
+            string mimeType = "";
+            string encoding = "";
+            string filenameExtension = "";
+            string[] streamids = null;
+            Warning[] warnings = null;
+
+            try
+            {
+                streamBytes = ReportViewer1.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+            }
+            catch (Exception e)
+            {
+
+            }
+            quotebytes = streamBytes;
+
+            MemoryStream stream = new MemoryStream(quotebytes);
+
+            return stream;
+        }
+
 
         public ActionResult UpdateCart()
         {
@@ -282,7 +445,6 @@ namespace FreeMarket.Controllers
             return Content(toReturn);
         }
 
-        [HttpPost]
         public ActionResult GetDeliveryAddress()
         {
             string toReturn = "";

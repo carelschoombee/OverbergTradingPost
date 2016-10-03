@@ -750,7 +750,16 @@ namespace FreeMarket.Models
             Order = new OrderHeader();
         }
 
-        public void Checkout() { }
+        public static void SetOrderConfirmed(int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                order.OrderStatus = "Confirmed";
+                db.Entry(order).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
 
         public override string ToString()
         {

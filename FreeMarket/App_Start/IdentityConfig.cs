@@ -36,6 +36,30 @@ namespace FreeMarket
             request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/google.png"));
             request.AddFile("attachment", Path.Combine("files", HttpContext.Current.Server.MapPath("~/Content/Images/google.png")));
             request.Method = Method.POST;
+
+            client.Execute(request);
+
+            return Task.FromResult(0);
+        }
+
+        public Task SendAsync(IdentityMessage message, MemoryStream attachment)
+        {
+            RestClient client = new RestClient();
+            client.BaseUrl = new Uri("https://api.mailgun.net/v3");
+            client.Authenticator =
+                   new HttpBasicAuthenticator("api",
+                                              ConfigurationManager.AppSettings["emailClientApiKey"]);
+            RestRequest request = new RestRequest();
+            request.AddParameter("domain",
+                                ConfigurationManager.AppSettings["emailDomainKey"], ParameterType.UrlSegment);
+            request.Resource = "{domain}/messages";
+            request.AddParameter("from", "Mailgun Sandbox <postmaster@sandboxe19f3641c58f4a56b87fbaf89339f2fb.mailgun.org>");
+            request.AddParameter("to", message.Destination);
+            request.AddParameter("subject", message.Subject);
+            string body = EmailService.Borderify(message.Body);
+            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Free Market platform</td></tr><tr><td><br /><img src=\"cid:google.png\"></td></tr></table><body></html>", body));
+            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/google.png"));
+            request.AddFile("attachment", attachment.ToArray(), "Order.pdf");
             request.Method = Method.POST;
 
             client.Execute(request);

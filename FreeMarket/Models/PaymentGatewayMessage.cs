@@ -41,5 +41,6 @@ namespace FreeMarket.Models
         public string Risk_Indicator { get; set; }
         public string Pay_Vault_Data1 { get; set; }
         public string Pay_Vault_Data2 { get; set; }
+        public Nullable<bool> Checksum_Passed { get; set; }
     }
 }

@@ -21,5 +21,6 @@ namespace FreeMarket.Models
         public string Return_Url { get; set; }
         public string Notify_Url { get; set; }
         public string RedirectToSecurePayment_Url { get; set; }
+        public string Key { get; set; }
     }
 }
