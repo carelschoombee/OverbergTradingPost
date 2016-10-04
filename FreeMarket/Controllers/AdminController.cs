@@ -1,4 +1,7 @@
 ﻿using FreeMarket.Models;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -26,6 +29,38 @@ namespace FreeMarket.Controllers
             Product product = Product.GetNewProduct();
 
             return View(product);
+        }
+
+        public ActionResult DownloadReport()
+        {
+            DownloadReportViewModel model = new DownloadReportViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DownloadReportProcess(DownloadReportViewModel model)
+        {
+            MemoryStream stream = new MemoryStream();
+
+            if (ModelState.IsValid)
+            {
+                Dictionary<MemoryStream, string> obj = OrderHeader.GetOrderReport(model.OrderNumber);
+
+                if (obj == null || obj.Count == 0)
+                {
+                    TempData["errorMessage"] = "An error occurred during report creation.";
+                    return View("DownloadReport", model);
+                }
+
+                return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", model.OrderNumber));
+            }
+            else
+            {
+                TempData["errorMessage"] = "That report does not exist";
+                return View("DownloadReport", model);
+            }
         }
 
         [HttpPost]

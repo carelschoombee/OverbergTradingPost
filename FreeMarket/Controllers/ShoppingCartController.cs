@@ -1,10 +1,8 @@
-﻿using FreeMarket.FreeMarketDataSetTableAdapters;
-using FreeMarket.Infrastructure;
+﻿using FreeMarket.Infrastructure;
 using FreeMarket.Model;
 using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,16 +49,6 @@ namespace FreeMarket.Controllers
             ShoppingCart cart = GetCartFromSession(userId);
             ShoppingCartViewModel model = new ShoppingCartViewModel();
             model = new ShoppingCartViewModel() { Cart = cart, ReturnUrl = Url.Action("Index", "Product") };
-
-            MemoryStream orderSummary = GetOrderReport(cart.Order.OrderNumber);
-
-            EmailService email = new EmailService();
-            IdentityMessage iMessage = new IdentityMessage();
-            iMessage.Destination = "carelschoombee@gmail.com";
-            iMessage.Body = "test";
-            iMessage.Subject = String.Format("test");
-
-            email.SendAsync(iMessage, orderSummary);
 
             return View(model);
         }
@@ -352,15 +340,21 @@ namespace FreeMarket.Controllers
 
                     if (!string.IsNullOrEmpty(customerNumber))
                     {
-                        MemoryStream orderSummary = GetOrderReport(orderNumber);
+                        ApplicationUser user = System.Web.HttpContext
+                            .Current
+                            .GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(customerNumber);
+
+                        Dictionary<MemoryStream, string> orderSummary = OrderHeader.GetOrderReport(orderNumber);
 
                         EmailService email = new EmailService();
                         IdentityMessage iMessage = new IdentityMessage();
-                        iMessage.Destination = "carelschoombee@gmail.com";
-                        iMessage.Body = "test";
-                        iMessage.Subject = String.Format("test");
+                        iMessage.Destination = user.Email;
+                        iMessage.Body = string.Format("<div>Good day {0}</div><br/><br/><div>Please find attached your order. You will need a program such as Acrobat Reader to open it.</div><br/><br/><div>We trust that you will find the product and delivery are up to your standards.</div><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>Johan Schoombee: 083 680 8780 or 028 435 7791</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", user.Name);
+                        iMessage.Subject = String.Format("Schoombee and Son Order");
 
-                        await email.SendAsync(iMessage, orderSummary);
+                        await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
                     }
                 }
             }
@@ -373,99 +367,6 @@ namespace FreeMarket.Controllers
             ThankYouViewModel model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
             return View("ThankYou", model);
         }
-
-        public MemoryStream GetOrderReport(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                //for avoiding "Failed to enable constraints. One or more rows contain values violating non-null, unique, or foreign-key constraints." error
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber); //You might customize your data at this step i.e. applying a filter
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
-
-                // Add the new report datasource to the report.
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return stream;
-        }
-
-        public void Report(string id)
-        {
-            try
-            {
-
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                //for avoiding "Failed to enable constraints. One or more rows contain values violating non-null, unique, or foreign-key constraints." error
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, 1); //You might customize your data at this step i.e. applying a filter
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
-
-                // Add the new report datasource to the report.
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                int x = 0;
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
 
         public ActionResult UpdateCart()
         {

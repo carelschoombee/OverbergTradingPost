@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using FreeMarket.FreeMarketDataSetTableAdapters;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Reporting.WebForms;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -109,6 +113,54 @@ namespace FreeMarket.Models
                 db.Entry(this).State = EntityState.Modified;
                 db.SaveChanges();
             }
+        }
+
+        public static Dictionary<MemoryStream, string> GetOrderReport(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report1.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
         }
 
         public override string ToString()

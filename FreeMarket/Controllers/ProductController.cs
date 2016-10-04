@@ -53,7 +53,7 @@ namespace FreeMarket.Controllers
                        .FirstOrDefault();
 
                     if (product != null)
-                        toReturn = string.Format("{0} {1}", product.Weight, product.Size);
+                        toReturn = string.Format("{0} {1}", product.Weight, "KG");
                 }
             }
 

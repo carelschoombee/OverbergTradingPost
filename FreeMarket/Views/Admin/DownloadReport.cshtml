@@ -1,0 +1,34 @@
+﻿@using FreeMarket.Models
+@model DownloadReportViewModel
+
+@{
+    ViewBag.Title = "Download Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Download Reports</h2>
+<hr />
+
+<div id="parent" class="container center_div">
+
+
+        @using (Html.BeginForm("DownloadReportProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.OrderNumber, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.EditorFor(m => m.OrderNumber, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Download" />
+                </div>
+            </div>
+        }
+
+</div>
