@@ -217,6 +217,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="FreeMarketDataSet.cs">
+      <DependentUpon>FreeMarketDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="FreeMarketDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

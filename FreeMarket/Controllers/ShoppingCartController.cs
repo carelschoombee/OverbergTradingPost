@@ -1,4 +1,5 @@
-﻿using FreeMarket.Infrastructure;
+﻿using FreeMarket.FreeMarketDataSetTableAdapters;
+using FreeMarket.Infrastructure;
 using FreeMarket.Model;
 using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
@@ -375,39 +376,94 @@ namespace FreeMarket.Controllers
 
         public MemoryStream GetOrderReport(int orderNumber)
         {
-            byte[] quotebytes;
-
-            ReportViewer ReportViewer1 = new ReportViewer();
-
-            ReportViewer1.Reset();
-            ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
-            ReportViewer1.LocalReport.DataSources.Clear();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                ReportViewer1.LocalReport.DataSources.Add(new ReportDataSource("DataSet1", db.GetOrderReport(orderNumber)));
-            }
-
-            byte[] streamBytes = null;
-            string mimeType = "";
-            string encoding = "";
-            string filenameExtension = "";
-            string[] streamids = null;
-            Warning[] warnings = null;
+            MemoryStream stream = new MemoryStream();
 
             try
             {
-                streamBytes = ReportViewer1.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                //for avoiding "Failed to enable constraints. One or more rows contain values violating non-null, unique, or foreign-key constraints." error
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber); //You might customize your data at this step i.e. applying a filter
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
+
+                // Add the new report datasource to the report.
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
             }
             catch (Exception e)
             {
 
             }
-            quotebytes = streamBytes;
-
-            MemoryStream stream = new MemoryStream(quotebytes);
 
             return stream;
+        }
+
+        public void Report(string id)
+        {
+            try
+            {
+
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                //for avoiding "Failed to enable constraints. One or more rows contain values violating non-null, unique, or foreign-key constraints." error
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, 1); //You might customize your data at this step i.e. applying a filter
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = Server.MapPath("~/Reports/Report1.rdlc");
+
+                // Add the new report datasource to the report.
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                int x = 0;
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
 
