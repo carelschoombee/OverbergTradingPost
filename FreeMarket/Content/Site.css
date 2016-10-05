@@ -455,3 +455,8 @@ th, td {
 .dropdown-login {
   text-align: left;
 }
+
+a.freemarket-link { color: white }
+/*a.freemarket-link:active { color: #666666 }
+a.freemarket-link:link { color: #999999 }
+a.freemarket-link:visited { color: #CCCCCC }*/

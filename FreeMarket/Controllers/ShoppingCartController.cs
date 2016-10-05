@@ -5,7 +5,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -334,27 +333,16 @@ namespace FreeMarket.Controllers
                     db.PaymentGatewayMessages.Add(message);
                     db.SaveChanges();
 
-                    string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
+                    if (RESULT_CODE == 1)
+                    {
+                        string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
                         .FirstOrDefault()
                         .CustomerNumber;
 
-                    if (!string.IsNullOrEmpty(customerNumber))
-                    {
-                        ApplicationUser user = System.Web.HttpContext
-                            .Current
-                            .GetOwinContext()
-                            .GetUserManager<ApplicationUserManager>()
-                            .FindById(customerNumber);
-
-                        Dictionary<MemoryStream, string> orderSummary = OrderHeader.GetOrderReport(orderNumber);
-
-                        EmailService email = new EmailService();
-                        IdentityMessage iMessage = new IdentityMessage();
-                        iMessage.Destination = user.Email;
-                        iMessage.Body = string.Format("<div>Good day {0}</div><br/><br/><div>Please find attached your order. You will need a program such as Acrobat Reader to open it.</div><br/><br/><div>We trust that you will find the product and delivery are up to your standards.</div><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>Johan Schoombee: 083 680 8780 or 028 435 7791</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", user.Name);
-                        iMessage.Subject = String.Format("Schoombee and Son Order");
-
-                        await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
+                        if (!string.IsNullOrEmpty(customerNumber))
+                        {
+                            OrderHeader.SendConfirmationEmail(customerNumber, orderNumber);
+                        }
                     }
                 }
             }

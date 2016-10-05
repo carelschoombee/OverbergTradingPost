@@ -397,6 +397,10 @@
     <Compile Include="Models\SupplierLocation.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Suppliers\SuppliersCollection.cs" />
+    <Compile Include="Models\Support.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SystemAction.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -430,6 +434,7 @@
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\background3.jpg" />
     <Content Include="Content\Images\logoBig.jpg" />
+    <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
@@ -603,6 +608,11 @@
     <Content Include="Views\Account\_ExternalLoginsListPartialSmall.cshtml" />
     <Content Include="Views\ShoppingCart\ThankYou.cshtml" />
     <Content Include="Views\Admin\DownloadReport.cshtml" />
+    <Content Include="Views\Admin\SuppliersIndex.cshtml" />
+    <Content Include="Views\Admin\EditSupplier.cshtml" />
+    <Content Include="Views\Admin\_SupplierPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateSupplierPartial.cshtml" />
+    <Content Include="Views\Admin\CreateSupplier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

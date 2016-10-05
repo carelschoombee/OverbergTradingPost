@@ -1,0 +1,129 @@
+﻿@using FreeMarket.Models
+@model Product
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#supplierForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'SupplierName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'MainContactName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'MainContactTelephoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'MainContactCellphoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'MainContactEmailAddress': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBankName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBranchName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBranchCode': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'BankingDetailsAccountNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'BankingDetailsAccountType': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

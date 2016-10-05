@@ -59,6 +59,7 @@ namespace FreeMarket.Models
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<Support> Supports { get; set; }
     
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {

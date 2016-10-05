@@ -163,6 +163,110 @@ namespace FreeMarket.Models
             return outCollection;
         }
 
+        public static Dictionary<MemoryStream, string> GetDeliveryInstructions(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
+        }
+
+        public async static void SendConfirmationEmail(string customerNumber, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ApplicationUser user = System.Web.HttpContext
+                            .Current
+                            .GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(customerNumber);
+
+                Dictionary<MemoryStream, string> orderSummary = GetOrderReport(orderNumber);
+                Dictionary<MemoryStream, string> orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+
+                EmailService email = new EmailService();
+
+                IdentityMessage iMessage = new IdentityMessage();
+                iMessage.Destination = user.Email;
+                //iMessage.Body = string.Format("<div>Good day {0}</div><br/><br/><div>Please find attached your order. You will need a program such as Acrobat Reader to open it.</div><br/><br/><div>We trust that you will find the product and delivery are up to your standards.</div><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>{1}: {2} or {3}. You may email us at {4}. Please do not reply to this email address as it is not monitored.</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", user.Name);
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine2")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine3")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine4")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line5 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine5")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                Support supportInfo = db.Supports
+                    .FirstOrDefault();
+
+                iMessage.Body = string.Format((line1 + line2 + line3 + line4 + line5), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                iMessage.Subject = string.Format("Schoombee and Son Order");
+
+                await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
+
+                Courier courier = db.Couriers.Find(1);
+
+                if (courier != null)
+                {
+                    line1 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderDeliveryInstructionsLine1")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                    line2 = db.SiteConfigurations
+                       .Where(c => c.Key == "OrderDeliveryInstructionsLine2")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
+
+                    line3 = db.SiteConfigurations
+                       .Where(c => c.Key == "OrderDeliveryInstructionsLine3")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
+
+                    line4 = db.SiteConfigurations
+                       .Where(c => c.Key == "OrderDeliveryInstructionsLine4")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
+
+                    IdentityMessage iMessageCourier = new IdentityMessage();
+                    iMessageCourier.Destination = courier.MainContactEmailAddress;
+                    //iMessageCourier.Body = string.Format("<div>Good day</div><br/><br/><div>Please find attached the instructions for delivery of order {0}.</div><br/><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>Johan Schoombee: 083 680 8780 or 028 435 7791</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", orderNumber);
+                    iMessageCourier.Body = string.Format((line1 + line2 + line3 + line4), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                    iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
+
+                    await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
+                }
+            }
+
+        }
+
         public override string ToString()
         {
             string toString = "";

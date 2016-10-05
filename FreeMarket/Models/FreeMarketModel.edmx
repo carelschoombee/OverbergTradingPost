@@ -396,6 +396,16 @@
           <Property Name="LocationNumber" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Support">
+          <Key>
+            <PropertyRef Name="SupportID" />
+          </Key>
+          <Property Name="SupportID" Type="int" Nullable="false" />
+          <Property Name="MainContactName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cellphone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Landline" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="SystemActions">
           <Key>
             <PropertyRef Name="ActionNumber" />
@@ -732,6 +742,7 @@
           <EntitySet Name="SitePictures" EntityType="Self.SitePictures" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SupplierLocation" EntityType="Self.SupplierLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Support" EntityType="Self.Support" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemActions" EntityType="Self.SystemActions" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CourierCustodianDistance_Courier" Association="Self.FK_CourierCustodianDistance_Courier">
             <End Role="Courier" EntitySet="Courier" />
@@ -1232,8 +1243,9 @@
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetOrderReport" ReturnType="Collection(FreeMarketModel.GetOrderReport_Result)">
-            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Supports" EntityType="FreeMarketModel.Support" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1832,6 +1844,16 @@
           <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
           <Property Type="Int32" Name="ItemNumber" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Support">
+          <Key>
+            <PropertyRef Name="SupportID" />
+          </Key>
+          <Property Name="SupportID" Type="Int32" Nullable="false" />
+          <Property Name="Cellphone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Landline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MainContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2438,6 +2460,17 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Supports">
+            <EntityTypeMapping TypeName="FreeMarketModel.Support">
+              <MappingFragment StoreEntitySet="Support">
+                <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Landline" ColumnName="Landline" />
+                <ScalarProperty Name="Cellphone" ColumnName="Cellphone" />
+                <ScalarProperty Name="SupportID" ColumnName="SupportID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

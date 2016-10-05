@@ -1,0 +1,44 @@
+﻿@using FreeMarket.Models
+@model SuppliersCollection
+@{
+    ViewBag.Title = "Suppliers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Suppliers</h2>
+<hr />
+
+@Html.ActionLink("Create New", "CreateSupplier", null, new { @class = "freemarket-link" })
+
+@if (Model.Suppliers.Count > 0)
+{
+    <table class="table table-bordered-custom">
+
+        <tr>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1">Supplier Number</th>
+            <th class="col-sm-2">Name</th>
+            <th class="col-sm-2">Activated</th>
+        </tr>
+
+        @foreach (Supplier supplier in Model.Suppliers)
+        {
+            <tr class="well">
+                <td class="text-center">
+                    @Html.ActionLink("Edit", "EditProduct", new { productNumber = supplier.SupplierNumber }, new { @class = "freemarket-link" })
+                </td>
+                <td>
+                    @Html.DisplayFor(model => supplier.SupplierNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => supplier.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => supplier.Activated)
+                </td>
+            </tr>
+        }
+
+    </table>
+}

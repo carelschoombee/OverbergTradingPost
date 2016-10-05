@@ -19,7 +19,9 @@
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            @Html.Partial("_ProductPartial", Model)
+            <div class="well well-modal">
+                @Html.Partial("_ProductPartial", Model)
+            </div>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -27,7 +29,7 @@
                 </div>
             </div>
         }
-    }
+}
 
 </div>
 

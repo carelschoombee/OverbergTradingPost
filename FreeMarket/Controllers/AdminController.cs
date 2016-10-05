@@ -24,11 +24,25 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult SuppliersIndex()
+        {
+            SuppliersCollection collection = SuppliersCollection.GetAllSuppliers();
+
+            return View(collection);
+        }
+
         public ActionResult CreateProduct()
         {
             Product product = Product.GetNewProduct();
 
             return View(product);
+        }
+
+        public ActionResult CreateSupplier()
+        {
+            Supplier supplier = Supplier.GetNewSupplier();
+
+            return View(supplier);
         }
 
         public ActionResult DownloadReport()
@@ -101,6 +115,16 @@ namespace FreeMarket.Controllers
             return View(product);
         }
 
+        public ActionResult EditSupplier(int supplierNumber)
+        {
+            if (supplierNumber == 0)
+                return RedirectToAction("SuppliersIndex", "Admin");
+
+            Supplier supplier = Supplier.GetSupplier(supplierNumber);
+
+            return View(supplier);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
@@ -127,6 +151,34 @@ namespace FreeMarket.Controllers
             product.InitializeDropDowns("edit");
 
             return View("EditProduct", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditSupplierProcess(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                Supplier.SaveSupplier(supplier);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = Product.SaveProductImage(supplier.ProductNumber, PictureSize.Medium, imagePrimary);
+
+                if (imageSecondary != null)
+                    resultSecondary = Product.SaveProductImage(supplier.ProductNumber, PictureSize.Small, imageSecondary);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", supplier.ProductNumber);
+
+                return RedirectToAction("ProductsIndex", "Admin");
+            }
+
+            supplier.InitializeDropDowns("edit");
+
+            return View("EditProduct", supplier);
         }
     }
 }

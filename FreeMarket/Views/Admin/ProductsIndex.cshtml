@@ -9,13 +9,13 @@
 <h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Products</h2>
 <hr />
 
-@Html.ActionLink("Create New", "CreateProduct")
+@Html.ActionLink("Create New", "CreateProduct", null, new { @class = "freemarket-link" })
 
 @if (Model.Products.Count > 0)
 {
     <table class="table table-bordered-custom">
 
-        <tr class="well">
+        <tr>
             <th class="col-sm-1"></th>
             <th class="col-sm-1">Product Number</th>
             <th class="col-sm-2">Description</th>
@@ -25,9 +25,9 @@
 
     @foreach (Product product in Model.Products)
     {
-        <tr>
+        <tr class="well">
             <td class="text-center">
-                @Html.ActionLink("Edit", "EditProduct", new { productNumber = product.ProductNumber, supplierNumber = product.SupplierNumber } )
+                @Html.ActionLink("Edit", "EditProduct", new { productNumber = product.ProductNumber, supplierNumber = product.SupplierNumber }, new { @class = "freemarket-link" })
             </td>
             <td>
                 @Html.DisplayFor(model => product.ProductNumber)
