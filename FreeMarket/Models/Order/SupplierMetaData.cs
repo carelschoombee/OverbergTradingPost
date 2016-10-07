@@ -1,13 +1,53 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 
 namespace FreeMarket.Models
 {
     [MetadataType(typeof(SupplierMetaData))]
     public partial class Supplier
     {
+        public static Supplier GetNewSupplier()
+        {
+            Supplier supplier = new Supplier();
 
+            supplier.DateAdded = DateTime.Now;
+
+            return supplier;
+        }
+
+        public static Supplier GetSupplier(int supplierNumber)
+        {
+            Supplier supplier = new Supplier();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                supplier = db.Suppliers.Find(supplierNumber);
+            }
+
+            return supplier;
+        }
+
+        public static void SaveSupplier(Supplier supplier)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                db.Entry(supplier).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public static void CreateNewSupplier(Supplier supplier)
+        {
+            supplier.DateAdded = DateTime.Now;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                db.Suppliers.Add(supplier);
+                db.SaveChanges();
+            }
+        }
     }
     public class SupplierMetaData
     {
@@ -16,6 +56,7 @@ namespace FreeMarket.Models
 
         [DisplayName("Name")]
         [StringLength(100)]
+        [Required]
         public string SupplierName { get; set; }
 
         [DisplayName("Main Contact")]

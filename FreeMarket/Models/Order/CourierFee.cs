@@ -43,7 +43,6 @@ namespace FreeMarket.Models
                         CourierName = c.CourierName,
                         CustomerDestinationPostalCode = c.DestinationPostalCode,
                         CourierFeeValue = c.CourierFee ?? 0,
-                        DistanceBetweenCourierAndCustodian = c.Distance ?? 0,
                         QuantityOnHand = c.QuantityOnHand ?? 0
                     }
                     ).ToList();

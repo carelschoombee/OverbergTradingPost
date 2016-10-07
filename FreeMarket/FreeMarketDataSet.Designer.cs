@@ -335,6 +335,14 @@ namespace FreeMarket {
             
             private global::System.Data.DataColumn columnMainContactEmailAddress;
             
+            private global::System.Data.DataColumn columnStreetAddress;
+            
+            private global::System.Data.DataColumn columnTownName;
+            
+            private global::System.Data.DataColumn columnPostalCode1;
+            
+            private global::System.Data.DataColumn columnProvince;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetOrderReportDataTable() {
@@ -594,6 +602,38 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn StreetAddressColumn {
+                get {
+                    return this.columnStreetAddress;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TownNameColumn {
+                get {
+                    return this.columnTownName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PostalCode1Column {
+                get {
+                    return this.columnPostalCode1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ProvinceColumn {
+                get {
+                    return this.columnProvince;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -655,7 +695,11 @@ namespace FreeMarket {
                         decimal Total, 
                         string CourierName, 
                         string MainContactTelephoneNumber, 
-                        string MainContactEmailAddress) {
+                        string MainContactEmailAddress, 
+                        string StreetAddress, 
+                        string TownName, 
+                        string PostalCode1, 
+                        string Province) {
                 GetOrderReportRow rowGetOrderReportRow = ((GetOrderReportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Price,
@@ -685,7 +729,11 @@ namespace FreeMarket {
                         Total,
                         CourierName,
                         MainContactTelephoneNumber,
-                        MainContactEmailAddress};
+                        MainContactEmailAddress,
+                        StreetAddress,
+                        TownName,
+                        PostalCode1,
+                        Province};
                 rowGetOrderReportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetOrderReportRow);
                 return rowGetOrderReportRow;
@@ -743,6 +791,10 @@ namespace FreeMarket {
                 this.columnCourierName = base.Columns["CourierName"];
                 this.columnMainContactTelephoneNumber = base.Columns["MainContactTelephoneNumber"];
                 this.columnMainContactEmailAddress = base.Columns["MainContactEmailAddress"];
+                this.columnStreetAddress = base.Columns["StreetAddress"];
+                this.columnTownName = base.Columns["TownName"];
+                this.columnPostalCode1 = base.Columns["PostalCode1"];
+                this.columnProvince = base.Columns["Province"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -804,6 +856,14 @@ namespace FreeMarket {
                 base.Columns.Add(this.columnMainContactTelephoneNumber);
                 this.columnMainContactEmailAddress = new global::System.Data.DataColumn("MainContactEmailAddress", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMainContactEmailAddress);
+                this.columnStreetAddress = new global::System.Data.DataColumn("StreetAddress", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStreetAddress);
+                this.columnTownName = new global::System.Data.DataColumn("TownName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTownName);
+                this.columnPostalCode1 = new global::System.Data.DataColumn("PostalCode1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPostalCode1);
+                this.columnProvince = new global::System.Data.DataColumn("Province", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnProvince);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnItemNumber}, true));
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint2", new global::System.Data.DataColumn[] {
@@ -844,6 +904,10 @@ namespace FreeMarket {
                 this.columnMainContactTelephoneNumber.MaxLength = 25;
                 this.columnMainContactEmailAddress.AllowDBNull = false;
                 this.columnMainContactEmailAddress.MaxLength = 100;
+                this.columnStreetAddress.MaxLength = 200;
+                this.columnTownName.MaxLength = 100;
+                this.columnPostalCode1.MaxLength = 50;
+                this.columnProvince.MaxLength = 100;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1382,6 +1446,70 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string StreetAddress {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.StreetAddressColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'StreetAddress\' in table \'GetOrderReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.StreetAddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string TownName {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.TownNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TownName\' in table \'GetOrderReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.TownNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PostalCode1 {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.PostalCode1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PostalCode1\' in table \'GetOrderReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.PostalCode1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Province {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.ProvinceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Province\' in table \'GetOrderReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.ProvinceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCustomerNameNull() {
                 return this.IsNull(this.tableGetOrderReport.CustomerNameColumn);
             }
@@ -1583,6 +1711,54 @@ namespace FreeMarket {
             public void SetMainContactTelephoneNumberNull() {
                 this[this.tableGetOrderReport.MainContactTelephoneNumberColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStreetAddressNull() {
+                return this.IsNull(this.tableGetOrderReport.StreetAddressColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStreetAddressNull() {
+                this[this.tableGetOrderReport.StreetAddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTownNameNull() {
+                return this.IsNull(this.tableGetOrderReport.TownNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTownNameNull() {
+                this[this.tableGetOrderReport.TownNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPostalCode1Null() {
+                return this.IsNull(this.tableGetOrderReport.PostalCode1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPostalCode1Null() {
+                this[this.tableGetOrderReport.PostalCode1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsProvinceNull() {
+                return this.IsNull(this.tableGetOrderReport.ProvinceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetProvinceNull() {
+                this[this.tableGetOrderReport.ProvinceColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -1772,6 +1948,10 @@ namespace FreeMarket.FreeMarketDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("CourierName", "CourierName");
             tableMapping.ColumnMappings.Add("MainContactTelephoneNumber", "MainContactTelephoneNumber");
             tableMapping.ColumnMappings.Add("MainContactEmailAddress", "MainContactEmailAddress");
+            tableMapping.ColumnMappings.Add("StreetAddress", "StreetAddress");
+            tableMapping.ColumnMappings.Add("TownName", "TownName");
+            tableMapping.ColumnMappings.Add("PostalCode1", "PostalCode1");
+            tableMapping.ColumnMappings.Add("Province", "Province");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

@@ -105,6 +105,20 @@ namespace FreeMarket.Controllers
             return View("CreateProduct", product);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateSupplierProcess(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                Supplier.CreateNewSupplier(supplier);
+
+                return RedirectToAction("SuppliersIndex", "Admin");
+            }
+
+            return View("CreateSupplier", supplier);
+        }
+
         public ActionResult EditProduct(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)
@@ -161,24 +175,10 @@ namespace FreeMarket.Controllers
             {
                 Supplier.SaveSupplier(supplier);
 
-                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
-                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
-
-                if (imagePrimary != null)
-                    resultPrimary = Product.SaveProductImage(supplier.ProductNumber, PictureSize.Medium, imagePrimary);
-
-                if (imageSecondary != null)
-                    resultSecondary = Product.SaveProductImage(supplier.ProductNumber, PictureSize.Small, imageSecondary);
-
-                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
-                    TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", supplier.ProductNumber);
-
-                return RedirectToAction("ProductsIndex", "Admin");
+                return RedirectToAction("SuppliersIndex", "Admin");
             }
 
-            supplier.InitializeDropDowns("edit");
-
-            return View("EditProduct", supplier);
+            return View("EditSupplier", supplier);
         }
     }
 }

@@ -244,9 +244,6 @@
     </Compile>
     <Compile Include="Models\Checkout\CheckOutViewModel.cs" />
     <Compile Include="Models\Checkout\PaymentGatewayIntegration.cs" />
-    <Compile Include="Models\CourierCustodianDistance.cs">
-      <DependentUpon>FreeMarketModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\CourierReview.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -283,9 +280,6 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Courier.cs">
-      <DependentUpon>FreeMarketModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\CourierLocation.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CourierStockMovementLog.cs">
@@ -343,7 +337,6 @@
     <Compile Include="Models\Order\CourierFeeViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />
-    <Compile Include="Models\Order\CourierViewModel.cs" />
     <Compile Include="Models\Order\OrderDetailMetaData.cs" />
     <Compile Include="Models\Order\OrderHeaderMetaData.cs" />
     <Compile Include="Models\Order\ProductMetaData.cs" />
@@ -391,6 +384,9 @@
     <Compile Include="Models\SitePicture.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Special.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -402,6 +398,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SystemAction.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TimeFreightCourierFeeReference.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -418,6 +417,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\rapidssl.png" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -436,6 +436,7 @@
     <Content Include="Content\Images\logoBig.jpg" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
+    <Content Include="Content\Images\TimeFreight.png" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
     <Content Include="Scripts\animsition.js" />
@@ -581,7 +582,7 @@
     <Content Include="Views\ShoppingCart\_CartTotals.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\_ShowAllProducts.cshtml" />
-    <Content Include="Views\Product\_ProductCarousel.cshtml" />
+    <Content Include="Views\Home\_ProductCarousel.cshtml" />
     <Content Include="Views\Product\_CourierContainer.cshtml" />
     <Content Include="Views\ShoppingCart\_CourierSelectionModal.cshtml" />
     <Content Include="Views\Manage\_ValidateModifyAccountDetailsPartial.cshtml" />
@@ -630,6 +631,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Report2.rdlc" />
     <EmbeddedResource Include="Reports\Report1.rdlc" />
   </ItemGroup>
   <PropertyGroup>

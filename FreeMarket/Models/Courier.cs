@@ -18,8 +18,6 @@ namespace FreeMarket.Models
         public Courier()
         {
             this.CourierStockMovementLogs = new HashSet<CourierStockMovementLog>();
-            this.CourierCustodianDistances = new HashSet<CourierCustodianDistance>();
-            this.CourierLocations = new HashSet<CourierLocation>();
             this.CourierReviews = new HashSet<CourierReview>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
@@ -36,17 +34,13 @@ namespace FreeMarket.Models
         public string BankingDetailsAccountNumber { get; set; }
         public string BankingDetailsAccountType { get; set; }
         public Nullable<System.DateTime> DateAdded { get; set; }
-        public bool TrustedCourier { get; set; }
-        public bool Activated { get; set; }
+        public Nullable<bool> TrustedCourier { get; set; }
+        public Nullable<bool> Activated { get; set; }
         public string UserId { get; set; }
         public Nullable<int> LocationNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierCustodianDistance> CourierCustodianDistances { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierLocation> CourierLocations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierReview> CourierReviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

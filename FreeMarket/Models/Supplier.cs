@@ -17,10 +17,10 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Supplier()
         {
-            this.ProductSuppliers = new HashSet<ProductSupplier>();
             this.SupplierLocations = new HashSet<SupplierLocation>();
             this.ProductCustodians = new HashSet<ProductCustodian>();
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.ProductSuppliers = new HashSet<ProductSupplier>();
         }
     
         public int SupplierNumber { get; set; }
@@ -40,12 +40,12 @@ namespace FreeMarket.Models
         public string UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SupplierLocation> SupplierLocations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductCustodian> ProductCustodians { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductSupplier> ProductSuppliers { get; set; }
     }
 }

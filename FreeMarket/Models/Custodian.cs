@@ -17,7 +17,6 @@ namespace FreeMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Custodian()
         {
-            this.CourierCustodianDistances = new HashSet<CourierCustodianDistance>();
             this.CourierStockMovementLogs = new HashSet<CourierStockMovementLog>();
             this.ProductCustodians = new HashSet<ProductCustodian>();
         }
@@ -28,8 +27,6 @@ namespace FreeMarket.Models
         public string CustodianTelephoneNumber { get; set; }
         public string CustodianCellphoneNumber { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierCustodianDistance> CourierCustodianDistances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -9,9 +9,6 @@
         <th class="col-sm-3">
             Description
         </th>
-        @*<th class="col-sm-1">
-            Courier Info
-        </th>*@
         <th class="col-sm-1">
             Price
         </th>
@@ -39,21 +36,6 @@
                 @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by @Model.Cart.Body.OrderDetails[i].SupplierName
                 @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
             </td>
-            @*<td data-label="Courier:">
-                <span>Courier Name: @Model.Cart.Body.OrderDetails[i].CourierName</span>
-                <br />
-                <span>Courier Number: @Model.Cart.Body.OrderDetails[i].CourierNumber</span>
-                <br />
-                <span>Custodian: @Model.Cart.Body.OrderDetails[i].CustodianNumber</span>
-                <br />
-                <span>Fee: @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].CourierFee)</span>
-                <br />
-                <span>Product: @Model.Cart.Body.OrderDetails[i].ProductNumber</span>
-                <br />
-                <span>Supplier: @Model.Cart.Body.OrderDetails[i].SupplierNumber</span>
-                <br />
-                <span>Order: @Model.Cart.Body.OrderDetails[i].OrderNumber</span>
-            </td>*@
             <td data-label="Price:">
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
             </td>

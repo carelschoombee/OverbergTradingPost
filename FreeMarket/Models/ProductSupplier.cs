@@ -17,6 +17,7 @@ namespace FreeMarket.Models
         public int ProductNumber { get; set; }
         public int SupplierNumber { get; set; }
         public decimal PricePerUnit { get; set; }
+        public Nullable<decimal> SpecialPricePerUnit { get; set; }
     
         public virtual Product Product { get; set; }
         public virtual Supplier Supplier { get; set; }

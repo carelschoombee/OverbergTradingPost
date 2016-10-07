@@ -51,6 +51,10 @@
               <Mapping SourceColumn="CourierName" DataSetColumn="CourierName" />
               <Mapping SourceColumn="MainContactTelephoneNumber" DataSetColumn="MainContactTelephoneNumber" />
               <Mapping SourceColumn="MainContactEmailAddress" DataSetColumn="MainContactEmailAddress" />
+              <Mapping SourceColumn="StreetAddress" DataSetColumn="StreetAddress" />
+              <Mapping SourceColumn="TownName" DataSetColumn="TownName" />
+              <Mapping SourceColumn="PostalCode1" DataSetColumn="PostalCode1" />
+              <Mapping SourceColumn="Province" DataSetColumn="Province" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -62,7 +66,7 @@
   <xs:element name="FreeMarketDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="FreeMarketDataSet" msprop:Generator_UserDSName="FreeMarketDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="GetOrderReport" msprop:Generator_TableClassName="GetOrderReportDataTable" msprop:Generator_TableVarName="tableGetOrderReport" msprop:Generator_TablePropName="GetOrderReport" msprop:Generator_RowDeletingName="GetOrderReportRowDeleting" msprop:Generator_RowChangingName="GetOrderReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderReportRowDeleted" msprop:Generator_UserTableName="GetOrderReport" msprop:Generator_RowChangedName="GetOrderReportRowChanged" msprop:Generator_RowEvArgName="GetOrderReportRowChangeEvent" msprop:Generator_RowClassName="GetOrderReportRow">
+        <xs:element name="GetOrderReport" msprop:Generator_TableClassName="GetOrderReportDataTable" msprop:Generator_TableVarName="tableGetOrderReport" msprop:Generator_RowChangedName="GetOrderReportRowChanged" msprop:Generator_TablePropName="GetOrderReport" msprop:Generator_RowDeletingName="GetOrderReportRowDeleting" msprop:Generator_RowChangingName="GetOrderReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderReportRowDeleted" msprop:Generator_RowClassName="GetOrderReportRow" msprop:Generator_UserTableName="GetOrderReport" msprop:Generator_RowEvArgName="GetOrderReportRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Price" msprop:Generator_ColumnVarNameInTable="columnPrice" msprop:Generator_ColumnPropNameInRow="Price" msprop:Generator_ColumnPropNameInTable="PriceColumn" msprop:Generator_UserColumnName="Price" type="xs:decimal" />
@@ -183,6 +187,34 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="MainContactEmailAddress" msprop:Generator_ColumnVarNameInTable="columnMainContactEmailAddress" msprop:Generator_ColumnPropNameInRow="MainContactEmailAddress" msprop:Generator_ColumnPropNameInTable="MainContactEmailAddressColumn" msprop:Generator_UserColumnName="MainContactEmailAddress">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StreetAddress" msprop:Generator_ColumnVarNameInTable="columnStreetAddress" msprop:Generator_ColumnPropNameInRow="StreetAddress" msprop:Generator_ColumnPropNameInTable="StreetAddressColumn" msprop:Generator_UserColumnName="StreetAddress" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TownName" msprop:Generator_ColumnVarNameInTable="columnTownName" msprop:Generator_ColumnPropNameInRow="TownName" msprop:Generator_ColumnPropNameInTable="TownNameColumn" msprop:Generator_UserColumnName="TownName" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PostalCode1" msprop:Generator_ColumnVarNameInTable="columnPostalCode1" msprop:Generator_ColumnPropNameInRow="PostalCode1" msprop:Generator_ColumnPropNameInTable="PostalCode1Column" msprop:Generator_UserColumnName="PostalCode1" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Province" msprop:Generator_ColumnVarNameInTable="columnProvince" msprop:Generator_ColumnPropNameInRow="Province" msprop:Generator_ColumnPropNameInTable="ProvinceColumn" msprop:Generator_UserColumnName="Province" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="100" />

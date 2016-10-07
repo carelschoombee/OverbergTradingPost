@@ -18,7 +18,6 @@ namespace FreeMarket.Models
         public Location()
         {
             this.SupplierLocations = new HashSet<SupplierLocation>();
-            this.CourierLocations = new HashSet<CourierLocation>();
         }
     
         public int LocationNumber { get; set; }
@@ -34,7 +33,5 @@ namespace FreeMarket.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SupplierLocation> SupplierLocations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourierLocation> CourierLocations { get; set; }
     }
 }

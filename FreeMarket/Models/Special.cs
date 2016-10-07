@@ -12,14 +12,9 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CourierLocation
+    public partial class Special
     {
-        public int CourierNumber { get; set; }
-        public int LocationNumberOrigin { get; set; }
-        public string PostalCodeDestination { get; set; }
-        public decimal CourierFee { get; set; }
-    
-        public virtual Courier Courier { get; set; }
-        public virtual Location Location { get; set; }
+        public string SpecialPostalCode { get; set; }
+        public decimal DeliveryFee { get; set; }
     }
 }

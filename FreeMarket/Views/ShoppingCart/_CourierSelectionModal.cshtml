@@ -55,14 +55,9 @@
                             <tr>
                                 <td>
                                     <div id="CourierContainer">
-                                        @if (User.Identity.IsAuthenticated)
-                                        {
-                                            @Html.Partial("_CourierData", Model);
-                                        }
-                                        else
-                                        {
-                                            <text>Please log in to check availability of this item.</text>
-                                        }
+
+                                       @Html.Partial("_CourierData", Model)
+
                                     </div>
                                 </td>
                             </tr>

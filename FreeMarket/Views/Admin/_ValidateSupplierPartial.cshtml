@@ -1,5 +1,5 @@
 ﻿@using FreeMarket.Models
-@model Product
+@model Supplier
 
 <script type="text/javascript">
 
@@ -25,9 +25,6 @@
                         },
                         'MainContactName': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 100 characters.',
                                     max: 100
@@ -36,9 +33,6 @@
                         },
                         'MainContactTelephoneNumber': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 25 characters.',
                                     max: 25
@@ -47,9 +41,6 @@
                         },
                         'MainContactCellphoneNumber': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 25 characters.',
                                     max: 25
@@ -58,9 +49,6 @@
                         },
                         'MainContactEmailAddress': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 100 characters.',
                                     max: 100
@@ -69,9 +57,6 @@
                         },
                         'BankingDetailsBankName': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 100 characters.',
                                     max: 100
@@ -80,9 +65,6 @@
                         },
                         'BankingDetailsBranchName': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 100 characters.',
                                     max: 100
@@ -91,9 +73,6 @@
                         },
                         'BankingDetailsBranchCode': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 25 characters.',
                                     max: 25
@@ -102,9 +81,6 @@
                         },
                         'BankingDetailsAccountNumber': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 25 characters.',
                                     max: 25
@@ -113,9 +89,6 @@
                         },
                         'BankingDetailsAccountType': {
                             validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
                                 stringLength: {
                                     message: 'Max length must be less than 50 characters.',
                                     max: 50

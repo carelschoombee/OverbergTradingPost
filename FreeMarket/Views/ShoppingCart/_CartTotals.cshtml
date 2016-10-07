@@ -9,7 +9,14 @@
     }
     else
     {
-        shippingMessage = string.Format("{0:C}", Model.Order.ShippingTotal);
+        if(Model.Order.ShippingTotal == 0)
+        {
+            shippingMessage = "Free!";
+        }
+        else
+        {
+            shippingMessage = string.Format("{0:C}", Model.Order.ShippingTotal);
+        }
     }
 }
 <table class="table table-condensed table-bordered-totals well">

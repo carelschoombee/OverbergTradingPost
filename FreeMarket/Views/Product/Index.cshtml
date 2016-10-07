@@ -11,28 +11,12 @@
             <h1 class="text-center">Nuts, seeds and dried fruit</h1>
             <hr />
         </div>
-        <div class="row">
-            @Html.Partial("_ProductCarousel")
-        </div>
         @Html.Action("GetAllProducts")
     </div>
 </div>
 
 <div id="loadingDiv" style="display:none;"></div>
 
-<script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $("#myCarousel").carousel({
-
-                interval: 5000
-
-            });
-
-        });
-  
-</script>
 
 @Html.Partial("_CourierContainer")
 

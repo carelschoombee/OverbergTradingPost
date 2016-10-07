@@ -218,6 +218,7 @@ namespace FreeMarket.Models
                     productDb.DateModified = DateTime.Now;
                     productDb.DepartmentNumber = int.Parse(product.SelectedDepartment);
                     productDb.Description = product.Description;
+                    productDb.LongDescription = product.LongDescription;
                     productDb.Size = product.Size;
                     productDb.Weight = product.Weight;
                     db.Entry(productDb).State = EntityState.Modified;

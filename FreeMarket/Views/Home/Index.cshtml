@@ -4,34 +4,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center">Nuts, seeds and dried fruit</h1>
-
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <!-- Carousel indicators -->
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <!-- Wrapper for carousel items -->
-    <div class="carousel-inner">
-        <div class="item active">
-            <img src="~/Content/Images/slide1.jpg" alt="Pecan Nuts 1">
+<div id="parent" class="center_div container">
+    <div class="col-sm-12">
+        <div class="row">
+            <h1 class="text-center">Welcome</h1>
+            <hr />
         </div>
-        <div class="item">
-            <img src="~/Content/Images/slide2.jpg" alt="Pecan Nuts 2">
+        <div class="row">
+            @Html.Partial("_ProductCarousel")
         </div>
-        <div class="item">
-            <img src="~/Content/Images/slide3.jpg" alt="Pecan Nuts 3">
+        <div class="row well">
+            Our Pecan nuts have been vacuum packed and stored in an airconditioned
+            facility.  You can either keep yours in a freezer or in your fridge for
+            anything from 12 months to 24 months, without a loss in freshness.  In South
+            Africa Pecan nuts are harvested in May, so it is best pratice to schedule
+            your annual purchases shortly thereafter.
+        </div>
+        <div class="col-md-offset-4 row">
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
         </div>
     </div>
-    <!-- Carousel controls -->
-    <a class="carousel-control left" href="#myCarousel" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-    </a>
-    <a class="carousel-control right" href="#myCarousel" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
 </div>
 
 <script type="text/javascript">
@@ -44,6 +36,18 @@ $(document).ready(function(){
 
      });
 
+});
+
+$(document).ready(function () {
+    $(".icon-input-btn").each(function () {
+        var btnFont = $(this).find(".btn").css("font-size");
+        var btnColor = $(this).find(".btn").css("color");
+        $(this).find(".glyphicon").css("font-size", btnFont);
+        $(this).find(".glyphicon").css("color", btnColor);
+        if ($(this).find(".btn-xs").length) {
+            $(this).find(".glyphicon").css("top", "24%");
+        }
+    });
 });
 
 </script>

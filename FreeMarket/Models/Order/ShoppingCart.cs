@@ -49,6 +49,13 @@ namespace FreeMarket.Models
 
                 Order = OrderHeader.GetOrderForShoppingCart(userId);
                 Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
+
+                if (db.Specials.Any(c => c.SpecialPostalCode == Order.DeliveryAddressPostalCode))
+                {
+                    ApplyAllSpecialPrices();
+                    UpdateTotal();
+                }
+
             }
         }
 
@@ -143,6 +150,8 @@ namespace FreeMarket.Models
                             CannotDeliver = undeliverableItem // Must this item be marked as undeliverable?
                         });
 
+                    ApplySpecialPrices(productNumber, supplierNumber);
+
                     res.Result = FreeMarketResult.Success;
                     res.Message = string.Format("{0} ({1}) has been added to your cart.", productInfo.Description, quantity);
                 }
@@ -153,6 +162,52 @@ namespace FreeMarket.Models
             UpdateTotal();
 
             return res;
+        }
+
+        public void ApplySpecialPrices(int productNumber, int supplierNumber)
+        {
+            if (Order.OrderNumber != 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    if (db.Specials.Any(c => c.SpecialPostalCode == Order.DeliveryAddressPostalCode))
+                    {
+                        ProductSupplier productSupplier = db.ProductSuppliers
+                            .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                            .FirstOrDefault();
+
+                        // If the user is ordering from a special region apply a special price.
+                        if (productSupplier != null)
+                        {
+                            if (productSupplier.SpecialPricePerUnit != null)
+                            {
+                                int quantity = Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .Quantity;
+
+                                Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .Price = (decimal)productSupplier.SpecialPricePerUnit;
+
+                                Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .OrderItemValue = (decimal)productSupplier.SpecialPricePerUnit * quantity;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ApplyAllSpecialPrices()
+        {
+            foreach (OrderDetail detail in Body.OrderDetails)
+            {
+                ApplySpecialPrices(detail.ProductNumber, detail.SupplierNumber);
+            }
         }
 
         public FreeMarketObject RemoveItem(int itemNumber, int productNumber, int supplierNumber, string userId = null)
@@ -341,6 +396,8 @@ namespace FreeMarket.Models
             // Re-initialize the Body
             Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
 
+            ApplyAllSpecialPrices();
+
             // Keep the total order value in sync
             UpdateTotal();
 
@@ -516,6 +573,7 @@ namespace FreeMarket.Models
         public void UpdateDeliveryDetails(SaveCartViewModel model)
         {
             Order.UpdateDeliveryDetails(model);
+            ApplyAllSpecialPrices();
             UpdateAllDeliverableStatus();
             UpdateAllCouriers();
             Save();

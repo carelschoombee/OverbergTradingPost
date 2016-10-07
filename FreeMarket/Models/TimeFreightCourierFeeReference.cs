@@ -12,13 +12,17 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CourierCustodianDistance
+    public partial class TimeFreightCourierFeeReference
     {
-        public int CourierNumber { get; set; }
-        public int CustodianNumber { get; set; }
-        public Nullable<decimal> Distance { get; set; }
-    
-        public virtual Courier Courier { get; set; }
-        public virtual Custodian Custodian { get; set; }
+        public int DeliveryCostID { get; set; }
+        public string Code { get; set; }
+        public int PostalCodeRangeStart { get; set; }
+        public int PostalCodeRangeEnd { get; set; }
+        public string MainCentre { get; set; }
+        public string DialingCode { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Surcharge { get; set; }
+        public decimal Total { get; set; }
+        public decimal DeliveryFee { get; set; }
     }
 }
