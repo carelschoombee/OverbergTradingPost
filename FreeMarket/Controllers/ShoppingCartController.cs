@@ -249,9 +249,18 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
+            bool specialDelivery = false;
             string reference = sessionCart.Order.OrderNumber.ToString();
             decimal amount = sessionCart.Order.TotalOrderValue * 100;
             ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (db.Specials.Any(c => c.SpecialPostalCode == sessionCart.Order.DeliveryAddressPostalCode))
+                {
+                    specialDelivery = true;
+                }
+            }
 
             PaymentGatewayIntegration payObject = new PaymentGatewayIntegration(reference, amount, user.Email);
 
@@ -259,21 +268,13 @@ namespace FreeMarket.Controllers
 
             if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
             {
-                ConfirmOrderViewModel model = new ConfirmOrderViewModel
-                {
-                    Cart = sessionCart,
-                    Pay_Request_Id = payObject.Pay_Request_Id,
-                    Checksum = payObject.Checksum
-                };
+                ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum, specialDelivery);
 
                 return View("ConfirmShoppingCart", model);
             }
             else
             {
-                ConfirmOrderViewModel model = new ConfirmOrderViewModel
-                {
-                    Cart = sessionCart,
-                };
+                ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
 
                 return View("ConfirmShoppingCart", model);
             }

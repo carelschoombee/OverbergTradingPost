@@ -144,6 +144,7 @@ namespace FreeMarket.Models
 
             try
             {
+                client = new HttpClient();
                 client.BaseAddress = new Uri(BaseUri);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

@@ -170,7 +170,86 @@ namespace FreeMarket.Models
 
             try
             {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
 
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report2.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
+        }
+
+        public static Dictionary<MemoryStream, string> GetStruisbaaiOrderReport(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report3.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
             }
             catch (Exception e)
             {
@@ -190,14 +269,36 @@ namespace FreeMarket.Models
                             .GetUserManager<ApplicationUserManager>()
                             .FindById(customerNumber);
 
-                Dictionary<MemoryStream, string> orderSummary = GetOrderReport(orderNumber);
-                Dictionary<MemoryStream, string> orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+                Dictionary<MemoryStream, string> orderSummary;
+                Dictionary<MemoryStream, string> orderDeliveryInstruction;
+
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                string postalCode = "null";
+                bool specialDelivery = false;
+
+                if (order != null)
+                {
+                    postalCode = order.DeliveryAddressPostalCode;
+                }
+
+                if (db.Specials.Any(c => c.SpecialPostalCode == postalCode))
+                {
+                    orderSummary = GetStruisbaaiOrderReport(orderNumber);
+                    orderDeliveryInstruction = GetStruisbaaiOrderReport(orderNumber);
+                    specialDelivery = true;
+                }
+                else
+                {
+                    orderSummary = GetOrderReport(orderNumber);
+                    orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+                }
+
 
                 EmailService email = new EmailService();
 
                 IdentityMessage iMessage = new IdentityMessage();
                 iMessage.Destination = user.Email;
-                //iMessage.Body = string.Format("<div>Good day {0}</div><br/><br/><div>Please find attached your order. You will need a program such as Acrobat Reader to open it.</div><br/><br/><div>We trust that you will find the product and delivery are up to your standards.</div><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>{1}: {2} or {3}. You may email us at {4}. Please do not reply to this email address as it is not monitored.</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", user.Name);
+
                 string line1 = db.SiteConfigurations
                     .Where(c => c.Key == "OrderConfirmationEmailLine1")
                     .Select(c => c.Value)
@@ -256,8 +357,16 @@ namespace FreeMarket.Models
                        .FirstOrDefault();
 
                     IdentityMessage iMessageCourier = new IdentityMessage();
-                    iMessageCourier.Destination = courier.MainContactEmailAddress;
-                    //iMessageCourier.Body = string.Format("<div>Good day</div><br/><br/><div>Please find attached the instructions for delivery of order {0}.</div><br/><br/><div>If you have any queries or problems please do not hesitate to contact us.<div/><br/><br/><div>Our contact details:</div><br/><div>Johan Schoombee: 083 680 8780 or 028 435 7791</div><br/><div>Regards</div><br/><div>Schoombee And Son</div>", orderNumber);
+
+                    if (specialDelivery)
+                    {
+                        iMessageCourier.Destination = supportInfo.Email;
+                    }
+                    else
+                    {
+                        iMessageCourier.Destination = courier.MainContactEmailAddress;
+                    }
+
                     iMessageCourier.Body = string.Format((line1 + line2 + line3 + line4), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
                     iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
 
