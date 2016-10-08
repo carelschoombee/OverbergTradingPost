@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using FreeMarket.Infrastructure;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +11,8 @@ namespace FreeMarket.Models
     {
         public int NumberOfItemsInOrder { get; set; }
         public OrderHeader Order { get; set; }
+        public List<Courier> Couriers { get; set; }
+        public bool SpecialDelivery { get; set; }
 
         public static OrderHeaderViewModel GetOrder(int orderNumber, string userId)
         {
@@ -28,6 +32,24 @@ namespace FreeMarket.Models
                     return model;
 
                 model.Order = order;
+
+                model.Couriers = new List<Courier>();
+
+                List<int?> courierNumbers = db.OrderDetails.Where(c => c.OrderNumber == order.OrderNumber)
+                    .DistinctBy(c => c.CourierNumber)
+                    .Select(c => c.CourierNumber)
+                    .ToList();
+
+                foreach (int courierNumber in courierNumbers)
+                {
+                    Courier c = db.Couriers.Find(courierNumber);
+                    model.Couriers.Add(c);
+                }
+
+                if (db.Specials.Any(c => c.SpecialPostalCode == order.DeliveryAddressPostalCode))
+                {
+                    model.SpecialDelivery = true;
+                }
 
                 // Find the customer's details
                 var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();

@@ -12,7 +12,7 @@
 
 @if (Model.Items != null && Model.Items.Count > 0)
 {
-    <table class="table table-responsive">
+    <table class="table table-bordered-custom table-responsive">
         <tr>
             <th class="col-sm-1">
                 Order #
@@ -24,24 +24,21 @@
                 Description
             </th>
             <th class="col-sm-1">
-                Status
-            </th>
-            <th class="col-sm-1">
-                Shipping
-            </th>
-            <th class="col-sm-1">
                 Qty
             </th>
             <th class="col-sm-1">
                 Price
             </th>
+            <th class="col-sm-1">
+                Total
+            </th>
         </tr>
 
         @foreach(GetOrderHistory_Result detail in Model.Items)
         {
-            <tr class="well well-modal">
+            <tr class="well">
                 <td>
-                    @Html.ActionLink(detail.OrderNumber.ToString(),"ViewOrder", new { orderNumber = detail.OrderNumber })
+                    @Html.ActionLink(detail.OrderNumber.ToString(),"ViewOrder", new { orderNumber = detail.OrderNumber }, new { @class = "freemarket-link"})
                 </td>
                 <td>
                     @string.Format("{0:d}", detail.OrderDatePlaced)
@@ -50,16 +47,13 @@
                     @Html.Action("GetFullDescription", "Product", new { productNumber = detail.ProductNumber , supplierNumber = detail.SupplierNumber })
                 </td>
                 <td>
-                    @Html.DisplayFor(m => detail.OrderItemStatus)
-                </td>
-                <td>
-                    @string.Format("{0:C}", detail.CourierFee)
-                </td>
-                <td>
                     @Html.DisplayFor(m => detail.Quantity)
                 </td>
                 <td>
                     @string.Format("{0:C}", detail.Price)
+                </td>
+                <td>
+                    @string.Format("{0:C}", detail.OrderItemValue)
                 </td>
             </tr>
         }

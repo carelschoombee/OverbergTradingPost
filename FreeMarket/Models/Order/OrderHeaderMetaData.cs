@@ -35,7 +35,8 @@ namespace FreeMarket.Models
             {
                 // Determine if the customer has an unconfirmed order
                 order = db.OrderHeaders.Where(c => c.CustomerNumber == customerNumber
-                                                    && c.OrderStatus == "Unconfirmed").FirstOrDefault();
+                                                    && (c.OrderStatus == "Unconfirmed"
+                                                    || c.OrderStatus == "Locked")).FirstOrDefault();
 
                 address = db.CustomerAddresses
                     .Where(c => c.CustomerNumber == customerNumber && c.AddressName == user.DefaultAddress)

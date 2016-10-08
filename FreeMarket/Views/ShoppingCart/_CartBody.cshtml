@@ -1,6 +1,8 @@
 ﻿@using FreeMarket.Models
 @model ShoppingCartViewModel
 
+@if (Model.Cart.Order.OrderStatus == "Locked")
+{
 <table class="table table-bordered-custom table-condensed table-responsive">
     <tr>
         <th class="col-sm-1">
@@ -40,15 +42,7 @@
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
             </td>
             <td class="text-center" data-label="Qty:">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
-                    @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
-                }
-                else
-                {
-                    @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
-                }
+                @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
             </td>
             <td data-label="Total:">
                 @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
@@ -81,4 +75,88 @@
         </tr>
     }
 </table>
+}
+else
+{
+    <table class="table table-bordered-custom table-condensed table-responsive">
+        <tr>
+            <th class="col-sm-1">
+                Image
+            </th>
+            <th class="col-sm-3">
+                Description
+            </th>
+            <th class="col-sm-1">
+                Price
+            </th>
+            <th class="col-sm-1">
+                Quantity
+            </th>
+            <th class="col-sm-1">
+                Total
+            </th>
+            <th class="col-sm-1">
+                Status
+            </th>
+            <th class="col-sm-1">
+                Remove
+            </th>
+        </tr>
+
+        @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
+        {
+            <tr class="well">
+                <td>
+                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
+                </td>
+                <td>
+                    @Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by @Model.Cart.Body.OrderDetails[i].SupplierName
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
+                </td>
+                <td data-label="Price:">
+                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
+                </td>
+                <td class="text-center" data-label="Qty:">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
+                        @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
+                    }
+                </td>
+                <td data-label="Total:">
+                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
+                </td>
+                <td data-label="Status:" class="text-center">
+                    @if (Model.Cart.Body.OrderDetails[i].CannotDeliver ?? false)
+                    {
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="right" title="We cannot deliver this to postal code @Model.Cart.Order.DeliveryAddressPostalCode" aria-hidden="true"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="right" title="Item not saved." aria-hidden="true"></span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="right" title="This item is in stock and available for purchase." aria-hidden="true"></span>
+                    }
+                </td>
+                <td data-label="Remove:" class="text-center">
+                    @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Selected)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CourierNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
+                </td>
+            </tr>
+        }
+    </table>
+}
 

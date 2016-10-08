@@ -473,7 +473,7 @@ namespace FreeMarket.Models
 
         public void Merge(string userId, CartBody tempBody)
         {
-            if (Order.OrderNumber != 0)
+            if (Order.OrderNumber != 0 && Order.OrderStatus != "Locked")
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
@@ -814,6 +814,7 @@ namespace FreeMarket.Models
             {
                 OrderHeader order = db.OrderHeaders.Find(orderNumber);
                 order.OrderStatus = "Confirmed";
+                order.PaymentReceived = true;
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
             }

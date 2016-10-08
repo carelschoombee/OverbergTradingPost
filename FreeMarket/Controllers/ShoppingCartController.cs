@@ -87,6 +87,11 @@ namespace FreeMarket.Controllers
                 bool anonymousUser = (userId == null);
                 ShoppingCart cart = GetCartFromSession(userId);
 
+                if (cart.Order.OrderStatus == "Locked")
+                {
+                    TempData["errorMessage"] = "Your cart is locked because you are in the process of checking out. Complete or cancel your checkout process.";
+                    return JavaScript("window.location = window.location.href;");
+                }
 
                 // CheckQuantity
                 if (viewModel.CustodianQuantityOnHand < viewModel.Quantity)
@@ -129,6 +134,12 @@ namespace FreeMarket.Controllers
             bool anonymousUser = (userId == null);
             ShoppingCart sessionCart = GetCartFromSession(userId);
             ShoppingCartViewModel model;
+
+            if (cart.Order.OrderStatus == "Locked")
+            {
+                TempData["errorMessage"] = "Your cart is locked because you are in the process of checking out. Complete or cancel your checkout process.";
+                return JavaScript("window.location = window.location.href;");
+            }
 
             if (ModelState.IsValid)
             {
@@ -250,9 +261,6 @@ namespace FreeMarket.Controllers
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
             bool specialDelivery = false;
-            string reference = sessionCart.Order.OrderNumber.ToString();
-            decimal amount = sessionCart.Order.TotalOrderValue * 100;
-            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -262,19 +270,59 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            PaymentGatewayIntegration payObject = new PaymentGatewayIntegration(reference, amount, user.Email);
+            ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
+            model.SpecialDelivery = specialDelivery;
 
-            payObject.Execute();
+            return View("ConfirmShoppingCart", model);
+        }
 
-            if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LockOrder(bool TermsAndConditions)
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+
+            if (TermsAndConditions)
             {
-                ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum, specialDelivery);
+                sessionCart.Order.OrderStatus = "Locked";
+                sessionCart.Save();
 
-                return View("ConfirmShoppingCart", model);
+                bool specialDelivery = false;
+                string reference = sessionCart.Order.OrderNumber.ToString();
+                decimal amount = sessionCart.Order.TotalOrderValue * 100;
+                ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    if (db.Specials.Any(c => c.SpecialPostalCode == sessionCart.Order.DeliveryAddressPostalCode))
+                    {
+                        specialDelivery = true;
+                    }
+                }
+
+                PaymentGatewayIntegration payObject = new PaymentGatewayIntegration(reference, amount, user.Email);
+
+                payObject.Execute();
+
+                if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
+                {
+                    ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum, specialDelivery);
+                    model.TermsAndConditions = TermsAndConditions;
+
+                    return View("ConfirmShoppingCart", model);
+                }
+                else
+                {
+                    ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
+
+                    return View("ConfirmShoppingCart", model);
+                }
             }
             else
             {
                 ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
+                model.TermsAndConditions = TermsAndConditions;
 
                 return View("ConfirmShoppingCart", model);
             }
@@ -305,8 +353,6 @@ namespace FreeMarket.Controllers
                 {
                     int orderNumber = int.Parse(REFERENCE);
 
-                    ShoppingCart.SetOrderConfirmed(orderNumber);
-
                     PaymentGatewayMessage message = new PaymentGatewayMessage
                     {
                         PayGate_ID = PAYGATE_ID,
@@ -336,6 +382,8 @@ namespace FreeMarket.Controllers
 
                     if (RESULT_CODE == 1)
                     {
+                        ShoppingCart.SetOrderConfirmed(orderNumber);
+
                         string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
                         .FirstOrDefault()
                         .CustomerNumber;

@@ -10,6 +10,7 @@ namespace FreeMarket.Models
         public string Pay_Request_Id { get; set; }
         public string Checksum { get; set; }
         public bool SpecialDelivery { get; set; }
+        public bool TermsAndConditions { get; set; }
 
         public List<Courier> Couriers { get; set; }
 
