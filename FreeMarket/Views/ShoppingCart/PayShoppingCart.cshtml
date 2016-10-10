@@ -152,11 +152,19 @@
     </div>
     <div class="row">
         <div class="col-sm-6 well">
-            @using (Html.BeginForm("LockOrder", "ShoppingCart", FormMethod.Post))
+            <div class="form-group">
+                You have accepted our terms and conditions
+                <div class="col-md-3">
+                    @Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                </div>
+            </div>
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://secure.paygate.co.za/payweb3/process.trans" }))
             {
-                @Html.AntiForgeryToken();
-                <div>To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our terms and conditions: @Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <input type="submit" value="Confirm" class="btn btn-success" /></span>
+                <div>
+                    @Html.HiddenFor(model => Model.Pay_Request_Id)
+                    @Html.HiddenFor(model => Model.Checksum)
+                    <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <input type="submit" value="Pay" class="btn btn-success" /></span>
+                </div>
             }
         </div>
         <div class="col-sm-6">
@@ -182,7 +190,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

@@ -649,6 +649,9 @@
         <Function Name="GetAllProductsByDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DepartmentNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetAllProductsInOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="orderNumber" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
@@ -1166,6 +1169,9 @@
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
           </AssociationSet>
+          <FunctionImport Name="GetAllProductsInOrder" ReturnType="Collection(FreeMarketModel.GetAllProductsInOrder_Result)">
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1722,6 +1728,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetAllProductsInOrder_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="LongDescription" Nullable="true" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2343,6 +2365,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProductsInOrder" FunctionName="FreeMarketModel.Store.GetAllProductsInOrder">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsInOrder_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

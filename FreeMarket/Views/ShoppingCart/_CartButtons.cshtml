@@ -1,33 +1,36 @@
 ﻿@model FreeMarket.Models.ShoppingCartViewModel
 
 <div class="col-md-12 well">
-	<div class="col-md-9">
-		@if (User.Identity.IsAuthenticated)
-		{
-			<span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" /></span>
-			<span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
-			<span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <a class="btn btn-success btn-sm" href="@Url.Action("SecureDeliveryDetails", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secure Check Out</a></span>
-		}
-		else
-		{
-			<span class="icon-input-btn"><span class="glyphicon glyphicon-user"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Cart", "ShoppingCart") })">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login to Proceed</a></span>
-			<span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
-		}
-	</div>
+    <div class="col-md-9">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" /></span>
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <a class="btn btn-success btn-sm" href="@Url.Action("SecureDeliveryDetails", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secure Check Out</a></span>
+            if (Model.Cart.Order.OrderStatus == "Locked")
+            {
+                <span class="icon-input-btn"><span class="glyphicon glyphicon-remove"></span> <a class="btn btn-danger btn-sm" href="@Url.Action("CancelOrder", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cancel Order</a></span>}
+        }
+        else
+        {
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-user"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Cart", "ShoppingCart") })">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login to Proceed</a></span>
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
+        }
+    </div>
 </div>
 
 <script type="text/javascript">
 
 $(document).ready(function(){
-	$(".icon-input-btn").each(function(){
-		var btnFont = $(this).find(".btn").css("font-size");
-		var btnColor = $(this).find(".btn").css("color");
-		$(this).find(".glyphicon").css("font-size", btnFont);
-		$(this).find(".glyphicon").css("color", btnColor);
-		if($(this).find(".btn-xs").length){
-			$(this).find(".glyphicon").css("top", "24%");
-		}
-	});
+    $(".icon-input-btn").each(function(){
+        var btnFont = $(this).find(".btn").css("font-size");
+        var btnColor = $(this).find(".btn").css("color");
+        $(this).find(".glyphicon").css("font-size", btnFont);
+        $(this).find(".glyphicon").css("color", btnColor);
+        if($(this).find(".btn-xs").length){
+            $(this).find(".glyphicon").css("top", "24%");
+        }
+    });
 });
 
 </script>

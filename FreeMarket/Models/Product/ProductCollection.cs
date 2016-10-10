@@ -57,6 +57,56 @@ namespace FreeMarket.Models
             }
         }
 
+        public static ProductCollection GetProductsInOrder(int orderNumber)
+        {
+            ProductCollection allProducts = new ProductCollection();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                allProducts.Products = db.GetAllProductsInOrder(orderNumber)
+                    .Select(c => new Product
+                    {
+                        Activated = c.Activated,
+                        DateAdded = c.DateAdded,
+                        DateModified = c.DateModified,
+                        DepartmentName = c.DepartmentName,
+                        DepartmentNumber = c.DepartmentNumber,
+                        Description = c.Description,
+                        LongDescription = c.LongDescription,
+                        PricePerUnit = c.PricePerUnit,
+                        ProductNumber = c.ProductNumberID,
+                        Size = c.Size,
+                        SupplierName = c.SupplierName,
+                        SupplierNumber = c.SupplierNumberID,
+                        Weight = c.Weight
+                    }
+                    ).ToList();
+
+                if (allProducts.Products != null && allProducts.Products.Count > 0)
+                {
+                    foreach (Product product in allProducts.Products)
+                    {
+                        int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Medium.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        int imageNumberSecondary = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        product.MainImageNumber = imageNumber;
+                        product.SecondaryImageNumber = imageNumberSecondary;
+                    }
+                }
+
+                Debug.Write(allProducts);
+
+                return allProducts;
+            }
+        }
+
         public override string ToString()
         {
             string toReturn = "";

@@ -89,7 +89,7 @@ namespace FreeMarket.Controllers
 
                 if (cart.Order.OrderStatus == "Locked")
                 {
-                    TempData["errorMessage"] = "Your cart is locked because you are in the process of checking out. Complete or cancel your checkout process.";
+                    TempData["errorMessage"] = "Your cart is locked because you are in the process of checking out. Open your cart to complete or cancel the checkout process.";
                     return JavaScript("window.location = window.location.href;");
                 }
 
@@ -278,12 +278,12 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LockOrder(bool TermsAndConditions)
+        public ActionResult LockOrder(ConfirmOrderViewModel confirmModel)
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
-            if (TermsAndConditions)
+            if (ModelState.IsValid)
             {
                 sessionCart.Order.OrderStatus = "Locked";
                 sessionCart.Save();
@@ -308,9 +308,9 @@ namespace FreeMarket.Controllers
                 if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
                 {
                     ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum, specialDelivery);
-                    model.TermsAndConditions = TermsAndConditions;
+                    model.TermsAndConditions = confirmModel.TermsAndConditions;
 
-                    return View("ConfirmShoppingCart", model);
+                    return View("PayShoppingCart", model);
                 }
                 else
                 {
@@ -322,7 +322,7 @@ namespace FreeMarket.Controllers
             else
             {
                 ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
-                model.TermsAndConditions = TermsAndConditions;
+                model.TermsAndConditions = confirmModel.TermsAndConditions;
 
                 return View("ConfirmShoppingCart", model);
             }
@@ -397,6 +397,15 @@ namespace FreeMarket.Controllers
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        public ActionResult CancelOrder()
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart cart = GetCartFromSession(userId);
+            cart.CancelOrder(userId);
+
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM)

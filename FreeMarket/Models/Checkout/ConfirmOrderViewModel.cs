@@ -1,5 +1,6 @@
 ﻿using FreeMarket.Infrastructure;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace FreeMarket.Models
@@ -10,6 +11,9 @@ namespace FreeMarket.Models
         public string Pay_Request_Id { get; set; }
         public string Checksum { get; set; }
         public bool SpecialDelivery { get; set; }
+
+        [EnforceTrue(ErrorMessage = "You must accept the terms and conditions before you can place your order.")]
+        [DisplayName("Terms and Conditions")]
         public bool TermsAndConditions { get; set; }
 
         public List<Courier> Couriers { get; set; }

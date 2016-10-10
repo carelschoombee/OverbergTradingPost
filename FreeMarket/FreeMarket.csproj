@@ -224,6 +224,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\EnforceTrueAttribute.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\Extensions.cs" />
     <Compile Include="Infrastructure\MinAttribute.cs" />
@@ -248,6 +249,9 @@
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
     <Compile Include="Models\GetAllProductsByDepartment_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetAllProductsInOrder_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetAllProducts_Result.cs">
@@ -374,6 +378,7 @@
     <Compile Include="Models\Product\ProductCollection.cs" />
     <Compile Include="Models\Review\ProductReviewsMetaData.cs" />
     <Compile Include="Models\Review\ProductReviewsCollection.cs" />
+    <Compile Include="Models\Review\RateOrderViewModel.cs" />
     <Compile Include="Models\SiteConfiguration.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -614,6 +619,8 @@
     <Content Include="Views\Admin\_SupplierPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateSupplierPartial.cshtml" />
     <Content Include="Views\Admin\CreateSupplier.cshtml" />
+    <Content Include="Views\ShoppingCart\PayShoppingCart.cshtml" />
+    <Content Include="Views\Manage\RateOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

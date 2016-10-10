@@ -820,6 +820,27 @@ namespace FreeMarket.Models
             }
         }
 
+        public void CancelOrder(string userId)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(Order.OrderNumber);
+                order.OrderStatus = "Cancelled";
+                db.Entry(order).State = EntityState.Modified;
+                db.SaveChanges();
+
+                foreach (OrderDetail temp in Body.OrderDetails)
+                {
+                    temp.OrderItemStatus = "Cancelled";
+                    db.Entry(temp).State = EntityState.Modified;
+                }
+
+                db.SaveChanges();
+            }
+
+            Initialize(userId);
+        }
+
         public override string ToString()
         {
             string toString = "";

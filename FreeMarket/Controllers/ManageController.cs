@@ -326,6 +326,19 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        public ActionResult RateOrder(int orderNumber)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            RateOrderViewModel model = new RateOrderViewModel(orderNumber);
+
+            return View(model);
+        }
+
         public ActionResult ViewOrder(int orderNumber)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
