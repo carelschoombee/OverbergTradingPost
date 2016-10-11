@@ -78,7 +78,12 @@ namespace FreeMarket.Models
                         Size = c.Size,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,
-                        Weight = c.Weight
+                        Weight = c.Weight,
+                        ProductRating = c.ProductRating ?? 0,
+                        ProductReviewText = c.ProductReviewText,
+                        PriceRating = c.PriceRating ?? 0,
+                        ReviewId = c.ReviewId,
+                        PriceOrder = c.Price
                     }
                     ).ToList();
 

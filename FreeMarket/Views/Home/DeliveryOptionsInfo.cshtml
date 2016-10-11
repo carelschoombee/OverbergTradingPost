@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Delivery Options";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="parent" class="center_div container">
+    <div class="col-sm-12">
+        <div class="row">
+            <h1 class="text-center">Delivery Options</h1>
+            <hr />
+        </div>
+        <div class="row">
+            @Html.Partial("_CourierCarousel")
+        </div>
+        <div class="row well">
+            <h2>Door to Door Courier Delivery</h2>
+            We are very aware that a critical aspect for our business to be successful,
+            is that deliveries from us to you need to be done professionally.  We chose
+            Time Freight as our service provider and have faith in their efficiency and
+            effectiveness.  Obviously cost is a major concern for us.  Please note that
+            cost of delivery is fixed, up and to 40 Kg's.  Therefore, the bigger your
+            order the more cost effective it will be to you.  We have benchmarked Time
+            Freights delivery costs with those of other couriers and found it very
+            compettitive.
+
+            Our Pecan nuts have been vacuum packed and stored in an airconditioned
+            facility.  You can either keep yours in a freezer or in your fridge for
+            anything from 12 months to 24 months, without a loss in freshness.  In South
+            Africa Pecan nuts are harvested in May, so it is best pratice to schedule
+            your annual purchases shortly thereafter.
+        </div>
+
+        <div class="row well">
+            <h2>Collect at Your Post Office</h2>
+            Should you choose to, you may collect your order from your local post office.
+            Please note that we cannot be held responsible for any products that may be
+            lost or damaged during the posting process.
+        </div>
+        <div class="col-md-offset-4 row">
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+     $("#myCarousel").carousel({
+
+         interval : 5000
+
+     });
+
+});
+
+$(document).ready(function () {
+    $(".icon-input-btn").each(function () {
+        var btnFont = $(this).find(".btn").css("font-size");
+        var btnColor = $(this).find(".btn").css("color");
+        $(this).find(".glyphicon").css("font-size", btnFont);
+        $(this).find(".glyphicon").css("color", btnColor);
+        if ($(this).find(".btn-xs").length) {
+            $(this).find(".glyphicon").css("top", "24%");
+        }
+    });
+});
+
+</script>

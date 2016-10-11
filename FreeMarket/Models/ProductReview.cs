@@ -23,6 +23,7 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> Date { get; set; }
         public string ReviewContent { get; set; }
         public Nullable<int> SupplierNumber { get; set; }
+        public Nullable<int> PriceRating { get; set; }
     
         public virtual Product Product { get; set; }
     }

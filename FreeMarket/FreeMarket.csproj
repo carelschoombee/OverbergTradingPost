@@ -248,6 +248,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\GetAllCouriersReview_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllProductsByDepartment_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -376,6 +379,7 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product\ProductCollection.cs" />
+    <Compile Include="Models\Review\CourierReviewMetaData.cs" />
     <Compile Include="Models\Review\ProductReviewsMetaData.cs" />
     <Compile Include="Models\Review\ProductReviewsCollection.cs" />
     <Compile Include="Models\Review\RateOrderViewModel.cs" />
@@ -439,7 +443,11 @@
     <Content Include="Content\Images\logoBig.jpg" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
-    <Content Include="Content\Images\struisbaai.jpg" />
+    <Content Include="Content\Images\slideCourier2.png" />
+    <Content Include="Content\Images\slideLocation1.jpg" />
+    <Content Include="Content\Images\slideLocation2.jpg" />
+    <Content Include="Content\Images\slideCourier1.png" />
+    <Content Include="Content\Images\slideLocation3.jpg" />
     <Content Include="Content\Images\TimeFreight.png" />
     <Content Include="Content\Images\visa.png" />
     <Content Include="Content\star-rating.css" />
@@ -621,6 +629,11 @@
     <Content Include="Views\Admin\CreateSupplier.cshtml" />
     <Content Include="Views\ShoppingCart\PayShoppingCart.cshtml" />
     <Content Include="Views\Manage\RateOrder.cshtml" />
+    <Content Include="Views\Manage\_ReviewsPartial.cshtml" />
+    <Content Include="Views\Home\DeliveryOptionsInfo.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\_CourierCarousel.cshtml" />
+    <Content Include="Views\Home\_StruisbaaiCarousel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

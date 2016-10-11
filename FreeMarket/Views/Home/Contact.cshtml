@@ -1,27 +1,41 @@
-﻿
+﻿@using FreeMarket.Models
+@model Support
+
 @{
-    ViewBag.Title = "Pecan Nuts";
+    ViewBag.Title = "Contact Us";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div id="parent" class="center_div container">
     <div class="col-sm-12">
         <div class="row">
-            <h1 class="text-center">Welcome</h1>
+            <h1 class="text-center">Contact Us</h1>
             <hr />
         </div>
         <div class="row">
-            @Html.Partial("_ProductCarousel")
+            @Html.Partial("_StruisbaaiCarousel")
         </div>
         <div class="row well">
-            Welcome to Schoombee And Son.
-            
-            We specialize in premium Pecan nuts, straight from South Africa's most well respected
-            farms. On this website you can purchase nuts which we will either deliver to
-            your door by courier or which you can collect at your local post office.
+            <h2>Location</h2>
+            Schoombee And Son is a partnership that is based in Struisbaai in the Western Cape
+            of South Africa that specializes in Pecan Nuts.
 
-            We deliver in South Africa only and we will refund you in full if you are not
-            satisfied with your purchase. For more information see our terms and conditions.
+            Please feel free to contact us with any queries or concerns.
+        </div>
+
+        <div class="row well">
+            <h2>Phone</h2>
+            <div>
+                <span class="glyphicon glyphicon-phone">@Model.Landline</span>
+            </div>
+            <div>
+                <span class="glyphicon glyphicon-phone">@Model.Cellphone</span>
+            </div>
+        </div>
+
+        <div class="row well">
+            <h2>Email</h2>
+            <span class="glyphicon glyphicon-pencil"><a class="freemarket-link" href="mailto:@Model.Email">Email Us</a></span>
         </div>
         <div class="col-md-offset-4 row">
             <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>

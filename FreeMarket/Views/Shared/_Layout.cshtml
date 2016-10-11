@@ -27,7 +27,7 @@
                 </button>
                 <div>
                     <img src="~/Content/Images/logoSmall.png" />
-                    @Html.ActionLink("Schoombee And Son", "Index", "Product", new { area = "" }, new { @class = "navbar-brand" })                  
+                    @Html.ActionLink("Schoombee And Son", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })                  
                 </div>
             </div>
             <div class="navbar-collapse collapse">
@@ -38,7 +38,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("Nuts, seeds and dried fruit", "", "", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Premium Nuts", "Index", "Product", new { area = "" }, null)</li>
                         </ul>
                     </li>
                     <li>
@@ -48,8 +48,6 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>@Html.ActionLink("Our Suppliers", "", "", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Supplier Login", "", "", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Apply to become a Trusted Supplier", "", "", new { area = "" }, null)</li>
                         </ul>
                     </li>
                     <li>
@@ -59,8 +57,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>@Html.ActionLink("Our Couriers", "", "", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Courier Login", "", "", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Apply to become a Trusted Courier", "", "", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Delivery Options", "DeliveryOptionsInfo", "Home", new { area = "" }, null)</li>
                         </ul>
                     </li>
                     <li>
@@ -69,8 +66,8 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("About", "", "", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Contact Us", "", "", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Contact Us", "Contact", "Home", new { area = "" }, null)</li>
                         </ul>
                     </li>
                 </ul>

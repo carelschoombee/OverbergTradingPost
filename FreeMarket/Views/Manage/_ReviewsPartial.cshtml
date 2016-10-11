@@ -1,0 +1,115 @@
+﻿@using FreeMarket.Models
+@model RateOrderViewModel
+
+<div>
+    @Html.HiddenFor(model => Model.Order.OrderNumber)
+</div>
+
+@for (int i = 0; i < Model.CourierRatings.Count; i++)
+{
+    <div class="row well well-modal">
+        <table class="table table-bordered-custom table-condensed table-responsive">
+            <tr>
+                <th class="col-sm-3">
+                    Courier Name
+                </th>
+                <th class="col-sm-3">
+                    Rating
+                </th>
+                <th class="col-sm-3">
+                    Review
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Model.CourierRatings[i].CourierName
+                    @Html.HiddenFor(model => Model.CourierRatings[i].CourierNumber)
+                    @Html.HiddenFor(model => Model.CourierRatings[i].ReviewId)
+                </td>
+                <td>
+                    <table>
+                        <tr><th>Satisfaction</th></tr>
+                        <tr>
+                            <td data-label="Satisfaction:">
+                                @Html.HiddenFor(model => Model.CourierRatings[i].StarRating, new { @class = "courierRating ratingLoading" })
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td>
+                    @Html.EditorFor(model => Model.CourierRatings[i].ReviewContent)
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+@for (int i = 0; i < Model.Products.Products.Count; i++)
+{
+<div class="row well well-modal">
+    <table class="table table-bordered-custom table-condensed table-responsive">
+        <tr>
+            <th class="col-sm-3">
+                Product
+            </th>
+            <th class="col-sm-3">
+                Product Details
+            </th>
+            <th class="col-sm-3">
+                Rating
+            </th>
+            <th class="col-sm-3">
+                Review
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products.Products[i].MainImageNumber })" alt="@Model.Products.Products[i].Description" title="@Model.Products.Products[i].Description" />
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td data-label="Item:">
+                            <i>@Model.Products.Products[i].Description</i>
+                            @Html.HiddenFor(model => Model.Products.Products[i].ProductNumber)
+                            @Html.HiddenFor(model => Model.Products.Products[i].SupplierNumber)
+                            @Html.HiddenFor(model => Model.Products.Products[i].ReviewId)
+                        </td>
+                    </tr>
+                    <tr><td data-label="Price:"><i>@String.Format("{0:C}", Model.Products.Products[i].PriceOrder) each</i></td></tr>
+                    <tr><td data-label="Purchase Date:"><i>@Model.Order.OrderDatePlaced.Value.ToShortDateString()</i></td></tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr><th>Quality</th></tr>
+                    <tr>
+                        <td data-label="Quality:">
+                            @Html.HiddenFor(model => Model.Products.Products[i].ProductRating, new { @class = "starRating ratingLoading" })
+                        </td>
+                    </tr>
+                    <tr><th>Price</th></tr>
+                    <tr>
+                        <td data-label="Price:">
+                            @Html.HiddenFor(model => Model.Products.Products[i].PriceRating, new { @class = "priceRating ratingLoading" })
+                        </td>
+                    </tr>
+                </table>
+                
+            </td>
+            <td>
+                @Html.EditorFor(model => Model.Products.Products[i].ProductReviewText)
+            </td>
+        </tr>
+    </table>
+</div>
+}
+
+<script language="javascript" type="text/javascript">
+
+    $('.starRating').rating({ min: 0, max: 3, size: 'xs', step: 1, stars: 3, starCaptions: { 1: 'Substandard', 2: 'Good', 3: 'Excellent' }, clearCaption: 'Not yet rated', hoverChangeCaption: false });
+    $('.priceRating').rating({ min: 0, max: 3, size: 'xs', step: 1, stars: 3, starCaptions: { 1: 'Expensive', 2: 'Just Right', 3: 'Bargain' }, clearCaption: 'Not yet rated', hoverChangeCaption: false });
+    $('.courierRating').rating({ min: 0, max: 3, size: 'xs', step: 1, stars: 3, starCaptions: { 1: 'Poor', 2: 'Good', 3: 'Excellent' }, clearCaption: 'Not yet rated', hoverChangeCaption: false });
+
+</script>

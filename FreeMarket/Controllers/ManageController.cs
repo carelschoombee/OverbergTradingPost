@@ -339,6 +339,91 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateReviews(RateOrderViewModel model)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                foreach (Product p in model.Products.Products)
+                {
+                    if (p.ReviewId == 0)
+                    {
+                        ProductReview review = new ProductReview
+                        {
+                            Author = user.Name,
+                            Date = DateTime.Now,
+                            OrderNumber = model.Order.OrderNumber,
+                            PriceRating = p.PriceRating,
+                            ProductNumber = p.ProductNumber,
+                            ReviewContent = p.ProductReviewText,
+                            StarRating = (short)p.ProductRating,
+                            SupplierNumber = p.SupplierNumber,
+                            UserId = user.Id
+                        };
+
+                        db.ProductReviews.Add(review);
+                    }
+                    else
+                    {
+                        ProductReview review = db.ProductReviews.Find(p.ReviewId);
+
+                        if (review != null)
+                        {
+                            review.Date = DateTime.Now;
+                            review.PriceRating = p.PriceRating;
+                            review.ReviewContent = p.ProductReviewText;
+                            review.StarRating = (short)p.ProductRating;
+
+                            db.Entry(review).State = System.Data.Entity.EntityState.Modified;
+                        }
+                    }
+                }
+
+                foreach (CourierReview cReview in model.CourierRatings)
+                {
+                    if (cReview.ReviewId == 0)
+                    {
+                        CourierReview review = new CourierReview
+                        {
+                            Author = user.Name,
+                            Date = DateTime.Now,
+                            OrderNumber = model.Order.OrderNumber,
+                            ReviewContent = cReview.ReviewContent,
+                            StarRating = (short)cReview.StarRating,
+                            CourierNumber = cReview.CourierNumber,
+                            UserId = user.Id
+                        };
+
+                        db.CourierReviews.Add(review);
+                    }
+                    else
+                    {
+                        CourierReview review = db.CourierReviews.Find(cReview.ReviewId);
+
+                        if (review != null)
+                        {
+                            review.Date = DateTime.Now;
+                            review.ReviewContent = cReview.ReviewContent;
+                            review.StarRating = (short)cReview.StarRating;
+
+                            db.Entry(review).State = System.Data.Entity.EntityState.Modified;
+                        }
+                    }
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("RateOrder", new { orderNumber = model.Order.OrderNumber });
+            }
+        }
+
         public ActionResult ViewOrder(int orderNumber)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());

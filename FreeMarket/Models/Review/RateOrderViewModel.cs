@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FreeMarket.Models
 {
@@ -6,9 +7,7 @@ namespace FreeMarket.Models
     {
         public OrderHeader Order { get; set; }
         public ProductCollection Products { get; set; }
-        public Dictionary<int, int> ProductRatings { get; set; }
-        public Dictionary<int, int> PriceRatings { get; set; }
-        public Dictionary<int, int> CourierRatings { get; set; }
+        public List<CourierReview> CourierRatings { get; set; }
 
         public RateOrderViewModel()
         {
@@ -25,6 +24,16 @@ namespace FreeMarket.Models
                     return;
 
                 Products = ProductCollection.GetProductsInOrder(orderNumber);
+
+                CourierRatings = db.GetAllCouriersReview(orderNumber)
+                    .Select(c => new CourierReview
+                    {
+                        CourierNumber = c.CourierNumber,
+                        ReviewContent = c.ReviewContent,
+                        StarRating = c.StarRating,
+                        CourierName = c.CourierName,
+                        ReviewId = c.ReviewId
+                    }).ToList();
             }
         }
     }

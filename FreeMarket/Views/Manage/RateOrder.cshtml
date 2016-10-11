@@ -6,3 +6,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="container">
+    <div class="col-md-12">
+        <div class="row">
+            <h1 class="text-center">Please Rate Your Order</h1>
+            <hr />
+        </div>
+        @using (Html.BeginForm("UpdateReviews", "Manage", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Partial("_ReviewsPartial", Model)
+            <div class="col-md-offset-5">
+                <span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-success" /></span>
+            </div>
+        }
+    </div>
+</div>

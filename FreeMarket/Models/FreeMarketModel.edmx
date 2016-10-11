@@ -321,6 +321,7 @@
           <Property Name="StarRating" Type="smallint" />
           <Property Name="Date" Type="datetime" />
           <Property Name="ReviewContent" Type="nvarchar(max)" />
+          <Property Name="PriceRating" Type="int" />
         </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
@@ -643,6 +644,9 @@
           <Parameter Name="productNumber" Type="int" Mode="In" />
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
           <Parameter Name="quantityRequested" Type="int" Mode="In" />
+          <Parameter Name="orderNumber" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetAllCouriersReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="GetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1170,6 +1174,9 @@
             <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
           </AssociationSet>
           <FunctionImport Name="GetAllProductsInOrder" ReturnType="Collection(FreeMarketModel.GetAllProductsInOrder_Result)">
+          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllCouriersReview" ReturnType="Collection(FreeMarketModel.GetAllCouriersReview_Result)">
             <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -1421,6 +1428,7 @@
           <Property Name="ReviewContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="ProductReview" ToRole="Product" />
           <Property Name="SupplierNumber" Type="Int32" />
+          <Property Name="PriceRating" Type="Int32" />
         </EntityType>
         <Association Name="FK_CourierReview_Courier">
           <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
@@ -1743,6 +1751,17 @@
           <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
           <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+          <Property Type="Int16" Name="ProductRating" Nullable="true" />
+          <Property Type="String" Name="ProductReviewText" Nullable="true" />
+          <Property Type="Int32" Name="ReviewId" Nullable="false" />
+          <Property Type="Int32" Name="PriceRating" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllCouriersReview_Result">
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="String" Name="ReviewContent" Nullable="true" />
+          <Property Type="Int16" Name="StarRating" Nullable="true" />
+          <Property Type="Int32" Name="ReviewId" Nullable="false" />
+          <Property Type="String" Name="CourierName" Nullable="false" MaxLength="100" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2120,6 +2139,7 @@
           <EntitySetMapping Name="ProductReviews">
             <EntityTypeMapping TypeName="FreeMarketModel.ProductReview">
               <MappingFragment StoreEntitySet="ProductReview">
+                <ScalarProperty Name="PriceRating" ColumnName="PriceRating" />
                 <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
                 <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -2382,6 +2402,21 @@
                 <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
                 <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ProductRating" ColumnName="ProductRating" />
+                <ScalarProperty Name="ProductReviewText" ColumnName="ProductReviewText" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+                <ScalarProperty Name="PriceRating" ColumnName="PriceRating" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllCouriersReview" FunctionName="FreeMarketModel.Store.GetAllCouriersReview">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllCouriersReview_Result">
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+                <ScalarProperty Name="StarRating" ColumnName="StarRating" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
