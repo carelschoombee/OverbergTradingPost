@@ -1,0 +1,49 @@
+﻿@using FreeMarket.Models
+@model List<OrderHeader>
+
+<table class="table table-bordered-custom table-responsive">
+    <tr>
+        <td colspan="5"><h2>Confirmed Orders</h2></td>
+    </tr>
+    @if (Model != null && Model.Count != 0)
+    {
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Customer Name
+            </th>
+            <th>
+                Total
+            </th>
+            <th>
+                PDF
+            </th>
+            <th>
+                Mark Complete
+            </th>
+        </tr>
+        for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { @class = "freemarket-link" })
+                    @Html.HiddenFor(model => Model[i].OrderNumber)
+                </td>
+                <td>@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
+                <td>@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
+                <td><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
+                <td>@Html.EditorFor(c => Model[i].Selected)</td>
+            </tr>
+        }
+    }
+    else
+    { 
+        <tr>
+            <td style="font-size: 20px">
+                There are no new confirmed orders to be processed.
+            </td>
+        </tr>
+    }
+</table>

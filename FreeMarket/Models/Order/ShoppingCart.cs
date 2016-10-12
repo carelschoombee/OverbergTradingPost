@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -814,6 +815,7 @@ namespace FreeMarket.Models
             {
                 OrderHeader order = db.OrderHeaders.Find(orderNumber);
                 order.OrderStatus = "Confirmed";
+                order.OrderDatePlaced = DateTime.Now;
                 order.PaymentReceived = true;
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -21,6 +22,7 @@ namespace FreeMarket.Models
         public string CustomerEmail { get; set; }
         public string CustomerPrimaryContactPhone { get; set; }
         public string CustomerPreferredCommunicationMethod { get; set; }
+        public bool Selected { get; set; }
 
         public static OrderHeader GetOrderForShoppingCart(string customerNumber)
         {
@@ -260,6 +262,61 @@ namespace FreeMarket.Models
             return outCollection;
         }
 
+        public async static void SendRatingEmail(string customerNumber, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ApplicationUser user = System.Web.HttpContext
+                            .Current
+                            .GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(customerNumber);
+
+                EmailService email = new EmailService();
+
+                IdentityMessage iMessage = new IdentityMessage();
+                iMessage.Destination = user.Email;
+
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine2")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine3")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine4")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line5 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine5")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line6 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateLine6")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                var requestContext = HttpContext.Current.Request.RequestContext;
+                string url = "https://www.schoombeeandson.co.za" + new UrlHelper(requestContext).Action("RateOrder", "Manage", new { orderNumber = orderNumber });
+
+                iMessage.Body = string.Format((line1 + line2 + line3 + line4 + line5 + line6), user.Name, url);
+                iMessage.Subject = string.Format("Schoombee and Son Order");
+
+                await email.SendAsync(iMessage);
+            }
+        }
+
         public async static void SendConfirmationEmail(string customerNumber, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -374,7 +431,6 @@ namespace FreeMarket.Models
                     await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
                 }
             }
-
         }
 
         public override string ToString()

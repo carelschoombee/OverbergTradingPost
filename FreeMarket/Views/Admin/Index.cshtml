@@ -1,20 +1,278 @@
-﻿
+﻿@using FreeMarket.Models
+@model Dashboard
+
 @{
     ViewBag.Title = "Administration";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "CompleteTable",
+        LoadingElementId = "loadingDiv",
+    };
+}
+
 <br />
 
-<h2 class="text-center">Administration</h2>
+<h2 class="text-center"><span class="glyphicon glyphicon-dashboard">Dashboard</span></h2>
 
 <hr />
 
-<div id="parent" class="center_div well well-modal">
-
-    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
-    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
-    <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
-
+<div id="loadingDiv" style="display:none;">
+    <img src="@Url.Content("~/Content/Images/loading.gif")"/>
 </div>
 
+<div class="center_div well well-modal">
+
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
+        <li><a href="#orders" data-toggle="tab">Orders</a></li>
+        <li><a href="#profile" data-toggle="tab">Admin</a></li>
+        <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
+        <li><a href="#customers" data-toggle="tab">Customers</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="home">
+            <div class="row">
+                <div>
+                    @using (Html.BeginForm("Dashboard", "Admin", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.Label("Period", new { @class = "col-md-4 control-label" })
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(model => Model.SelectedYear, Model.YearOptions, new { @class = "form-control", @onchange = "this.form.submit();" })
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <h2 class="text-center">Sales</h2>
+                <div id="sales" style="height: 250px;"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2 class="text-center">Transaction Status</h2>
+                    <div id="transactionStatus" style="height: 250px;"></div>
+                </div>
+                <div class="col-sm-6">
+                    <h2 class="text-center">Payment Methods</h2>
+                    <div id="paymentTypes" style="height: 250px;"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2 class="text-center">Order Statuses</h2>
+                    <div id="orderStatuses" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="orders">
+            @using (Ajax.BeginForm("MarkComplete", "Admin", null, ajaxOpts))
+            {
+                @Html.AntiForgeryToken()
+
+                <div id="CompleteTable">
+                    @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
+                </div>
+
+                <div>
+                    <span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" /></span>
+                </div>
+            }
+        </div>
+        <div class="tab-pane" id="ratings">
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td colspan="2"><h2>Orders</h2></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Orders:
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Completed Orders:
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Cancelled Orders:
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane" id="customers">
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td colspan="2"><h2>Orders</h2></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Orders:
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Completed Orders:
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Cancelled Orders:
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane" id="profile">
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
+            <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('lastTab', $(this).attr('href'));
+        });
+
+        var lastTab = localStorage.getItem('lastTab');
+        if (lastTab) {
+            $('[href="' + lastTab + '"]').tab('show');
+        }
+    });
+
+    $(document).ready(function () {
+        if (location.hash) {
+            $('a[href=' + location.hash + ']').tab('show');
+        }
+        $(document.body).on("click", "a[data-toggle]", function (event) {
+            location.hash = this.getAttribute("href");
+        });
+    });
+    $(window).on('popstate', function () {
+        var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+        $('a[href=' + anchor + ']').tab('show');
+    });
+
+    new Morris.Line({
+        // ID of the element in which to draw the chart.
+        element: 'sales',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        parseTime: false,
+        data: [
+            @foreach (KeyValuePair<string, decimal> record in Model.SalesInformation.SalesDetails)
+            {
+                if (Model.SelectedYear == "0")
+                {
+                    <text>
+                    { Year: '@record.Key', value: @(((int)record.Value)) },
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    { Month: '@record.Key', value: @(((int)record.Value)) },
+                    </text>
+                }
+            }
+        ],
+
+        @if (Model.SelectedYear == "0")
+        {
+            <text>
+                xkey: 'Year',
+            </text>
+        }
+        else
+        {
+            <text>
+                xkey: 'Month',
+            </text>
+        }
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['value'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['Value']
+    });
+
+    new Morris.Donut({
+        element: 'transactionStatus',
+        parseTime: false,
+        data: [
+            @foreach (KeyValuePair<string, int> record in Model.SalesInformation.TransactionDetails)
+            {
+                <text>
+                { label: "@record.Key", value: @record.Value },
+                </text>
+            }
+        ],
+        labelColor: '#ffffff',
+        colors: [
+            '#ff0000',
+            '#0BA462',
+            '#ff6600',
+            '#ffff00',
+            '#9999ff'
+        ]
+    });
+
+    new Morris.Donut({
+        element: 'paymentTypes',
+        parseTime: false,
+        data: [
+          @foreach (KeyValuePair<string, int> record in Model.SalesInformation.PaymentDetails)
+          {
+            <text>
+            { label: "@record.Key", value: @record.Value },
+            </text>
+          }
+        ],
+        labelColor: '#ffffff',
+        colors: [
+        '#0BA462',
+        '#39B580',
+        '#67C69D',
+        '#95D7BB',
+        '#00cc88',
+        '#33ffbb'
+        ],
+    });
+
+    new Morris.Donut({
+        element: 'orderStatuses',
+        parseTime: false,
+        data: [
+            { label: "Confirmed", value: @Model.SalesInformation.TotalSuccessfulOrders },
+            { label: "Unconfirmed", value: @Model.SalesInformation.TotalUnconfirmedOrders },
+            { label: "Cancelled", value: @Model.SalesInformation.TotalCancelledOrders },
+            { label: "Locked", value: @Model.SalesInformation.TotalLockedOrders },
+          ],
+        labelColor: '#ffffff',
+        colors: [
+        '#33ffbb',
+        '#ffff33',
+        '#cc0000',
+        '#66ccff'
+        ],
+    });
+
+</script>

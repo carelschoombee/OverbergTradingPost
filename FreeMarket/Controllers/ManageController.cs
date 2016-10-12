@@ -334,9 +334,30 @@ namespace FreeMarket.Controllers
                 return View("Error");
             }
 
-            RateOrderViewModel model = new RateOrderViewModel(orderNumber);
+            OrderHeader order = new OrderHeader();
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                order = db.OrderHeaders.Find(orderNumber);
 
-            return View(model);
+                if (order == null)
+                {
+                    return View("Error");
+                }
+            }
+
+            // Only allow the owner of the order to rate it.
+            RateOrderViewModel model = new RateOrderViewModel();
+            if (user.Id == order.CustomerNumber)
+            {
+                model = new RateOrderViewModel(orderNumber);
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
         }
 
         [HttpPost]

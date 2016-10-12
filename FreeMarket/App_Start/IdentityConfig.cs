@@ -33,8 +33,7 @@ namespace FreeMarket
             request.AddParameter("subject", message.Subject);
             string body = EmailService.Borderify(message.Body);
             request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Free Market platform</td></tr><tr><td><br /><img src=\"cid:google.png\"></td></tr></table><body></html>", body));
-            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/google.png"));
-            request.AddFile("attachment", Path.Combine("files", HttpContext.Current.Server.MapPath("~/Content/Images/google.png")));
+            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg"));
             request.Method = Method.POST;
 
             client.Execute(request);

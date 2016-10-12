@@ -229,7 +229,9 @@
     <Compile Include="Infrastructure\Extensions.cs" />
     <Compile Include="Infrastructure\MinAttribute.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
+    <Compile Include="Models\Admin\SalesInfo.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DateTimeModelBinder.cs" />
     <Compile Include="Models\Binders\DecimalModelBinder.cs" />
@@ -450,10 +452,13 @@
     <Content Include="Content\Images\slideLocation3.jpg" />
     <Content Include="Content\Images\TimeFreight.png" />
     <Content Include="Content\Images\visa.png" />
+    <Content Include="Content\morris.css" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
     <Content Include="Scripts\animsition.js" />
     <Content Include="Scripts\animsition.min.js" />
+    <Content Include="Scripts\morris.min.js" />
+    <Content Include="Scripts\raphael.min.js" />
     <Content Include="Scripts\star-rating.js" />
     <Content Include="Scripts\star-rating.min.js" />
     <Content Include="siteIcon.ico" />
@@ -634,6 +639,8 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\_CourierCarousel.cshtml" />
     <Content Include="Views\Home\_StruisbaaiCarousel.cshtml" />
+    <Content Include="Views\Admin\_ConfirmedOrders.cshtml" />
+    <Content Include="Views\Admin\ViewOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

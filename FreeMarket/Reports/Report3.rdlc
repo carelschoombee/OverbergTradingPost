@@ -4658,10 +4658,10 @@
         <Source>Embedded</Source>
         <Value>paid</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>2.68845cm</Top>
+        <Top>3.42928cm</Top>
         <Left>12.09887cm</Left>
-        <Height>2.0235cm</Height>
-        <Width>2.516cm</Width>
+        <Height>1.28267cm</Height>
+        <Width>1.77517cm</Width>
         <ZIndex>13</ZIndex>
         <Style>
           <Border>

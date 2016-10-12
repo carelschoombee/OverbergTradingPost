@@ -1,0 +1,172 @@
+﻿@using FreeMarket.Models
+@model OrderHeaderViewModel
+
+@{
+    ViewBag.Title = "View Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container text-center">
+
+    <div class="row well well-modal">
+        <div class="col-sm-6">
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td colspan="2">
+                        Customer Details
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        @Model.Order.CustomerName
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Order.CustomerEmail
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Order.CustomerPrimaryContactPhone
+                    </td>
+                </tr>
+            </table>
+            @if (Model.Couriers != null && Model.Couriers.Count > 0)
+            {
+                if (Model.SpecialDelivery)
+                {
+                    <table class="table table-bordered-custom table-responsive">
+                        <tr>
+                            <td colspan="2">
+                                Courier/Shipping Information
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Courier Name:
+                            </th>
+                            <td>
+                                Schoombee and Son Delivery (deliver within 48 hours)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Email Address:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;info@schoombeeandson.co.za
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Contact Number:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;083 680 8780
+                            </td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    foreach (Courier courier in Model.Couriers)
+                    {
+                        <table class="table table-bordered-custom table-responsive">
+                            <tr>
+                                <td colspan="2">
+                                    Courier/Shipping Information
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Courier Name:
+                                </th>
+                                <td>
+                                    @courier.CourierName
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Email Address:
+                                </th>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@courier.MainContactEmailAddress
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Contact Number:
+                                </th>
+                                <td>
+                                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@courier.MainContactTelephoneNumber
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                }
+            }
+
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td colspan="2">
+                        Order Information
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.LabelFor(c => Model.Order.OrderNumber)
+                    </th>
+                    <td data-label="Order:">
+                        @Html.DisplayFor(c => Model.Order.OrderNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Preferred Delivery Date
+                    </th>
+                    <td>
+                        @string.Format("{0:f}", Model.Order.DeliveryDate)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Delivery Address <span class="glyphicon glyphicon-home"></span>&nbsp; </th>
+
+                    <td>
+                        <span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <span class="icon-input-btn"><span class="glyphicon glyphicon-star"></span> <a class="btn btn-success btn-lg" href="@Url.Action("RateOrder", "Manage", new { orderNumber = Model.Order.OrderNumber })">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rate this order</a></span>
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-bordered-totals well well-banner">
+                <tr>
+                    <td colspan="2">
+                        Total Costs
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-right"><strong>Sub-Total:</strong></td>
+                    <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.SubTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-right"><strong>Shipping:</strong></td>
+                    <td class="col-sm-2 text-right"><strong>@string.Format("{0:C}", Model.Order.ShippingTotal)</strong></td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2 text-right"><strong style="font-size: 24px">Total:</strong></td>
+                    <td class="col-sm-2 text-right"><strong style="font-size: 24px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

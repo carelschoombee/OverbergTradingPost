@@ -1,7 +1,10 @@
 ﻿using FreeMarket.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,7 +17,60 @@ namespace FreeMarket.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View();
+            Dashboard model = new Dashboard(null);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Dashboard(Dashboard data)
+        {
+            Dashboard model = new Dashboard(data.SelectedYear);
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarkComplete(List<OrderHeader> orders)
+        {
+            List<OrderHeader> selected = orders
+                .Where(c => c.Selected)
+                .ToList();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (selected.Count > 0)
+                {
+                    foreach (OrderHeader oh in selected)
+                    {
+                        OrderHeader order = db.OrderHeaders.Find(oh.OrderNumber);
+
+                        if (order != null)
+                        {
+                            order.OrderStatus = "Complete";
+                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+
+                            OrderHeader.SendRatingEmail(order.CustomerNumber, order.OrderNumber);
+                        }
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("DeliverPartialTable", "Admin");
+        }
+
+        public ActionResult DeliverPartialTable()
+        {
+            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+            }
+
+            return PartialView("_ConfirmedOrders", confirmedOrders);
         }
 
         public ActionResult ProductsIndex()
@@ -74,6 +130,29 @@ namespace FreeMarket.Controllers
             {
                 TempData["errorMessage"] = "That report does not exist";
                 return View("DownloadReport", model);
+            }
+        }
+
+        public ActionResult DownloadReportConfirmed(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+
+            if (ModelState.IsValid)
+            {
+                Dictionary<MemoryStream, string> obj = OrderHeader.GetDeliveryInstructions(orderNumber);
+
+                if (obj == null || obj.Count == 0)
+                {
+                    TempData["errorMessage"] = "An error occurred during report creation.";
+                    return View("Index");
+                }
+
+                return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", orderNumber));
+            }
+            else
+            {
+                TempData["errorMessage"] = "That report does not exist";
+                return View("Index");
             }
         }
 
@@ -137,6 +216,40 @@ namespace FreeMarket.Controllers
             Supplier supplier = Supplier.GetSupplier(supplierNumber);
 
             return View(supplier);
+        }
+
+        public ActionResult GetCustomerName(int orderNumber)
+        {
+            OrderHeader order = new OrderHeader();
+            ApplicationUser user = new ApplicationUser();
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return Content("Customer");
+
+                user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(order.CustomerNumber);
+            }
+
+            return Content(user.Name);
+        }
+
+        public ActionResult GetCustomerPhone(int orderNumber)
+        {
+            OrderHeader order = new OrderHeader();
+            ApplicationUser user = new ApplicationUser();
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return Content("Customer");
+
+                user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(order.CustomerNumber);
+            }
+
+            return Content(user.PhoneNumber);
         }
 
         [HttpPost]

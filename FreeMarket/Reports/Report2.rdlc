@@ -4398,7 +4398,7 @@
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
         <Top>10.49211cm</Top>
-        <Height>11.95577cm</Height>
+        <Height>11.95574cm</Height>
         <Width>16.88395cm</Width>
         <ZIndex>11</ZIndex>
         <Style>
@@ -4512,10 +4512,10 @@
         <Source>Embedded</Source>
         <Value>paid</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>2.68845cm</Top>
+        <Top>3.47162cm</Top>
         <Left>12.09887cm</Left>
-        <Height>2.0235cm</Height>
-        <Width>2.516cm</Width>
+        <Height>1.24033cm</Height>
+        <Width>1.52117cm</Width>
         <ZIndex>13</ZIndex>
         <Style>
           <Border>

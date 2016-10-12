@@ -34,13 +34,18 @@ namespace FreeMarket
             bundles.Add(new ScriptBundle("~/bundles/animsition").Include(
                       "~/Scripts/animsition.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/morris").Include(
+                      "~/Scripts/raphael.min.js",
+                      "~/Scripts/morris.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       //"~/Content/bootstrap-theme.min.css",
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap.datetimepicker.min.css",
                       "~/Content/site.css",
                       "~/Content/animsition.min.css",
-                      "~/Content/star-rating.css"));
+                      "~/Content/star-rating.css",
+                      "~/Content/morris.css"));
         }
     }
 }
