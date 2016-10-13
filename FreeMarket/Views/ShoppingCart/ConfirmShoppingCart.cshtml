@@ -155,7 +155,10 @@
             @using (Html.BeginForm("LockOrder", "ShoppingCart", FormMethod.Post))
             {
                 @Html.AntiForgeryToken();
-                <div>To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our terms and conditions: @Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
+                <div style="font-size:20px">To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our <a data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+                     class="conditionClass freemarket-link">terms and conditions (here)</a>: </div>
+                <div class="col-sm-offset-3">@Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div>@Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
                 <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <input type="submit" value="Confirm" class="btn btn-success" /></span>
             }
         </div>
@@ -182,6 +185,8 @@
         </div>
     </div>
 </div>
+
+@Html.Partial("_TermsAndConditionsContainer")
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

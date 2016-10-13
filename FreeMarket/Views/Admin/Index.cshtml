@@ -211,7 +211,9 @@
         ykeys: ['value'],
         // Labels for the ykeys -- will be displayed when you hover over the
         // chart.
-        labels: ['Value']
+        labels: ['Value'],
+        resize: true,
+        preUnits:  'R '
     });
 
     new Morris.Donut({
@@ -273,6 +275,14 @@
         '#cc0000',
         '#66ccff'
         ],
+    });
+
+    $(window).on('resize', function() {
+        if (!window.recentResize) {
+            window.m.redraw();
+            window.recentResize = true;
+            setTimeout(function(){ window.recentResize = false; }, 200);
+        }
     });
 
 </script>

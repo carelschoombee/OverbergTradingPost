@@ -20,17 +20,26 @@ namespace FreeMarket.Models
         public string AddressName { get; set; }
         public CustomerAddress Address { get; set; }
 
+        public DeliveryType DeliveryOptions { get; set; }
+
         public SaveCartViewModel() { }
 
-        public SaveCartViewModel(string customerNumber, OrderHeader order)
+        public SaveCartViewModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
         {
-            SetModel(customerNumber, order);
+            SetModel(customerNumber, order, courierFee, postalFee);
         }
 
-        public void SetModel(string customerNumber, OrderHeader order)
+        public void SetModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                DeliveryOptions = new DeliveryType()
+                {
+                    SelectedDeliveryType = order.DeliveryType,
+                    CourierCost = courierFee,
+                    PostOfficeCost = postalFee
+                };
+
                 List<CustomerAddress> addresses = db.CustomerAddresses
                     .Where(c => c.CustomerNumber == customerNumber)
                     .ToList();

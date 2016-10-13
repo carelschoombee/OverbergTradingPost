@@ -1,0 +1,17 @@
+﻿@using FreeMarket.Models
+@model SaveCartViewModel
+
+<div id="radioDiv" class="form-group col-md-12">
+    <table class="table table-responsive table-condensed table-bordered-custom">
+        <tr>
+            <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier")</td>
+            <td>Deliver via Courier</td>
+            <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+        </tr>
+        <tr>
+            <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice")</td>
+            <td>Deliver via Post Office</td>
+            <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
+        </tr>
+    </table>
+</div>

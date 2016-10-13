@@ -235,7 +235,13 @@
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DateTimeModelBinder.cs" />
     <Compile Include="Models\Binders\DecimalModelBinder.cs" />
+    <Compile Include="Models\CalculateCourierFeeAdhoc_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CalculateCourierFee_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CalculateDeliveryFeeAdhoc_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CalculateDeliveryFee_Result.cs">
@@ -342,6 +348,7 @@
     <Compile Include="Models\Order\CourierFeeViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />
+    <Compile Include="Models\Order\DeliveryType.cs" />
     <Compile Include="Models\Order\OrderDetailMetaData.cs" />
     <Compile Include="Models\Order\OrderHeaderMetaData.cs" />
     <Compile Include="Models\Order\ProductMetaData.cs" />
@@ -641,6 +648,10 @@
     <Content Include="Views\Home\_StruisbaaiCarousel.cshtml" />
     <Content Include="Views\Admin\_ConfirmedOrders.cshtml" />
     <Content Include="Views\Admin\ViewOrder.cshtml" />
+    <Content Include="Views\Home\_TermsAndConditionsModal.cshtml" />
+    <Content Include="Views\Home\_TermsAndConditionsContainer.cshtml" />
+    <Content Include="Views\ShoppingCart\_TermsAndConditionsContainer.cshtml" />
+    <Content Include="Views\ShoppingCart\_CartModifyDeliveryTypeDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,9 +29,11 @@ namespace FreeMarket.Models
         public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
         public Nullable<decimal> CourierFee { get; set; }
+        public Nullable<bool> CannotDeliver { get; set; }
         public Nullable<System.DateTime> OrderDatePlaced { get; set; }
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string OrderStatus { get; set; }
         public bool PaymentReceived { get; set; }
+        public string DeliveryType { get; set; }
     }
 }

@@ -194,11 +194,53 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
-            SaveCartViewModel model = new SaveCartViewModel(userId, sessionCart.Order);
+            decimal courierCost = sessionCart.CalculateCourierFee();
+            decimal postOfficeCost = sessionCart.CalculatePostalFee();
+
+            SaveCartViewModel model = new SaveCartViewModel(userId, sessionCart.Order, courierCost, postOfficeCost);
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
             return View("CheckoutDeliveryDetails", model);
+        }
+
+        [HttpPost]
+        public ActionResult GetDeliveryOptions(string id, string selectedDeliveryType)
+        {
+            SaveCartViewModel model = new SaveCartViewModel();
+            DeliveryType options = new DeliveryType();
+
+            //postalcode
+            if (!string.IsNullOrEmpty(id) && id.Length == 4)
+            {
+                try
+                {
+                    int.Parse(id);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+
+                string userId = User.Identity.GetUserId();
+                ShoppingCart sessionCart = GetCartFromSession(userId);
+
+                decimal courierCost = sessionCart.CalculateCourierFeeAdhoc(int.Parse(id));
+                decimal postOfficeCost = sessionCart.CalculatePostalFee();
+
+                options = new DeliveryType()
+                {
+                    SelectedDeliveryType = selectedDeliveryType,
+                    CourierCost = courierCost,
+                    PostOfficeCost = postOfficeCost
+                };
+
+                model.DeliveryOptions = options;
+
+                return PartialView("_CartModifyDeliveryTypeDetails", model);
+            }
+
+            return null;
         }
 
         [HttpPost]
@@ -221,7 +263,7 @@ namespace FreeMarket.Controllers
                 {
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 
-                    return PartialView("_SaveCartModal", model);
+                    return View("CheckoutDeliveryDetails", model);
                 }
 
                 sessionCart.UpdateDeliveryDetails(model);

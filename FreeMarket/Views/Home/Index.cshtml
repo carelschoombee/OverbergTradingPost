@@ -5,29 +5,33 @@
 }
 
 <div id="parent" class="center_div container">
-    <div class="col-sm-12">
-        <div class="row">
-            <h1 class="text-center">Welcome</h1>
-            <hr />
-        </div>
-        <div class="row">
-            @Html.Partial("_ProductCarousel")
-        </div>
-        <div class="row well">
-            Welcome to Schoombee And Son.
+    <div class="row">
+        <h1 class="text-center">Welcome</h1>
+        <hr />
+    </div>
+    <div class="row">
+        @Html.Partial("_ProductCarousel")
+    </div>
+    <div class="row well">
+        Welcome to Schoombee And Son.
             
-            We specialize in premium Pecan nuts, straight from South Africa's most well respected
-            farms. On this website you can purchase nuts which we will either deliver to
-            your door by courier or which you can collect at your local post office.
+        We specialize in premium Pecan nuts, straight from South Africa's most well respected
+        farms. On this website you can purchase nuts which we will either deliver to
+        your door by courier or which you can collect at your local post office.
 
-            We deliver in South Africa only and we will refund you in full if you are not
-            satisfied with your purchase. For more information see our terms and conditions.
-        </div>
-        <div class="col-md-offset-4 row">
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
-        </div>
+        We deliver in South Africa only and we will refund you in full if you are not
+        satisfied with your purchase. For more information see our terms and conditions.
+    </div>
+    <div class="row well text-center">
+        <a data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+           class="conditionClass freemarket-link"><span class="glyphicon glyphicon-paperclip" aria-hidden="true">&nbsp; Click here to read our terms and conditions.</span></a>
+    </div>
+    <div class="col-md-offset-4 row">
+        <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
     </div>
 </div>
+
+@Html.Partial("_TermsAndConditionsContainer")
 
 <script type="text/javascript">
 

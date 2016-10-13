@@ -140,6 +140,10 @@ a:hover {
     font-weight: 600;
 }
 
+.table td {
+    font-size: 20px !important;
+}
+
 .table-striped td {
   text-align: center;
 }
@@ -355,11 +359,11 @@ th, td {
 
 .table-scroll-parent{
   display: block;
-  height: 200px;
+  height: 600px;
   overflow-y: scroll;
   /*border: 1px solid black !important;*/
-  font-size: 12px !important;
-  font-weight: 800;
+  /*font-size: 12px !important;*/
+  /*font-weight: 800;*/
 }
 
 .table-scroll-parent-fit{
@@ -458,6 +462,3 @@ th, td {
 }
 
 a.freemarket-link { color: white }
-/*a.freemarket-link:active { color: #666666 }
-a.freemarket-link:link { color: #999999 }
-a.freemarket-link:visited { color: #CCCCCC }*/

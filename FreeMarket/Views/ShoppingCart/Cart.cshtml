@@ -32,31 +32,27 @@ else
 {
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-12">
-                    @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "cartForm" }))
-                    {
-                        @Html.AntiForgeryToken();
+            <div>
+                @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "cartForm" }))
+                {
+                    @Html.AntiForgeryToken();
 
-                        @Html.Partial("_CartBody", Model)
+                    @Html.Partial("_CartBody", Model)
 
-                        @Html.Partial("_CartButtons", Model)
+                    @Html.Partial("_CartButtons", Model)
 
-                        @Html.Hidden("returnUrl", Model.ReturnUrl)
-                    }
-                </div>
+                    @Html.Hidden("returnUrl", Model.ReturnUrl)
+                }
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-3">
-                    <img src="~/Content/Images/rapidssl.png" />
-                </div>
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-3">
-                    @Html.Action("CartTotals", Model.Cart)
-                </div>
+            <div class="col-sm-3">
+                <img src="~/Content/Images/rapidssl.png" />
+            </div>
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-3">
+                @Html.Action("CartTotals", Model.Cart)
             </div>
         </div>
     </div>

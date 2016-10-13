@@ -1,0 +1,24 @@
+﻿<div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
+    <div id='EditContainer'>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.conditionClass').click(function (evt) {
+            evt.preventDefault();
+            var urlId = $(this).data('id');
+            $.ajax({
+                url: urlId,
+                cache: false
+            }).done
+            (function (data) {
+                $('#EditContainer').html(data);
+            });
+            $('.modal-content').empty();
+            $('#EditModal').removeData('bs.modal');
+            $('#EditModal').modal('show');
+        });
+    });
+</script>
+

@@ -10,16 +10,15 @@
 namespace FreeMarket.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class UndeliverableOrderDetail
+    public partial class CalculateCourierFeeAdhoc_Result
     {
-        public int ItemNumber { get; set; }
-        public int OrderNumber { get; set; }
-        public int SupplierNumber { get; set; }
-        public int ProductNumber { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
-        public decimal OrderItemValue { get; set; }
+        public Nullable<int> CustodianNumber { get; set; }
+        public Nullable<int> CustodianLocation { get; set; }
+        public Nullable<int> CourierNumber { get; set; }
+        public string CourierName { get; set; }
+        public Nullable<int> QuantityOnHand { get; set; }
+        public string DestinationPostalCode { get; set; }
+        public Nullable<decimal> CourierFee { get; set; }
     }
 }

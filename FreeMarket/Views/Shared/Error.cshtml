@@ -5,10 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>There seems to be a problem...</h1>
-<h2>We experienced an error while processing your request. Please try again later.</h2>
+<div id="parent" class="text-center well well-modal">
+    <h2>An error occurred, please try to refresh the page and start again. We apologize for the inconvenience.</h2>
 
-<div>
     @Html.ActionLink("Go back to home", "Index", "Product")
 </div>
 

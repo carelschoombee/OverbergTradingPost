@@ -504,54 +504,61 @@ namespace FreeMarket.Models
 
         public bool UpdateCourier(OrderDetail tempB)
         {
-            using (FreeMarketEntities db = new FreeMarketEntities())
+            if (Order.DeliveryType == "Courier")
             {
-                bool noCharge = false;
-
-                // Calculate the delivery fee
-                CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
-                    .FirstOrDefault();
-
-                List<OrderDetail> otherItems = Body.OrderDetails.ToList();
-
-                if (result != null)
+                using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    // Set the order detail
-                    tempB.CourierNumber = result.CourierNumber;
-                    tempB.CustodianNumber = result.CustodianNumber;
+                    bool noCharge = false;
 
-                    if (otherItems != null && otherItems.Count > 0)
+                    // Calculate the delivery fee
+                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
+                        .FirstOrDefault();
+
+                    List<OrderDetail> otherItems = Body.OrderDetails.ToList();
+
+                    if (result != null)
                     {
-                        // Determine noCharge
-                        foreach (OrderDetail temp in otherItems)
-                        {
-                            if (temp.ProductNumber == tempB.ProductNumber && temp.SupplierNumber == tempB.SupplierNumber)
-                                continue;
+                        // Set the order detail
+                        tempB.CourierNumber = result.CourierNumber;
+                        tempB.CustodianNumber = result.CustodianNumber;
 
-                            if (tempB.CustodianNumber == temp.CustodianNumber &&
-                                tempB.CourierNumber == temp.CourierNumber &&
-                                temp.CourierFee > 0)
+                        if (otherItems != null && otherItems.Count > 0)
+                        {
+                            // Determine noCharge
+                            foreach (OrderDetail temp in otherItems)
                             {
-                                noCharge = true;
-                                break;
+                                if (temp.ProductNumber == tempB.ProductNumber && temp.SupplierNumber == tempB.SupplierNumber)
+                                    continue;
+
+                                if (tempB.CustodianNumber == temp.CustodianNumber &&
+                                    tempB.CourierNumber == temp.CourierNumber &&
+                                    temp.CourierFee > 0)
+                                {
+                                    noCharge = true;
+                                    break;
+                                }
                             }
                         }
+
+                        tempB.CannotDeliver = false;
+
+                        if (noCharge)
+                            tempB.CourierFee = 0;
+                        else
+                            tempB.CourierFee = result.CourierFee;
                     }
-
-                    tempB.CannotDeliver = false;
-
-                    if (noCharge)
-                        tempB.CourierFee = 0;
                     else
-                        tempB.CourierFee = result.CourierFee;
-                }
-                else
-                {
-                    // The courier could not deliver to that postal code.
-                    tempB.CannotDeliver = true;
+                    {
+                        // The courier could not deliver to that postal code.
+                        tempB.CannotDeliver = true;
 
-                    return true;
+                        return true;
+                    }
                 }
+            }
+            else if (Order.DeliveryType == "PostOffice")
+            {
+                tempB.CourierFee = 0;
             }
 
             return false;
@@ -624,125 +631,226 @@ namespace FreeMarket.Models
             }
         }
 
-        public decimal CalculateApproximateDeliveryFee()
+        public decimal CalculateCourierFee()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+
+                List<OrderDetail> deliverableItems = Body.OrderDetails
+                            .Where(c => c.CannotDeliver == false)
+                            .ToList();
+
+                List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
+
+                deliverableItems.ForEach((item) =>
+                {
+                    clonedList.Add(new OrderDetail(item));
+                });
+
+                OrderHeader order = Order;
+
+                ShoppingCart virtualCart = new ShoppingCart
+                {
+                    Body = new CartBody { OrderDetails = clonedList },
+                    Order = order
+                };
+
+                foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
+                {
+                    bool noCharge = false;
+
+                    // Calculate the delivery fee
+                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)
+                        .FirstOrDefault();
+
+                    if (result != null)
+                    {
+                        // Set the order detail
+                        detail.CourierNumber = result.CourierNumber;
+                        detail.CustodianNumber = result.CustodianNumber;
+
+                        // Determine noCharge
+                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
+                        {
+                            // Do not compare against itself
+                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
+                                continue;
+
+                            if (detail.CustodianNumber == temp.CustodianNumber &&
+                                detail.CourierNumber == temp.CourierNumber &&
+                                temp.CourierFee > 0)
+                            {
+                                noCharge = true;
+                                break;
+                            }
+                        }
+
+                        if (noCharge)
+                            detail.CourierFee = 0;
+                        else
+                            detail.CourierFee = result.CourierFee;
+                    }
+                }
+
+                if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
+                {
+                    decimal threshold = 0;
+
+                    try
+                    {
+                        threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
+                    }
+                    catch
+                    {
+
+                    }
+
+                    if (threshold != 0 && Order.SubTotal > threshold)
+                        return 0;
+                    else
+                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                }
+                else
+                    return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
+        }
+
+        public decimal CalculateCourierFeeAdhoc(int postalCode)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                List<OrderDetail> deliverableItems = Body.OrderDetails
+                            .Where(c => c.CannotDeliver == false)
+                            .ToList();
+
+                List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
+
+                deliverableItems.ForEach((item) =>
+                {
+                    clonedList.Add(new OrderDetail(item));
+                });
+
+                OrderHeader order = Order;
+
+                ShoppingCart virtualCart = new ShoppingCart
+                {
+                    Body = new CartBody { OrderDetails = clonedList },
+                    Order = order
+                };
+
+                foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
+                {
+                    bool noCharge = false;
+
+                    // Calculate the delivery fee
+                    CalculateDeliveryFeeAdhoc_Result result = db.CalculateDeliveryFeeAdhoc(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, postalCode)
+                        .FirstOrDefault();
+
+                    if (result != null)
+                    {
+                        // Set the order detail
+                        detail.CourierNumber = result.CourierNumber;
+                        detail.CustodianNumber = result.CustodianNumber;
+
+                        // Determine noCharge
+                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
+                        {
+                            // Do not compare against itself
+                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
+                                continue;
+
+                            if (detail.CustodianNumber == temp.CustodianNumber &&
+                                detail.CourierNumber == temp.CourierNumber &&
+                                temp.CourierFee > 0)
+                            {
+                                noCharge = true;
+                                break;
+                            }
+                        }
+
+                        if (noCharge)
+                            detail.CourierFee = 0;
+                        else
+                            detail.CourierFee = result.CourierFee;
+                    }
+                }
+
+                if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
+                {
+                    decimal threshold = 0;
+
+                    try
+                    {
+                        threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
+                    }
+                    catch
+                    {
+
+                    }
+
+                    if (threshold != 0 && Order.SubTotal > threshold)
+                        return 0;
+                    else
+                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                }
+                else
+                    return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+            }
+        }
+
+        public decimal CalculatePostalFee()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                decimal totalWeight = GetTotalWeightOfOrder();
+                return (decimal)db.CalculatePostOfficeFee(totalWeight).FirstOrDefault();
+            }
+        }
+
+        public decimal CalculateDeliveryFee()
         {
             // If the user is logged in
             if (Order.OrderNumber != 0)
             {
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                if (Order.DeliveryType == "Courier")
                 {
-                    List<OrderDetail> deliverableItems = Body.OrderDetails
-                        .Where(c => c.CannotDeliver == false)
-                        .ToList();
-
-                    List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
-
-                    deliverableItems.ForEach((item) =>
-                    {
-                        clonedList.Add(new OrderDetail(item));
-                    });
-
-                    OrderHeader order = Order;
-
-                    ShoppingCart virtualCart = new ShoppingCart
-                    {
-                        Body = new CartBody { OrderDetails = clonedList },
-                        Order = order
-                    };
-
-                    foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
-                    {
-                        bool noCharge = false;
-
-                        // Calculate the delivery fee
-                        CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)
-                            .FirstOrDefault();
-
-                        if (result != null)
-                        {
-                            // Set the order detail
-                            detail.CourierNumber = result.CourierNumber;
-                            detail.CustodianNumber = result.CustodianNumber;
-
-                            // Determine noCharge
-                            foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
-                            {
-                                // Do not compare against itself
-                                if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
-                                    continue;
-
-                                if (detail.CustodianNumber == temp.CustodianNumber &&
-                                    detail.CourierNumber == temp.CourierNumber &&
-                                    temp.CourierFee > 0)
-                                {
-                                    noCharge = true;
-                                    break;
-                                }
-                            }
-
-                            if (noCharge)
-                                detail.CourierFee = 0;
-                            else
-                                detail.CourierFee = result.CourierFee;
-                        }
-                    }
-
-                    if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
-                    {
-                        decimal threshold = 0;
-
-                        try
-                        {
-                            threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
-                        }
-                        catch
-                        {
-
-                        }
-
-                        if (threshold != 0 && Order.SubTotal > threshold)
-                            return 0;
-                        else
-                            return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
-                    }
-                    else
-                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                    return CalculateCourierFee();
+                }
+                else // Post Office
+                {
+                    return CalculatePostalFee();
                 }
             }
             else
+            {
                 return Order.ShippingTotal ?? 0;
+            }
+        }
+
+        public decimal GetTotalWeightOfOrder()
+        {
+            decimal totalWeight = 0;
+            foreach (OrderDetail od in Body.OrderDetails)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    Product product = db.Products.Find(od.ProductNumber);
+
+                    if (product != null)
+                    {
+                        totalWeight += product.Weight * od.Quantity;
+                    }
+                }
+            }
+            return totalWeight;
         }
 
         public void UpdateTotal()
         {
             Body.OrderDetails.ForEach(c => c.OrderItemValue = c.Price * c.Quantity);
             Order.SubTotal = Body.OrderDetails.Sum(c => c.OrderItemValue);
-            Order.ShippingTotal = CalculateApproximateDeliveryFee();
+            Order.ShippingTotal = CalculateDeliveryFee();
             Order.TotalOrderValue = (Order.SubTotal ?? 0) + (Order.ShippingTotal ?? 0);
-        }
-
-        public void CalculateShippingTotal()
-        {
-            if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
-            {
-                decimal threshold = 0;
-
-                try
-                {
-                    threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
-                }
-                catch
-                {
-
-                }
-
-                if (threshold != 0 && Order.SubTotal > threshold)
-                    Order.ShippingTotal = 0;
-            }
-            else
-            {
-                Order.ShippingTotal = Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
-            }
         }
 
         public FreeMarketResult ReserveStock(int productNumber, int supplierNumber, int custodianNumber, int quantityRequested)

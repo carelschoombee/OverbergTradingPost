@@ -56,6 +56,10 @@
                 @Html.Partial("_CartModifyDeliveryDetails", Model)
             </div>
 
+            <div id="DeliveryTypeContainer">
+                @Html.Partial("_CartModifyDeliveryTypeDetails", Model)
+            </div>
+
             <div class="center_div">
                 <span class="icon-input-btn"><span class="glyphicon glyphicon-arrow-right"></span> <input type="submit" value="Next" class="btn btn-success btn-sm" /></span>
                 <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Cart", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back to Cart</a></span>
@@ -226,7 +230,34 @@
                 validator.addField($('#Address_AddressCity'));
                 validator.addField($('#Address_AddressSuburb'));
                 validator.addField($('#Address_AddressPostalCode'));
+                $("#Address_AddressPostalCode").trigger('keyup');
             });
+    });
+
+    $(document).on('keyup', '.dynamicControl', function () {
+        
+        if ($("#Address_AddressPostalCode").val().length == 4) {
+
+            var selectedVal = "";
+            var selected = $("#radioDiv input[type='radio']:checked");
+            if (selected.length > 0) {
+                selectedVal = selected.val();
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetDeliveryOptions", "ShoppingCart")',
+                type: 'POST',
+                data: {
+                    id: $("#Address_AddressPostalCode").val(),
+                    selectedDeliveryType: selectedVal
+                }
+            }).done
+                (function (data) {
+                    if (data != undefined) {
+                        $('#DeliveryTypeContainer').html(data);
+                    }
+                });
+        }
     });
 
 </script>

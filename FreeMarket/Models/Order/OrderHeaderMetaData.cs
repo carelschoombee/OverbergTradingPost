@@ -70,6 +70,7 @@ namespace FreeMarket.Models
                         DeliveryAddressPostalCode = address.AddressPostalCode,
                         DeliveryDate = null,
                         DeliveryDateAgreed = null,
+                        DeliveryType = "Courier",
 
                         CustomerName = user.Name,
                         CustomerEmail = user.Email,
@@ -110,6 +111,7 @@ namespace FreeMarket.Models
             DeliveryAddressLine2 = model.Address.AddressLine2;
             DeliveryAddressLine3 = model.Address.AddressLine3;
             DeliveryAddressLine4 = model.Address.AddressLine4;
+            DeliveryType = model.DeliveryOptions.SelectedDeliveryType;
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
