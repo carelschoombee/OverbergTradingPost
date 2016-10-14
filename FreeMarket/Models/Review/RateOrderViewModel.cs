@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace FreeMarket.Models
 {
@@ -8,6 +11,7 @@ namespace FreeMarket.Models
         public OrderHeader Order { get; set; }
         public ProductCollection Products { get; set; }
         public List<CourierReview> CourierRatings { get; set; }
+        public bool Unsubscribe { get; set; }
 
         public RateOrderViewModel()
         {
@@ -34,6 +38,16 @@ namespace FreeMarket.Models
                         CourierName = c.CourierName,
                         ReviewId = c.ReviewId
                     }).ToList();
+
+                ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(Order.CustomerNumber);
+                if (user == null)
+                {
+                    Unsubscribe = true;
+                }
+                else
+                {
+                    Unsubscribe = user.UnsubscribeFromRatings;
+                }
             }
         }
     }

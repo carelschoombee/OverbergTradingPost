@@ -19,5 +19,6 @@ namespace FreeMarket.Models
         public string Landline { get; set; }
         public string Email { get; set; }
         public string MainContactName { get; set; }
+        public string OrdersEmail { get; set; }
     }
 }

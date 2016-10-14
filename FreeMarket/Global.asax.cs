@@ -30,6 +30,9 @@ namespace FreeMarket
 
                 if (!Roles.IsUserInRole("carelschoombee@gmail.com", "Administrator"))
                     Roles.AddUserToRole("carelschoombee@gmail.com", "Administrator");
+
+                if (!Roles.IsUserInRole("ijschoombee@gmail.com", "Administrator"))
+                    Roles.AddUserToRole("ijschoombee@gmail.com", "Administrator");
             }
             catch (Exception e)
             {

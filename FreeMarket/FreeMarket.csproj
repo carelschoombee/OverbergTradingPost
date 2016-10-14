@@ -652,6 +652,8 @@
     <Content Include="Views\Home\_TermsAndConditionsContainer.cshtml" />
     <Content Include="Views\ShoppingCart\_TermsAndConditionsContainer.cshtml" />
     <Content Include="Views\ShoppingCart\_CartModifyDeliveryTypeDetails.cshtml" />
+    <Content Include="Views\Account\_RequiredFields.cshtml" />
+    <Content Include="Views\ShoppingCart\_RequiredFields.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -669,6 +671,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Report5.rdlc" />
+    <EmbeddedResource Include="Reports\Report4.rdlc" />
     <EmbeddedResource Include="Reports\Report3.rdlc" />
     <EmbeddedResource Include="Reports\Report2.rdlc" />
     <EmbeddedResource Include="Reports\Report1.rdlc" />

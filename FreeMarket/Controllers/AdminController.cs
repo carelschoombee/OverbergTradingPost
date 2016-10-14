@@ -17,15 +17,34 @@ namespace FreeMarket.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            Dashboard model = new Dashboard(null);
+            Dashboard model = new Dashboard(null, "Year");
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Dashboard(Dashboard data)
+        public ActionResult Dashboard(Dashboard data, string yearView, string monthView)
         {
-            Dashboard model = new Dashboard(data.SelectedYear);
+            Dashboard model = new Dashboard();
+            string periodType = "";
+
+            if (!string.IsNullOrEmpty(yearView))
+            {
+                periodType = "Year";
+            }
+            else if (!string.IsNullOrEmpty(monthView))
+            {
+                periodType = "Month";
+            }
+
+            if (periodType == "Year")
+            {
+                model = new Dashboard(data.SelectedYear, periodType);
+            }
+            else
+            {
+                model = new Dashboard(data.SelectedMonth, periodType);
+            }
             return View("Index", model);
         }
 
@@ -50,7 +69,11 @@ namespace FreeMarket.Controllers
                             order.OrderStatus = "Complete";
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
-                            OrderHeader.SendRatingEmail(order.CustomerNumber, order.OrderNumber);
+                            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(oh.CustomerNumber);
+                            if (user.UnsubscribeFromRatings == false)
+                            {
+                                OrderHeader.SendRatingEmail(order.CustomerNumber, order.OrderNumber);
+                            }
                         }
                     }
 

@@ -462,3 +462,7 @@ th, td {
 }
 
 a.freemarket-link { color: white }
+
+.hidden {
+    display:none;
+}

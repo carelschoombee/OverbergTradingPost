@@ -13,7 +13,8 @@ namespace FreeMarket.Models
         public Dictionary<string, int> TransactionDetails { get; set; }
         public Dictionary<string, int> PaymentDetails { get; set; }
 
-        public int TotalSuccessfulOrders { get; set; }
+        public int TotalConfirmedOrders { get; set; }
+        public int TotalCompletedOrders { get; set; }
         public int TotalCancelledOrders { get; set; }
         public int TotalLockedOrders { get; set; }
         public int TotalUnconfirmedOrders { get; set; }
@@ -24,14 +25,28 @@ namespace FreeMarket.Models
 
             if (year == 0)
             {
-                int minDate = orders.Min(c => c.OrderDatePlaced).Value.Year - 1;
-                int maxDate = orders.Max(c => c.OrderDatePlaced).Value.Year;
+                DateTime? minDate = orders.Min(c => c.OrderDatePlaced);
+                DateTime? maxDate = orders.Max(c => c.OrderDatePlaced);
+
+                int minYear = 0;
+
+                if (minDate == null)
+                    minYear = DateTime.Now.Year - 1;
+                else
+                    minYear = minDate.Value.Year - 1;
+
+                int maxYear = 0;
+
+                if (maxDate == null)
+                    maxYear = DateTime.Now.Year;
+                else
+                    maxYear = maxDate.Value.Year;
 
                 sales = new Dictionary<string, decimal>();
 
-                int i = minDate;
+                int i = minYear;
 
-                while (i <= maxDate)
+                while (i <= maxYear)
                 {
                     sales.Add(i.ToString(), 0);
                     i++;
@@ -72,10 +87,44 @@ namespace FreeMarket.Models
                 }
             }
 
+            if (sales == null)
+            {
+                sales = new Dictionary<string, decimal>();
+            }
+
             return sales;
         }
 
-        public Dictionary<string, int> GetTransactionDetails(List<PaymentGatewayMessage> messages)
+        public Dictionary<string, decimal> CalculateSalesDetails(DateTime date, List<OrderHeader> orders)
+        {
+            Dictionary<string, decimal> sales;
+
+            sales = new Dictionary<string, decimal>()
+                {
+                    { "1", 0},
+                    { "2", 0},
+                    { "3", 0},
+                    { "4", 0},
+                    { "5", 0 },
+                };
+
+            foreach (OrderHeader o in orders)
+            {
+                if (sales.ContainsKey(((DateTime)o.OrderDatePlaced).GetWeekOfMonth().ToString()) && (o.OrderDatePlaced.Value.Year == date.Year) && (o.OrderDatePlaced.Value.Month == date.Month))
+                {
+                    sales[((DateTime)o.OrderDatePlaced).ToString("MMMM")] += o.TotalOrderValue;
+                }
+            }
+
+            if (sales == null)
+            {
+                sales = new Dictionary<string, decimal>();
+            }
+
+            return sales;
+        }
+
+        public Dictionary<string, int> GetTransactionDetails(int? year, DateTime? date, List<PaymentGatewayMessage> messages)
         {
             List<PaymentGatewayTransactionStatu> statuses = new List<PaymentGatewayTransactionStatu>();
 
@@ -94,11 +143,34 @@ namespace FreeMarket.Models
 
             foreach (PaymentGatewayMessage o in messages)
             {
-                if (o.TransactionStatus != null)
+                if (o.TransactionStatus != null && o.Transaction_Date != null)
                 {
-                    if (tempTranscationCodes.ContainsKey(o.TransactionStatus.ToString()))
+                    if (date == null)
                     {
-                        tempTranscationCodes[o.TransactionStatus.ToString()] += 1;
+                        if (year == 0)
+                        {
+                            if (tempTranscationCodes.ContainsKey(o.TransactionStatus.ToString()))
+                            {
+                                tempTranscationCodes[o.TransactionStatus.ToString()] += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (tempTranscationCodes.ContainsKey(o.TransactionStatus.ToString())
+                                && DateTime.Parse(o.Transaction_Date).Year == year)
+                            {
+                                tempTranscationCodes[o.TransactionStatus.ToString()] += 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (tempTranscationCodes.ContainsKey(o.TransactionStatus.ToString())
+                            && DateTime.Parse(o.Transaction_Date).Year == date.Value.Year
+                            && DateTime.Parse(o.Transaction_Date).Month == date.Value.Month)
+                        {
+                            tempTranscationCodes[o.TransactionStatus.ToString()] += 1;
+                        }
                     }
                 }
             }
@@ -109,10 +181,15 @@ namespace FreeMarket.Models
                 transactionCodes[status.Status] = tempTranscationCodes[status.TransactionCode.ToString()];
             }
 
+            if (transactionCodes == null)
+            {
+                transactionCodes = new Dictionary<string, int>();
+            }
+
             return transactionCodes;
         }
 
-        public Dictionary<string, int> GetPaymentDetails(List<PaymentGatewayMessage> messages)
+        public Dictionary<string, int> GetPaymentDetails(int? year, DateTime? date, List<PaymentGatewayMessage> messages)
         {
             List<PaymentGatewayPaymentMethod> methods = new List<PaymentGatewayPaymentMethod>();
 
@@ -131,11 +208,35 @@ namespace FreeMarket.Models
 
             foreach (PaymentGatewayMessage o in messages)
             {
-                if (o.Pay_Method != null)
+                if (o.Pay_Method != null && o.Transaction_Date != null)
                 {
-                    if (tempPaymentMethods.ContainsKey(o.Pay_Method.ToString()))
+
+                    if (date == null)
                     {
-                        tempPaymentMethods[o.Pay_Method.ToString()] += 1;
+                        if (year == 0)
+                        {
+                            if (tempPaymentMethods.ContainsKey(o.Pay_Method.ToString()))
+                            {
+                                tempPaymentMethods[o.Pay_Method.ToString()] += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (tempPaymentMethods.ContainsKey(o.Pay_Method.ToString())
+                                && DateTime.Parse(o.Transaction_Date).Year == year)
+                            {
+                                tempPaymentMethods[o.Pay_Method.ToString()] += 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (tempPaymentMethods.ContainsKey(o.Pay_Method.ToString())
+                            && DateTime.Parse(o.Transaction_Date).Year == date.Value.Year
+                            && DateTime.Parse(o.Transaction_Date).Month == date.Value.Month)
+                        {
+                            tempPaymentMethods[o.Pay_Method.ToString()] += 1;
+                        }
                     }
                 }
             }
@@ -144,6 +245,11 @@ namespace FreeMarket.Models
             {
                 paymentMethods.Add(method.Description, 0);
                 paymentMethods[method.Description] = tempPaymentMethods[method.PayMethod.ToString()];
+            }
+
+            if (paymentMethods == null)
+            {
+                paymentMethods = new Dictionary<string, int>();
             }
 
             return paymentMethods;
@@ -170,16 +276,20 @@ namespace FreeMarket.Models
                         .Where(c => (c.OrderStatus == "Confirmed" || c.OrderStatus == "Completed"))
                         .ToList();
 
-                    TotalSuccessfulOrders = orders.Count();
+                    List<OrderHeader> tempCompleted = db.OrderHeaders.Where(c => c.OrderStatus == "Completed").ToList();
+                    TotalCompletedOrders = tempCompleted.Count;
+
+                    List<OrderHeader> tempConfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                    TotalConfirmedOrders = tempConfirmed.Count;
 
                     List<OrderHeader> tempCancelled = db.OrderHeaders.Where(c => c.OrderStatus == "Cancelled").ToList();
                     TotalCancelledOrders = tempCancelled.Count;
 
                     List<OrderHeader> tempLocked = db.OrderHeaders.Where(c => c.OrderStatus == "Locked").ToList();
-                    TotalCancelledOrders = tempLocked.Count;
+                    TotalLockedOrders = tempLocked.Count;
 
                     List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed").ToList();
-                    TotalCancelledOrders = tempUnconfirmed.Count;
+                    TotalUnconfirmedOrders = tempUnconfirmed.Count;
                 }
                 else
                 {
@@ -198,16 +308,20 @@ namespace FreeMarket.Models
                             .Where(c => c.TransactionStatus == 1 && DateTime.Parse(c.Transaction_Date).Year == year)
                             .Sum(c => c.Amount) ?? 0;
 
-                        TotalSuccessfulOrders = orders.Count;
+                        List<OrderHeader> tempCompleted = db.OrderHeaders.Where(c => c.OrderStatus == "Completed" && c.OrderDatePlaced.Value.Year == year).ToList();
+                        TotalCompletedOrders = tempCompleted.Count;
+
+                        List<OrderHeader> tempConfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed" && c.OrderDatePlaced.Value.Year == year).ToList();
+                        TotalConfirmedOrders = tempConfirmed.Count;
 
                         List<OrderHeader> tempCancelled = db.OrderHeaders.Where(c => c.OrderStatus == "Cancelled" && c.OrderDatePlaced.Value.Year == year).ToList();
                         TotalCancelledOrders = tempCancelled.Count;
 
                         List<OrderHeader> tempLocked = db.OrderHeaders.Where(c => c.OrderStatus == "Locked" && c.OrderDatePlaced.Value.Year == year).ToList();
-                        TotalCancelledOrders = tempLocked.Count;
+                        TotalLockedOrders = tempLocked.Count;
 
                         List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed" && c.OrderDatePlaced.Value.Year == year).ToList();
-                        TotalCancelledOrders = tempUnconfirmed.Count;
+                        TotalUnconfirmedOrders = tempUnconfirmed.Count;
 
                         TotalSalesGateway = TotalSalesGateway / 100;
                     }
@@ -221,15 +335,63 @@ namespace FreeMarket.Models
 
                 TotalShippingOrders = (decimal)orders.Sum(c => c.ShippingTotal);
 
-                if (orders.Count == 0)
+                SalesDetails = CalculateSalesDetails(year, orders);
+                TransactionDetails = GetTransactionDetails(year, null, messages);
+                PaymentDetails = GetPaymentDetails(year, null, messages);
+            }
+        }
+
+        public SalesInfo(DateTime date)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                List<OrderHeader> orders = new List<OrderHeader>();
+                List<PaymentGatewayMessage> messages = new List<PaymentGatewayMessage>();
+
+                try
                 {
-                    SalesDetails = new Dictionary<string, decimal>();
-                    return;
+                    orders = db.OrderHeaders
+                        .Where(c => (c.OrderStatus == "Confirmed" || c.OrderStatus == "Completed")
+                        && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month)
+                        .ToList();
+
+                    messages = db.PaymentGatewayMessages
+                        .Where(c => c.TransactionStatus != null && c.Transaction_Date != null)
+                        .ToList();
+
+                    TotalSalesGateway = messages
+                        .Where(c => c.TransactionStatus == 1 && DateTime.Parse(c.Transaction_Date).Year == date.Year && DateTime.Parse(c.Transaction_Date).Month == date.Month)
+                        .Sum(c => c.Amount) ?? 0;
+
+                    List<OrderHeader> tempCompleted = db.OrderHeaders.Where(c => c.OrderStatus == "Completed" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalCompletedOrders = tempCompleted.Count;
+
+                    List<OrderHeader> tempConfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalConfirmedOrders = tempConfirmed.Count;
+
+                    List<OrderHeader> tempCancelled = db.OrderHeaders.Where(c => c.OrderStatus == "Cancelled" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalCancelledOrders = tempCancelled.Count;
+
+                    List<OrderHeader> tempLocked = db.OrderHeaders.Where(c => c.OrderStatus == "Locked" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalLockedOrders = tempLocked.Count;
+
+                    List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalUnconfirmedOrders = tempUnconfirmed.Count;
+
+                    TotalSalesGateway = TotalSalesGateway / 100;
+                }
+                catch (Exception e)
+                {
+                    ExceptionLogging.LogException(e);
                 }
 
-                SalesDetails = CalculateSalesDetails(year, orders);
-                TransactionDetails = GetTransactionDetails(messages);
-                PaymentDetails = GetPaymentDetails(messages);
+                TotalSalesOrders = orders.Sum(c => c.TotalOrderValue);
+
+                TotalShippingOrders = (decimal)orders.Sum(c => c.ShippingTotal);
+
+                SalesDetails = CalculateSalesDetails(date, orders);
+                TransactionDetails = GetTransactionDetails(null, date, messages);
+                PaymentDetails = GetPaymentDetails(null, date, messages);
             }
         }
     }

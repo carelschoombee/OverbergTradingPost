@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -187,7 +188,10 @@ namespace FreeMarket.Controllers
                     PhoneNumber = model.PrimaryPhoneNumber,
                     SecondaryPhoneNumber = model.SecondaryPhoneNumber,
                     PreferredCommunicationMethod = model.PreferredCommunicationMethod,
-                    DefaultAddress = model.AddressName
+                    DefaultAddress = model.AddressName,
+                    UnsubscribeFromAllCorrespondence = false,
+                    UnsubscribeFromRatings = false,
+                    LastVisited = DateTime.Now
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -440,8 +444,12 @@ namespace FreeMarket.Controllers
                     PhoneNumber = model.PrimaryPhoneNumber,
                     SecondaryPhoneNumber = model.SecondaryPhoneNumber,
                     PreferredCommunicationMethod = model.PreferredCommunicationMethod,
-                    DefaultAddress = model.AddressName
+                    DefaultAddress = model.AddressName,
+                    UnsubscribeFromAllCorrespondence = false,
+                    UnsubscribeFromRatings = false,
+                    LastVisited = DateTime.Now
                 };
+
 
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)

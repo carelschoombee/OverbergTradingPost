@@ -5,16 +5,22 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <h3 class="text-center">Associate your @ViewBag.LoginProvider account.</h3>
 
-<div id="parent" class="container center_div">
+<div id="parent" class="container center_div well well-modal">
 
     @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "registerForm" }))
     {
         @Html.AntiForgeryToken()
         <hr />
+
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <p class="text-info text-center">
             You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
             Please enter your details to register for this site and to finish logging in.
+        </p>
+
+        <p class="text-center">
+            <i>Your information is private and will only be used to ensure your orders reach you safely.</i>
         </p>
         <div>
             @Html.Hidden("loginProvider", (string)ViewBag.LoginProvider)
@@ -36,4 +42,7 @@
 
 </div>
 
+
 @Html.Partial("_ValidateRegistrationFormPartial")
+
+@Html.Partial("_RequiredFields")

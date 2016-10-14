@@ -186,9 +186,13 @@
                                 notEmpty: {
                                     message: 'The field is required.'
                                 },
+                                numeric: {
+                                    message: 'Postal code must be a number.'
+                                },
                                 stringLength: {
-                                    message: 'Max string length is 50.',
-                                    max: 50
+                                    message: 'Postal code must be 4 digits long.',
+                                    max: 4,
+                                    min: 4
                                 }
                             }
                         }

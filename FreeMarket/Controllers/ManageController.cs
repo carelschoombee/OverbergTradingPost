@@ -362,13 +362,16 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateReviews(RateOrderViewModel model)
+        public async Task<ActionResult> UpdateReviews(RateOrderViewModel model)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             if (user == null)
             {
                 return View("Error");
             }
+
+            user.UnsubscribeFromRatings = model.Unsubscribe;
+            await UserManager.UpdateAsync(user);
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {

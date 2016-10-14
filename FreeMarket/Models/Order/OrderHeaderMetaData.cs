@@ -264,6 +264,102 @@ namespace FreeMarket.Models
             return outCollection;
         }
 
+        public static Dictionary<MemoryStream, string> GetPostalReport(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report4.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
+        }
+
+        public static Dictionary<MemoryStream, string> GetPostalInstructions(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report5.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
+        }
+
         public async static void SendRatingEmail(string customerNumber, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -349,8 +445,16 @@ namespace FreeMarket.Models
                 }
                 else
                 {
-                    orderSummary = GetOrderReport(orderNumber);
-                    orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+                    if (order.DeliveryType == "Courier")
+                    {
+                        orderSummary = GetOrderReport(orderNumber);
+                        orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+                    }
+                    else
+                    {
+                        orderSummary = GetPostalReport(orderNumber);
+                        orderDeliveryInstruction = GetPostalInstructions(orderNumber);
+                    }
                 }
 
 
@@ -392,42 +496,70 @@ namespace FreeMarket.Models
 
                 await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
 
-                Courier courier = db.Couriers.Find(1);
+                if (order.DeliveryType == "Courier")
+                {
+                    Courier courier = db.Couriers.Find(1);
 
-                if (courier != null)
+                    if (courier != null)
+                    {
+                        line1 = db.SiteConfigurations
+                       .Where(c => c.Key == "OrderDeliveryInstructionsLine1")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
+
+                        line2 = db.SiteConfigurations
+                           .Where(c => c.Key == "OrderDeliveryInstructionsLine2")
+                           .Select(c => c.Value)
+                           .FirstOrDefault();
+
+                        line3 = db.SiteConfigurations
+                           .Where(c => c.Key == "OrderDeliveryInstructionsLine3")
+                           .Select(c => c.Value)
+                           .FirstOrDefault();
+
+                        line4 = db.SiteConfigurations
+                           .Where(c => c.Key == "OrderDeliveryInstructionsLine4")
+                           .Select(c => c.Value)
+                           .FirstOrDefault();
+
+                        IdentityMessage iMessageCourier = new IdentityMessage();
+
+                        if (specialDelivery)
+                        {
+                            iMessageCourier.Destination = supportInfo.OrdersEmail;
+                        }
+                        else
+                        {
+                            iMessageCourier.Destination = courier.MainContactEmailAddress;
+                        }
+
+                        iMessageCourier.Body = string.Format((line1 + line2 + line3 + line4), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                        iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
+
+                        await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
+                    }
+                }
+                else
                 {
                     line1 = db.SiteConfigurations
-                   .Where(c => c.Key == "OrderDeliveryInstructionsLine1")
-                   .Select(c => c.Value)
-                   .FirstOrDefault();
+                       .Where(c => c.Key == "OrderPostOfficeLine1")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
 
                     line2 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderDeliveryInstructionsLine2")
+                       .Where(c => c.Key == "OrderPostOfficeLine2")
                        .Select(c => c.Value)
                        .FirstOrDefault();
 
                     line3 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderDeliveryInstructionsLine3")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
-
-                    line4 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderDeliveryInstructionsLine4")
+                       .Where(c => c.Key == "OrderPostOfficeLine3")
                        .Select(c => c.Value)
                        .FirstOrDefault();
 
                     IdentityMessage iMessageCourier = new IdentityMessage();
 
-                    if (specialDelivery)
-                    {
-                        iMessageCourier.Destination = supportInfo.Email;
-                    }
-                    else
-                    {
-                        iMessageCourier.Destination = courier.MainContactEmailAddress;
-                    }
-
-                    iMessageCourier.Body = string.Format((line1 + line2 + line3 + line4), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                    iMessageCourier.Destination = supportInfo.OrdersEmail;
+                    iMessageCourier.Body = string.Format((line1 + line2 + line3), orderNumber);
                     iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
 
                     await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);

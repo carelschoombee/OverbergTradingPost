@@ -395,6 +395,7 @@
           <Property Name="Cellphone" Type="nvarchar" MaxLength="50" />
           <Property Name="Landline" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrdersEmail" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="SystemActions">
           <Key>
@@ -1666,6 +1667,7 @@
           <Property Name="Landline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="MainContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrdersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Special">
           <Key>
@@ -2364,6 +2366,7 @@
           <EntitySetMapping Name="Supports">
             <EntityTypeMapping TypeName="FreeMarketModel.Support">
               <MappingFragment StoreEntitySet="Support">
+                <ScalarProperty Name="OrdersEmail" ColumnName="OrdersEmail" />
                 <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Landline" ColumnName="Landline" />

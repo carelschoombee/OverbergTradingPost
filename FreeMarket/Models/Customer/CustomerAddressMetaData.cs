@@ -232,7 +232,8 @@ namespace FreeMarket.Models
 
         [Required]
         [Display(Name = "Postal Code")]
-        [StringLength(50, ErrorMessage = "The Postal Code field may not contain more than 50 characters.")]
+        [StringLength(4, ErrorMessage = "The Postal Code field may not contain more than 4 digits.")]
+        [RegularExpression(@"^(\d{4})$", ErrorMessage = "The postal code must consist only of digits.")]
         public string AddressPostalCode { get; set; }
     }
 }
