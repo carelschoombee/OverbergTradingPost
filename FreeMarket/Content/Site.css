@@ -290,9 +290,20 @@ th, td {
         font-weight: bold;
         width: 50%;
     }
+
 }
 
-@media (max-width: 1199px) {
+/*.navbar-collapse.in {
+    overflow: hidden;
+    max-height: none !important;
+    height: auto !important;
+    }*/
+
+.navbar-brand {
+    font-size: 24px;
+}
+
+/*@media (max-width: 1199px) {
     .navbar-header {
         float: none;
     }
@@ -307,10 +318,10 @@ th, td {
         min-height: 45px !important;
     }
 
-        .navbar-collapse.collapse {
-            display: none !important;
-            min-height: 45px !important;
-        }
+    .navbar-collapse.collapse {
+        display: none !important;
+        min-height: 45px !important;
+    }
 
     .navbar-nav {
         float: none !important;
@@ -318,14 +329,15 @@ th, td {
         min-height: 45px !important;
     }
 
-        .navbar-nav > li {
-            float: none;
-        }
+    .navbar-nav > li {
+        float: none;
 
-            .navbar-nav > li > a {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
+    }
+
+    .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 
     .navbar-text {
         float: none;
@@ -339,7 +351,7 @@ th, td {
     .collapsing {
         overflow: hidden !important;
     }
-}
+}*/
 
 .icon-input-btn {
     display: inline-block;
@@ -465,4 +477,14 @@ a.freemarket-link { color: white }
 
 .hidden {
     display:none;
+}
+
+.navbar-header > .navbar-nav > li{
+  padding-left:20px;
+  padding-right:20px;
+}
+
+.navbar-toggle{
+  margin-left:20px;
+  margin-right:20px;
 }

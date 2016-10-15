@@ -1,0 +1,47 @@
+﻿@using FreeMarket.Models
+@model AboutViewModel
+
+@{
+    ViewBag.Title = "About Us";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="parent" class="center_div container">
+    <div class="col-sm-12">
+        <div class="row">
+            <h1 class="text-center">About Us</h1>
+            <hr />
+        </div>
+        <div class="row">
+            @Html.Partial("_StruisbaaiCarousel")
+        </div>
+        <div class="row well">
+            <h2 class="text-center">The Founders</h2>
+            <div class="text-center">
+                <img class="img-rounded img-thumbnail img-responsive" src="~/Content/Images/AboutUs.jpg" width="400" height="200"/>
+            </div>
+            <div>
+                <br />
+                @Html.Raw(Model.MainDescription)
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 row">
+            <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+     $("#myCarousel").carousel({
+
+         interval : 5000
+
+     });
+
+});
+
+</script>

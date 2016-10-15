@@ -6,19 +6,19 @@
         {
             if (Model.Cart.Order.OrderStatus != "Locked")
             {
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" /></span>
+                <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
             }
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <a class="btn btn-success btn-sm" href="@Url.Action("SecureDeliveryDetails", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secure Check Out</a></span>
+            <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Continue Shopping</span></a>
+            <a class="btn btn-success btn-sm" href="@Url.Action("SecureDeliveryDetails", "ShoppingCart")"><span class="glyphicon glyphicon-lock">&nbsp;&nbsp;Secure Check Out</span></a>
             if (Model.Cart.Order.OrderStatus == "Locked")
             {
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-remove"></span> <a class="btn btn-danger btn-sm" href="@Url.Action("CancelOrder", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cancel Order</a></span>
+                <a class="btn btn-danger btn-sm" href="@Url.Action("CancelOrder", "ShoppingCart")"><span class="glyphicon glyphicon-remove">&nbsp;&nbsp;Cancel Order</span></a>
             }
         }
         else
         {
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-user"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Cart", "ShoppingCart") })">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login to Proceed</a></span>
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Continue Shopping</a></span>
+            <a class="btn btn-primary btn-sm" href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Cart", "ShoppingCart") })"><span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;Login to Proceed</a>
+            <a class="btn btn-primary btn-sm" href="@Model.ReturnUrl"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Continue Shopping</span></a>
         }
     </div>
 </div>

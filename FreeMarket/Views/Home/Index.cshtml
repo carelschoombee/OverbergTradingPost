@@ -26,9 +26,24 @@
         <a data-id="@Url.Action("TermsAndConditionsModal", "Home")"
            class="conditionClass freemarket-link"><span class="glyphicon glyphicon-paperclip" aria-hidden="true">&nbsp; Click here to read our terms and conditions.</span></a>
     </div>
-    <div class="col-md-offset-4 row">
-        <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
+    <div class="center_div text-center">
+        <div class="row">
+            <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+            <a class="btn btn-primary" href="@Url.Action("DeliveryOptionsInfo", "Home")"><span class="glyphicon glyphicon-piggy-bank">&nbsp;&nbsp;Learn about our delivery options...</span></a>
+        </div>
+        <div class="row">
+            <a class="btn btn-primary" href="@Url.Action("About", "Home")"><span class="glyphicon glyphicon-book">&nbsp;&nbsp;Learn more about us...</span></a>
+        </div>
+        <div class="row">
+            <a class="btn btn-primary" href="@Url.Action("Contact", "Home")"><span class="glyphicon glyphicon-pencil">&nbsp;&nbsp;Contact us...</span></a>
+        </div>
     </div>
+    
 </div>
 
 @Html.Partial("_TermsAndConditionsContainer")

@@ -19,7 +19,9 @@ namespace FreeMarket.Controllers
 
         public ActionResult About()
         {
-            return View();
+            AboutViewModel model = new AboutViewModel();
+
+            return View(model);
         }
 
         public ActionResult Contact()

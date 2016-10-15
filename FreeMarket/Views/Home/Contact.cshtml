@@ -38,7 +38,7 @@
             <span class="glyphicon glyphicon-pencil"><a class="freemarket-link" href="mailto:@Model.Email">Email Us</a></span>
         </div>
         <div class="col-md-offset-4 row">
-            <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-success" href="@Url.Action("Index", "Product")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Shopping!</a></span>
+            <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
         </div>
     </div>
 </div>
@@ -53,18 +53,6 @@ $(document).ready(function(){
 
      });
 
-});
-
-$(document).ready(function () {
-    $(".icon-input-btn").each(function () {
-        var btnFont = $(this).find(".btn").css("font-size");
-        var btnColor = $(this).find(".btn").css("color");
-        $(this).find(".glyphicon").css("font-size", btnFont);
-        $(this).find(".glyphicon").css("color", btnColor);
-        if ($(this).find(".btn-xs").length) {
-            $(this).find(".glyphicon").css("top", "24%");
-        }
-    });
 });
 
 </script>
