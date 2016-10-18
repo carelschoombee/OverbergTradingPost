@@ -11,6 +11,8 @@ namespace FreeMarket.Models
     {
         public SalesInfo SalesInformation { get; set; }
 
+        public RatingsInfo RatingsInformation { get; set; }
+
         public List<OrderHeader> ConfirmedOrders { get; set; }
 
         [DisplayName("Time Period")]
@@ -65,6 +67,7 @@ namespace FreeMarket.Models
                 Period = period;
                 SelectedMonth = DateTime.Now;
                 SalesInformation = new SalesInfo(int.Parse(SelectedYear));
+                RatingsInformation = new RatingsInfo();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
             }
         }

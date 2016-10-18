@@ -316,5 +316,57 @@ namespace FreeMarket.Controllers
 
             return View("EditSupplier", supplier);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApproveReview(int reviewId, int courierReviewId, string button)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductReview review = db.ProductReviews.Find(reviewId);
+                CourierReview courierReview = db.CourierReviews.Find(courierReviewId);
+
+                if (review == null)
+                {
+                    return JavaScript("window.location = window.location.href;");
+                }
+                else
+                {
+                    if (button == "Approve")
+                    {
+                        review.Approved = true;
+                    }
+                    else
+                    {
+                        review.Approved = false;
+                    }
+                    db.Entry(review).State = System.Data.Entity.EntityState.Modified;
+                }
+
+                if (courierReview == null)
+                {
+                    return JavaScript("window.location = window.location.href;");
+                }
+                else
+                {
+                    if (button == "Approve")
+                    {
+                        courierReview.Approved = true;
+                    }
+                    else
+                    {
+                        courierReview.Approved = false;
+                    }
+
+                    db.Entry(courierReview).State = System.Data.Entity.EntityState.Modified;
+                }
+
+                db.SaveChanges();
+            }
+
+            RatingsInfo info = new RatingsInfo();
+
+            return PartialView("_ApproveRatings", info);
+        }
     }
 }

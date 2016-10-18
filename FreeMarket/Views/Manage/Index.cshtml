@@ -7,70 +7,63 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-<div class="container">
+<div id="parent" class="container">
 
     <p class="text-success">@ViewBag.StatusMessage</p>
-        <div class="row well well-modal">
-            <div>
-                <h4 class="text-center">Manage Account</h4>
-            </div>
-            <div class="form-group">
-                @Html.Label("Email", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @Model.ConfirmedEmail
-                    @if (!String.IsNullOrWhiteSpace(Model.UnConfirmedEmail))
-                    {
-                        <em> - Unconfirmed: @Model.UnConfirmedEmail </em> @Html.ActionLink("Cancel", "CancelUnconfirmedEmail", new { emailOrUserId = Model.ConfirmedEmail })
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Change Email", "ChangeEmail")
-                    }
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("Password", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @if (Model.HasPassword)
-                    {
-                        @Html.ActionLink("Modify", "ChangePassword")
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Create", "SetPassword")
-                    }
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("Google Login", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @Html.ActionLink("Manage", "ManageLogins")
-                </div>
-            </div>
+    <div class="row well well-modal">
+        <div>
+            <h4 class="text-center">Manage Account</h4>
         </div>
-        <div class="row well well-modal">
-            <div>
-                <h4 class="text-center">Personal Details</h4>
-            </div>
-            <div class="form-group">
-                @Html.Label("View/Change Info", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @Html.ActionLink("Modify", "ModifyAccountDetails")
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("View/Change Delivery Addresses", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @Html.ActionLink("Modify", "ModifyDeliveryDetails")
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("View Order History", new { @class = "col-sm-4 control-label" })
-                <div>
-                    @Html.ActionLink("View", "ViewOrderHistory")
-                </div>
-            </div>
+
+        <div>
+            @Model.ConfirmedEmail
+            @if (!String.IsNullOrWhiteSpace(Model.UnConfirmedEmail))
+            {
+                <em> - Unconfirmed: @Model.UnConfirmedEmail </em> @Html.ActionLink("Cancel", "CancelUnconfirmedEmail", new { emailOrUserId = Model.ConfirmedEmail })
+            }
+            else
+            {
+                @Html.ActionLink("Change Email", "ChangeEmail")
+            }
         </div>
+
+
+        <div>
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Modify Password", "ChangePassword")
+            }
+            else
+            {
+                @Html.ActionLink("Create Password", "SetPassword")
+            }
+        </div>
+    </div>
+    @*<div class="form-group">
+            @Html.Label("Google Login", new { @class = "col-sm-4 control-label" })
+            <div>
+                @Html.ActionLink("Manage", "ManageLogins")
+            </div>
+        </div>*@
+
+    <div class="row well well-modal">
+        <div>
+            <h4 class="text-center">Personal Details</h4>
+        </div>
+
+        <div>
+            @Html.ActionLink("Change Personal Details", "ModifyAccountDetails")
+        </div>
+
+        <div>
+            @Html.ActionLink("Change Delivery Information", "ModifyDeliveryDetails")
+        </div>
+
+        <div>
+            @Html.ActionLink("View Order History", "ViewOrderHistory")
+        </div>
+    </div>
+
 </div>
 
 @*<dl class="dl-horizontal">

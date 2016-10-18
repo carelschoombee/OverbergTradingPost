@@ -18,27 +18,34 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <span id="loginLink" class="glyphicon glyphicon-user" aria-hidden="true" onclick="window.location = '@Url.Action("Login", "Account")'">Log In</span>
-            </a>
-            <ul class="dropdown-menu dropdown-login well hidden-xs hidden-sm" role="menu">
-                @Html.Action("LoginSmall", "Account")
-            </ul>
-
+        <li>
+            <a><span id="loginLink" class="glyphicon glyphicon-user" aria-hidden="true" onclick="window.location = '@Url.Action("Login", "Account")'">Log In</span></a>
         </li>
     </ul>
+
+        @*<ul class="nav navbar-nav navbar-right">
+                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span id="loginLink" class="glyphicon glyphicon-user" aria-hidden="true" onclick="window.location = '@Url.Action("Login", "Account")'">Log In</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-login well hidden-xs hidden-sm" role="menu">
+                        @Html.Action("LoginSmall", "Account")
+                    </ul>
+
+                </li>
+            </ul>*@
 }
 
-@*<ul class="nav navbar-nav navbar-right">
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <span id ="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
-        </a>
-        <ul class="dropdown-menu dropdown-cart well hidden-xs hidden-sm" role="menu">
-            @Html.Action("SmallCartBody", "ShoppingCart")
-            <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
-        </ul>
-        
-    </li>
-</ul>*@
+        @*<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span id ="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-cart well hidden-xs hidden-sm" role="menu">
+                        @Html.Action("SmallCartBody", "ShoppingCart")
+                        <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
+                    </ul>
+
+                </li>
+            </ul>*@

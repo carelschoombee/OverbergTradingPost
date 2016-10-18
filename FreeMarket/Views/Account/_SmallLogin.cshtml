@@ -3,7 +3,7 @@
 @model LoginViewModel
 
 <li>
-    Use a local account to log in
+    Login
 </li>
 
 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -17,7 +17,7 @@
                     @Html.LabelFor(m => m.Email, new { @class = "control-label" })
                 </td>
                 <td>
-                    @Html.TextBoxFor(m => m.Email, new { @style = "Width: 125px" })
+                    @Html.TextBoxFor(m => m.Email, new { @style = "Width: 200px" })
                     @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -26,7 +26,7 @@
                     @Html.LabelFor(m => m.Password, new { @class = "control-label" })
                 </td>
                 <td>
-                    @Html.PasswordFor(m => m.Password, new { @style = "Width: 125px" })
+                    @Html.PasswordFor(m => m.Password, new { @style = "Width: 200px" })
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -39,7 +39,7 @@
     </li>
 }
 
-<section id="socialLoginFormSmall">
+@*<section id="socialLoginFormSmall">
     @Html.Partial("_ExternalLoginsListPartialSmall", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-</section>
+</section>*@
 

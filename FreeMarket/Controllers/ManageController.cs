@@ -356,8 +356,6 @@ namespace FreeMarket.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-
-
         }
 
         [HttpPost]
@@ -389,7 +387,8 @@ namespace FreeMarket.Controllers
                             ReviewContent = p.ProductReviewText,
                             StarRating = (short)p.ProductRating,
                             SupplierNumber = p.SupplierNumber,
-                            UserId = user.Id
+                            UserId = user.Id,
+                            Approved = null
                         };
 
                         db.ProductReviews.Add(review);

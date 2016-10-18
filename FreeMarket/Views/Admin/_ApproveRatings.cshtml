@@ -1,0 +1,110 @@
+﻿@model FreeMarket.Models.RatingsInfo
+
+<table class="table table-bordered-custom table-responsive">
+    @if (Model != null && Model.ProductRatings.Count > 0)
+    {
+        for (int i = 0; i < Model.ProductRatings.Count; i++)
+        {
+            using (Ajax.BeginForm("ApproveReview", "Admin", null, new AjaxOptions { LoadingElementId = "loadingDiv", UpdateTargetId = "ratingsTable" }))
+            {
+                @Html.AntiForgeryToken()
+                string formattedDate = Model.ProductRatings[i].Date.HasValue
+                ? Model.ProductRatings[i].Date.Value.ToLongDateString()
+                : "<not available>";
+
+                <tr><td colspan="4">@formattedDate</td></tr>
+                <tr>
+                    @Html.Hidden("ReviewId", Model.ProductRatings[i].ReviewId)
+                    @Html.Hidden("CourierReviewId", Model.ProductRatings[i].CourierReviewId)
+                    <td class="text-center">Order @Model.ProductRatings[i].OrderNumber</td>
+                    <td>@Model.ProductRatings[i].Author</td>
+                    <td>@Model.ProductRatings[i].ProductName</td>
+                    <td>@Model.ProductRatings[i].SupplierName</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <label class="control-label text-info">Quality Rating</label>
+                        <input id="@Model.ProductRatings[i].ReviewId" name="input-id" value="@Model.ProductRatings[i].StarRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
+                        @if (Model.ProductRatings[i].StarRating == 1)
+                        {
+                            <span class="btn btn-danger">Substandard</span>
+                        }
+                        else if (Model.ProductRatings[i].StarRating == 2)
+                        {
+                            <span class="btn btn-warning">Good</span>
+                        }
+                        else if (Model.ProductRatings[i].StarRating == 3)
+                        {
+                            <span class="btn btn-success">Excellent</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <div>
+                            <label class="control-label text-info">Price Rating</label>
+                        </div>
+                        <span>@Model.ProductRatings[i].Quantity unit(s) @@ @string.Format("{0:C}", Model.ProductRatings[i].Price)</span>
+                        <input name="input-id" value="@Model.ProductRatings[i].PriceRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
+                        @if (Model.ProductRatings[i].PriceRating == 1)
+                        {
+                            <span class="btn btn-danger">Expensive</span>
+                        }
+                        else if (Model.ProductRatings[i].PriceRating == 2)
+                        {
+                            <span class="btn btn-warning">Just Right</span>
+                        }
+                        else if (Model.ProductRatings[i].PriceRating == 3)
+                        {
+                            <span class="btn btn-success">Bargain</span>
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="4"><div class="text-info">Product Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].ReviewContent </span></td>
+                </tr>
+
+                if (Model.ProductRatings[i].CourierName == null)
+                {
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <div>
+                                <label class="control-label text-info">Courier Rating</label>
+                            </div>
+                            <span>@Model.ProductRatings[i].CourierName</span>
+                            <input name="input-id" value="@Model.ProductRatings[i].CourierRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
+                            @if (Model.ProductRatings[i].CourierRating == 1)
+                            {
+                                <span class="btn btn-danger">Poor</span>
+                            }
+                            else if (Model.ProductRatings[i].CourierRating == 2)
+                            {
+                                <span class="btn btn-warning">Good</span>
+                            }
+                            else if (Model.ProductRatings[i].CourierRating == 3)
+                            {
+                                <span class="btn btn-success">Excellent</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><div class="text-info">Courier Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].CourierReviewContent </span></td>
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" value="Approve" name="button" class="btn btn-success btn-sm" />
+                        <input type="submit" value="Revoke" name="button" class="btn btn-danger btn-sm" />
+                    </td>
+                </tr>
+            }
+        }
+    }
+
+</table>

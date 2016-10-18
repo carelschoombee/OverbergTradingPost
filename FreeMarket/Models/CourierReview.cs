@@ -22,6 +22,7 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> Date { get; set; }
         public string ReviewContent { get; set; }
         public Nullable<short> StarRating { get; set; }
+        public Nullable<bool> Approved { get; set; }
     
         public virtual Courier Courier { get; set; }
     }

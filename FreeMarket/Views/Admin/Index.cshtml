@@ -12,6 +12,12 @@
         UpdateTargetId = "CompleteTable",
         LoadingElementId = "loadingDiv",
     };
+
+    AjaxOptions reviewAjaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "ratingsTable",
+        LoadingElementId = "loadingDiv",
+    };
 }
 
 <br />
@@ -34,7 +40,7 @@
     <img src="@Url.Content("~/Content/Images/loading.gif")" />
 </div>
 
-<div class="center_div well well-modal">
+<div id="parent" class="center_div well well-modal">
 
     <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
@@ -65,7 +71,7 @@
                                     @Html.Hidden("yearView", "Year")
                                 </div>
                                 <div class="col-sm-3">
-                                    <span class="icon-input-btn"><span class="glyphicon glyphicon-eye-open"></span> <input type="submit" value="View" class="btn btn-primary btn-sm" /></span>
+                                    <input type="submit" value="View" class="btn btn-primary btn-sm" />
                                 </div>
                             </div>
                         }
@@ -90,7 +96,7 @@
                                     @Html.ValidationMessageFor(m => m.SelectedMonth, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="col-sm-3">
-                                    <span class="icon-input-btn"><span class="glyphicon glyphicon-eye-open"></span> <input type="submit" value="View" class="btn btn-primary btn-sm" /></span>
+                                    <input type="submit" value="View" class="btn btn-primary btn-sm" />
                                 </div>
                             </div>
                             @Html.Hidden("monthView", "Month")
@@ -169,34 +175,16 @@
                 </div>
 
                 <div>
-                    <span class="icon-input-btn"><span class="glyphicon glyphicon-floppy-save"></span> <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" /></span>
+                   <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
                 </div>
             }
         </div>
         <div class="tab-pane" id="ratings">
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2"><h2>Orders</h2></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Orders:
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Completed Orders:
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Cancelled Orders:
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
+            <div id="ratingsTable">
+
+                @Html.Partial("_ApproveRatings", Model.RatingsInformation)
+
+            </div>
         </div>
         <div class="tab-pane" id="customers">
             <table class="table table-bordered-custom table-responsive">
@@ -232,6 +220,8 @@
 </div>
 
 <script type="text/javascript">
+
+    $('.ratingDisplay').rating({ displayOnly: true, step: 1, stars: 3, clearCaption: 'Not yet rated' });
 
     $(function () {
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

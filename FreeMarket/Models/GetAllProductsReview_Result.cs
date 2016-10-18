@@ -10,22 +10,30 @@
 namespace FreeMarket.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class ProductReview
+    public partial class GetAllProductsReview_Result
     {
         public int ReviewId { get; set; }
         public Nullable<int> ProductNumber { get; set; }
+        public Nullable<int> SupplierNumber { get; set; }
         public Nullable<int> OrderNumber { get; set; }
         public string Author { get; set; }
         public string UserId { get; set; }
         public Nullable<short> StarRating { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public string ReviewContent { get; set; }
-        public Nullable<int> SupplierNumber { get; set; }
         public Nullable<int> PriceRating { get; set; }
         public Nullable<bool> Approved { get; set; }
-    
-        public virtual Product Product { get; set; }
+        public string Description { get; set; }
+        public string SupplierName { get; set; }
+        public string DeliveryAddressCity { get; set; }
+        public decimal TotalOrderValue { get; set; }
+        public Nullable<decimal> ShippingTotal { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public Nullable<short> CourierRating { get; set; }
+        public string CourierRatingReview { get; set; }
+        public Nullable<int> CourierReviewId { get; set; }
+        public string CourierName { get; set; }
     }
 }

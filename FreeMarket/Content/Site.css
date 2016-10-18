@@ -471,6 +471,7 @@ th, td {
 
 .dropdown-login {
   text-align: left;
+  width: 400px;
 }
 
 a.freemarket-link { color: white }

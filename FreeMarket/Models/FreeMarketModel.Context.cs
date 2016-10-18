@@ -242,5 +242,10 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CalculateDeliveryFeeAdhoc_Result>("CalculateDeliveryFeeAdhoc", productNumberParameter, supplierNumberParameter, quantityRequestedParameter, postalCodeParameter);
         }
+    
+        public virtual ObjectResult<GetAllProductsReview_Result> GetAllProductsReview()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsReview_Result>("GetAllProductsReview");
+        }
     }
 }

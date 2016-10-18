@@ -231,6 +231,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
+    <Compile Include="Models\Admin\RatingsInfo.cs" />
     <Compile Include="Models\Admin\SalesInfo.cs" />
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DateTimeModelBinder.cs" />
@@ -263,6 +264,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetAllProductsInOrder_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetAllProductsReview_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetAllProducts_Result.cs">
@@ -657,6 +661,7 @@
     <Content Include="Views\Account\_RequiredFields.cshtml" />
     <Content Include="Views\ShoppingCart\_RequiredFields.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Admin\_ApproveRatings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
