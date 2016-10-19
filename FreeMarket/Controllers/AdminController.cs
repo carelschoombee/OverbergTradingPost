@@ -88,6 +88,59 @@ namespace FreeMarket.Controllers
             return RedirectToAction("DeliverPartialTable", "Admin");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarkRefundComplete(List<OrderHeader> orders)
+        {
+            List<OrderHeader> selected = orders
+                .Where(c => c.Selected)
+                .ToList();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (selected.Count > 0)
+                {
+                    foreach (OrderHeader oh in selected)
+                    {
+                        OrderHeader order = db.OrderHeaders.Find(oh.OrderNumber);
+
+                        if (order != null)
+                        {
+                            order.OrderStatus = "Refunded";
+                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+                        }
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("DeliverRefundCompleteTable", "Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RefundOrder(int OrderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+
+                OrderHeader order = db.OrderHeaders.Find(OrderNumber);
+
+                if (order != null)
+                {
+                    order.OrderStatus = "RefundPending";
+                    db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+
+                    OrderHeader.SendRefundEmail(order.CustomerNumber, order.OrderNumber);
+                }
+
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("DeliverRefundTable", "Admin");
+        }
+
         public ActionResult DeliverPartialTable()
         {
             List<OrderHeader> confirmedOrders = new List<OrderHeader>();
@@ -98,6 +151,30 @@ namespace FreeMarket.Controllers
             }
 
             return PartialView("_ConfirmedOrders", confirmedOrders);
+        }
+
+        public ActionResult DeliverRefundTable()
+        {
+            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+            }
+
+            return PartialView("_RefundOrders", confirmedOrders);
+        }
+
+        public ActionResult DeliverRefundCompleteTable()
+        {
+            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+            }
+
+            return PartialView("_RefundPending", confirmedOrders);
         }
 
         public ActionResult ProductsIndex()
@@ -225,6 +302,20 @@ namespace FreeMarket.Controllers
             return View("CreateSupplier", supplier);
         }
 
+        public ActionResult ViewOrder(int orderNumber, string customerNumber)
+        {
+            if (string.IsNullOrEmpty(customerNumber) || orderNumber == 0)
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+
+            OrderHeaderViewModel model = new OrderHeaderViewModel();
+
+            model = OrderHeaderViewModel.GetOrder(orderNumber, customerNumber);
+
+            return View(model);
+        }
+
         public ActionResult EditProduct(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)
@@ -286,6 +377,30 @@ namespace FreeMarket.Controllers
             if (user != null)
             {
                 return Content(user.PhoneNumber);
+            }
+            else
+            {
+                return Content("Anonymous");
+            }
+        }
+
+        public ActionResult GetCustomerEmail(int orderNumber)
+        {
+            OrderHeader order = new OrderHeader();
+            ApplicationUser user = new ApplicationUser();
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return Content("Customer");
+
+                user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(order.CustomerNumber);
+            }
+
+            if (user != null)
+            {
+                return Content(user.Email);
             }
             else
             {

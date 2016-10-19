@@ -1,0 +1,145 @@
+﻿@using FreeMarket.Models
+@model RatingsInfo
+
+<div class="text-center">
+    <h2>Average Ratings - Products</h2>
+</div>
+
+@if (Model != null && Model.AverageRatings != null && Model.AverageRatings.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+    <tr>
+        <th>
+            Image
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Supplier
+        </th>
+        <th>
+            Number of Reviews
+        </th>
+        <th>
+            Quality
+        </th>
+        <th>
+            Price
+        </th>
+    </tr>
+    @foreach (KeyValuePair<Product, Dictionary<string, int>> item in Model.AverageRatings)
+    {
+        <tr>
+            <td>
+                <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = item.Key.MainImageNumber, defaultSize = PictureSize.Small })" alt="@item.Key.Description" title="@item.Key.Description" />
+            </td>
+            <td>
+                @item.Key.Description
+            </td>
+            <td>
+                @item.Key.SupplierName
+            </td>
+            <td>
+                @item.Key.ProductReviewsCount
+            </td>
+            @foreach (KeyValuePair<string, int> subItem in item.Value)
+            {
+                if (subItem.Key == "Quality")
+                {
+
+                    <td data-label="Quality:">
+                        @if (subItem.Value == 1)
+                        {
+                            <span class="btn btn-danger btn-sm">Substandard</span>
+                        }
+                        else if (subItem.Value == 2)
+                        {
+                            <span class="btn btn-warning btn-sm">Good</span>
+                        }
+                        else if (subItem.Value == 3)
+                        {
+                            <span class="btn btn-success btn-sm">Excellent</span>
+                        }
+                    </td>
+                }
+            }
+
+            @foreach (KeyValuePair<string, int> subItem in item.Value)
+            {
+                if (subItem.Key == "Price")
+                {
+
+                    <td data-label="Price:">
+                        @if (subItem.Value == 1)
+                        {
+                            <span class="btn btn-danger btn-sm">Expensive</span>
+                        }
+                        else if (subItem.Value == 2)
+                        {
+                            <span class="btn btn-warning btn-sm">Just Right</span>
+                        }
+                        else if (subItem.Value == 3)
+                        {
+                            <span class="btn btn-success btn-sm">Bargain</span>
+                        }
+                    </td>
+                }
+            }
+
+        </tr>
+    }
+    
+    </table>
+
+    if (Model.CourierRatings != null && Model.CourierRatings.Count > 0)
+    {
+
+    <div class="text-center">
+        <h2>Average Ratings - Couriers</h2>
+    </div>
+
+    <table class="table table-responsive table-bordered-custom">
+
+        <tr>
+            <th>Courier Name</th>
+            <th>Number of Reviews</th>
+            <th>Average Rating</th>
+        </tr>
+
+        @foreach (KeyValuePair<Courier, int> courier in Model.CourierRatings)
+        {
+
+            <tr>
+                <td>@courier.Key.CourierName</td>
+                <td>
+                    @courier.Key.CourierReviewsCount
+                </td>
+                <td>
+                    @if (courier.Value == 1)
+                    {
+                        <span class="btn btn-danger btn-sm">Poor</span>
+                    }
+                    else if (courier.Value == 2)
+                    {
+                        <span class="btn btn-warning btn-sm">Good</span>
+                    }
+                    else if (courier.Value == 3)
+                    {
+                        <span class="btn btn-success btn-sm">Excellent</span>
+                    }
+                </td>
+            </tr>
+              
+        }
+
+    </table>
+
+    }
+
+}
+else
+{
+    <text>There are no average ratings to display yet.</text>
+}

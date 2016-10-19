@@ -1,0 +1,65 @@
+﻿@using FreeMarket.Models
+@model List<OrderHeader>
+
+<h2 class="text-center">Confirmed Orders</h2>
+<table class="table table-bordered-custom table-responsive">
+
+    @if (Model != null && Model.Count != 0)
+    {
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                PDF
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Phone
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Total
+            </th>
+            
+            <th>
+                Mark Complete
+            </th>
+        </tr>
+        for (int i = 0; i < Model.Count; i++)
+        {
+            using (Html.BeginForm("RefundOrder", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <tr>
+                    <td class="text-center">
+                        @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
+                        @Html.HiddenFor(model => Model[i].OrderNumber)
+                    </td>
+                    <td class="text-center"><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
+                    <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
+                    <td class="text-center">@Html.Action("GetCustomerEmail", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
+                    <td class="text-center">@Html.Action("GetCustomerPhone", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
+                    <td class="text-center" style="white-space: pre-line">@Model[i].DeliveryAddress</td>
+                    <td class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>                   
+                    <td class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
+                </tr>
+            }
+        }
+    }
+    else
+    { 
+        <tr>
+            <td style="font-size: 20px">
+                There are no new confirmed orders to be processed.
+            </td>
+        </tr>
+    }
+</table>

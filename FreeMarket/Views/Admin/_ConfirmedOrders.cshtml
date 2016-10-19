@@ -1,10 +1,9 @@
 ﻿@using FreeMarket.Models
 @model List<OrderHeader>
 
+<h2 class="text-center">Confirmed Orders</h2>
 <table class="table table-bordered-custom table-responsive">
-    <tr>
-        <td colspan="5"><h2>Confirmed Orders</h2></td>
-    </tr>
+
     @if (Model != null && Model.Count != 0)
     {
         <tr>
@@ -27,14 +26,14 @@
         for (int i = 0; i < Model.Count; i++)
         {
             <tr>
-                <td>
-                    @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { @class = "freemarket-link" })
+                <td class="text-center">
+                    @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
                     @Html.HiddenFor(model => Model[i].OrderNumber)
                 </td>
-                <td>@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
-                <td>@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
-                <td><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
-                <td>@Html.EditorFor(c => Model[i].Selected)</td>
+                <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
+                <td class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
+                <td class="text-center"><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
+                <td class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
             </tr>
         }
     }

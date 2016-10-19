@@ -14,6 +14,7 @@ namespace FreeMarket.Models
         public RatingsInfo RatingsInformation { get; set; }
 
         public List<OrderHeader> ConfirmedOrders { get; set; }
+        public List<OrderHeader> RefundPending { get; set; }
 
         [DisplayName("Time Period")]
         [Required]
@@ -69,6 +70,7 @@ namespace FreeMarket.Models
                 SalesInformation = new SalesInfo(int.Parse(SelectedYear));
                 RatingsInformation = new RatingsInfo();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
         }
 
@@ -105,7 +107,9 @@ namespace FreeMarket.Models
                 Period = period;
                 SelectedMonth = date;
                 SalesInformation = new SalesInfo(date);
+                RatingsInformation = new RatingsInfo();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
         }
     }

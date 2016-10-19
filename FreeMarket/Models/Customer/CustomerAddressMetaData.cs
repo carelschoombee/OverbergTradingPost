@@ -186,7 +186,9 @@ namespace FreeMarket.Models
             string toReturn = "";
 
             toReturn += string.Format("{0}", AddressLine1);
-            toReturn += string.Format("\n{0}", AddressLine2);
+
+            if (!string.IsNullOrEmpty(AddressLine2))
+                toReturn += string.Format("\n{0}", AddressLine2);
 
             if (!string.IsNullOrEmpty(AddressLine3))
                 toReturn += string.Format("\n{0}", AddressLine3);
@@ -194,7 +196,9 @@ namespace FreeMarket.Models
             if (!string.IsNullOrEmpty(AddressLine4))
                 toReturn += string.Format("\n{0}", AddressLine4);
 
-            toReturn += string.Format("\n{0}", AddressSuburb);
+            if (!string.IsNullOrEmpty(AddressSuburb))
+                toReturn += string.Format("\n{0}", AddressSuburb);
+
             toReturn += string.Format("\n{0}", AddressCity);
             toReturn += string.Format("\n{0}", AddressPostalCode);
 

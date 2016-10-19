@@ -121,6 +121,54 @@ namespace FreeMarket.Models
             }
         }
 
+        public static Dictionary<MemoryStream, string> GetRefundReport(int orderNumber)
+        {
+            MemoryStream stream = new MemoryStream();
+            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+
+            try
+            {
+                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                FreeMarketDataSet ds = new FreeMarketDataSet();
+
+                ds.GetOrderReport.Clear();
+                ds.EnforceConstraints = false;
+
+                ta.Fill(ds.GetOrderReport, orderNumber);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = "DataSet1";
+                rds.Value = ds.GetOrderReport;
+
+                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                rv.ProcessingMode = ProcessingMode.Local;
+                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report6.rdlc");
+
+                rv.LocalReport.DataSources.Add(rds);
+                rv.LocalReport.EnableHyperlinks = true;
+                rv.LocalReport.Refresh();
+
+                byte[] streamBytes = null;
+                string mimeType = "";
+                string encoding = "";
+                string filenameExtension = "";
+                string[] streamids = null;
+                Warning[] warnings = null;
+
+                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+                stream = new MemoryStream(streamBytes);
+
+                outCollection.Add(stream, mimeType);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return outCollection;
+        }
+
         public static Dictionary<MemoryStream, string> GetOrderReport(int orderNumber)
         {
             MemoryStream stream = new MemoryStream();
@@ -413,6 +461,74 @@ namespace FreeMarket.Models
                 iMessage.Subject = string.Format("Schoombee and Son Order");
 
                 await email.SendAsync(iMessage);
+            }
+        }
+
+        public async static void SendRefundEmail(string customerNumber, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Dictionary<MemoryStream, string> refundSummary;
+
+                OrderHeader oh = db.OrderHeaders.Find(orderNumber);
+
+                if (oh != null)
+                {
+
+                    refundSummary = GetRefundReport(orderNumber);
+
+                    ApplicationUser user = System.Web.HttpContext
+                                .Current
+                                .GetOwinContext()
+                                .GetUserManager<ApplicationUserManager>()
+                                .FindById(customerNumber);
+
+                    EmailService email = new EmailService();
+
+                    IdentityMessage iMessage = new IdentityMessage();
+                    iMessage.Destination = user.Email;
+
+                    string line1 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundLine1")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    string line2 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundLine2")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    string line3 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundLine3")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    string line4 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundLine4")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    Support supportInfo = db.Supports
+                        .FirstOrDefault();
+
+                    iMessage.Body = string.Format((line1 + line2 + line3 + line4), user.Name, orderNumber, supportInfo.Cellphone, supportInfo.Landline, supportInfo.Email);
+                    iMessage.Subject = string.Format("Schoombee and Son Refund");
+
+                    await email.SendAsync(iMessage, refundSummary.FirstOrDefault().Key);
+
+                    IdentityMessage iMessageNotifyRefund = new IdentityMessage();
+                    iMessageNotifyRefund.Destination = "carelschoombee@gmail.com";
+
+                    string usLine1 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundUsLine1")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    iMessageNotifyRefund.Body = string.Format((usLine1), orderNumber, user.Name, user.Email, user.PhoneNumber, user.SecondaryPhoneNumber);
+                    iMessageNotifyRefund.Subject = string.Format("Refund - Order {0}", orderNumber);
+
+                    await email.SendAsync(iMessageNotifyRefund, refundSummary.FirstOrDefault().Key);
+                }
             }
         }
 

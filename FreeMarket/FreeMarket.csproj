@@ -257,6 +257,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\GetAllCouriersReviewList_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllCouriersReview_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -662,6 +665,9 @@
     <Content Include="Views\ShoppingCart\_RequiredFields.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Admin\_ApproveRatings.cshtml" />
+    <Content Include="Views\Admin\_AverageRatings.cshtml" />
+    <Content Include="Views\Admin\_RefundOrders.cshtml" />
+    <Content Include="Views\Admin\_RefundPending.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -679,6 +685,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Report6.rdlc" />
     <EmbeddedResource Include="Reports\Report5.rdlc" />
     <EmbeddedResource Include="Reports\Report4.rdlc" />
     <EmbeddedResource Include="Reports\Report3.rdlc" />

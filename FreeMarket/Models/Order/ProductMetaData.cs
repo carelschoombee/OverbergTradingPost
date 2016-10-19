@@ -44,6 +44,8 @@ namespace FreeMarket.Models
         public int PriceRating { get; set; }
         public decimal PriceOrder { get; set; }
 
+        public int ProductReviewsCount { get; set; }
+
         public static string GetFullDescription(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)

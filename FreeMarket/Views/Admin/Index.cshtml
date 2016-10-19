@@ -10,14 +10,21 @@
     AjaxOptions ajaxOpts = new AjaxOptions
     {
         UpdateTargetId = "CompleteTable",
-        LoadingElementId = "loadingDiv",
+        //LoadingElementId = "loadingDiv",
     };
 
     AjaxOptions reviewAjaxOpts = new AjaxOptions
     {
         UpdateTargetId = "ratingsTable",
-        LoadingElementId = "loadingDiv",
+        //LoadingElementId = "loadingDiv",
     };
+
+    AjaxOptions ajaxOptsRefund = new AjaxOptions
+    {
+        UpdateTargetId = "RefundPendingTable",
+        //LoadingElementId = "loadingDiv",
+    };
+
 }
 
 <br />
@@ -40,7 +47,7 @@
     <img src="@Url.Content("~/Content/Images/loading.gif")" />
 </div>
 
-<div id="parent" class="center_div well well-modal">
+<div class="well well-modal">
 
     <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
@@ -48,6 +55,7 @@
         <li><a href="#profile" data-toggle="tab">Admin</a></li>
         <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
         <li><a href="#customers" data-toggle="tab">Customers</a></li>
+        <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
     </ul>
 
     <div class="tab-content">
@@ -59,7 +67,7 @@
                         View By Month: @Html.RadioButtonFor(m => m.Period, "Month")
                     </div>
 
-                    <div id="YearView" style="display:none">
+                    <div id="YearView" style="display:none" class="center_div">
                         @using (Html.BeginForm("Dashboard", "Admin", FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
@@ -77,13 +85,13 @@
                         }
                     </div>
 
-                    <div id="MonthView" style="display:none">
+                    <div id="MonthView" style="display:none" class="center_div">
                         @using (Html.BeginForm("Dashboard", "Admin", FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Select Period</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="input-group date" id="datetimePicker">
                                         @{ Html.EnableClientValidation(false); }
                                         @Html.EditorFor(m => m.SelectedMonth, new { htmlAttributes = new { @class = "form-control-inline" } })
@@ -174,13 +182,18 @@
                     @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
                 </div>
 
-                <div>
+                <div class="col-sm-offset-5">
                    <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
                 </div>
             }
         </div>
         <div class="tab-pane" id="ratings">
             <div id="ratingsTable">
+
+                @if (Model.RatingsInformation.AverageRatings != null && Model.RatingsInformation.AverageRatings.Count > 0)
+                {
+                    @Html.Partial("_AverageRatings", Model.RatingsInformation)
+                }
 
                 @if (Model.RatingsInformation != null)
                 {
@@ -190,29 +203,19 @@
             </div>
         </div>
         <div class="tab-pane" id="customers">
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2"><h2>Orders</h2></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Orders:
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Completed Orders:
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        Total Cancelled Orders:
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
+            
+        </div>
+        <div class="tab-pane" id="refunds">
+            <div id="CancelledTable">
+                @Html.Partial("_RefundOrders", Model.ConfirmedOrders)
+            </div>
+            @using (Ajax.BeginForm("MarkRefundComplete", "Admin", null, ajaxOptsRefund))
+            {
+                @Html.AntiForgeryToken()
+                <div id="RefundPendingTable">
+                    @Html.Partial("_RefundPending", Model.RefundPending)
+                </div>
+            }
         </div>
         <div class="tab-pane" id="profile">
             <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>

@@ -1,5 +1,9 @@
 ﻿@model FreeMarket.Models.RatingsInfo
 
+<div class="text-center">
+    <h2>New Ratings</h2>
+</div>
+
 <table class="table table-bordered-custom table-responsive">
     @if (Model != null && Model.ProductRatings.Count > 0)
     {
@@ -11,18 +15,28 @@
                 string formattedDate = Model.ProductRatings[i].Date.HasValue
                 ? Model.ProductRatings[i].Date.Value.ToLongDateString()
                 : "<not available>";
+                <tr>
+                    <td>
+                        <div>
+                            @Html.Hidden("ReviewId", Model.ProductRatings[i].ReviewId)
+                            @Html.Hidden("CourierReviewId", Model.ProductRatings[i].CourierReviewId)
 
-                <tr><td colspan="4">@formattedDate</td></tr>
-                <tr>
-                    @Html.Hidden("ReviewId", Model.ProductRatings[i].ReviewId)
-                    @Html.Hidden("CourierReviewId", Model.ProductRatings[i].CourierReviewId)
-                    <td class="text-center">Order @Model.ProductRatings[i].OrderNumber</td>
-                    <td>@Model.ProductRatings[i].Author</td>
-                    <td>@Model.ProductRatings[i].ProductName</td>
-                    <td>@Model.ProductRatings[i].SupplierName</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-center">
+                            @formattedDate
+                        </div>
+                        <div>
+                            Order @Model.ProductRatings[i].OrderNumber
+                        </div>
+                        <div>
+                            @Model.ProductRatings[i].Author
+                        </div>
+                        <div>
+                            @Model.ProductRatings[i].ProductName
+                        </div>
+                        <div>
+                            @Model.ProductRatings[i].SupplierName
+                        </div>
+                    </td>
+                    <td  class="text-center">
                         <label class="control-label text-info">Quality Rating</label>
                         <input id="@Model.ProductRatings[i].ReviewId" name="input-id" value="@Model.ProductRatings[i].StarRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
                         @if (Model.ProductRatings[i].StarRating == 1)
@@ -38,9 +52,7 @@
                             <span class="btn btn-success">Excellent</span>
                         }
                     </td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-center">
+                    <td class="text-center">
                         <div>
                             <label class="control-label text-info">Price Rating</label>
                         </div>
@@ -59,8 +71,28 @@
                             <span class="btn btn-success">Bargain</span>
                         }
                     </td>
+                    <td class="text-center">
+                        <div>
+                            <label class="control-label text-info">Courier Rating</label>
+                        </div>
+                        <span>@Model.ProductRatings[i].CourierName</span>
+                        <input name="input-id" value="@Model.ProductRatings[i].CourierRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
+                        @if (Model.ProductRatings[i].CourierRating == 1)
+                        {
+                            <span class="btn btn-danger">Poor</span>
+                        }
+                        else if (Model.ProductRatings[i].CourierRating == 2)
+                        {
+                            <span class="btn btn-warning">Good</span>
+                        }
+                        else if (Model.ProductRatings[i].CourierRating == 3)
+                        {
+                            <span class="btn btn-success">Excellent</span>
+                        }
+                    </td>
 
                 </tr>
+                
                 <tr>
                     <td colspan="4"><div class="text-info">Product Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].ReviewContent </span></td>
                 </tr>
@@ -70,28 +102,7 @@
 
                 }
                 else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">
-                            <div>
-                                <label class="control-label text-info">Courier Rating</label>
-                            </div>
-                            <span>@Model.ProductRatings[i].CourierName</span>
-                            <input name="input-id" value="@Model.ProductRatings[i].CourierRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
-                            @if (Model.ProductRatings[i].CourierRating == 1)
-                            {
-                                <span class="btn btn-danger">Poor</span>
-                            }
-                            else if (Model.ProductRatings[i].CourierRating == 2)
-                            {
-                                <span class="btn btn-warning">Good</span>
-                            }
-                            else if (Model.ProductRatings[i].CourierRating == 3)
-                            {
-                                <span class="btn btn-success">Excellent</span>
-                            }
-                        </td>
-                    </tr>
+                {                    
                     <tr>
                         <td colspan="4"><div class="text-info">Courier Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].CourierReviewContent </span></td>
                     </tr>
@@ -103,10 +114,11 @@
                         <input type="submit" value="Revoke" name="button" class="btn btn-danger btn-sm" />
                     </td>
                 </tr>
-
-                
             }
         }
     }
-
+    else
+    {
+        <text>There are no new ratings to approve at the moment.</text>
+    }
 </table>

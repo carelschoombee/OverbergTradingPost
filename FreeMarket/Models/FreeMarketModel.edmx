@@ -669,6 +669,7 @@
         <Function Name="GetAllCouriersReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetAllCouriersReviewList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllProductsByDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DepartmentNumber" Type="int" Mode="In" />
@@ -1217,6 +1218,7 @@
             <Parameter Name="postalCode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllProductsReview" ReturnType="Collection(FreeMarketModel.GetAllProductsReview_Result)" />
+          <FunctionImport Name="GetAllCouriersReviewList" ReturnType="Collection(FreeMarketModel.GetAllCouriersReviewList_Result)" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1875,6 +1877,18 @@
           <Property Type="String" Name="CourierRatingReview" Nullable="true" />
           <Property Type="Int32" Name="CourierReviewId" Nullable="true" />
           <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetAllCouriersReviewList_Result">
+          <Property Type="Int32" Name="ReviewId" Nullable="false" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="Int32" Name="OrderNumber" Nullable="true" />
+          <Property Type="String" Name="Author" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
+          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="ReviewContent" Nullable="true" />
+          <Property Type="Int16" Name="StarRating" Nullable="true" />
+          <Property Type="Boolean" Name="Approved" Nullable="true" />
+          <Property Type="String" Name="CourierName" Nullable="false" MaxLength="100" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2617,6 +2631,22 @@
                 <ScalarProperty Name="CourierRating" ColumnName="CourierRating" />
                 <ScalarProperty Name="CourierRatingReview" ColumnName="CourierRatingReview" />
                 <ScalarProperty Name="CourierReviewId" ColumnName="CourierReviewId" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllCouriersReviewList" FunctionName="FreeMarketModel.Store.GetAllCouriersReviewList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllCouriersReviewList_Result">
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+                <ScalarProperty Name="StarRating" ColumnName="StarRating" />
+                <ScalarProperty Name="Approved" ColumnName="Approved" />
                 <ScalarProperty Name="CourierName" ColumnName="CourierName" />
               </ComplexTypeMapping>
             </ResultMapping>
