@@ -5,11 +5,13 @@ namespace FreeMarket.Models
 {
     public class RatingsInfo
     {
+        public Dictionary<string, int> AverageRatings { get; set; }
         public List<ProductReview> ProductRatings { get; set; }
 
         public RatingsInfo()
         {
             ProductRatings = new List<ProductReview>();
+            AverageRatings = new Dictionary<string, int>();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -40,6 +42,25 @@ namespace FreeMarket.Models
                         UserId = c.UserId
 
                     }).ToList();
+
+                if (ProductRatings.Count > 0)
+                {
+                    List<ProductSupplier> products = db.ProductSuppliers.ToList();
+
+                    if (products != null && products.Count > 0)
+                    {
+                        foreach (ProductSupplier product in products)
+                        {
+                            double qualityRating = ProductRatings
+                                .Where(c => c.ProductNumber == product.ProductNumber && c.SupplierNumber == product.SupplierNumber)
+                                .Average(m => m.StarRating) ?? 0;
+
+                            double priceRating = ProductRatings
+                                .Where(c => c.ProductNumber == product.ProductNumber && c.SupplierNumber == product.SupplierNumber)
+                                .Average(m => m.PriceRating) ?? 0;
+                        }
+                    }
+                }
             }
         }
     }

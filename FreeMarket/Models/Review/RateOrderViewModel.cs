@@ -39,7 +39,11 @@ namespace FreeMarket.Models
                         ReviewId = c.ReviewId
                     }).ToList();
 
-                ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(Order.CustomerNumber);
+                ApplicationUser user = System.Web.HttpContext.Current
+                    .GetOwinContext()
+                    .GetUserManager<ApplicationUserManager>()
+                    .FindById(Order.CustomerNumber);
+
                 if (user == null)
                 {
                     Unsubscribe = true;

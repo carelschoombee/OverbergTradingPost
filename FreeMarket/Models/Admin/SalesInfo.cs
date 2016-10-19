@@ -112,7 +112,7 @@ namespace FreeMarket.Models
             {
                 if (sales.ContainsKey(((DateTime)o.OrderDatePlaced).GetWeekOfMonth().ToString()) && (o.OrderDatePlaced.Value.Year == date.Year) && (o.OrderDatePlaced.Value.Month == date.Month))
                 {
-                    sales[((DateTime)o.OrderDatePlaced).ToString("MMMM")] += o.TotalOrderValue;
+                    sales[((DateTime)o.OrderDatePlaced).GetWeekOfMonth().ToString()] += o.TotalOrderValue;
                 }
             }
 

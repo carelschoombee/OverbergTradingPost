@@ -69,7 +69,11 @@ namespace FreeMarket.Controllers
                             order.OrderStatus = "Complete";
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
-                            ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(oh.CustomerNumber);
+                            ApplicationUser user = System.Web.HttpContext.Current
+                                .GetOwinContext()
+                                .GetUserManager<ApplicationUserManager>()
+                                .FindById(order.CustomerNumber);
+
                             if (user.UnsubscribeFromRatings == false)
                             {
                                 OrderHeader.SendRatingEmail(order.CustomerNumber, order.OrderNumber);
@@ -255,7 +259,14 @@ namespace FreeMarket.Controllers
                 user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(order.CustomerNumber);
             }
 
-            return Content(user.Name);
+            if (user != null)
+            {
+                return Content(user.Name);
+            }
+            else
+            {
+                return Content("Anonymous");
+            }
         }
 
         public ActionResult GetCustomerPhone(int orderNumber)
@@ -272,7 +283,14 @@ namespace FreeMarket.Controllers
                 user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(order.CustomerNumber);
             }
 
-            return Content(user.PhoneNumber);
+            if (user != null)
+            {
+                return Content(user.PhoneNumber);
+            }
+            else
+            {
+                return Content("Anonymous");
+            }
         }
 
         [HttpPost]
@@ -319,7 +337,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApproveReview(int reviewId, int courierReviewId, string button)
+        public ActionResult ApproveReview(string button, int reviewId, int courierReviewId, FormCollection collection)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -328,7 +346,7 @@ namespace FreeMarket.Controllers
 
                 if (review == null)
                 {
-                    return JavaScript("window.location = window.location.href;");
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
@@ -336,16 +354,20 @@ namespace FreeMarket.Controllers
                     {
                         review.Approved = true;
                     }
-                    else
+                    else if (button == "Revoke")
                     {
                         review.Approved = false;
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Admin");
                     }
                     db.Entry(review).State = System.Data.Entity.EntityState.Modified;
                 }
 
                 if (courierReview == null)
                 {
-                    return JavaScript("window.location = window.location.href;");
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
@@ -353,9 +375,13 @@ namespace FreeMarket.Controllers
                     {
                         courierReview.Approved = true;
                     }
-                    else
+                    else if (button == "Revoke")
                     {
                         courierReview.Approved = false;
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Admin");
                     }
 
                     db.Entry(courierReview).State = System.Data.Entity.EntityState.Modified;
@@ -366,7 +392,7 @@ namespace FreeMarket.Controllers
 
             RatingsInfo info = new RatingsInfo();
 
-            return PartialView("_ApproveRatings", info);
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

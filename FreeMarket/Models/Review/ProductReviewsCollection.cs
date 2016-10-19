@@ -34,7 +34,7 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 reviews = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
                     .OrderByDescending(c => c.StarRating)
                     .Take(size)
                     .ToList();

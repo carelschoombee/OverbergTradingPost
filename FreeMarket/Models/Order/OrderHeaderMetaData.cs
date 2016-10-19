@@ -67,6 +67,7 @@ namespace FreeMarket.Models
                         DeliveryAddressLine3 = address.AddressLine3,
                         DeliveryAddressLine4 = address.AddressLine4,
                         DeliveryAddressSuburb = address.AddressSuburb,
+                        DeliveryAddressCity = address.AddressCity,
                         DeliveryAddressPostalCode = address.AddressPostalCode,
                         DeliveryDate = null,
                         DeliveryDateAgreed = null,

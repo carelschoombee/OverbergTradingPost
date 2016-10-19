@@ -182,7 +182,10 @@
         <div class="tab-pane" id="ratings">
             <div id="ratingsTable">
 
-                @Html.Partial("_ApproveRatings", Model.RatingsInformation)
+                @if (Model.RatingsInformation != null)
+                {
+                    @Html.Partial("_ApproveRatings", Model.RatingsInformation)
+                }
 
             </div>
         </div>
