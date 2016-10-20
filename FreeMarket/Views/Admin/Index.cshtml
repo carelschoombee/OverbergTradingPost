@@ -158,10 +158,11 @@
                     <h2 class="text-center">Order Statuses</h2>
                     <hr />
                     @if (Model.SalesInformation.TotalCancelledOrders == 0 &&
-                Model.SalesInformation.TotalLockedOrders == 0 &&
-                Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
-                Model.SalesInformation.TotalConfirmedOrders == 0 &&
-                Model.SalesInformation.TotalCompletedOrders == 0)
+                        Model.SalesInformation.TotalLockedOrders == 0 &&
+                        Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
+                        Model.SalesInformation.TotalConfirmedOrders == 0 &&
+                        Model.SalesInformation.TotalCompletedOrders == 0 &&
+                        Model.SalesInformation.TotalRefundedOrders == 0)
                     {
                         <text>No transactions yet.</text>
                         <div id="orderStatuses" style="height: 0px;"></div>
@@ -214,6 +215,10 @@
                 @Html.AntiForgeryToken()
                 <div id="RefundPendingTable">
                     @Html.Partial("_RefundPending", Model.RefundPending)
+                </div>
+
+                <div class="col-sm-offset-5">
+                    <input type="submit" value="Complete Refund" class="btn btn-primary btn-sm" />
                 </div>
             }
         </div>
@@ -411,14 +416,6 @@
             <text>
         ],
         labelColor: '#ffffff',
-        //colors: [
-        //'#0BA462',
-        //'#39B580',
-        //'#67C69D',
-        //'#95D7BB',
-        //'#00cc88',
-        //'#33ffbb'
-        //],
     });
     </text>
     }
@@ -428,7 +425,8 @@
             Model.SalesInformation.TotalLockedOrders == 0 &&
             Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
             Model.SalesInformation.TotalConfirmedOrders == 0 &&
-            Model.SalesInformation.TotalCompletedOrders == 0)
+            Model.SalesInformation.TotalCompletedOrders == 0 &&
+            Model.SalesInformation.TotalRefundedOrders == 0)
     {
 
     }
@@ -439,11 +437,12 @@
         element: 'orderStatuses',
         parseTime: false,
         data: [
-                    { label: "Completed", value: @Model.SalesInformation.TotalCompletedOrders },
+            { label: "Completed", value: @Model.SalesInformation.TotalCompletedOrders },
             { label: "Confirmed", value: @Model.SalesInformation.TotalConfirmedOrders },
             { label: "Unconfirmed", value: @Model.SalesInformation.TotalUnconfirmedOrders },
             { label: "Cancelled", value: @Model.SalesInformation.TotalCancelledOrders },
             { label: "Locked", value: @Model.SalesInformation.TotalLockedOrders },
+            { label: "Refunded", value: @Model.SalesInformation.TotalRefundedOrders }
         ],
         labelColor: '#ffffff',
         colors: [
@@ -451,7 +450,8 @@
         '#0BA462',
         '#ffff33',
         '#cc0000',
-        '#66ccff'
+        '#66ccff',
+        '#ff9900'
         ],
     });
     </text>

@@ -18,6 +18,7 @@ namespace FreeMarket.Models
         public int TotalCancelledOrders { get; set; }
         public int TotalLockedOrders { get; set; }
         public int TotalUnconfirmedOrders { get; set; }
+        public int TotalRefundedOrders { get; set; }
 
         public Dictionary<string, decimal> CalculateSalesDetails(int year, List<OrderHeader> orders)
         {
@@ -290,6 +291,9 @@ namespace FreeMarket.Models
 
                     List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed").ToList();
                     TotalUnconfirmedOrders = tempUnconfirmed.Count;
+
+                    List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded").ToList();
+                    TotalRefundedOrders = tempRefunded.Count;
                 }
                 else
                 {
@@ -322,6 +326,9 @@ namespace FreeMarket.Models
 
                         List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed" && c.OrderDatePlaced.Value.Year == year).ToList();
                         TotalUnconfirmedOrders = tempUnconfirmed.Count;
+
+                        List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded" && c.OrderDatePlaced.Value.Year == year).ToList();
+                        TotalRefundedOrders = tempRefunded.Count;
 
                         TotalSalesGateway = TotalSalesGateway / 100;
                     }
@@ -377,6 +384,9 @@ namespace FreeMarket.Models
 
                     List<OrderHeader> tempUnconfirmed = db.OrderHeaders.Where(c => c.OrderStatus == "Unconfirmed" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
                     TotalUnconfirmedOrders = tempUnconfirmed.Count;
+
+                    List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalRefundedOrders = tempRefunded.Count;
 
                     TotalSalesGateway = TotalSalesGateway / 100;
                 }

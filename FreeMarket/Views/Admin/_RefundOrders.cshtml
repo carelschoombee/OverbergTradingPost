@@ -41,7 +41,7 @@
                 <tr>
                     <td class="text-center">
                         @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
-                        @Html.HiddenFor(model => Model[i].OrderNumber)
+                        @Html.Hidden("OrderNumber", Model[i].OrderNumber)
                     </td>
                     <td class="text-center"><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
                     <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
@@ -49,7 +49,7 @@
                     <td class="text-center">@Html.Action("GetCustomerPhone", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                     <td class="text-center" style="white-space: pre-line">@Model[i].DeliveryAddress</td>
                     <td class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>                   
-                    <td class="text-center"><div class="btn btn-danger">REFUND</div></td>
+                    <td class="text-center"><input class="btn btn-danger" type="submit" value="REFUND" /></td>
                 </tr>
             }
         }

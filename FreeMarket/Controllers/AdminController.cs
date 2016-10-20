@@ -68,6 +68,7 @@ namespace FreeMarket.Controllers
                         {
                             order.OrderStatus = "Complete";
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
 
                             ApplicationUser user = System.Web.HttpContext.Current
                                 .GetOwinContext()
@@ -80,8 +81,6 @@ namespace FreeMarket.Controllers
                             }
                         }
                     }
-
-                    db.SaveChanges();
                 }
             }
 
@@ -115,7 +114,7 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            return RedirectToAction("DeliverRefundCompleteTable", "Admin");
+            return RedirectToAction("RefundCompletedPartial", "Admin");
         }
 
         [HttpPost]
@@ -138,7 +137,7 @@ namespace FreeMarket.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("DeliverRefundTable", "Admin");
+            return RedirectToAction("Index", "Admin");
         }
 
         public ActionResult DeliverPartialTable()
@@ -153,28 +152,16 @@ namespace FreeMarket.Controllers
             return PartialView("_ConfirmedOrders", confirmedOrders);
         }
 
-        public ActionResult DeliverRefundTable()
+        public ActionResult RefundCompletedPartial()
         {
-            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
+            List<OrderHeader> pendingOrders = new List<OrderHeader>();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                pendingOrders = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
 
-            return PartialView("_RefundOrders", confirmedOrders);
-        }
-
-        public ActionResult DeliverRefundCompleteTable()
-        {
-            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
-            }
-
-            return PartialView("_RefundPending", confirmedOrders);
+            return PartialView("_RefundPending", pendingOrders);
         }
 
         public ActionResult ProductsIndex()

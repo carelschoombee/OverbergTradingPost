@@ -517,7 +517,7 @@ namespace FreeMarket.Models
                     await email.SendAsync(iMessage, refundSummary.FirstOrDefault().Key);
 
                     IdentityMessage iMessageNotifyRefund = new IdentityMessage();
-                    iMessageNotifyRefund.Destination = "carelschoombee@gmail.com";
+                    iMessageNotifyRefund.Destination = supportInfo.OrdersEmail;
 
                     string usLine1 = db.SiteConfigurations
                         .Where(c => c.Key == "OrderRefundUsLine1")
