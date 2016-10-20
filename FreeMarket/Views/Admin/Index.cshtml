@@ -183,9 +183,12 @@
                     @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
                 </div>
 
-                <div class="col-sm-offset-5">
-                   <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
-                </div>
+                if (Model.ConfirmedOrders != null && Model.ConfirmedOrders.Count > 0)
+                {
+                    <div class="col-sm-offset-5">
+                        <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
+                    </div>
+                }
             }
         </div>
         <div class="tab-pane" id="ratings">
@@ -204,7 +207,9 @@
             </div>
         </div>
         <div class="tab-pane" id="customers">
-            
+
+                @Html.Partial("_ViewCustomers", Model.Customers)
+
         </div>
         <div class="tab-pane" id="refunds">
             <div id="CancelledTable">
@@ -217,9 +222,12 @@
                     @Html.Partial("_RefundPending", Model.RefundPending)
                 </div>
 
-                <div class="col-sm-offset-5">
-                    <input type="submit" value="Complete Refund" class="btn btn-primary btn-sm" />
-                </div>
+                if (Model.RefundPending != null && Model.RefundPending.Count > 0)
+                {
+                    <div class="col-sm-offset-5">
+                        <input type="submit" value="Complete Refund" class="btn btn-primary btn-sm" />
+                    </div>
+                }
             }
         </div>
         <div class="tab-pane" id="profile">

@@ -56,6 +56,7 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="8.25" PointY="14.375" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
+        <EntityTypeShape EntityType="FreeMarketModel.AspNetUser" Width="1.5" PointX="17.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

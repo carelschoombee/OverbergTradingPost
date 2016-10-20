@@ -13,6 +13,8 @@ namespace FreeMarket.Models
 
         public RatingsInfo RatingsInformation { get; set; }
 
+        public List<AspNetUser> Customers { get; set; }
+
         public List<OrderHeader> ConfirmedOrders { get; set; }
         public List<OrderHeader> RefundPending { get; set; }
 
@@ -69,6 +71,7 @@ namespace FreeMarket.Models
                 SelectedMonth = DateTime.Now;
                 SalesInformation = new SalesInfo(int.Parse(SelectedYear));
                 RatingsInformation = new RatingsInfo();
+                Customers = db.AspNetUsers.ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
@@ -108,6 +111,7 @@ namespace FreeMarket.Models
                 SelectedMonth = date;
                 SalesInformation = new SalesInfo(date);
                 RatingsInformation = new RatingsInfo();
+                Customers = db.AspNetUsers.ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }

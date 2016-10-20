@@ -98,6 +98,7 @@ namespace FreeMarket.Controllers
                     allowPassOnEmailVerfication = true;
                 }
             }
+            
 
 
             // This now counts login failures towards account lockout
@@ -107,6 +108,8 @@ namespace FreeMarket.Controllers
             {
                 case SignInStatus.Success:
                     SetShoppingCartSession(user.Id);
+                    user.LastVisited = DateTime.Now;
+                    await UserManager.UpdateAsync(user);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

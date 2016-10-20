@@ -1,0 +1,55 @@
+﻿@using FreeMarket.Models
+@model List<AspNetUser>
+
+<table class="table table-bordered-custom table-responsive">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Phone 1
+        </th>
+        <th>
+            Phone 2
+        </th>
+        <th>
+            Last Visited
+        </th>
+        <th>
+            Order History
+        </th>
+        <th>
+            Edit
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @item.PhoneNumber
+            </td>
+            <td>
+                @item.SecondaryPhoneNumber
+            </td>
+            <td>
+                @item.LastVisited
+            </td>
+            <td>
+                @Html.ActionLink("History", "ViewOrderHistory", new { customerNumber = item.Id })
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditCustomer", new { customerNumber = item.Id } )
+            </td>
+        </tr>
+    }
+</table>
+

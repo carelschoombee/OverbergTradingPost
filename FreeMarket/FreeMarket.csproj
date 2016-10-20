@@ -229,10 +229,15 @@
     <Compile Include="Infrastructure\Extensions.cs" />
     <Compile Include="Infrastructure\MinAttribute.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
+    <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
     <Compile Include="Models\Admin\RatingsInfo.cs" />
     <Compile Include="Models\Admin\SalesInfo.cs" />
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DateTimeModelBinder.cs" />
     <Compile Include="Models\Binders\DecimalModelBinder.cs" />
@@ -275,7 +280,13 @@
     <Compile Include="Models\GetAllProducts_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetDeliveryTypeHistory_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetDetailsForShoppingCart_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetItemHistory_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderHistory_Result.cs">
@@ -668,6 +679,12 @@
     <Content Include="Views\Admin\_AverageRatings.cshtml" />
     <Content Include="Views\Admin\_RefundOrders.cshtml" />
     <Content Include="Views\Admin\_RefundPending.cshtml" />
+    <Content Include="Views\Admin\_ViewCustomers.cshtml" />
+    <Content Include="Views\Admin\_CustomerPartial.cshtml" />
+    <Content Include="Views\Admin\EditCustomer.cshtml" />
+    <Content Include="Views\Admin\_ValidateCustomerPartial.cshtml" />
+    <Content Include="Views\Admin\ViewCustomer.cshtml" />
+    <Content Include="Views\Admin\ViewOrderHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

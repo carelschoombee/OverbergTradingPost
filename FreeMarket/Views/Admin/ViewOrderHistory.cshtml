@@ -1,0 +1,139 @@
+﻿@using FreeMarket.Models
+@model AdminOrderHistoryViewModel
+
+@{
+    ViewBag.Title = Model.CustomerName + " - Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<h2 class="text-center">Summary</h2>
+
+<table class="table table-responsive well-modal">
+
+        <tr>
+            <td class="col-sm-1">
+                Total Orders Placed
+            </td>
+            <td class="col-sm-1">
+                @Model.TotalOrders
+            </td>
+        </tr>
+
+</table>
+
+
+
+@if (Model.Quantities != null && Model.Quantities.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive well">
+        <tr>
+            <th class="col-sm-1">
+                Product Description
+            </th>
+            <th class="col-sm-1">
+                Total Purchases
+            </th>
+            
+        </tr>
+
+        @foreach (GetItemHistory_Result detail in Model.Quantities)
+        {
+            <tr class="well">
+                <td>
+                    @detail.Description
+                </td>
+                <td>
+                    @detail.SumQuantity
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.DeliveryTypes != null && Model.DeliveryTypes.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive well">
+        <tr>
+            <th class="col-sm-1">
+                Delivery Type
+            </th>
+            <th class="col-sm-1">
+                Count
+            </th>
+
+        </tr>
+
+        @foreach (GetDeliveryTypeHistory_Result detail in Model.DeliveryTypes)
+        {
+            <tr class="well">
+                <td>
+                    @detail.DeliveryType
+                </td>
+                <td>
+                    @detail.CountDeliveryType
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+<h2 class="text-center">All items purchased</h2>
+
+@if (Model.OrderHistory.Items != null && Model.OrderHistory.Items.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+        <tr>
+            <th class="col-sm-1">
+                Order #
+            </th>
+            <th class="col-sm-1">
+                Date Placed
+            </th>
+            <th class="col-sm-1">
+                Description
+            </th>
+            <th class="col-sm-1">
+                Qty
+            </th>
+            <th class="col-sm-1">
+                Price
+            </th>
+            <th class="col-sm-1">
+                Total
+            </th>
+        </tr>
+
+        @foreach(GetOrderHistory_Result detail in Model.OrderHistory.Items)
+        {
+            <tr class="well">
+                <td>
+                    @Html.ActionLink(detail.OrderNumber.ToString(),"ViewOrder", new { orderNumber = detail.OrderNumber, customerNumber = Model.CustomerNumber }, new { @class = "freemarket-link"})
+                </td>
+                <td>
+                    @string.Format("{0:d}", detail.OrderDatePlaced)
+                </td>
+                <td>
+                    @Html.Action("GetFullDescription", "Product", new { productNumber = detail.ProductNumber , supplierNumber = detail.SupplierNumber })
+                </td>
+                <td>
+                    @Html.DisplayFor(m => detail.Quantity)
+                </td>
+                <td>
+                    @string.Format("{0:C}", detail.Price)
+                </td>
+                <td>
+                    @string.Format("{0:C}", detail.OrderItemValue)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+

@@ -1,0 +1,29 @@
+﻿@using FreeMarket.Models
+@model AspNetUserCustomer
+@{
+    ViewBag.Title = "Edit Customer";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div id="parent" class="container center_div well well-modal">
+@if (Model != null)
+{
+    using (Html.BeginForm("EditCustomerProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "customerForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.Partial("_CustomerPartial", Model)
+
+        <div class="col-sm-offset-5">
+            <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
+        </div>
+    }
+}
+</div>
+
+@Html.Partial("_ValidateCustomerPartial")

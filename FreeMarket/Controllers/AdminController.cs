@@ -21,6 +21,27 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        public ActionResult EditCustomer(string customerNumber)
+        {
+            AspNetUserCustomer model = new AspNetUserCustomer(customerNumber, false);
+
+            return View(model);
+        }
+
+        public ActionResult ViewCustomer(string customerNumber)
+        {
+            AspNetUserCustomer model = new AspNetUserCustomer(customerNumber, true);
+
+            return View(model);
+        }
+
+        public ActionResult ViewOrderHistory(string customerNumber)
+        {
+            AdminOrderHistoryViewModel model = new AdminOrderHistoryViewModel(customerNumber);
+
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Dashboard(Dashboard data, string yearView, string monthView)
@@ -393,6 +414,49 @@ namespace FreeMarket.Controllers
             {
                 return Content("Anonymous");
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditCustomerProcess(AspNetUserCustomer model)
+        {
+            ApplicationUser user = new ApplicationUser();
+            ApplicationUserManager userManager;
+
+            if ((string.IsNullOrEmpty(model.User.Name)) || (string.IsNullOrEmpty(model.User.Email))
+                || (string.IsNullOrEmpty(model.User.PhoneNumber)) || (string.IsNullOrEmpty(model.User.SecondaryPhoneNumber))
+                || (string.IsNullOrEmpty(model.SelectedCommunicationOption)))
+                return View("EditCustomer", model);
+
+            if (ModelState.IsValid)
+            {
+                user = System.Web.HttpContext.Current
+                    .GetOwinContext()
+                    .GetUserManager<ApplicationUserManager>()
+                    .FindById(model.User.Id);
+
+                userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                if (user != null)
+                {
+                    user.Name = model.User.Name;
+                    user.PhoneNumber = model.User.PhoneNumber;
+                    user.SecondaryPhoneNumber = model.User.SecondaryPhoneNumber;
+                    user.Email = model.User.Email;
+                    user.PreferredCommunicationMethod = model.SelectedCommunicationOption;
+                    user.UnsubscribeFromAllCorrespondence = model.User.UnsubscribeFromAllCorrespondence;
+
+                    await userManager.UpdateAsync(user);
+
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+            }
+
+            return View("EditCustomer", model);
         }
 
         [HttpPost]

@@ -348,5 +348,8 @@ namespace FreeMarket.Models
 
         [DisplayName("Department Number")]
         public DateTime DepartmentNumber { get; set; }
+
+        [DisplayName("Long Description")]
+        public string LongDescription { get; set; }
     }
 }

@@ -60,6 +60,7 @@ namespace FreeMarket.Models
         public virtual DbSet<Special> Specials { get; set; }
         public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     
         public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
         {
@@ -251,6 +252,24 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllCouriersReviewList_Result> GetAllCouriersReviewList()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCouriersReviewList_Result>("GetAllCouriersReviewList");
+        }
+    
+        public virtual ObjectResult<GetItemHistory_Result> GetItemHistory(string customerNumber)
+        {
+            var customerNumberParameter = customerNumber != null ?
+                new ObjectParameter("CustomerNumber", customerNumber) :
+                new ObjectParameter("CustomerNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetItemHistory_Result>("GetItemHistory", customerNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetDeliveryTypeHistory_Result> GetDeliveryTypeHistory(string customerNumber)
+        {
+            var customerNumberParameter = customerNumber != null ?
+                new ObjectParameter("CustomerNumber", customerNumber) :
+                new ObjectParameter("CustomerNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDeliveryTypeHistory_Result>("GetDeliveryTypeHistory", customerNumberParameter);
         }
     }
 }

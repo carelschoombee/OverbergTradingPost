@@ -1,0 +1,73 @@
+﻿<script type="text/javascript" src="~/Scripts/bootstrapValidator.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#customerForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'User.Name': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 100.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'User.PrimaryPhoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                                regexp: {
+                                    message: 'Please enter a valid phone number',
+                                    regexp: /^[0-9\-\s\(\)]+$/
+                                }
+                            }
+                        },
+                        'User.Email': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max email length is 100.',
+                                    max: 100
+                                },
+                                emailAddress: {
+                                    message: 'Email addresses only.'
+                                }
+                            }
+                        },
+                        'User.SecondaryPhoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                                regexp: {
+                                    message: 'Please enter a valid phone number',
+                                    regexp: /^[0-9\-\s\(\)]+$/
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

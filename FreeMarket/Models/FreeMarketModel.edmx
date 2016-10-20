@@ -19,6 +19,31 @@
           <Property Name="AddressNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AddressName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="PreferredCommunicationMethod" Type="nvarchar(max)" />
+          <Property Name="SecondaryPhoneNumber" Type="nvarchar(max)" />
+          <Property Name="UnConfirmedEmail" Type="nvarchar(max)" />
+          <Property Name="DefaultAddress" Type="nvarchar(max)" />
+          <Property Name="UnsubscribeFromRatings" Type="bit" Nullable="false" />
+          <Property Name="UnsubscribeFromAllCorrespondence" Type="bit" Nullable="false" />
+          <Property Name="LastVisited" Type="datetime" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="AuditUser">
           <Key>
             <PropertyRef Name="ActionNumber" />
@@ -678,8 +703,14 @@
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="GetAllProductsReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetDeliveryTypeHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GetDetailsForShoppingCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetItemHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="GetNumberOfItemsInOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
@@ -697,6 +728,7 @@
         <EntityContainer Name="FreeMarketModelStoreContainer">
           <EntitySet Name="ActivityLogging" EntityType="Self.ActivityLogging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AddressName" EntityType="Self.AddressName" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AuditUser" EntityType="Self.AuditUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Courier" EntityType="Self.Courier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierReview" EntityType="Self.CourierReview" Schema="dbo" store:Type="Tables" />
@@ -1219,6 +1251,13 @@
           </FunctionImport>
           <FunctionImport Name="GetAllProductsReview" ReturnType="Collection(FreeMarketModel.GetAllProductsReview_Result)" />
           <FunctionImport Name="GetAllCouriersReviewList" ReturnType="Collection(FreeMarketModel.GetAllCouriersReviewList_Result)" />
+          <EntitySet Name="AspNetUsers" EntityType="FreeMarketModel.AspNetUser" />
+          <FunctionImport Name="GetItemHistory" ReturnType="Collection(FreeMarketModel.GetItemHistory_Result)">
+          <Parameter Name="CustomerNumber" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDeliveryTypeHistory" ReturnType="Collection(FreeMarketModel.GetDeliveryTypeHistory_Result)">
+            <Parameter Name="CustomerNumber" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1889,6 +1928,39 @@
           <Property Type="Int16" Name="StarRating" Nullable="true" />
           <Property Type="Boolean" Name="Approved" Nullable="true" />
           <Property Type="String" Name="CourierName" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PreferredCommunicationMethod" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecondaryPhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnConfirmedEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DefaultAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnsubscribeFromRatings" Type="Boolean" Nullable="false" />
+          <Property Name="UnsubscribeFromAllCorrespondence" Type="Boolean" Nullable="false" />
+          <Property Name="LastVisited" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="GetItemHistory_Result">
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Int32" Name="SumQuantity" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetDeliveryTypeHistory_Result">
+          <Property Type="String" Name="DeliveryType" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="CountDeliveryType" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2648,6 +2720,48 @@
                 <ScalarProperty Name="StarRating" ColumnName="StarRating" />
                 <ScalarProperty Name="Approved" ColumnName="Approved" />
                 <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="FreeMarketModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastVisited" ColumnName="LastVisited" />
+                <ScalarProperty Name="UnsubscribeFromAllCorrespondence" ColumnName="UnsubscribeFromAllCorrespondence" />
+                <ScalarProperty Name="UnsubscribeFromRatings" ColumnName="UnsubscribeFromRatings" />
+                <ScalarProperty Name="DefaultAddress" ColumnName="DefaultAddress" />
+                <ScalarProperty Name="UnConfirmedEmail" ColumnName="UnConfirmedEmail" />
+                <ScalarProperty Name="SecondaryPhoneNumber" ColumnName="SecondaryPhoneNumber" />
+                <ScalarProperty Name="PreferredCommunicationMethod" ColumnName="PreferredCommunicationMethod" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetItemHistory" FunctionName="FreeMarketModel.Store.GetItemHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetItemHistory_Result">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="SumQuantity" ColumnName="SumQuantity" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDeliveryTypeHistory" FunctionName="FreeMarketModel.Store.GetDeliveryTypeHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetDeliveryTypeHistory_Result">
+                <ScalarProperty Name="DeliveryType" ColumnName="DeliveryType" />
+                <ScalarProperty Name="CountDeliveryType" ColumnName="CountDeliveryType" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

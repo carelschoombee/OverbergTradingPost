@@ -1,0 +1,18 @@
+﻿@using FreeMarket.Models
+@model AspNetUserCustomer
+@{
+    ViewBag.Title = "View Customer";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div id="parent" class="container center_div well well-modal">
+@if (Model != null)
+{
+
+    @Html.Partial("_CustomerPartial", Model)
+
+}
+</div>
