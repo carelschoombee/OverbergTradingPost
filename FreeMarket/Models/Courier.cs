@@ -11,7 +11,7 @@ namespace FreeMarket.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Courier
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +21,7 @@ namespace FreeMarket.Models
             this.CourierReviews = new HashSet<CourierReview>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
-    
+
         public int CourierNumber { get; set; }
         public string CourierName { get; set; }
         public string MainContactName { get; set; }
@@ -38,7 +38,7 @@ namespace FreeMarket.Models
         public Nullable<bool> Activated { get; set; }
         public string UserId { get; set; }
         public Nullable<int> LocationNumber { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

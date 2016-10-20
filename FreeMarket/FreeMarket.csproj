@@ -231,6 +231,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
     <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
+    <Compile Include="Models\Admin\CouriersCollection.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
     <Compile Include="Models\Admin\RatingsInfo.cs" />
@@ -685,6 +686,14 @@
     <Content Include="Views\Admin\_ValidateCustomerPartial.cshtml" />
     <Content Include="Views\Admin\ViewCustomer.cshtml" />
     <Content Include="Views\Admin\ViewOrderHistory.cshtml" />
+    <Content Include="Views\Admin\CouriersIndex.cshtml" />
+    <Content Include="Views\Admin\EditCourier.cshtml" />
+    <Content Include="Views\Admin\_CourierPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateCourierPartial.cshtml" />
+    <Content Include="Views\Admin\_RequiredFields.cshtml" />
+    <Content Include="Views\Admin\TimeFreightPrices.cshtml" />
+    <Content Include="Views\Admin\_TimeFreightPartial.cshtml" />
+    <Content Include="Views\Admin\TimeFreightIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

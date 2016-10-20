@@ -1,0 +1,61 @@
+﻿@using FreeMarket.Models
+@model CouriersCollection
+@{
+    ViewBag.Title = "Couriers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Couriers</h2>
+<hr />
+
+@*@Html.ActionLink("Create New", "CreateCourier", null, new { @class = "freemarket-link" })*@
+
+@if (Model.Couriers.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Courier Number</th>
+            <th class="col-sm-2">Courier Name</th>
+            <th class="col-sm-2">Contact Person</th>
+            <th class="col-sm-2">Primary Phone</th>
+            <th class="col-sm-2">Secondary Phone</th>
+            <th class="col-sm-2">Email</th>
+        </tr>
+
+    @foreach (Courier courier in Model.Couriers)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditCourier", new { courierNumber = courier.CourierNumber }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => courier.CourierNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => courier.CourierName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => courier.MainContactName)
+            </td>
+            <td>
+                @courier.MainContactTelephoneNumber
+            </td>
+            <td>
+                @courier.MainContactCellphoneNumber
+            </td>
+            <td>
+                @courier.MainContactEmailAddress
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

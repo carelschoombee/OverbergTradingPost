@@ -1,0 +1,104 @@
+﻿@using FreeMarket.Models
+@model Courier
+
+<div class="form-group">
+    @Html.LabelFor(m => m.CourierNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.CourierNumber)
+        @Html.HiddenFor(m => m.CourierNumber)
+        @Html.HiddenFor(m => m.UserId)
+        @Html.HiddenFor(m => m.DateAdded)
+        @Html.HiddenFor(m => m.LocationNumber)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.CourierName, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.CourierName, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.MainContactName, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.MainContactName, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.MainContactTelephoneNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.MainContactTelephoneNumber, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.MainContactCellphoneNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.MainContactCellphoneNumber, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.MainContactEmailAddress, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.MainContactEmailAddress, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.BankingDetailsBankName, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.BankingDetailsBankName, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.BankingDetailsBranchName, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.BankingDetailsBranchName, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.BankingDetailsBranchCode, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.BankingDetailsBranchCode, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.BankingDetailsAccountNumber, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.BankingDetailsAccountNumber, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.BankingDetailsAccountType, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.BankingDetailsAccountType, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.TrustedCourier, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.EditorFor(m => m.TrustedCourier)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Activated, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.EditorFor(m => m.Activated)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DateAdded, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.DateAdded)
+    </div>
+</div>

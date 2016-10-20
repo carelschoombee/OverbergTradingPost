@@ -1,0 +1,73 @@
+﻿@using FreeMarket.Models
+@model List<TimeFreightCourierFeeReference>
+@{
+    ViewBag.Title = "Time Freight";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Time Freight</h2>
+<hr />
+
+@*@Html.ActionLink("Create New", "CreateCourier", null, new { @class = "freemarket-link" })*@
+
+@if (Model.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Code</th>
+            <th class="col-sm-2">Postal Code Start Range</th>
+            <th class="col-sm-2">Postal Code End Range  </th>
+            <th class="col-sm-2">Main Centre</th>
+            <th class="col-sm-2">Dialing Code</th>
+            <th class="col-sm-2">Cost</th>
+            <th class="col-sm-2">Surcharge</th>
+            <th class="col-sm-2">Total</th>
+            <th class="col-sm-2">Delivery Fee</th>
+        </tr>
+
+    @foreach (TimeFreightCourierFeeReference item in Model)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "TimeFreightPrices", new { deliveryCostID = item.DeliveryCostID }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.PostalCodeRangeStart)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.PostalCodeRangeEnd)
+            </td>
+            <td>
+                @item.MainCentre
+            </td>
+            <td>
+                @item.DialingCode
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Cost)
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Surcharge)
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Total)
+            </td>
+            <td>
+                @string.Format("{0:C}", item.DeliveryFee)
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

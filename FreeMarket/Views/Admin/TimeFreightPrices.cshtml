@@ -1,0 +1,36 @@
+﻿@using FreeMarket.Models
+@model TimeFreightCourierFeeReference
+@{
+    ViewBag.Title = "Edit Courier Prices";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Courier Prices</h2>
+<hr />
+
+<div class="container">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditTimeFreightProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "timeFreightForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="well well-modal">
+                @Html.Partial("_TimeFreightPartial", Model)
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Update" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+@Html.Partial("_ValidateTimeFreightPartial")

@@ -1,0 +1,39 @@
+﻿@using FreeMarket.Models
+@model Courier
+@{
+    ViewBag.Title = "Edit Courier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Courier</h2>
+<hr />
+
+<div id="parent" class="container well well-modal center_div">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditCourierProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "courierForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div>
+                @Html.Partial("_CourierPartial", Model)
+            </div>
+            
+            <hr />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+@Html.Partial("_ValidateCourierPartial", Model)
+@Html.Partial("_RequiredFields")

@@ -1,0 +1,99 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#courierForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'CourierName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'MainContactName': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'MainContactTelephoneNumber': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'MainContactCellphoneNumber': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'MainContactEmailAddress': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBankName': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBranchName': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 100 characters.',
+                                    max: 100
+                                }
+                            }
+                        },
+                        'BankingDetailsBranchCode': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'BankingDetailsAccountNumber': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 25 characters.',
+                                    max: 25
+                                }
+                            }
+                        },
+                        'BankingDetailsAccountType': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

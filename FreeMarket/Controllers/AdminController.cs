@@ -199,6 +199,20 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult CouriersIndex()
+        {
+            CouriersCollection collection = CouriersCollection.GetAllCouriers();
+
+            return View(collection);
+        }
+
+        public ActionResult TimeFreightIndex()
+        {
+            List<TimeFreightCourierFeeReference> model = Courier.GetTimeFreightPrices();
+
+            return View(model);
+        }
+
         public ActionResult CreateProduct()
         {
             Product product = Product.GetNewProduct();
@@ -332,6 +346,28 @@ namespace FreeMarket.Controllers
             Product product = Product.GetProduct(productNumber, supplierNumber);
 
             return View(product);
+        }
+
+        public ActionResult EditCourier(int courierNumber)
+        {
+            if (courierNumber == 0)
+                return RedirectToAction("CouriersIndex", "Admin");
+
+            Courier courier = Courier.GetCourier(courierNumber);
+
+            return View(courier);
+        }
+
+        public ActionResult TimeFreightPrices(int deliveryCostID)
+        {
+            TimeFreightCourierFeeReference model = new TimeFreightCourierFeeReference();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                model = db.TimeFreightCourierFeeReferences.Find(deliveryCostID);
+            }
+
+            return View(model);
         }
 
         public ActionResult EditSupplier(int supplierNumber)
@@ -499,6 +535,20 @@ namespace FreeMarket.Controllers
             }
 
             return View("EditSupplier", supplier);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCourierProcess(Courier courier)
+        {
+            if (ModelState.IsValid)
+            {
+                Courier.SaveCourier(courier);
+
+                return RedirectToAction("CouriersIndex", "Admin");
+            }
+
+            return View("EditCourier", courier);
         }
 
         [HttpPost]
