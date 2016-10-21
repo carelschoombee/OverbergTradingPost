@@ -51,12 +51,22 @@ namespace FreeMarket.Models
                 Order = OrderHeader.GetOrderForShoppingCart(userId);
                 Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
 
-                if (db.Specials.Any(c => c.SpecialPostalCode == Order.DeliveryAddressPostalCode))
+                int postalCode = 0;
+
+                try
+                {
+                    postalCode = int.Parse(Order.DeliveryAddressPostalCode);
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                 {
                     ApplyAllSpecialPrices();
                     UpdateTotal();
                 }
-
             }
         }
 
@@ -171,7 +181,18 @@ namespace FreeMarket.Models
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    if (db.Specials.Any(c => c.SpecialPostalCode == Order.DeliveryAddressPostalCode))
+                    int postalCode = 0;
+
+                    try
+                    {
+                        postalCode = int.Parse(Order.DeliveryAddressPostalCode);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                     {
                         ProductSupplier productSupplier = db.ProductSuppliers
                             .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
@@ -208,6 +229,15 @@ namespace FreeMarket.Models
             foreach (OrderDetail detail in Body.OrderDetails)
             {
                 ApplySpecialPrices(detail.ProductNumber, detail.SupplierNumber);
+
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    if (detail.ItemNumber != 0)
+                    {
+                        db.Entry(detail).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
             }
         }
 

@@ -4,25 +4,36 @@
 @helper ListProduct(int i)
 {
     <div>
-        <table class="table table-responsive well">
+        <table class="table table-bordered-custom table-responsive well">
+            <tr class="well well-modal">
+                <th class="col-sm-2"></th>
+                <th class="col-sm-2"></th>
+            </tr>
             <tr>
-                <td>
+                <td class="text-center" colspan="2">
                     <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
                 </td>
             </tr>
             <tr>
-                <td style="font-size: 16px; color:black">
-                    <i><strong>@Html.DisplayFor(model => Model.Products[i].Description) from @Html.DisplayFor(model => Model.Products[i].SupplierName)</strong></i>
+                <td class="text-center" colspan="2">
+                    <div style="font-size: 24px; color:black"><i><strong>@Html.DisplayFor(model => Model.Products[i].Description) from @Html.DisplayFor(model => Model.Products[i].SupplierName)</strong></i></div>
                 </td>
             </tr>
             <tr>
-                <td style="font-size: 20px">
-                    @String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG
+                <td class="text-center">
+                    <div style="color:black"><u>Regular Price</u></div>  
+                    <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>    
+                    <div style="font-size: 16px"><i>South Africa</i></div>           
+                </td>
+                <td class="text-center">
+                    <div style="color:black"><u>Special Offer</u></div>
+                    <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].SpecialPricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>
+                    <div style="font-size: 16px"><i>Struisbaai and La 'Agulhas Visitors Only</i></div>
                 </td>
             </tr>
             
             <tr>
-                <td>
+                <td class="text-center" colspan="2">
                     <a data-id="@Url.Action("CourierSelectionModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
                        class="btn btn-success editClass"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Show Product</span></a>
                 </td>
@@ -37,9 +48,9 @@
     <div class="row">
         <div class="col-sm-3">
         </div>
-        <div class="col-sm-2">
-        </div>
-        <div class="col-sm-1">
+        @*<div class="col-sm-2">
+        </div>*@
+        <div class="col-sm-6">
             @ListProduct(0)
         </div>
         <div class="col-sm-2">

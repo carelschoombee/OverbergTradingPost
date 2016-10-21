@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -46,7 +47,18 @@ namespace FreeMarket.Models
                     model.Couriers.Add(c);
                 }
 
-                if (db.Specials.Any(c => c.SpecialPostalCode == order.DeliveryAddressPostalCode))
+                int postalCode = 0;
+
+                try
+                {
+                    postalCode = int.Parse(order.DeliveryAddressPostalCode);
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                 {
                     model.SpecialDelivery = true;
                 }

@@ -54,7 +54,7 @@
         <li><a href="#orders" data-toggle="tab">Orders</a></li>
         <li><a href="#customers" data-toggle="tab">Customers</a></li>
         <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
-        <li><a href="#profile" data-toggle="tab">Products/Suppliers/Couriers</a></li>
+        <li><a href="#profile" data-toggle="tab">Products/Suppliers/Couriers/Specials</a></li>
         <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
     </ul>
 
@@ -231,11 +231,26 @@
             }
         </div>
         <div class="tab-pane" id="profile">
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Couriers", "CouriersIndex")</div>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Time Freight Prices", "TimeFreightIndex")</div>
-            <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
+            <ul>
+                <li>
+                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
+                </li>
+                <li>
+                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
+                </li>
+                <li>
+                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Couriers", "CouriersIndex")</div>
+                </li>
+                <li>
+                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Time Freight Prices", "TimeFreightIndex")</div>
+                </li>
+                <li>
+                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Specials", "SpecialsIndex")</div>
+                </li>
+                <li>
+                    <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
+                </li>
+            </ul>            
         </div>
     </div>
 </div>

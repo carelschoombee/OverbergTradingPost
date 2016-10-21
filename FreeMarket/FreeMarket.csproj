@@ -236,6 +236,9 @@
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
     <Compile Include="Models\Admin\RatingsInfo.cs" />
     <Compile Include="Models\Admin\SalesInfo.cs" />
+    <Compile Include="Models\Admin\SpecialsMetaData.cs" />
+    <Compile Include="Models\Admin\SpecialsViewModel.cs" />
+    <Compile Include="Models\Admin\TimeFreightCourierFeeReferenceMetaData.cs" />
     <Compile Include="Models\AspNetUser.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -694,6 +697,12 @@
     <Content Include="Views\Admin\TimeFreightPrices.cshtml" />
     <Content Include="Views\Admin\_TimeFreightPartial.cshtml" />
     <Content Include="Views\Admin\TimeFreightIndex.cshtml" />
+    <Content Include="Views\Admin\_ValidateTimeFreightPartial.cshtml" />
+    <Content Include="Views\Admin\SpecialsIndex.cshtml" />
+    <Content Include="Views\Admin\EditSpecial.cshtml" />
+    <Content Include="Views\Admin\_SpecialsPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateSpecialsPartial.cshtml" />
+    <Content Include="Views\Admin\CreateSpecial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

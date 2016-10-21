@@ -15,11 +15,11 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 double qualityRating = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
                     .Average(m => m.StarRating) ?? 0;
 
                 double priceRating = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
                     .Average(m => m.PriceRating) ?? 0;
 
                 return (qualityRating + priceRating) / 2;

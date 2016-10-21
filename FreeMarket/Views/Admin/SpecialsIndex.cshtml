@@ -1,0 +1,61 @@
+﻿@using FreeMarket.Models
+@model SpecialsViewModel
+@{
+    ViewBag.Title = "Specials";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Specials</h2>
+<hr />
+
+@Html.ActionLink("Create New", "CreateSpecial", null, new { @class = "freemarket-link" })
+
+@if (Model.Specials.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Postal Code Start Range</th>
+            <th class="col-sm-1">Postal Code End Range</th>
+            <th class="col-sm-1">Delivery Fee</th>
+            <th class="col-sm-1">Active</th>
+            <th class="col-sm-1">Date Added</th>
+            <th class="col-sm-1">Date Modified</th>
+        </tr>
+
+    @foreach (Special item in Model.Specials)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditSpecial", new { specialID = item.SpecialID }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.SpecialPostalCodeRangeStart)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.SpecialPostalCodeRangeEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DeliveryFee)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Active)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DateAdded)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DateModified)
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

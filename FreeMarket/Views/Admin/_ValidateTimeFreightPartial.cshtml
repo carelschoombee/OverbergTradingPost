@@ -1,36 +1,7 @@
-﻿@using FreeMarket.Models
-@model Product
-
-<script type="text/javascript">
-
-    function readURLPrimary(input) {
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#imagePrimaryPreview').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function readURLSecondary(input) {
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#imageSecondaryPreview').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+﻿<script type="text/javascript">
 
     $(document).ready(function () {
-        $('#productForm')
+        $('#timeFreightForm')
                 .bootstrapValidator({
                     feedbackIcons: {
                         valid: 'glyphicon glyphicon-ok',
@@ -38,21 +9,76 @@
                         validating: 'glyphicon glyphicon-refresh'
                     },
                     fields: {
-                        'Description': {
+                        'PostalCodeRangeStart': {
                             validators: {
                                 notEmpty: {
                                     message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.'
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
                                 }
                             }
                         },
-                        'LongDescription': {
+                        'PostalCodeRangeEnd': {
                             validators: {
                                 notEmpty: {
                                     message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.'
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
                                 }
                             }
                         },
-                        'PricePerUnit': {
+                        'Cost': {
+                            validators: {
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        'Surcharge': {
+                            validators: {
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        'Total': {
+                            validators: {
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        'DeliveryFee': {
                             validators: {
                                 notEmpty: {
                                     message: 'The field is required.'
@@ -65,79 +91,9 @@
                                     message: 'Must be a positive number greater than zero.',
                                     value: 0,
                                     inclusive: false
-                                }
-                            }
-                        },
-                        'SpecialPricePerUnit': {
-                            validators: {
-                                numeric: {
-                                    message: 'The field must be a number.',
-                                    separator: ','
-                                },
-                                greaterThan: {
-                                    message: 'Must be a positive number greater than zero.',
-                                    value: 0,
-                                    inclusive: false
-                                }
-                            }
-                        },
-                        'Weight': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                },
-                                numeric: {
-                                    message: 'The field must be a number.',
-                                    separator: ','
-                                },
-                                greaterThan: {
-                                    message: 'Must be a positive number greater than zero.',
-                                    value: 0,
-                                    inclusive: false
-                                }
-                            }
-                        },
-                        @if (Model.Suppliers != null)
-                        {
-                         <text>
-                        'imagePrimary': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                }
-                            }
-                        },
-                        'imageSecondary': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                }
-                            }
-                        },
-                        </text>
-                        }
-                        'SelectedDepartment': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                }
-                            }
-                        },
-                        'SelectedSupplier': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
-                                }
-                            }
-                        },
-                        'Size': {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The field is required.'
                                 }
                             }
                         }
-
                     }
                 })
     });

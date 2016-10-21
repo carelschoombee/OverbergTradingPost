@@ -20,9 +20,9 @@ namespace FreeMarket.Models
         public int PostalCodeRangeEnd { get; set; }
         public string MainCentre { get; set; }
         public string DialingCode { get; set; }
-        public decimal Cost { get; set; }
-        public decimal Surcharge { get; set; }
-        public decimal Total { get; set; }
+        public Nullable<decimal> Cost { get; set; }
+        public Nullable<decimal> Surcharge { get; set; }
+        public Nullable<decimal> Total { get; set; }
         public decimal DeliveryFee { get; set; }
     }
 }

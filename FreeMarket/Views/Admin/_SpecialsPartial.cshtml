@@ -1,0 +1,54 @@
+﻿@using FreeMarket.Models
+@model Special
+
+<div class="form-group">
+    @Html.LabelFor(m => m.SpecialID, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.SpecialID)
+        @Html.HiddenFor(m => m.SpecialID)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.SpecialPostalCodeRangeStart, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.SpecialPostalCodeRangeStart, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.SpecialPostalCodeRangeEnd, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.SpecialPostalCodeRangeEnd, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DeliveryFee, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @{ Html.EnableClientValidation(false); }
+        @Html.EditorFor(m => m.DeliveryFee, new { htmlAttributes = new { @class = "form-control" } })
+        @{ Html.EnableClientValidation(true); }
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Active, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.EditorFor(m => m.Active, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DateAdded, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.DateAdded)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DateModified, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.DateModified)
+    </div>
+</div>

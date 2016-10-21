@@ -1,4 +1,75 @@
 ﻿@using FreeMarket.Models
-@model List<TimeFreightCourierFeeReference>
+@model TimeFreightCourierFeeReference
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Code, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+        @Html.HiddenFor(m => m.DeliveryCostID)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.PostalCodeRangeStart, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.PostalCodeRangeStart, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.PostalCodeRangeEnd, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.PostalCodeRangeEnd, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.MainCentre, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.MainCentre, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.DialingCode, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.DialingCode, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Cost, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @{ Html.EnableClientValidation(false); }
+        @Html.EditorFor(m => m.Cost, new { htmlAttributes = new { @class = "form-control" } })
+        @{ Html.EnableClientValidation(true); }
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Surcharge, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @{ Html.EnableClientValidation(false); }
+        @Html.EditorFor(m => m.Surcharge, new { htmlAttributes = new { @class = "form-control" } })
+        @{ Html.EnableClientValidation(true); }
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Total, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @{ Html.EnableClientValidation(false); }
+        @Html.EditorFor(m => m.Total, new { htmlAttributes = new { @class = "form-control" } })
+        @{ Html.EnableClientValidation(true); }
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DeliveryFee, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @{ Html.EnableClientValidation(false); }
+        @Html.EditorFor(m => m.DeliveryFee, new { htmlAttributes = new { @class = "form-control" } })
+        @{ Html.EnableClientValidation(true); }
+    </div>
+</div>
 
 

@@ -1,0 +1,55 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#specialsForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'SpecialPostalCodeRangeStart': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.'
+                                },
+                            }
+                        },
+                        'SpecialPostalCodeRangeEnd': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.'
+                                },
+                            }
+                        },
+                        'DeliveryFee': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

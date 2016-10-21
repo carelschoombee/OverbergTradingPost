@@ -14,7 +14,12 @@ namespace FreeMarket.Models
     
     public partial class Special
     {
-        public string SpecialPostalCode { get; set; }
+        public int SpecialID { get; set; }
+        public string SpecialPostalCodeRangeStart { get; set; }
+        public string SpecialPostalCodeRangeEnd { get; set; }
         public decimal DeliveryFee { get; set; }
+        public Nullable<bool> Active { get; set; }
+        public Nullable<System.DateTime> DateModified { get; set; }
+        public Nullable<System.DateTime> DateAdded { get; set; }
     }
 }

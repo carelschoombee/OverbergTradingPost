@@ -303,10 +303,20 @@ namespace FreeMarket.Controllers
             ShoppingCart sessionCart = GetCartFromSession(userId);
 
             bool specialDelivery = false;
+            int postalCode = 0;
+
+            try
+            {
+                postalCode = int.Parse(sessionCart.Order.DeliveryAddressPostalCode);
+            }
+            catch (Exception e)
+            {
+
+            }
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                if (db.Specials.Any(c => c.SpecialPostalCode == sessionCart.Order.DeliveryAddressPostalCode))
+                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                 {
                     specialDelivery = true;
                 }
@@ -335,9 +345,20 @@ namespace FreeMarket.Controllers
                 decimal amount = sessionCart.Order.TotalOrderValue * 100;
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
 
+                int postalCode = 0;
+
+                try
+                {
+                    postalCode = int.Parse(sessionCart.Order.DeliveryAddressPostalCode);
+                }
+                catch (Exception e)
+                {
+
+                }
+
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    if (db.Specials.Any(c => c.SpecialPostalCode == sessionCart.Order.DeliveryAddressPostalCode))
+                    if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                     {
                         specialDelivery = true;
                     }

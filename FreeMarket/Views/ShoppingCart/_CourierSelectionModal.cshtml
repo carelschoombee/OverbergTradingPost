@@ -25,17 +25,30 @@
 
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <table class="table">
+                        <table class="table table-bordered-custom table-responsive">
                             <tr>
-                                <th class="col-sm-6"></th>
-                                <th class="col-sm-6"></th>
+                                <th class="col-sm-6 text-center">Image</th>
+                                <th class="col-sm-6 text-center">Description</th>
                             </tr>
                             <tr>
                                 <td rowspan="4">
                                     <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
                                 </td>
                                 <td>
-                                    <span style="font-size:larger; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)&nbsp;per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</span>
+                                    <table class="table table-bordered-custom table-responsive well">
+                                        <tr>
+                                            <td class="text-center">
+                                                <div><u>Rest of RSA</u></div>
+                                                <div style="font-size:medium; font-weight:600;">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)</div>
+                                                <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div><u>Struisbaai</u></div>
+                                                <div style="font-size:medium; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.SpecialPricePerUnit) </div>
+                                                <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>

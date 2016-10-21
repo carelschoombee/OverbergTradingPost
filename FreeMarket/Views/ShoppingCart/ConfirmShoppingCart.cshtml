@@ -159,7 +159,7 @@
                      class="conditionClass freemarket-link">terms and conditions (here)</a>: </div>
                 <div class="col-sm-offset-3">@Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } })</div>
                 <div>@Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-lock"></span> <input type="submit" value="Confirm" class="btn btn-success" /></span>
+                <input type="submit" value="Confirm" class="btn btn-success" />
             }
         </div>
         <div class="col-sm-6">

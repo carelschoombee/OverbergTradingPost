@@ -1,26 +1,26 @@
 ﻿@using FreeMarket.Models
-@model TimeFreightCourierFeeReference
+@model Special
 @{
-    ViewBag.Title = "Edit Courier Prices";
+    ViewBag.Title = "Create Special";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <br />
-<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Courier Prices</h2>
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Create Special</h2>
 <hr />
 
 <div id="parent" class="container center_div">
 
     @if (Model != null)
     {
-        using (Html.BeginForm("EditTimeFreightProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "timeFreightForm" }))
+        using (Html.BeginForm("CreateSpecialProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "supplierForm" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="well well-modal">
-                @Html.Partial("_TimeFreightPartial", Model)
+                @Html.Partial("_SpecialsPartial", Model)
             </div>
 
             <div class="form-group">
@@ -29,8 +29,8 @@
                 </div>
             </div>
         }
-    }
+}
 
 </div>
 
-@Html.Partial("_ValidateTimeFreightPartial")
+@Html.Partial("_ValidateSpecialsPartial")

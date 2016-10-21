@@ -29,6 +29,11 @@
 
             @Html.ValidationSummary(true)
 
+            <div style="font-size:large" class="text-center">If you are visiting Struisbaai or La'Agulhas, enter <b><i>7285</i></b> as the postal code along with your address while in Struisbaai/La'Agulhas and we will deliver to you personally and for free.</div>
+            <div class="text-center"><i>Free delivery is a special offer available only within Struisbaai and La'Agulhas.</i></div>
+            <br />
+            <br />
+
             <div class="form-group">
                 <label class="col-sm-4 control-label">Preferred Delivery Time</label>
                 <div class="col-sm-6">
@@ -61,8 +66,8 @@
             </div>
 
             <div class="center_div">
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-arrow-right"></span> <input type="submit" value="Next" class="btn btn-success btn-sm" /></span>
-                <span class="icon-input-btn"><span class="glyphicon glyphicon-shopping-cart"></span> <a class="btn btn-primary btn-sm" href="@Url.Action("Cart", "ShoppingCart")">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back to Cart</a></span>
+                <input type="submit" value="Next" class="btn btn-success btn-sm" />
+                <a class="btn btn-primary btn-sm" href="@Url.Action("Cart", "ShoppingCart")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Back To Cart</span> </a>
             </div>
 
         </div>  

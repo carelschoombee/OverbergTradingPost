@@ -28,6 +28,7 @@ namespace FreeMarket.Models
                         Size = c.Size,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,
+                        SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
                         Weight = c.Weight
                     }
                     ).ToList();
@@ -78,6 +79,7 @@ namespace FreeMarket.Models
                         Size = c.Size,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,
+                        SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
                         Weight = c.Weight,
                         ProductRating = c.ProductRating ?? 0,
                         ProductReviewText = c.ProductReviewText,

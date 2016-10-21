@@ -19,11 +19,13 @@ namespace FreeMarket.Models
         public System.DateTime DateAdded { get; set; }
         public Nullable<System.DateTime> DateModified { get; set; }
         public string Description { get; set; }
+        public string LongDescription { get; set; }
         public int DepartmentNumber { get; set; }
         public decimal Weight { get; set; }
         public string Size { get; set; }
         public bool Activated { get; set; }
         public string DepartmentName { get; set; }
         public decimal PricePerUnit { get; set; }
+        public Nullable<decimal> SpecialPricePerUnit { get; set; }
     }
 }

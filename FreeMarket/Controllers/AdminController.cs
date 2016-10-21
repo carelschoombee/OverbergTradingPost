@@ -206,6 +206,13 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult SpecialsIndex()
+        {
+            SpecialsViewModel model = SpecialsViewModel.GetModel();
+
+            return View(model);
+        }
+
         public ActionResult TimeFreightIndex()
         {
             List<TimeFreightCourierFeeReference> model = Courier.GetTimeFreightPrices();
@@ -218,6 +225,13 @@ namespace FreeMarket.Controllers
             Product product = Product.GetNewProduct();
 
             return View(product);
+        }
+
+        public ActionResult CreateSpecial()
+        {
+            Special special = Special.GetNewSpecial();
+
+            return View(special);
         }
 
         public ActionResult CreateSupplier()
@@ -324,6 +338,20 @@ namespace FreeMarket.Controllers
             return View("CreateSupplier", supplier);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateSpecialProcess(Special special)
+        {
+            if (ModelState.IsValid)
+            {
+                Special.CreateNewSpecial(special);
+
+                return RedirectToAction("SpecialsIndex", "Admin");
+            }
+
+            return View("CreateSpecial", special);
+        }
+
         public ActionResult ViewOrder(int orderNumber, string customerNumber)
         {
             if (string.IsNullOrEmpty(customerNumber) || orderNumber == 0)
@@ -346,6 +374,16 @@ namespace FreeMarket.Controllers
             Product product = Product.GetProduct(productNumber, supplierNumber);
 
             return View(product);
+        }
+
+        public ActionResult EditSpecial(int specialID)
+        {
+            if (specialID == 0)
+                return RedirectToAction("SpecialsIndex", "Admin");
+
+            Special special = Special.GetSpecial(specialID);
+
+            return View(special);
         }
 
         public ActionResult EditCourier(int courierNumber)
@@ -521,6 +559,34 @@ namespace FreeMarket.Controllers
             product.InitializeDropDowns("edit");
 
             return View("EditProduct", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTimeFreightProcess(TimeFreightCourierFeeReference model)
+        {
+            if (ModelState.IsValid)
+            {
+                TimeFreightCourierFeeReference.SaveModel(model);
+
+                return RedirectToAction("TimeFreightIndex", "Admin");
+            }
+
+            return View("TimeFreightPrices", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditSpecialProcess(Special model)
+        {
+            if (ModelState.IsValid)
+            {
+                Special.SaveModel(model);
+
+                return RedirectToAction("SpecialsIndex", "Admin");
+            }
+
+            return View("EditSpecial", model);
         }
 
         [HttpPost]

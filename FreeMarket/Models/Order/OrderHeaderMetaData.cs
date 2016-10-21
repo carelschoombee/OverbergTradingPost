@@ -546,15 +546,21 @@ namespace FreeMarket.Models
                 Dictionary<MemoryStream, string> orderDeliveryInstruction;
 
                 OrderHeader order = db.OrderHeaders.Find(orderNumber);
-                string postalCode = "null";
+
                 bool specialDelivery = false;
 
-                if (order != null)
+                int postalCode = 0;
+
+                try
                 {
-                    postalCode = order.DeliveryAddressPostalCode;
+                    postalCode = int.Parse(order.DeliveryAddressPostalCode);
+                }
+                catch (Exception e)
+                {
+
                 }
 
-                if (db.Specials.Any(c => c.SpecialPostalCode == postalCode))
+                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                 {
                     orderSummary = GetStruisbaaiOrderReport(orderNumber);
                     orderDeliveryInstruction = GetStruisbaaiOrderReport(orderNumber);
