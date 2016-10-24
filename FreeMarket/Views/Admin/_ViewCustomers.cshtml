@@ -1,6 +1,9 @@
 ﻿@using FreeMarket.Models
 @model List<AspNetUser>
 
+@if (Model != null && Model.Count > 0)
+{
+
 <table class="table table-bordered-custom table-responsive">
     <tr>
         <th>
@@ -53,3 +56,10 @@
     }
 </table>
 
+}
+else
+{
+    <div>
+        <i>There are no customers which match your search criteria.</i>
+    </div>
+}

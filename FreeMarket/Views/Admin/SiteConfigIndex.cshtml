@@ -1,0 +1,47 @@
+﻿@using FreeMarket.Models
+@model List<SiteConfiguration>
+@{
+    ViewBag.Title = "Site Config";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Site Config</h2>
+<hr />
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-bordered-custom">
+
+        <tr>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1">ID</th>
+            <th class="col-sm-1">Key</th>
+            <th class="col-sm-2">Value</th>
+        </tr>
+
+    @foreach (SiteConfiguration config in Model)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditSiteConfig", new { siteConfigNumber = config.SiteConfigurationNumber }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => config.SiteConfigurationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => config.Key)
+            </td>
+            <td>
+                @Html.DisplayFor(model => config.Value)
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

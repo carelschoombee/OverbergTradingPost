@@ -44,6 +44,29 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult SearchCustomer(Dashboard model)
+        {
+            List<AspNetUser> allUsers = new List<AspNetUser>();
+
+            ModelState.Remove("SelectedYear");
+
+            if (ModelState.IsValid)
+            {
+                List<AspNetUser> filteredUsers = AspNetUserCustomer.Filter(model.CustomerSearchCriteria);
+                return PartialView("_ViewCustomers", filteredUsers);
+            }
+            else
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    allUsers = db.AspNetUsers.ToList();
+                    return PartialView("_ViewCustomers", allUsers);
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Dashboard(Dashboard data, string yearView, string monthView)
         {
             Dashboard model = new Dashboard();
@@ -183,6 +206,20 @@ namespace FreeMarket.Controllers
             }
 
             return PartialView("_RefundPending", pendingOrders);
+        }
+
+        public ActionResult PriceHistoryIndex()
+        {
+            List<PriceHistory> collection = PriceHistory.GetAllHistories();
+
+            return View(collection);
+        }
+
+        public ActionResult SiteConfigIndex()
+        {
+            List<SiteConfiguration> collection = SiteConfiguration.GetSiteConfig();
+
+            return View(collection);
         }
 
         public ActionResult ProductsIndex()
@@ -386,6 +423,16 @@ namespace FreeMarket.Controllers
             return View(special);
         }
 
+        public ActionResult EditSiteConfig(int siteConfigNumber)
+        {
+            if (siteConfigNumber == 0)
+                return RedirectToAction("SiteConfigIndex", "Admin");
+
+            SiteConfiguration config = SiteConfiguration.GetSpecificSiteConfig(siteConfigNumber);
+
+            return View(config);
+        }
+
         public ActionResult EditCourier(int courierNumber)
         {
             if (courierNumber == 0)
@@ -559,6 +606,20 @@ namespace FreeMarket.Controllers
             product.InitializeDropDowns("edit");
 
             return View("EditProduct", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditSiteConfigProcess(SiteConfiguration config)
+        {
+            if (ModelState.IsValid)
+            {
+                SiteConfiguration.SaveConfig(config);
+
+                return RedirectToAction("SiteConfigIndex", "Admin");
+            }
+
+            return View("EditSiteConfig", config);
         }
 
         [HttpPost]

@@ -1,0 +1,55 @@
+﻿@using FreeMarket.Models
+@model List<PriceHistory>
+@{
+    ViewBag.Title = "Price History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Price History</h2>
+<hr />
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-bordered-custom">
+
+        <tr>
+            <th class="col-sm-2">Date</th>
+            <th class="col-sm-2">Product</th>
+            <th class="col-sm-2">Supplier</th>
+            <th class="col-sm-2">Old Price</th>
+            <th class="col-sm-2">New Price</th>
+            <th class="col-sm-2">Price Type</th>
+        </tr>
+
+        @foreach (PriceHistory history in Model)
+        {
+            <tr class="well">
+                <td>
+                    @String.Format("{0:C}", history.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => history.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => history.SupplierName)
+                </td>
+                <td>
+                    @String.Format("{0:C}", history.OldPrice)
+                </td>
+                <td>
+                    @String.Format("{0:C}", history.NewPrice)
+                </td>
+                <td>
+                    @String.Format("{0:C}", history.Type)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+
+
+

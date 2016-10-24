@@ -61,6 +61,7 @@ namespace FreeMarket.Models
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Special> Specials { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistories { get; set; }
     
         public virtual ObjectResult<GetDetailsForShoppingCart_Result> GetDetailsForShoppingCart(Nullable<int> orderNumber)
         {
@@ -279,6 +280,20 @@ namespace FreeMarket.Models
                 new ObjectParameter("orderNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsInOrder_Result>("GetAllProductsInOrder", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetPriceHistories_Result> GetPriceHistories()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPriceHistories_Result>("GetPriceHistories");
+        }
+    
+        public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
+        {
+            var filterCriteriaParameter = filterCriteria != null ?
+                new ObjectParameter("filterCriteria", filterCriteria) :
+                new ObjectParameter("filterCriteria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCustomers_Result>("FilterCustomers", filterCriteriaParameter);
         }
     }
 }

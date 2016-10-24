@@ -296,6 +296,18 @@
           <Property Name="CommunicationMethodNumber" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CommunicationMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="PriceHistory">
+          <Key>
+            <PropertyRef Name="PriceID" />
+          </Key>
+          <Property Name="PriceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductNumber" Type="int" Nullable="false" />
+          <Property Name="SupplierNumber" Type="int" Nullable="false" />
+          <Property Name="OldPrice" Type="money" />
+          <Property Name="NewPrice" Type="money" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductNumber" />
@@ -696,6 +708,9 @@
         <Function Name="CalculatePostOfficeFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="totalWeight" Type="decimal" Mode="In" />
         </Function>
+        <Function Name="FilterCustomers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="filterCriteria" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GetAllCouriersReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
@@ -726,6 +741,7 @@
         <Function Name="GetOrderReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetPriceHistories" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductNumber" Type="int" Mode="In" />
           <Parameter Name="SupplierNumber" Type="int" Mode="In" />
@@ -755,6 +771,7 @@
           <EntitySet Name="PaymentGatewayPaymentMethods" EntityType="Self.PaymentGatewayPaymentMethods" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentGatewayTransactionStatus" EntityType="Self.PaymentGatewayTransactionStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PreferredCommunicationMethod" EntityType="Self.PreferredCommunicationMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PriceHistory" EntityType="Self.PriceHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductCustodian" EntityType="Self.ProductCustodian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductPicture" EntityType="Self.ProductPicture" Schema="dbo" store:Type="Tables" />
@@ -1263,10 +1280,15 @@
           </FunctionImport>
           <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
           <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
-            <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllProductsInOrder" ReturnType="Collection(FreeMarketModel.GetAllProductsInOrder_Result)">
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="PriceHistories" EntityType="FreeMarketModel.PriceHistory" />
+          <FunctionImport Name="GetPriceHistories" ReturnType="Collection(FreeMarketModel.GetPriceHistories_Result)" />
+          <FunctionImport Name="FilterCustomers" ReturnType="Collection(FreeMarketModel.FilterCustomers_Result)">
+            <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1981,6 +2003,51 @@
           <Property Type="String" Name="ProductReviewText" Nullable="true" />
           <Property Type="Int32" Name="ReviewId" Nullable="false" />
           <Property Type="Int32" Name="PriceRating" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="PriceHistory">
+          <Key>
+            <PropertyRef Name="PriceID" />
+          </Key>
+          <Property Name="PriceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" />
+          <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
+          <Property Name="OldPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NewPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <ComplexType Name="GetPriceHistories_Result">
+          <Property Type="Int32" Name="PriceID" Nullable="false" />
+          <Property Type="Int32" Name="ProductNumber" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
+          <Property Type="Decimal" Name="OldPrice" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="NewPrice" Nullable="true" Precision="19" />
+          <Property Type="String" Name="Type" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FilterCustomers_Result">
+          <Property Type="String" Name="Id" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="true" />
+          <Property Type="String" Name="PreferredCommunicationMethod" Nullable="true" />
+          <Property Type="String" Name="SecondaryPhoneNumber" Nullable="true" />
+          <Property Type="String" Name="UnConfirmedEmail" Nullable="true" />
+          <Property Type="String" Name="DefaultAddress" Nullable="true" />
+          <Property Type="Boolean" Name="UnsubscribeFromAllCorrespondence" Nullable="true" />
+          <Property Type="Boolean" Name="UnsubscribeFromRatings" Nullable="true" />
+          <Property Type="DateTime" Name="LastVisited" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="Boolean" Name="EmailConfirmed" Nullable="true" />
+          <Property Type="String" Name="PasswordHash" Nullable="true" />
+          <Property Type="String" Name="SecurityStamp" Nullable="true" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" />
+          <Property Type="Boolean" Name="PhoneNumberConfirmed" Nullable="true" />
+          <Property Type="Boolean" Name="TwoFactorEnabled" Nullable="true" />
+          <Property Type="DateTime" Name="LockoutEndDateUtc" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="LockoutEnabled" Nullable="true" />
+          <Property Type="Int32" Name="AccessFailedCount" Nullable="true" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="256" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2793,6 +2860,60 @@
                 <ScalarProperty Name="ProductReviewText" ColumnName="ProductReviewText" />
                 <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
                 <ScalarProperty Name="PriceRating" ColumnName="PriceRating" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PriceHistories">
+            <EntityTypeMapping TypeName="FreeMarketModel.PriceHistory">
+              <MappingFragment StoreEntitySet="PriceHistory">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="PriceID" ColumnName="PriceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetPriceHistories" FunctionName="FreeMarketModel.Store.GetPriceHistories">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetPriceHistories_Result">
+                <ScalarProperty Name="PriceID" ColumnName="PriceID" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FilterCustomers" FunctionName="FreeMarketModel.Store.FilterCustomers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.FilterCustomers_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PreferredCommunicationMethod" ColumnName="PreferredCommunicationMethod" />
+                <ScalarProperty Name="SecondaryPhoneNumber" ColumnName="SecondaryPhoneNumber" />
+                <ScalarProperty Name="UnConfirmedEmail" ColumnName="UnConfirmedEmail" />
+                <ScalarProperty Name="DefaultAddress" ColumnName="DefaultAddress" />
+                <ScalarProperty Name="UnsubscribeFromAllCorrespondence" ColumnName="UnsubscribeFromAllCorrespondence" />
+                <ScalarProperty Name="UnsubscribeFromRatings" ColumnName="UnsubscribeFromRatings" />
+                <ScalarProperty Name="LastVisited" ColumnName="LastVisited" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

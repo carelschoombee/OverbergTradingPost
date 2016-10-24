@@ -13,6 +13,9 @@ namespace FreeMarket.Models
 
         public RatingsInfo RatingsInformation { get; set; }
 
+        [DisplayName("Filter")]
+        [RegularExpression(@"([a-zA-Z0-9_@\s]+)", ErrorMessage = "Alphanumeric characters only")]
+        public string CustomerSearchCriteria { get; set; }
         public List<AspNetUser> Customers { get; set; }
 
         public List<OrderHeader> ConfirmedOrders { get; set; }

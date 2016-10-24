@@ -25,6 +25,11 @@
         //LoadingElementId = "loadingDiv",
     };
 
+    AjaxOptions ajaxOptsCustomer = new AjaxOptions
+    {
+        UpdateTargetId = "customersResults"
+        //LoadingElementId = "loadingDiv",
+    };
 }
 
 <br />
@@ -207,9 +212,35 @@
             </div>
         </div>
         <div class="tab-pane" id="customers">
+            <h2 class="text-center">Customers</h2>
+            <hr />
+           @if (Model.Customers != null && Model.Customers.Count > 0)
+           {
+               using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
+               {
+                   @Html.AntiForgeryToken()
 
-                @Html.Partial("_ViewCustomers", Model.Customers)
+                    <div class="form-group center_div">
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(c => c.CustomerSearchCriteria, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.CustomerSearchCriteria, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <br />
+                        </div>
+                    </div>
+
+                   <div id="customersResults">
+                       @Html.Partial("_ViewCustomers", Model.Customers)
+                   </div>
+               }
+           }
         </div>
         <div class="tab-pane" id="refunds">
             <div id="CancelledTable">
@@ -231,26 +262,37 @@
             }
         </div>
         <div class="tab-pane" id="profile">
-            <ul>
-                <li>
-                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
-                </li>
-                <li>
-                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
-                </li>
-                <li>
-                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Couriers", "CouriersIndex")</div>
-                </li>
-                <li>
-                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Time Freight Prices", "TimeFreightIndex")</div>
-                </li>
-                <li>
-                    <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Specials", "SpecialsIndex")</div>
-                </li>
-                <li>
-                    <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
-                </li>
-            </ul>            
+            <div style="font-size:x-large">
+                <ul>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Products", "ProductsIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Suppliers", "SuppliersIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Couriers", "CouriersIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Price History", "PriceHistoryIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Time Freight Prices", "TimeFreightIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Specials", "SpecialsIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Custodians and Stock", "CustodiansIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Site Config", "SiteConfigIndex")</div>
+                    </li>
+                    <li>
+                        <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
+                    </li>       
+                </ul>
+            </div>      
         </div>
     </div>
 </div>
@@ -515,9 +557,5 @@
             <text>$("#YearView").show();</text>
         }
     });
-
-    //$("#datetimePicker").on("dp.change", function() {
-    //    $('#DatePickerForm').submit();
-    //});
 
 </script>

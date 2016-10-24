@@ -1,0 +1,44 @@
+﻿@using FreeMarket.Models
+@model List<Custodian>
+@{
+    ViewBag.Title = "Custodians and Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Custodians and Stock</h2>
+<hr />
+
+@Html.ActionLink("Create New", "CreateCustodian", null, new { @class = "freemarket-link" })
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Postal Code Start Range</th>
+            <th class="col-sm-1">Postal Code End Range</th>
+            <th class="col-sm-1">Delivery Fee</th>
+            <th class="col-sm-1">Active</th>
+            <th class="col-sm-1">Date Added</th>
+            <th class="col-sm-1">Date Modified</th>
+        </tr>
+
+    @foreach (Custodian item in Model)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditCustodian", new { custodianId = item.CustodianNumber }, new { @class = "freemarket-link" })
+            </td>
+            
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

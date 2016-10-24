@@ -936,6 +936,52 @@ namespace FreeMarket.Models
             }
         }
 
+        public static void ReleaseAllStock(int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
+                List<OrderDetail> details = db.OrderDetails
+                    .Where(c => c.OrderNumber == orderNumber)
+                    .ToList();
+
+                if (details == null || details.Count == 0)
+                    return;
+
+                foreach (OrderDetail detail in details)
+                {
+                    ReleaseStock(detail.ProductNumber, detail.SupplierNumber, detail.CustodianNumber, detail.Quantity);
+                }
+            }
+        }
+
+        private static void ReleaseStock(int productNumber, int supplierNumber, int? custodianNumber, int quantity)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ProductCustodian custodian = db.ProductCustodians.Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.CustodianNumber == custodianNumber)
+                        .FirstOrDefault();
+
+                if (custodian == null)
+                    return;
+
+                if (custodian.StockReservedForOrders == null)
+                    custodian.StockReservedForOrders = 0;
+
+                custodian.StockReservedForOrders -= quantity;
+
+                if (custodian.StockReservedForOrders < 0)
+                    custodian.StockReservedForOrders = 0;
+
+                db.Entry(custodian).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
         public ShoppingCart(string userId)
         {
             Initialize(userId);
@@ -952,11 +998,17 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
                 order.OrderStatus = "Confirmed";
                 order.OrderDatePlaced = DateTime.Now;
                 order.PaymentReceived = true;
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
+
+                ReleaseAllStock(orderNumber);
             }
         }
 

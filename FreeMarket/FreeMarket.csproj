@@ -65,6 +65,14 @@
       <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PdfSharp, Version=1.32.3057.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.32.3057.0\lib\net20\PdfSharp.dll</HintPath>
       <Private>True</Private>
@@ -234,8 +242,10 @@
     <Compile Include="Models\Admin\CouriersCollection.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
+    <Compile Include="Models\Admin\PriceHistoryMetaData.cs" />
     <Compile Include="Models\Admin\RatingsInfo.cs" />
     <Compile Include="Models\Admin\SalesInfo.cs" />
+    <Compile Include="Models\Admin\SiteConfigurationMetaData.cs" />
     <Compile Include="Models\Admin\SpecialsMetaData.cs" />
     <Compile Include="Models\Admin\SpecialsViewModel.cs" />
     <Compile Include="Models\Admin\TimeFreightCourierFeeReferenceMetaData.cs" />
@@ -266,6 +276,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\FilterCustomers_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllCouriersReviewList_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -297,6 +310,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderReport_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPriceHistories_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProduct_Result.cs">
@@ -395,6 +411,9 @@
     <Compile Include="Models\PreferredCommunicationMethod.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PriceHistory.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -484,6 +503,7 @@
     <Content Include="Content\Images\TimeFreight.png" />
     <Content Include="Content\Images\visa.png" />
     <Content Include="Content\morris.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
     <Content Include="Scripts\animsition.js" />
@@ -703,6 +723,12 @@
     <Content Include="Views\Admin\_SpecialsPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateSpecialsPartial.cshtml" />
     <Content Include="Views\Admin\CreateSpecial.cshtml" />
+    <Content Include="Views\Admin\CustodiansIndex.cshtml" />
+    <Content Include="Views\Admin\PriceHistoryIndex.cshtml" />
+    <Content Include="Views\Admin\SiteConfigIndex.cshtml" />
+    <Content Include="Views\Admin\EditSiteConfig.cshtml" />
+    <Content Include="Views\Admin\_SiteConfigPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateSiteConfigPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

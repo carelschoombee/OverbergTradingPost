@@ -242,6 +242,36 @@ namespace FreeMarket.Models
 
                 productSupplierDb = db.ProductSuppliers.Find(product.ProductNumber, product.SupplierNumber);
 
+                if (product.PricePerUnit != productSupplierDb.PricePerUnit)
+                {
+                    PriceHistory history = new PriceHistory()
+                    {
+                        OldPrice = productSupplierDb.PricePerUnit,
+                        NewPrice = product.PricePerUnit,
+                        ProductNumber = product.ProductNumber,
+                        SupplierNumber = product.SupplierNumber,
+                        Date = DateTime.Now,
+                        Type = "Normal"
+                    };
+
+                    db.PriceHistories.Add(history);
+                }
+
+                if (product.SpecialPricePerUnit != productSupplierDb.SpecialPricePerUnit)
+                {
+                    PriceHistory history = new PriceHistory()
+                    {
+                        OldPrice = productSupplierDb.SpecialPricePerUnit,
+                        NewPrice = product.SpecialPricePerUnit,
+                        ProductNumber = product.ProductNumber,
+                        SupplierNumber = product.SupplierNumber,
+                        Date = DateTime.Now,
+                        Type = "Special"
+                    };
+
+                    db.PriceHistories.Add(history);
+                }
+
                 if (productSupplierDb != null)
                 {
                     productSupplierDb.PricePerUnit = product.PricePerUnit;
