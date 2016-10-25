@@ -85,7 +85,9 @@ namespace FreeMarket.Models
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, Order.OrderNumber)
+                decimal totalWeight = GetTotalWeightOfOrder();
+
+                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, (int)totalWeight, Order.OrderNumber)
                     .FirstOrDefault();
 
                 if (result != null)
@@ -482,7 +484,7 @@ namespace FreeMarket.Models
                     foreach (OrderDetail tempB in newItems)
                     {
                         tempB.OrderNumber = Order.OrderNumber;
-                        CalculateDeliveryFee_Result result = CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, tempB.OrderNumber);
+                        CalculateDeliveryFee_Result result = CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, tempB.Quantity, tempB.OrderNumber);
                         if (result == null)
                         {
                             tempB.CustodianNumber = null;
@@ -540,8 +542,10 @@ namespace FreeMarket.Models
                 {
                     bool noCharge = false;
 
+                    decimal totalWeight = GetTotalWeightOfOrder();
+
                     // Calculate the delivery fee
-                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, Order.OrderNumber)
+                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, (int)totalWeight, Order.OrderNumber)
                         .FirstOrDefault();
 
                     List<OrderDetail> otherItems = Body.OrderDetails.ToList();
@@ -617,13 +621,13 @@ namespace FreeMarket.Models
             Save();
         }
 
-        public static bool CalculateDeliverableStatus(int productNumber, int supplierNumber, int quantity, int orderNumber)
+        public static bool CalculateDeliverableStatus(int productNumber, int supplierNumber, int quantity, int orderNumber, int weight)
         {
             CalculateDeliveryFee_Result result;
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, orderNumber)
+                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, (int)weight, orderNumber)
                     .FirstOrDefault();
 
                 if (result == null)
@@ -634,20 +638,22 @@ namespace FreeMarket.Models
             }
         }
 
-        public static CalculateDeliveryFee_Result CalculateDeliveryFee(int productNumber, int supplierNumber, int quantity, int orderNumber)
+        public static CalculateDeliveryFee_Result CalculateDeliveryFee(int productNumber, int supplierNumber, int quantity, int weight, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                return db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, orderNumber)
+                return db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, weight, orderNumber)
                     .FirstOrDefault();
             }
         }
 
         public void UpdateAllDeliverableStatus()
         {
+            decimal totalWeight = GetTotalWeightOfOrder();
+
             foreach (OrderDetail detail in Body.OrderDetails)
             {
-                detail.CannotDeliver = ShoppingCart.CalculateDeliverableStatus(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber);
+                detail.CannotDeliver = ShoppingCart.CalculateDeliverableStatus(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber, (int)totalWeight);
             }
         }
 
@@ -688,6 +694,8 @@ namespace FreeMarket.Models
                 foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
                 {
                     bool noCharge = false;
+
+                    decimal totalWeight = GetTotalWeightOfOrder();
 
                     // Calculate the delivery fee
                     CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)

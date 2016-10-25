@@ -33,6 +33,14 @@ namespace FreeMarket.Models
         [DisplayName("Postal Code Range End")]
         public int PostalCodeRangeEnd { get; set; }
 
+        [Required]
+        [DisplayName("Postal Code Range Start")]
+        public int WeightStartRange { get; set; }
+
+        [Required]
+        [DisplayName("Postal Code Range End")]
+        public int WeightEndRange { get; set; }
+
         [StringLength(50)]
         [DisplayName("Main Centre")]
         public string MainCentre { get; set; }
@@ -40,18 +48,6 @@ namespace FreeMarket.Models
         [StringLength(10)]
         [DisplayName("Dialing Code")]
         public string DialingCode { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
-        [DisplayName("Cost")]
-        public decimal Cost { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
-        [DisplayName("Surcharge")]
-        public decimal Surcharge { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
-        [DisplayName("Total")]
-        public decimal Total { get; set; }
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]

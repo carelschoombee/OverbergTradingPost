@@ -24,6 +24,20 @@
 </div>
 
 <div class="form-group">
+    @Html.LabelFor(m => m.WeightStartRange, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.WeightStartRange, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.WeightEndRange, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.WeightEndRange, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
     @Html.LabelFor(m => m.MainCentre, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">
         @Html.TextBoxFor(m => m.MainCentre, new { @class = "form-control" })
@@ -33,33 +47,6 @@
     @Html.LabelFor(m => m.DialingCode, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">
         @Html.TextBoxFor(m => m.DialingCode, new { @class = "form-control" })
-    </div>
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.Cost, new { @class = "col-md-4 control-label" })
-    <div class="col-md-6">
-        @{ Html.EnableClientValidation(false); }
-        @Html.EditorFor(m => m.Cost, new { htmlAttributes = new { @class = "form-control" } })
-        @{ Html.EnableClientValidation(true); }
-    </div>
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.Surcharge, new { @class = "col-md-4 control-label" })
-    <div class="col-md-6">
-        @{ Html.EnableClientValidation(false); }
-        @Html.EditorFor(m => m.Surcharge, new { htmlAttributes = new { @class = "form-control" } })
-        @{ Html.EnableClientValidation(true); }
-    </div>
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.Total, new { @class = "col-md-4 control-label" })
-    <div class="col-md-6">
-        @{ Html.EnableClientValidation(false); }
-        @Html.EditorFor(m => m.Total, new { htmlAttributes = new { @class = "form-control" } })
-        @{ Html.EnableClientValidation(true); }
     </div>
 </div>
 

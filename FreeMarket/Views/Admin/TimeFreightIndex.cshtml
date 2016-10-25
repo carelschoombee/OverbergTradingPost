@@ -20,11 +20,10 @@
             <th class="col-sm-1">Code</th>
             <th class="col-sm-2">Postal Code Start Range</th>
             <th class="col-sm-2">Postal Code End Range  </th>
+            <th class="col-sm-2">Weight Start Range</th>
+            <th class="col-sm-2">Weight End Range  </th>
             <th class="col-sm-2">Main Centre</th>
             <th class="col-sm-2">Dialing Code</th>
-            <th class="col-sm-2">Cost</th>
-            <th class="col-sm-2">Surcharge</th>
-            <th class="col-sm-2">Total</th>
             <th class="col-sm-2">Delivery Fee</th>
         </tr>
 
@@ -44,20 +43,21 @@
                 @Html.DisplayFor(model => item.PostalCodeRangeEnd)
             </td>
             <td>
+                @Html.DisplayFor(model => item.WeightStartRange)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.WeightEndRange)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.PostalCodeRangeEnd)
+            </td>
+            <td>
                 @item.MainCentre
             </td>
             <td>
                 @item.DialingCode
             </td>
-            <td>
-                @string.Format("{0:C}", item.Cost)
-            </td>
-            <td>
-                @string.Format("{0:C}", item.Surcharge)
-            </td>
-            <td>
-                @string.Format("{0:C}", item.Total)
-            </td>
+            
             <td>
                 @string.Format("{0:C}", item.DeliveryFee)
             </td>

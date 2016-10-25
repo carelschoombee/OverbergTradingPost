@@ -456,11 +456,10 @@
           <Property Name="Code" Type="nvarchar" MaxLength="10" />
           <Property Name="PostalCodeRangeStart" Type="int" Nullable="false" />
           <Property Name="PostalCodeRangeEnd" Type="int" Nullable="false" />
+          <Property Name="WeightStartRange" Type="int" />
+          <Property Name="WeightEndRange" Type="int" />
           <Property Name="MainCentre" Type="nvarchar" MaxLength="50" />
           <Property Name="DialingCode" Type="nvarchar" MaxLength="10" />
-          <Property Name="Cost" Type="money" />
-          <Property Name="Surcharge" Type="money" />
-          <Property Name="Total" Type="money" />
           <Property Name="DeliveryFee" Type="money" Nullable="false" />
         </EntityType>
         <Association Name="FK_CourierReview_Courier">
@@ -684,6 +683,7 @@
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
           <Parameter Name="quantityRequested" Type="int" Mode="In" />
           <Parameter Name="courierNumber" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="int" Mode="In" />
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculateCourierFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -691,18 +691,21 @@
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
           <Parameter Name="quantityRequested" Type="int" Mode="In" />
           <Parameter Name="courierNumber" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="int" Mode="In" />
           <Parameter Name="postalCode" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculateDeliveryFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="productNumber" Type="int" Mode="In" />
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
           <Parameter Name="quantityRequested" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="int" Mode="In" />
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculateDeliveryFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="productNumber" Type="int" Mode="In" />
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
           <Parameter Name="quantityRequested" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="int" Mode="In" />
           <Parameter Name="postalCode" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculatePostOfficeFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1213,13 +1216,6 @@
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Supports" EntityType="FreeMarketModel.Support" />
-          <FunctionImport Name="CalculateDeliveryFee" ReturnType="Collection(FreeMarketModel.CalculateDeliveryFee_Result)">
-            <Parameter Name="productNumber" Mode="In" Type="Int32" />
-            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
           <EntitySet Name="ProductSuppliers" EntityType="FreeMarketModel.ProductSupplier" />
           <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1241,12 +1237,6 @@
           <FunctionImport Name="CalculatePostOfficeFee" ReturnType="Collection(Decimal)">
           <Parameter Name="totalWeight" Mode="In" Type="Decimal" />
           </FunctionImport>
-          <FunctionImport Name="CalculateDeliveryFeeAdhoc" ReturnType="Collection(FreeMarketModel.CalculateDeliveryFeeAdhoc_Result)">
-            <Parameter Name="productNumber" Mode="In" Type="Int32" />
-            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
-            <Parameter Name="postalCode" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="GetAllProductsReview" ReturnType="Collection(FreeMarketModel.GetAllProductsReview_Result)" />
           <FunctionImport Name="GetAllCouriersReviewList" ReturnType="Collection(FreeMarketModel.GetAllCouriersReviewList_Result)" />
           <EntitySet Name="AspNetUsers" EntityType="FreeMarketModel.AspNetUser" />
@@ -1261,20 +1251,6 @@
             <Parameter Name="SupplierNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Specials" EntityType="FreeMarketModel.Special" />
-          <FunctionImport Name="CalculateCourierFee" ReturnType="Collection(FreeMarketModel.CalculateCourierFee_Result)">
-            <Parameter Name="productNumber" Mode="In" Type="Int32" />
-            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
-            <Parameter Name="courierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="CalculateCourierFeeAdhoc" ReturnType="Collection(FreeMarketModel.CalculateCourierFeeAdhoc_Result)">
-            <Parameter Name="productNumber" Mode="In" Type="Int32" />
-            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
-            <Parameter Name="courierNumber" Mode="In" Type="Int32" />
-            <Parameter Name="postalCode" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="ValidateSpecialDeliveryCode" ReturnType="Collection(Int32)">
           <Parameter Name="postalCode" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -1288,7 +1264,38 @@
           <EntitySet Name="PriceHistories" EntityType="FreeMarketModel.PriceHistory" />
           <FunctionImport Name="GetPriceHistories" ReturnType="Collection(FreeMarketModel.GetPriceHistories_Result)" />
           <FunctionImport Name="FilterCustomers" ReturnType="Collection(FreeMarketModel.FilterCustomers_Result)">
-            <Parameter Name="filterCriteria" Mode="In" Type="String" />
+          <Parameter Name="filterCriteria" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
+          <FunctionImport Name="CalculateCourierFee" ReturnType="Collection(FreeMarketModel.CalculateCourierFee_Result)">
+            <Parameter Name="productNumber" Mode="In" Type="Int32" />
+            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
+            <Parameter Name="courierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="weight" Mode="In" Type="Int32" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateCourierFeeAdhoc" ReturnType="Collection(FreeMarketModel.CalculateCourierFeeAdhoc_Result)">
+            <Parameter Name="productNumber" Mode="In" Type="Int32" />
+            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
+            <Parameter Name="courierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="weight" Mode="In" Type="Int32" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateDeliveryFee" ReturnType="Collection(FreeMarketModel.CalculateDeliveryFee_Result)">
+            <Parameter Name="productNumber" Mode="In" Type="Int32" />
+            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
+            <Parameter Name="weight" Mode="In" Type="Int32" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateDeliveryFeeAdhoc" ReturnType="Collection(FreeMarketModel.CalculateDeliveryFeeAdhoc_Result)">
+            <Parameter Name="productNumber" Mode="In" Type="Int32" />
+            <Parameter Name="supplierNumber" Mode="In" Type="Int32" />
+            <Parameter Name="quantityRequested" Mode="In" Type="Int32" />
+            <Parameter Name="weight" Mode="In" Type="Int32" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1705,30 +1712,6 @@
           <Property Name="MainContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="OrdersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="CalculateDeliveryFee_Result">
-          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
-          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
-          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
-          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
-          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
-          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
-        </ComplexType>
-        <EntityType Name="TimeFreightCourierFeeReference">
-          <Key>
-            <PropertyRef Name="DeliveryCostID" />
-          </Key>
-          <Property Name="DeliveryCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCodeRangeStart" Type="Int32" Nullable="false" />
-          <Property Name="PostalCodeRangeEnd" Type="Int32" Nullable="false" />
-          <Property Name="MainCentre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DialingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Surcharge" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Total" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-        </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
             <PropertyRef Name="ProductNumber" />
@@ -1828,15 +1811,6 @@
           <Property Type="String" Name="PostalCode1" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Province" Nullable="true" MaxLength="100" />
         </ComplexType>
-        <ComplexType Name="CalculateDeliveryFeeAdhoc_Result">
-          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
-          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
-          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
-          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
-          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
-          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
-        </ComplexType>
         <ComplexType Name="GetAllProductsReview_Result">
           <Property Type="Int32" Name="ReviewId" Nullable="false" />
           <Property Type="Int32" Name="ProductNumber" Nullable="true" />
@@ -1934,24 +1908,6 @@
           <Property Name="DateModified" Type="DateTime" Precision="3" />
           <Property Name="DateAdded" Type="DateTime" Precision="3" />
         </EntityType>
-        <ComplexType Name="CalculateCourierFee_Result">
-          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
-          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
-          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
-          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
-          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
-          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
-        </ComplexType>
-        <ComplexType Name="CalculateCourierFeeAdhoc_Result">
-          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
-          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
-          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
-          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
-          <Property Type="Int32" Name="DestinationPostalCode" Nullable="true" />
-          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
-        </ComplexType>
         <ComplexType Name="GetAllProducts_Result">
           <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
           <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
@@ -2048,6 +2004,56 @@
           <Property Type="Boolean" Name="LockoutEnabled" Nullable="true" />
           <Property Type="Int32" Name="AccessFailedCount" Nullable="true" />
           <Property Type="String" Name="UserName" Nullable="true" MaxLength="256" />
+        </ComplexType>
+        <EntityType Name="TimeFreightCourierFeeReference">
+          <Key>
+            <PropertyRef Name="DeliveryCostID" />
+          </Key>
+          <Property Name="DeliveryCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCodeRangeStart" Type="Int32" Nullable="false" />
+          <Property Name="PostalCodeRangeEnd" Type="Int32" Nullable="false" />
+          <Property Name="WeightStartRange" Type="Int32" />
+          <Property Name="WeightEndRange" Type="Int32" />
+          <Property Name="MainCentre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DialingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+        </EntityType>
+        <ComplexType Name="CalculateCourierFee_Result">
+          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
+          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
+          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="CalculateCourierFeeAdhoc_Result">
+          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
+          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
+          <Property Type="Int32" Name="DestinationPostalCode" Nullable="true" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="CalculateDeliveryFee_Result">
+          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
+          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
+          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="CalculateDeliveryFeeAdhoc_Result">
+          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
+          <Property Type="Int32" Name="CustodianLocation" Nullable="true" />
+          <Property Type="Int32" Name="CourierNumber" Nullable="true" />
+          <Property Type="String" Name="CourierName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="true" />
+          <Property Type="String" Name="DestinationPostalCode" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="CourierFee" Nullable="true" Precision="19" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2525,35 +2531,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateDeliveryFee_Result">
-                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
-                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
-                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
-                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
-                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
-                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
-                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="TimeFreightCourierFeeReferences">
-            <EntityTypeMapping TypeName="FreeMarketModel.TimeFreightCourierFeeReference">
-              <MappingFragment StoreEntitySet="TimeFreightCourierFeeReference">
-                <ScalarProperty Name="DeliveryFee" ColumnName="DeliveryFee" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
-                <ScalarProperty Name="Surcharge" ColumnName="Surcharge" />
-                <ScalarProperty Name="Cost" ColumnName="Cost" />
-                <ScalarProperty Name="DialingCode" ColumnName="DialingCode" />
-                <ScalarProperty Name="MainCentre" ColumnName="MainCentre" />
-                <ScalarProperty Name="PostalCodeRangeEnd" ColumnName="PostalCodeRangeEnd" />
-                <ScalarProperty Name="PostalCodeRangeStart" ColumnName="PostalCodeRangeStart" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="DeliveryCostID" ColumnName="DeliveryCostID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductSuppliers">
             <EntityTypeMapping TypeName="FreeMarketModel.ProductSupplier">
               <MappingFragment StoreEntitySet="ProductSupplier">
@@ -2640,19 +2617,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="CalculatePostOfficeFee" FunctionName="FreeMarketModel.Store.CalculatePostOfficeFee" />
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateDeliveryFeeAdhoc_Result">
-                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
-                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
-                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
-                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
-                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
-                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
-                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetAllProductsReview" FunctionName="FreeMarketModel.Store.GetAllProductsReview">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsReview_Result">
@@ -2772,32 +2736,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="CalculateCourierFee" FunctionName="FreeMarketModel.Store.CalculateCourierFee">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateCourierFee_Result">
-                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
-                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
-                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
-                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
-                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
-                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
-                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CalculateCourierFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateCourierFeeAdhoc">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateCourierFeeAdhoc_Result">
-                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
-                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
-                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
-                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
-                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
-                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
-                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="ValidateSpecialDeliveryCode" FunctionName="FreeMarketModel.Store.ValidateSpecialDeliveryCode" />
           <FunctionImportMapping FunctionImportName="GetAllProducts" FunctionName="FreeMarketModel.Store.GetAllProducts">
             <ResultMapping>
@@ -2914,6 +2852,73 @@
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="TimeFreightCourierFeeReferences">
+            <EntityTypeMapping TypeName="FreeMarketModel.TimeFreightCourierFeeReference">
+              <MappingFragment StoreEntitySet="TimeFreightCourierFeeReference">
+                <ScalarProperty Name="DeliveryFee" ColumnName="DeliveryFee" />
+                <ScalarProperty Name="DialingCode" ColumnName="DialingCode" />
+                <ScalarProperty Name="MainCentre" ColumnName="MainCentre" />
+                <ScalarProperty Name="WeightEndRange" ColumnName="WeightEndRange" />
+                <ScalarProperty Name="WeightStartRange" ColumnName="WeightStartRange" />
+                <ScalarProperty Name="PostalCodeRangeEnd" ColumnName="PostalCodeRangeEnd" />
+                <ScalarProperty Name="PostalCodeRangeStart" ColumnName="PostalCodeRangeStart" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="DeliveryCostID" ColumnName="DeliveryCostID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CalculateCourierFee" FunctionName="FreeMarketModel.Store.CalculateCourierFee">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateCourierFee_Result">
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CalculateCourierFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateCourierFeeAdhoc">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateCourierFeeAdhoc_Result">
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateDeliveryFee_Result">
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.CalculateDeliveryFeeAdhoc_Result">
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="CustodianLocation" ColumnName="CustodianLocation" />
+                <ScalarProperty Name="CourierNumber" ColumnName="CourierNumber" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="DestinationPostalCode" ColumnName="DestinationPostalCode" />
+                <ScalarProperty Name="CourierFee" ColumnName="CourierFee" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

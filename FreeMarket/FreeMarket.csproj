@@ -383,7 +383,6 @@
     </Compile>
     <Compile Include="Models\Order\CartBody.cs" />
     <Compile Include="Models\Checkout\ConfirmOrderViewModel.cs" />
-    <Compile Include="Models\Order\CourierFee.cs" />
     <Compile Include="Models\Order\CourierFeeViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />

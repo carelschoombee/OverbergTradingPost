@@ -18,11 +18,10 @@ namespace FreeMarket.Models
         public string Code { get; set; }
         public int PostalCodeRangeStart { get; set; }
         public int PostalCodeRangeEnd { get; set; }
+        public Nullable<int> WeightStartRange { get; set; }
+        public Nullable<int> WeightEndRange { get; set; }
         public string MainCentre { get; set; }
         public string DialingCode { get; set; }
-        public Nullable<decimal> Cost { get; set; }
-        public Nullable<decimal> Surcharge { get; set; }
-        public Nullable<decimal> Total { get; set; }
         public decimal DeliveryFee { get; set; }
     }
 }

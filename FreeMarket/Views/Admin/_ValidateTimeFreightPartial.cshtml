@@ -39,11 +39,13 @@
                                 }
                             }
                         },
-                        'Cost': {
+                        'WeightStartRange': {
                             validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
                                 numeric: {
-                                    message: 'The field must be a number.',
-                                    separator: ','
+                                    message: 'The field must be a number.'
                                 },
                                 greaterThan: {
                                     message: 'Must be a positive number greater than zero.',
@@ -52,24 +54,13 @@
                                 }
                             }
                         },
-                        'Surcharge': {
+                        'WeightEndRange': {
                             validators: {
-                                numeric: {
-                                    message: 'The field must be a number.',
-                                    separator: ','
+                                notEmpty: {
+                                    message: 'The field is required.'
                                 },
-                                greaterThan: {
-                                    message: 'Must be a positive number greater than zero.',
-                                    value: 0,
-                                    inclusive: false
-                                }
-                            }
-                        },
-                        'Total': {
-                            validators: {
                                 numeric: {
-                                    message: 'The field must be a number.',
-                                    separator: ','
+                                    message: 'The field must be a number.'
                                 },
                                 greaterThan: {
                                     message: 'Must be a positive number greater than zero.',
