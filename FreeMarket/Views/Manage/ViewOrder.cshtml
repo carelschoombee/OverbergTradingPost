@@ -34,7 +34,7 @@
                     </td>
                 </tr>
             </table>
-            @if (Model.Couriers != null && Model.Couriers.Count > 0)
+            @if (Model.Courier != null)
             {
                 if (Model.SpecialDelivery)
                 {
@@ -57,7 +57,7 @@
                                 Email Address:
                             </th>
                             <td>
-                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;info@schoombeeandson.co.za
+                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
                             </td>
                         </tr>
                         <tr>
@@ -65,47 +65,44 @@
                                 Contact Number:
                             </th>
                             <td>
-                                <span class="glyphicon glyphicon-phone"></span>&nbsp;083 680 8780
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
                             </td>
                         </tr>
                     </table>
                 }
                 else
                 {
-                    foreach (Courier courier in Model.Couriers)
-                    {
-                        <table class="table table-bordered-custom table-responsive">
-                            <tr>
-                                <td colspan="2">
-                                    Courier/Shipping Information
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Courier Name:
-                                </th>
-                                <td>
-                                    @courier.CourierName
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Email Address:
-                                </th>
-                                <td>
-                                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@courier.MainContactEmailAddress
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Contact Number:
-                                </th>
-                                <td>
-                                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@courier.MainContactTelephoneNumber
-                                </td>
-                            </tr>
-                        </table>
-                    }
+                    <table class="table table-bordered-custom table-responsive">
+                        <tr>
+                            <td colspan="2">
+                                Courier/Shipping Information
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Courier Name:
+                            </th>
+                            <td>
+                                @Model.Courier.CourierName
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Email Address:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Contact Number:
+                            </th>
+                            <td>
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
+                            </td>
+                        </tr>
+                    </table>
                 }
             }
 

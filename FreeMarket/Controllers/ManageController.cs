@@ -375,7 +375,7 @@ namespace FreeMarket.Controllers
             {
                 foreach (Product p in model.Products.Products)
                 {
-                    if (p.ReviewId == 0)
+                    if (p.ReviewId == null)
                     {
                         ProductReview review = new ProductReview
                         {

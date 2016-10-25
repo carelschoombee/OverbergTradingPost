@@ -58,21 +58,21 @@ namespace FreeMarket.Controllers
             return PartialView("_CartTotals", cart);
         }
 
-        public ActionResult CourierSelectionModal(int id, int supplierNumber, int quantity)
+        public ActionResult ViewProductModal(int id, int supplierNumber, int quantity)
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart cart = GetCartFromSession(userId);
 
-            CourierFeeViewModel model = new CourierFeeViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
+            ViewProductViewModel model = new ViewProductViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
             if (model == null)
                 return RedirectToAction("Index", "Product");
 
-            return PartialView("_CourierSelectionModal", model);
+            return PartialView("_ViewProductModal", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddToCart(CourierFeeViewModel viewModel)
+        public ActionResult AddToCart(ViewProductViewModel viewModel)
         {
             // Validate
             if (viewModel.ProductNumber == 0 || viewModel.SupplierNumber == 0)

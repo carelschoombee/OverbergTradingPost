@@ -39,8 +39,6 @@ namespace FreeMarket.Models
         public OrderDetail(OrderDetail temp)
         {
             CourierName = temp.CourierName;
-            CourierFee = temp.CourierFee;
-            CourierNumber = temp.CourierNumber;
             CustodianNumber = temp.CustodianNumber;
             ItemNumber = temp.ItemNumber;
             MainImageNumber = temp.MainImageNumber;
@@ -62,14 +60,12 @@ namespace FreeMarket.Models
             SupplierName = temp.SupplierName;
             SupplierNumber = temp.SupplierNumber;
             Selected = temp.Selected;
-            CannotDeliver = temp.CannotDeliver;
         }
 
         public void Update(int quantity)
         {
             Quantity += quantity;
             OrderItemValue = Price * Quantity;
-            CourierNumber = 0;
             CustodianNumber = 0;
         }
 
@@ -84,7 +80,7 @@ namespace FreeMarket.Models
             }
 
             if (this.ProductNumber == item.ProductNumber && this.Quantity == item.Quantity
-                && this.SupplierNumber == item.SupplierNumber && this.CannotDeliver == item.CannotDeliver)
+                && this.SupplierNumber == item.SupplierNumber)
                 return true;
             else
                 return false;

@@ -30,7 +30,7 @@ namespace FreeMarket.Models
         public decimal Price { get; set; }
         public Nullable<short> ProductRating { get; set; }
         public string ProductReviewText { get; set; }
-        public int ReviewId { get; set; }
+        public Nullable<int> ReviewId { get; set; }
         public Nullable<int> PriceRating { get; set; }
     }
 }

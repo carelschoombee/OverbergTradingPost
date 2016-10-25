@@ -36,7 +36,7 @@ namespace FreeMarket.Models
                         ReviewContent = c.ReviewContent,
                         StarRating = c.StarRating,
                         CourierName = c.CourierName,
-                        ReviewId = c.ReviewId
+                        ReviewId = c.ReviewId ?? 0
                     }).ToList();
 
                 ApplicationUser user = System.Web.HttpContext.Current

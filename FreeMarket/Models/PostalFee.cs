@@ -10,15 +10,13 @@
 namespace FreeMarket.Models
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class CalculateDeliveryFee_Result
+    public partial class PostalFee
     {
-        public Nullable<int> CustodianNumber { get; set; }
-        public Nullable<int> CustodianLocation { get; set; }
-        public Nullable<int> CourierNumber { get; set; }
-        public string CourierName { get; set; }
-        public Nullable<int> QuantityOnHand { get; set; }
-        public string DestinationPostalCode { get; set; }
-        public Nullable<decimal> CourierFee { get; set; }
+        public int Id { get; set; }
+        public Nullable<decimal> Weight { get; set; }
+        public Nullable<decimal> Price { get; set; }
+        public Nullable<decimal> PerKgExtraPrice { get; set; }
     }
 }

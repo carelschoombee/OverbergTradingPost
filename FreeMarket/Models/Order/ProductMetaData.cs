@@ -40,12 +40,12 @@ namespace FreeMarket.Models
         public string SelectedSupplier { get; set; }
         public List<SelectListItem> Suppliers { get; set; }
 
-        public int ReviewId { get; set; }
-        public int ProductRating { get; set; }
+        public int? ReviewId { get; set; }
+        public int? ProductRating { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string ProductReviewText { get; set; }
-        public int PriceRating { get; set; }
+        public int? PriceRating { get; set; }
         public decimal PriceOrder { get; set; }
 
         public int ProductReviewsCount { get; set; }

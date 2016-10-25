@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -76,29 +75,11 @@ namespace FreeMarket.Models
             if (productNumber == 0 || supplierNumber == 0)
                 return new FreeMarketObject { Result = FreeMarketResult.Failure, Argument = null, Message = "No products could be found." };
 
-            // Assign a courier. The cost will be calculated later.
-            int courierNumber = 0;
-            decimal? courierFeeCost = 0;
-            bool undeliverableItem = false;
-            CalculateDeliveryFee_Result result;
             FreeMarketObject res = new FreeMarketObject();
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-
-                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, (int)totalWeight, Order.OrderNumber)
-                    .FirstOrDefault();
-
-                if (result != null)
-                    courierNumber = (int)result.CourierNumber;
-                else
-                {
-                    // If no courier could be found this item is undeliverable and must be marked as such.
-                    // Assign a default courier to keep database constraints happy.
-                    undeliverableItem = true;
-                    courierNumber = db.Couriers.FirstOrDefault().CourierNumber;
-                }
 
                 // Check whether the item already exists
                 OrderDetail existingItem = Body.OrderDetails
@@ -140,8 +121,6 @@ namespace FreeMarket.Models
                     Body.OrderDetails.Add(
                         new OrderDetail()
                         {
-                            CourierFee = courierFeeCost, // Will always be zero at this point.
-                            CourierNumber = courierNumber, // May be a default value at this point.
                             CourierName = null,
                             CustodianNumber = custodianNumber,
                             OrderItemStatus = status,
@@ -159,8 +138,7 @@ namespace FreeMarket.Models
                             Settled = null,
                             SupplierNumber = productInfo.SupplierNumberID,
                             SupplierName = productInfo.SupplierName,
-                            MainImageNumber = imageNumber,
-                            CannotDeliver = undeliverableItem // Must this item be marked as undeliverable?
+                            MainImageNumber = imageNumber
                         });
 
                     ApplySpecialPrices(productNumber, supplierNumber);
@@ -219,6 +197,34 @@ namespace FreeMarket.Models
                                 .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
                                 .FirstOrDefault()
                                 .OrderItemValue = (decimal)productSupplier.SpecialPricePerUnit * quantity;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ProductSupplier productSupplier = db.ProductSuppliers
+                           .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                           .FirstOrDefault();
+
+                        // If the user is ordering from a special region apply a special price.
+                        if (productSupplier != null)
+                        {
+                            if (productSupplier.SpecialPricePerUnit != null)
+                            {
+                                int quantity = Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .Quantity;
+
+                                Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .Price = productSupplier.PricePerUnit;
+
+                                Body.OrderDetails
+                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                                .FirstOrDefault()
+                                .OrderItemValue = productSupplier.PricePerUnit * quantity;
                             }
                         }
                     }
@@ -464,7 +470,6 @@ namespace FreeMarket.Models
                                 // If the item has changed update it
                                 tempDb.Quantity = temp.Quantity;
                                 tempDb.OrderItemValue = temp.OrderItemValue;
-                                tempDb.CannotDeliver = temp.CannotDeliver;
 
                                 db.Entry(tempDb).State = EntityState.Modified;
                                 db.SaveChanges();
@@ -484,16 +489,9 @@ namespace FreeMarket.Models
                     foreach (OrderDetail tempB in newItems)
                     {
                         tempB.OrderNumber = Order.OrderNumber;
-                        CalculateDeliveryFee_Result result = CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, tempB.Quantity, tempB.OrderNumber);
-                        if (result == null)
-                        {
-                            tempB.CustodianNumber = null;
-                        }
-                        else
-                        {
-                            tempB.CustodianNumber = result.CustodianNumber;
-                            ReserveStock(tempB.ProductNumber, tempB.SupplierNumber, (int)tempB.CustodianNumber, tempB.Quantity);
-                        }
+
+                        ReserveStock(tempB.ProductNumber, tempB.SupplierNumber, (int)tempB.CustodianNumber, tempB.Quantity);
+
                         db.OrderDetails.Add(tempB);
                     }
 
@@ -529,132 +527,15 @@ namespace FreeMarket.Models
                 }
             }
 
-            UpdateAllDeliverableStatus();
             UpdateTotal();
             Save();
-        }
-
-        public bool UpdateCourier(OrderDetail tempB)
-        {
-            if (Order.DeliveryType == "Courier")
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    bool noCharge = false;
-
-                    decimal totalWeight = GetTotalWeightOfOrder();
-
-                    // Calculate the delivery fee
-                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(tempB.ProductNumber, tempB.SupplierNumber, tempB.Quantity, (int)totalWeight, Order.OrderNumber)
-                        .FirstOrDefault();
-
-                    List<OrderDetail> otherItems = Body.OrderDetails.ToList();
-
-                    if (result != null)
-                    {
-                        // Set the order detail
-                        tempB.CourierNumber = result.CourierNumber;
-                        tempB.CustodianNumber = result.CustodianNumber;
-
-                        if (otherItems != null && otherItems.Count > 0)
-                        {
-                            // Determine noCharge
-                            foreach (OrderDetail temp in otherItems)
-                            {
-                                if (temp.ProductNumber == tempB.ProductNumber && temp.SupplierNumber == tempB.SupplierNumber)
-                                    continue;
-
-                                if (tempB.CustodianNumber == temp.CustodianNumber &&
-                                    tempB.CourierNumber == temp.CourierNumber &&
-                                    temp.CourierFee > 0)
-                                {
-                                    noCharge = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        tempB.CannotDeliver = false;
-
-                        if (noCharge)
-                            tempB.CourierFee = 0;
-                        else
-                            tempB.CourierFee = result.CourierFee;
-                    }
-                    else
-                    {
-                        // The courier could not deliver to that postal code.
-                        tempB.CannotDeliver = true;
-
-                        return true;
-                    }
-                }
-            }
-            else if (Order.DeliveryType == "PostOffice")
-            {
-                tempB.CourierFee = 0;
-            }
-
-            return false;
-        }
-
-        public void UpdateAllCouriers()
-        {
-            List<OrderDetail> items = Body.OrderDetails
-                .Where(c => c.CannotDeliver == false)
-                .ToList();
-
-            foreach (OrderDetail item in items)
-            {
-                UpdateCourier(item);
-            }
-
-            UpdateTotal();
         }
 
         public void UpdateDeliveryDetails(SaveCartViewModel model)
         {
             Order.UpdateDeliveryDetails(model);
             ApplyAllSpecialPrices();
-            UpdateAllDeliverableStatus();
-            UpdateAllCouriers();
             Save();
-        }
-
-        public static bool CalculateDeliverableStatus(int productNumber, int supplierNumber, int quantity, int orderNumber, int weight)
-        {
-            CalculateDeliveryFee_Result result;
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                result = db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, (int)weight, orderNumber)
-                    .FirstOrDefault();
-
-                if (result == null)
-                    // If no courier could be found this item is undeliverable and must be marked as such.
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        public static CalculateDeliveryFee_Result CalculateDeliveryFee(int productNumber, int supplierNumber, int quantity, int weight, int orderNumber)
-        {
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                return db.CalculateDeliveryFee(productNumber, supplierNumber, quantity, weight, orderNumber)
-                    .FirstOrDefault();
-            }
-        }
-
-        public void UpdateAllDeliverableStatus()
-        {
-            decimal totalWeight = GetTotalWeightOfOrder();
-
-            foreach (OrderDetail detail in Body.OrderDetails)
-            {
-                detail.CannotDeliver = ShoppingCart.CalculateDeliverableStatus(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber, (int)totalWeight);
-            }
         }
 
         public static ProductCustodian GetStockAvailable(int productNumber, int supplierNumber, int quantity)
@@ -671,85 +552,8 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-
-                List<OrderDetail> deliverableItems = Body.OrderDetails
-                            .Where(c => c.CannotDeliver == false)
-                            .ToList();
-
-                List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
-
-                deliverableItems.ForEach((item) =>
-                {
-                    clonedList.Add(new OrderDetail(item));
-                });
-
-                OrderHeader order = Order;
-
-                ShoppingCart virtualCart = new ShoppingCart
-                {
-                    Body = new CartBody { OrderDetails = clonedList },
-                    Order = order
-                };
-
-                foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
-                {
-                    bool noCharge = false;
-
-                    decimal totalWeight = GetTotalWeightOfOrder();
-
-                    // Calculate the delivery fee
-                    CalculateDeliveryFee_Result result = db.CalculateDeliveryFee(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, Order.OrderNumber)
-                        .FirstOrDefault();
-
-                    if (result != null)
-                    {
-                        // Set the order detail
-                        detail.CourierNumber = result.CourierNumber;
-                        detail.CustodianNumber = result.CustodianNumber;
-
-                        // Determine noCharge
-                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
-                        {
-                            // Do not compare against itself
-                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
-                                continue;
-
-                            if (detail.CustodianNumber == temp.CustodianNumber &&
-                                detail.CourierNumber == temp.CourierNumber &&
-                                temp.CourierFee > 0)
-                            {
-                                noCharge = true;
-                                break;
-                            }
-                        }
-
-                        if (noCharge)
-                            detail.CourierFee = 0;
-                        else
-                            detail.CourierFee = result.CourierFee;
-                    }
-                }
-
-                if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
-                {
-                    decimal threshold = 0;
-
-                    try
-                    {
-                        threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
-                    }
-                    catch
-                    {
-
-                    }
-
-                    if (threshold != 0 && Order.SubTotal > threshold)
-                        return 0;
-                    else
-                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
-                }
-                else
-                    return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                decimal totalWeight = GetTotalWeightOfOrder();
+                return (decimal)db.CalculateDeliveryFee((int)totalWeight, Order.OrderNumber).FirstOrDefault();
             }
         }
 
@@ -757,82 +561,8 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                List<OrderDetail> deliverableItems = Body.OrderDetails
-                            .Where(c => c.CannotDeliver == false)
-                            .ToList();
-
-                List<OrderDetail> clonedList = new List<OrderDetail>(deliverableItems.Count);
-
-                deliverableItems.ForEach((item) =>
-                {
-                    clonedList.Add(new OrderDetail(item));
-                });
-
-                OrderHeader order = Order;
-
-                ShoppingCart virtualCart = new ShoppingCart
-                {
-                    Body = new CartBody { OrderDetails = clonedList },
-                    Order = order
-                };
-
-                foreach (OrderDetail detail in virtualCart.Body.OrderDetails)
-                {
-                    bool noCharge = false;
-
-                    // Calculate the delivery fee
-                    CalculateDeliveryFeeAdhoc_Result result = db.CalculateDeliveryFeeAdhoc(detail.ProductNumber, detail.SupplierNumber, detail.Quantity, postalCode)
-                        .FirstOrDefault();
-
-                    if (result != null)
-                    {
-                        // Set the order detail
-                        detail.CourierNumber = result.CourierNumber;
-                        detail.CustodianNumber = result.CustodianNumber;
-
-                        // Determine noCharge
-                        foreach (OrderDetail temp in virtualCart.Body.OrderDetails)
-                        {
-                            // Do not compare against itself
-                            if (temp.ProductNumber == detail.ProductNumber && temp.SupplierNumber == detail.SupplierNumber)
-                                continue;
-
-                            if (detail.CustodianNumber == temp.CustodianNumber &&
-                                detail.CourierNumber == temp.CourierNumber &&
-                                temp.CourierFee > 0)
-                            {
-                                noCharge = true;
-                                break;
-                            }
-                        }
-
-                        if (noCharge)
-                            detail.CourierFee = 0;
-                        else
-                            detail.CourierFee = result.CourierFee;
-                    }
-                }
-
-                if ((ConfigurationManager.AppSettings["freeDeliveryAboveCertainOrderTotal"]) == "true")
-                {
-                    decimal threshold = 0;
-
-                    try
-                    {
-                        threshold = decimal.Parse(ConfigurationManager.AppSettings["freeDeliveryThreshold"]);
-                    }
-                    catch
-                    {
-
-                    }
-
-                    if (threshold != 0 && Order.SubTotal > threshold)
-                        return 0;
-                    else
-                        return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
-                }
-                else
-                    return virtualCart.Body.OrderDetails.Sum(c => (c.CourierFee ?? 0));
+                decimal totalWeight = GetTotalWeightOfOrder();
+                return (decimal)db.CalculateDeliveryFeeAdhoc((int)totalWeight, postalCode).FirstOrDefault();
             }
         }
 

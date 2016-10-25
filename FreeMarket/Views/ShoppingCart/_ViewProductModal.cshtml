@@ -1,5 +1,5 @@
 ﻿@using FreeMarket.Models
-@model CourierFeeViewModel
+@model ViewProductViewModel
 
 @{
     AjaxOptions ajaxOpts = new AjaxOptions
@@ -52,7 +52,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>@Model.ProductInstance.SupplierName</td>
+                                <td>Supplied by: <span class="text-info">@Model.ProductInstance.SupplierName</span></td>
                             </tr>
                             <tr>
                                 <td>

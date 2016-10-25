@@ -60,6 +60,7 @@ namespace FreeMarket.Models
                         OrderStatus = "Unconfirmed",
                         PaymentReceived = false,
                         TotalOrderValue = 0,
+                        CourierNumber = 1,
 
                         DeliveryAddress = address.ToString(),
                         DeliveryAddressLine1 = address.AddressLine1,

@@ -15,15 +15,15 @@
 {
     <table class="table table-bordered-custom table-responsive">
 
-        <tr>
+        <tr class="well well-modal">
             <th class="col-sm-1">Edit</th>
             <th class="col-sm-1">Code</th>
+            <th class="col-sm-2">Main Centre</th>
+            <th class="col-sm-2">Dialing Code</th>
             <th class="col-sm-2">Postal Code Start Range</th>
             <th class="col-sm-2">Postal Code End Range  </th>
             <th class="col-sm-2">Weight Start Range</th>
             <th class="col-sm-2">Weight End Range  </th>
-            <th class="col-sm-2">Main Centre</th>
-            <th class="col-sm-2">Dialing Code</th>
             <th class="col-sm-2">Delivery Fee</th>
         </tr>
 
@@ -37,28 +37,24 @@
                 @Html.DisplayFor(model => item.Code)
             </td>
             <td>
-                @Html.DisplayFor(model => item.PostalCodeRangeStart)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PostalCodeRangeEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.WeightStartRange)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.WeightEndRange)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PostalCodeRangeEnd)
-            </td>
-            <td>
                 @item.MainCentre
             </td>
             <td>
                 @item.DialingCode
             </td>
-            
-            <td>
+            <td data-label="Postal Start:">
+                @Html.DisplayFor(model => item.PostalCodeRangeStart)
+            </td>
+            <td data-label="Postal End:">
+                @Html.DisplayFor(model => item.PostalCodeRangeEnd)
+            </td>
+            <td data-label="Weight Start:">
+                @Html.DisplayFor(model => item.WeightStartRange)
+            </td>
+            <td data-label="Weight End:">
+                @Html.DisplayFor(model => item.WeightEndRange)
+            </td>
+            <td data-label="Fee:">
                 @string.Format("{0:C}", item.DeliveryFee)
             </td>
         </tr>

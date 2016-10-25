@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeMarket.Models
 {
-    public class CourierFeeViewModel
+    public class ViewProductViewModel
     {
         [DisplayName("Quantity")]
         [Required]
@@ -26,12 +26,12 @@ namespace FreeMarket.Models
             SupplierNumber = 0;
         }
 
-        public CourierFeeViewModel()
+        public ViewProductViewModel()
         {
             InitializeDefault();
         }
 
-        public CourierFeeViewModel(int productNumber, int supplierNumber, int quantityRequested, int orderNumber = 0)
+        public ViewProductViewModel(int productNumber, int supplierNumber, int quantityRequested, int orderNumber = 0)
         {
             // Validate
             if (productNumber == 0 || supplierNumber == 0 || quantityRequested < 1)
@@ -52,51 +52,18 @@ namespace FreeMarket.Models
                 ProductNumber = productNumber;
                 SupplierNumber = supplierNumber;
 
-                if (orderNumber == 0)
+                ProductCustodian custodian = ShoppingCart.GetStockAvailable(productNumber, supplierNumber, quantityRequested);
+                if (custodian != null)
                 {
-                    CannotDeliver = null;
-
-                    ProductCustodian custodian = ShoppingCart.GetStockAvailable(productNumber, supplierNumber, quantityRequested);
-                    if (custodian != null)
-                    {
-                        CannotDeliver = false;
-                        CustodianQuantityOnHand = custodian.QuantityOnHand;
-                        CustodianNumber = custodian.CustodianNumber;
-                    }
-                    else
-                    {
-                        CannotDeliver = true;
-                        CustodianQuantityOnHand = 0;
-                        CustodianNumber = 0;
-                    }
+                    CannotDeliver = false;
+                    CustodianQuantityOnHand = custodian.QuantityOnHand;
+                    CustodianNumber = custodian.CustodianNumber;
                 }
                 else
                 {
-                    CalculateDeliveryFee_Result result = ShoppingCart.CalculateDeliveryFee(productNumber, supplierNumber, quantityRequested, orderNumber);
-                    if (result == null)
-                    {
-                        CannotDeliver = true;
-                        ProductCustodian custodian = ShoppingCart.GetStockAvailable(productNumber, supplierNumber, quantityRequested);
-                        if (custodian != null)
-                        {
-                            CannotDeliver = false;
-                            CustodianQuantityOnHand = custodian.QuantityOnHand;
-                            CustodianNumber = custodian.CustodianNumber;
-                        }
-                        else
-                        {
-                            CannotDeliver = true;
-                            CustodianQuantityOnHand = 0;
-                            CustodianNumber = 0;
-                        }
-                    }
-                    else
-                    {
-                        CannotDeliver = false;
-                        CustodianQuantityOnHand = (int)result.QuantityOnHand;
-                        CustodianNumber = (int)result.CustodianNumber;
-                    }
-
+                    CannotDeliver = true;
+                    CustodianQuantityOnHand = 0;
+                    CustodianNumber = 0;
                 }
 
                 SetInstances(productNumber, supplierNumber);

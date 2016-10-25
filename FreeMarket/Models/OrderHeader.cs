@@ -25,6 +25,7 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string CustomerNumber { get; set; }
         public string OrderStatus { get; set; }
+        public string DeliveryType { get; set; }
         public bool PaymentReceived { get; set; }
         public string DeliveryAddress { get; set; }
         public string DeliveryAddressLine1 { get; set; }
@@ -40,7 +41,7 @@ namespace FreeMarket.Models
         public Nullable<decimal> ShippingTotal { get; set; }
         public Nullable<decimal> SubTotal { get; set; }
         public decimal TotalOrderValue { get; set; }
-        public string DeliveryType { get; set; }
+        public Nullable<int> CourierNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

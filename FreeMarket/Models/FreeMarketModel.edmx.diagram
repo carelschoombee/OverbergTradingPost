@@ -44,12 +44,6 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductReview" Width="1.5" PointX="5.25" PointY="30.5" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierReview_Courier" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductReview_Product" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="2.625" PointX="15.375" PointY="13.125" />
-        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="18.75" PointY="13" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" />
-        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Courier" />
         <EntityTypeShape EntityType="FreeMarketModel.Support" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="8.25" PointY="14.375" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
@@ -58,6 +52,12 @@
         <EntityTypeShape EntityType="FreeMarketModel.Special" Width="1.5" PointX="7.375" PointY="8.75" />
         <EntityTypeShape EntityType="FreeMarketModel.PriceHistory" Width="1.5" PointX="5.375" PointY="13.75" />
         <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.PostalFee" Width="1.5" PointX="17.375" PointY="6.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.OrderDetail" Width="1.5" PointX="18.75" PointY="13.375" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Product" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_Supplier" />
+        <EntityTypeShape EntityType="FreeMarketModel.OrderHeader" Width="1.5" PointX="15.375" PointY="13.125" />
+        <AssociationConnector Association="FreeMarketModel.FK_OrderDetail_OrderHeader" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

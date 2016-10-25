@@ -18,6 +18,7 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> OrderDateClosed { get; set; }
         public string CustomerNumber { get; set; }
         public string OrderStatus { get; set; }
+        public string DeliveryType { get; set; }
         public bool PaymentReceived { get; set; }
         public string DeliveryAddress { get; set; }
         public string DeliveryAddressLine1 { get; set; }
@@ -33,6 +34,7 @@ namespace FreeMarket.Models
         public Nullable<decimal> ShippingTotal { get; set; }
         public Nullable<decimal> SubTotal { get; set; }
         public decimal TotalOrderValue { get; set; }
+        public Nullable<int> CourierNumber { get; set; }
         public int SupplierNumberID { get; set; }
         public string SupplierName { get; set; }
         public int CourierNumberID { get; set; }
@@ -51,7 +53,6 @@ namespace FreeMarket.Models
         public int OrderDetailOrderNumber { get; set; }
         public int SupplierNumber { get; set; }
         public int OrderDetailProductNumber { get; set; }
-        public Nullable<int> CourierNumber { get; set; }
         public Nullable<bool> Settled { get; set; }
         public Nullable<bool> PaySupplier { get; set; }
         public Nullable<bool> PayCourier { get; set; }
@@ -61,9 +62,7 @@ namespace FreeMarket.Models
         public decimal PriceOrderDetail { get; set; }
         public int Quantity { get; set; }
         public decimal OrderItemValue { get; set; }
-        public Nullable<decimal> CourierFee { get; set; }
         public Nullable<int> CustodianNumber { get; set; }
-        public Nullable<bool> CannotDeliver { get; set; }
         public decimal PricePerUnit { get; set; }
     }
 }

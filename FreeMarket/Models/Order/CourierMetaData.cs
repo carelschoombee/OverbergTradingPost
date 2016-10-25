@@ -30,7 +30,11 @@ namespace FreeMarket.Models
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                prices = db.TimeFreightCourierFeeReferences.ToList();
+                prices = db.TimeFreightCourierFeeReferences
+                    .OrderBy(c => c.Code)
+                    .ThenBy(c => c.PostalCodeRangeStart)
+                    .ThenBy(c => c.WeightStartRange)
+                    .ToList();
             }
 
             return prices;

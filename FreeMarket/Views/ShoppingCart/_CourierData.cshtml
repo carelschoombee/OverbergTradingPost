@@ -1,24 +1,13 @@
 ﻿@using FreeMarket.Models
-@model CourierFeeViewModel
+@model ViewProductViewModel
 
-@if (Model.CannotDeliver == null)
+@if (Model.CustodianQuantityOnHand > 0)
 {
-    <span>@Model.CustodianQuantityOnHand units in stock.</span>
-}
-else if (Model.CannotDeliver == true)
-{
-    <span class="text-danger">This item is either out of stock or cannot be delivered to your current address.</span>
+    <span class="glyphicon glyphicon-ok text-success">&nbsp;&nbsp;@Model.CustodianQuantityOnHand units in stock.</span>
 }
 else
-{
-    if (User.Identity.IsAuthenticated)
-    {
-        <span style="white-space :pre-line" data-toggle="tooltip" data-placement="bottom" title="@Html.Action("GetDeliveryAddress", "ShoppingCart")" aria-hidden="true">@Model.CustodianQuantityOnHand units in stock.</span>
-    }
-    else
-    {
-        <span>@Model.CustodianQuantityOnHand units in stock.</span>
-    }
+{ 
+    <span class="glyphicon glyphicon-remove text-danger">&nbsp;&nbsp;This item is either out of stock or cannot be delivered to your current address.</span>
 }
 
 

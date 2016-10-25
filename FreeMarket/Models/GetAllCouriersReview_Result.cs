@@ -16,7 +16,7 @@ namespace FreeMarket.Models
         public Nullable<int> CourierNumber { get; set; }
         public string ReviewContent { get; set; }
         public Nullable<short> StarRating { get; set; }
-        public int ReviewId { get; set; }
+        public Nullable<int> ReviewId { get; set; }
         public string CourierName { get; set; }
     }
 }

@@ -34,11 +34,11 @@ namespace FreeMarket.Models
         public int PostalCodeRangeEnd { get; set; }
 
         [Required]
-        [DisplayName("Postal Code Range Start")]
+        [DisplayName("Weight Range Start")]
         public int WeightStartRange { get; set; }
 
         [Required]
-        [DisplayName("Postal Code Range End")]
+        [DisplayName("Weight Range End")]
         public int WeightEndRange { get; set; }
 
         [StringLength(50)]

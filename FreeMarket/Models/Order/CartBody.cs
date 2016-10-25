@@ -18,8 +18,6 @@ namespace FreeMarket.Models
                     .Select(c => new OrderDetail
                     {
                         CourierName = c.CourierName,
-                        CourierFee = c.CourierFee,
-                        CourierNumber = c.CourierNumber,
                         CustodianNumber = c.CustodianNumber,
                         ItemNumber = c.ItemNumber,
                         MainImageNumber = 0,
@@ -40,8 +38,7 @@ namespace FreeMarket.Models
                         Settled = false,
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumber,
-                        Selected = false,
-                        CannotDeliver = c.CannotDeliver
+                        Selected = false
                     }
                     ).ToList();
 

@@ -9,6 +9,12 @@
 <h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Specials</h2>
 <hr />
 
+<div>
+    <h4>The postal codes in this table will receive a discount on their delivery fee and also have a special price defined in the product table.</h4>
+</div>
+
+<br />
+
 @Html.ActionLink("Create New", "CreateSpecial", null, new { @class = "freemarket-link" })
 
 @if (Model.Specials.Count > 0)
@@ -41,7 +47,7 @@
                 @Html.DisplayFor(model => item.DeliveryFee)
             </td>
             <td>
-                @Html.DisplayFor(model => item.Active)
+                @item.Active
             </td>
             <td>
                 @Html.DisplayFor(model => item.DateAdded)
