@@ -29,8 +29,38 @@
 
             @Html.ValidationSummary(true)
 
-            <div style="font-size:large" class="text-center">If you are visiting Struisbaai or La'Agulhas, enter <b><i>7285</i></b> as the postal code along with your address while in Struisbaai/La'Agulhas and we will deliver to you personally and for free.</div>
-            <div class="text-center"><i>Free delivery is a special offer available only within Struisbaai and La'Agulhas.</i></div>
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td class="text-center"><span class="text-info">Special Offer</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="font-size:large" class="text-center">If you are visiting Struisbaai or La'Agulhas, enter <b class="text-info"><i>7285</i></b> as the postal code along with your address while in Struisbaai/La'Agulhas and we will deliver to you personally and for free.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="text-center"><i>Free delivery is a special offer available only within Struisbaai and La'Agulhas.</i></div>
+                    </td>
+                </tr>
+            </table>
+            
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td class="text-center"><span class="text-info">Deliveries for the rest of RSA</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="text-center"><i>For deliveries outside of Struisbaai/La'Agulhas please note that we only dispatch orders on a Tuesday. Orders are delivered on Wednesday, Thursday or Friday at the latest.</i></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="text-center"><i>For all orders using the POST OFFICE we cannot guaruntee a delivery date, but you can expect to collect your order within 7 to 14 days after the order is dispatched.</i></div>
+                    </td>
+                </tr>
+            </table>
+
             <br />
             <br />
 
@@ -54,6 +84,7 @@
                 @Html.LabelFor(m => m.SelectedAddress, new { @class = "col-md-4 control-label" })
                 <div class="col-md-6">
                     @Html.DropDownListFor(model => model.SelectedAddress, Model.AddressNameOptions, new { @class = "form-control" })
+                    @Html.HiddenFor(c => c.DaysToAddToMinDate)
                 </div>
             </div>
 
@@ -90,16 +121,18 @@
     });
 
     $('#datetimePicker').datetimepicker({
-        format: 'DD/MM/YYYY HH:mm',
-        daysOfWeekDisabled: [0, 6],
-        minDate: moment().add(1, 'days'),
-        maxDate: moment().add(30, 'days'),
-        useCurrent: false,
-        widgetPositioning: {
-        horizontal: 'auto',
-        vertical: 'bottom'
+            format: 'DD/MM/YYYY HH:mm',
+            daysOfWeekDisabled: [0, 1, 2, 6],
+
+            minDate: moment().add(@Model.DaysToAddToMinDate, 'days'),
+  
+            maxDate: moment().add(30, 'days'),
+            useCurrent: false,
+            widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'bottom'
+            }
         }
-    }
     );
 
     $('#datetimePicker')

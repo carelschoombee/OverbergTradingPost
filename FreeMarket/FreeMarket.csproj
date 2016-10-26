@@ -246,6 +246,7 @@
     <Compile Include="Models\Admin\RatingsInfo.cs" />
     <Compile Include="Models\Admin\SalesInfo.cs" />
     <Compile Include="Models\Admin\SiteConfigurationMetaData.cs" />
+    <Compile Include="Models\Admin\SMSHelper.cs" />
     <Compile Include="Models\Admin\SpecialsMetaData.cs" />
     <Compile Include="Models\Admin\SpecialsViewModel.cs" />
     <Compile Include="Models\Admin\TimeFreightCourierFeeReferenceMetaData.cs" />

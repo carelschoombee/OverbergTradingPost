@@ -254,12 +254,16 @@ namespace FreeMarket.Controllers
 
             TimeSpan startTime = new TimeSpan(8, 0, 0);
             TimeSpan endTime = new TimeSpan(17, 0, 0);
-
+            DateTime minDate = DateTime.Today.AddDays(model.DaysToAddToMinDate);
 
             if (ModelState.IsValid)
             {
-                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime && model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
-                    model.prefDeliveryDateTime > DateTime.Now))
+                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime &&
+                    model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
+                    model.prefDeliveryDateTime.Value > minDate &&
+                    (model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
+                     model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
+                     model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
                 {
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 

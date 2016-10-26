@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
@@ -620,8 +621,30 @@ namespace FreeMarket.Models
 
                 await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
 
+                SMSHelper helper = new SMSHelper();
+
+                DateTime dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                DateTime dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                if (ConfigurationManager.AppSettings["sendSMSToSupportOnOrderConfirmed"] == "true")
+                {
+                    await helper.SendMessage(string.Format("Customer: {0}, has placed order {1}. Date of dispatch: {2}. Order Total: {3}. Delivery mechanism: {4}."
+                                           , user.Name, order.OrderNumber, string.Format("{0:f}", dateDispatch), string.Format("{0:C}", order.TotalOrderValue),
+                                           order.DeliveryType), string.Format("{0},{1}", supportInfo.Cellphone, supportInfo.Landline));
+
+                }
+
                 if (order.DeliveryType == "Courier")
                 {
+                    string smsLine1 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderConfirmationSmsLine1")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    await helper.SendMessage(string.Format(smsLine1, user.Name, order.OrderNumber,
+                        string.Format("{0:d}", dateDispatch), string.Format("{0:f}", dateArrive))
+                        , user.PhoneNumber);
+
                     Courier courier = db.Couriers.Find(1);
 
                     if (courier != null)
@@ -665,6 +688,15 @@ namespace FreeMarket.Models
                 }
                 else
                 {
+                    string smsLine1 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderConfirmationSmsPostOfficeLine1")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    await helper.SendMessage(string.Format(smsLine1, user.Name, order.OrderNumber,
+                        string.Format("{0:d}", dateDispatch))
+                        , user.PhoneNumber);
+
                     line1 = db.SiteConfigurations
                        .Where(c => c.Key == "OrderPostOfficeLine1")
                        .Select(c => c.Value)
@@ -689,6 +721,75 @@ namespace FreeMarket.Models
                     await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
                 }
             }
+        }
+
+        public static DateTime GetDispatchDay(DateTime preferredDeliveryTime)
+        {
+            DateTime deliveryDate = preferredDeliveryTime;
+
+            while (deliveryDate.DayOfWeek != DayOfWeek.Tuesday)
+                deliveryDate = deliveryDate.AddDays(-1);
+
+            return deliveryDate;
+        }
+
+        public static DateTime GetArriveDay(DateTime preferredDeliveryTime)
+        {
+            DateTime today = GetDispatchDay(preferredDeliveryTime);
+            int daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            DateTime nextFriday = today.AddDays(daysUntilFriday);
+
+            TimeSpan ts = new TimeSpan(preferredDeliveryTime.Hour, preferredDeliveryTime.Minute, 0);
+            nextFriday = nextFriday.Date + ts;
+
+            return nextFriday;
+        }
+
+        public static DateTime GetSuggestedDeliveryTime()
+        {
+            DateTime today = DateTime.Today;
+            int daysUntilFriday = 0;
+
+            if (GetDaysToMinDate() >= 7)
+            {
+                daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
+            }
+            else
+            {
+                daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            }
+
+            DateTime nextFriday = today.AddDays(daysUntilFriday);
+            nextFriday = nextFriday.AddHours(12);
+
+            return nextFriday;
+        }
+
+        public static int GetDaysToMinDate()
+        {
+            DateTime today = DateTime.Today;
+
+            int daysTillMinDate = 0;
+
+            if (today.DayOfWeek == DayOfWeek.Tuesday)
+            {
+                today = today.AddDays(1);
+                daysTillMinDate++;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                today = today.AddDays(1);
+                daysTillMinDate++;
+            }
+
+            while (today.DayOfWeek != DayOfWeek.Wednesday)
+            {
+                today = today.AddDays(1);
+                daysTillMinDate++;
+            }
+
+            return daysTillMinDate;
         }
 
         public override string ToString()

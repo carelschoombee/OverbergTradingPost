@@ -22,6 +22,8 @@ namespace FreeMarket.Models
 
         public DeliveryType DeliveryOptions { get; set; }
 
+        public int DaysToAddToMinDate { get; set; }
+
         public SaveCartViewModel() { }
 
         public SaveCartViewModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
@@ -88,16 +90,7 @@ namespace FreeMarket.Models
 
                 if (order.DeliveryDate == null)
                 {
-                    // Create a suggested date
-                    int i = 2;
-
-                    while (DateTime.Now.AddDays(i).DayOfWeek.ToString() == "Saturday" || DateTime.Now.AddDays(i).DayOfWeek.ToString() == "Sunday")
-                    {
-                        ++i;
-                    }
-
-                    DateTime defaultDateTime = new DateTime(DateTime.Now.AddDays(i).Year, DateTime.Now.AddDays(i).Month, DateTime.Now.AddDays(i).Day, 12, 0, 0, DateTimeKind.Utc);
-                    prefDeliveryDateTime = defaultDateTime;
+                    prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
                 }
                 else
                 {
@@ -110,6 +103,8 @@ namespace FreeMarket.Models
                     .FirstOrDefault();
 
                 SelectedAddress = selectedAddressNumber;
+
+                DaysToAddToMinDate = OrderHeader.GetDaysToMinDate();
             }
         }
 
