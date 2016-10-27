@@ -1,0 +1,28 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#custodiansForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'QuantityChange': {
+                            validators: {
+                                numeric: {
+                                    message: 'The field must be a number.'
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

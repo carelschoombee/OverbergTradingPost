@@ -1,0 +1,40 @@
+﻿@using FreeMarket.Models
+@model ProductCustodian
+@{
+    ViewBag.Title = "Edit Custodian Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Custodian</h2>
+<hr />
+
+<div id="parent" class="container well well-modal center_div">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditCustodianProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "custodiansForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div>
+                @Html.Partial("_CustodianStockPartial", Model)
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" name="button" class="btn btn-success" value="+ Add Stock" />
+                    <input type="submit" name="button" class="btn btn-warning" value="- Remove Stock" />
+                    @Html.ActionLink("Back", "CustodiansIndex", null, new { @class = "btn btn-info" })
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+@Html.Partial("_ValidateCustodianStockPartial")

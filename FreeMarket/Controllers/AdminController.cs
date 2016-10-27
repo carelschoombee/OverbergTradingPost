@@ -208,6 +208,12 @@ namespace FreeMarket.Controllers
             return PartialView("_RefundPending", pendingOrders);
         }
 
+        public ActionResult CustodiansIndex()
+        {
+            List<ProductCustodian> collection = ProductCustodian.GetAllProductCustodians();
+            return View(collection);
+        }
+
         public ActionResult PriceHistoryIndex()
         {
             List<PriceHistory> collection = PriceHistory.GetAllHistories();
@@ -293,7 +299,7 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                Dictionary<MemoryStream, string> obj = OrderHeader.GetOrderReport(model.OrderNumber);
+                Dictionary<MemoryStream, string> obj = OrderHeader.GetReport(ReportType.OrderConfirmation.ToString(), model.OrderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {
@@ -316,7 +322,7 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                Dictionary<MemoryStream, string> obj = OrderHeader.GetDeliveryInstructions(orderNumber);
+                Dictionary<MemoryStream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {
@@ -389,6 +395,25 @@ namespace FreeMarket.Controllers
             return View("CreateSpecial", special);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCustodianProcess(ProductCustodian model, string button)
+        {
+            if (ModelState.IsValid)
+            {
+                if (button == "+ Add Stock")
+                {
+                    ProductCustodian.AddStock(model.ProductNumber, model.SupplierNumber, model.CustodianNumber, model.QuantityChange);
+                }
+                else if (button == "- Remove Stock")
+                {
+                    ProductCustodian.RemoveStock(model.ProductNumber, model.SupplierNumber, model.CustodianNumber, model.QuantityChange);
+                }
+            }
+
+            return RedirectToAction("CustodiansIndex", "Admin");
+        }
+
         public ActionResult ViewOrder(int orderNumber, string customerNumber)
         {
             if (string.IsNullOrEmpty(customerNumber) || orderNumber == 0)
@@ -431,6 +456,16 @@ namespace FreeMarket.Controllers
             SiteConfiguration config = SiteConfiguration.GetSpecificSiteConfig(siteConfigNumber);
 
             return View(config);
+        }
+
+        public ActionResult EditCustodian(int custodianNumber, int supplierNumber, int productNumber)
+        {
+            if (custodianNumber == 0 || supplierNumber == 0 || productNumber == 0)
+                return RedirectToAction("CustodianIndex", "Admin");
+
+            ProductCustodian custodian = ProductCustodian.GetSpecificCustodian(custodianNumber, supplierNumber, productNumber);
+
+            return View(custodian);
         }
 
         public ActionResult EditCourier(int courierNumber)

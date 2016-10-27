@@ -701,6 +701,7 @@
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="GetAllCouriersReviewList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllProductCustodians" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllProductsByDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DepartmentNumber" Type="int" Mode="In" />
@@ -721,6 +722,7 @@
         <Function Name="GetNumberOfItemsInOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OrderNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetNumberOfItemsStatistic" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetOrderHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
         </Function>
@@ -1259,8 +1261,10 @@
           <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllCouriersReview" ReturnType="Collection(FreeMarketModel.GetAllCouriersReview_Result)">
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetNumberOfItemsStatistic" ReturnType="Collection(FreeMarketModel.GetNumberOfItemsStatistic_Result)" />
+          <FunctionImport Name="GetAllProductCustodians" ReturnType="Collection(FreeMarketModel.GetAllProductCustodians_Result)" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1972,6 +1976,23 @@
           <Property Type="Int16" Name="StarRating" Nullable="true" />
           <Property Type="Int32" Name="ReviewId" Nullable="true" />
           <Property Type="String" Name="CourierName" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetNumberOfItemsStatistic_Result">
+          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
+          <Property Type="DateTime" Name="OrderDatePlaced" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="SumItems" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllProductCustodians_Result">
+          <Property Type="Int32" Name="ProductNumber" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
+          <Property Type="Int32" Name="CustodianNumber" Nullable="false" />
+          <Property Type="Int32" Name="QuantityOnHand" Nullable="false" />
+          <Property Type="Int32" Name="StockReservedForOrders" Nullable="true" />
+          <Property Type="DateTime" Name="DateLastIncreasedBySupplier" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="AmountLastIncreasedBySupplier" Nullable="true" />
+          <Property Type="String" Name="CustodianName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Description" Nullable="false" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2793,6 +2814,31 @@
                 <ScalarProperty Name="StarRating" ColumnName="StarRating" />
                 <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
                 <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetNumberOfItemsStatistic" FunctionName="FreeMarketModel.Store.GetNumberOfItemsStatistic">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetNumberOfItemsStatistic_Result">
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="OrderDatePlaced" ColumnName="OrderDatePlaced" />
+                <ScalarProperty Name="SumItems" ColumnName="SumItems" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProductCustodians" FunctionName="FreeMarketModel.Store.GetAllProductCustodians">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductCustodians_Result">
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="QuantityOnHand" ColumnName="QuantityOnHand" />
+                <ScalarProperty Name="StockReservedForOrders" ColumnName="StockReservedForOrders" />
+                <ScalarProperty Name="DateLastIncreasedBySupplier" ColumnName="DateLastIncreasedBySupplier" />
+                <ScalarProperty Name="AmountLastIncreasedBySupplier" ColumnName="AmountLastIncreasedBySupplier" />
+                <ScalarProperty Name="CustodianName" ColumnName="CustodianName" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

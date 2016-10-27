@@ -240,6 +240,7 @@
     <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
     <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
     <Compile Include="Models\Admin\CouriersCollection.cs" />
+    <Compile Include="Models\Admin\ProductCustodianMetaData.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
     <Compile Include="Models\Admin\PriceHistoryMetaData.cs" />
@@ -274,6 +275,9 @@
     <Compile Include="Models\GetAllCouriersReview_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetAllProductCustodians_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetAllProductsByDepartment_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -293,6 +297,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetItemHistory_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetNumberOfItemsStatistic_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderHistory_Result.cs">
@@ -720,6 +727,9 @@
     <Content Include="Views\Admin\EditSiteConfig.cshtml" />
     <Content Include="Views\Admin\_SiteConfigPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateSiteConfigPartial.cshtml" />
+    <Content Include="Views\Admin\EditCustodian.cshtml" />
+    <Content Include="Views\Admin\_CustodianStockPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateCustodianStockPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

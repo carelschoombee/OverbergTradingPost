@@ -123,7 +123,7 @@ namespace FreeMarket.Models
             }
         }
 
-        public static Dictionary<MemoryStream, string> GetRefundReport(int orderNumber)
+        public static Dictionary<MemoryStream, string> GetReport(string reportType, int orderNumber)
         {
             MemoryStream stream = new MemoryStream();
             Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
@@ -144,247 +144,31 @@ namespace FreeMarket.Models
 
                 ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
                 rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report6.rdlc");
 
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-
-                outCollection.Add(stream, mimeType);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return outCollection;
-        }
-
-        public static Dictionary<MemoryStream, string> GetOrderReport(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber);
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report1.rdlc");
-
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-
-                outCollection.Add(stream, mimeType);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return outCollection;
-        }
-
-        public static Dictionary<MemoryStream, string> GetDeliveryInstructions(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber);
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report2.rdlc");
-
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-
-                outCollection.Add(stream, mimeType);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return outCollection;
-        }
-
-        public static Dictionary<MemoryStream, string> GetStruisbaaiOrderReport(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber);
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report3.rdlc");
-
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-
-                outCollection.Add(stream, mimeType);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return outCollection;
-        }
-
-        public static Dictionary<MemoryStream, string> GetPostalReport(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber);
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report4.rdlc");
-
-                rv.LocalReport.DataSources.Add(rds);
-                rv.LocalReport.EnableHyperlinks = true;
-                rv.LocalReport.Refresh();
-
-                byte[] streamBytes = null;
-                string mimeType = "";
-                string encoding = "";
-                string filenameExtension = "";
-                string[] streamids = null;
-                Warning[] warnings = null;
-
-                streamBytes = rv.LocalReport.Render("PDF", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                stream = new MemoryStream(streamBytes);
-
-                outCollection.Add(stream, mimeType);
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return outCollection;
-        }
-
-        public static Dictionary<MemoryStream, string> GetPostalInstructions(int orderNumber)
-        {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
-
-            try
-            {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
-
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
-
-                ta.Fill(ds.GetOrderReport, orderNumber);
-
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
-
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
-                rv.ProcessingMode = ProcessingMode.Local;
-                rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report5.rdlc");
+                switch (reportType)
+                {
+                    case "Refund":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report6.rdlc");
+                        break;
+                    case "PostalInstructions":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report5.rdlc");
+                        break;
+                    case "PostalConfirmation":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report4.rdlc");
+                        break;
+                    case "StruisbaaiOrderConfirmation":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report3.rdlc");
+                        break;
+                    case "DeliveryInstructions":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report2.rdlc");
+                        break;
+                    case "OrderConfirmation":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report1.rdlc");
+                        break;
+                    default:
+                        return new Dictionary<MemoryStream, string>();
+
+                }
 
                 rv.LocalReport.DataSources.Add(rds);
                 rv.LocalReport.EnableHyperlinks = true;
@@ -421,15 +205,40 @@ namespace FreeMarket.Models
                             .GetUserManager<ApplicationUserManager>()
                             .FindById(customerNumber);
 
+                var requestContext = HttpContext.Current.Request.RequestContext;
+                string url = "https://www.schoombeeandson.co.za" + new UrlHelper(requestContext).Action("RateOrder", "Manage", new { orderNumber = orderNumber });
+
                 EmailService email = new EmailService();
 
                 IdentityMessage iMessage = new IdentityMessage();
                 iMessage.Destination = user.Email;
 
-                string line1 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderRateLine1")
+                string message1 = CreateRatingMessageCustomer();
+
+                iMessage.Body = string.Format((message1), user.Name, url);
+                iMessage.Subject = string.Format("Schoombee and Son Order");
+
+                await email.SendAsync(iMessage);
+
+                SMSHelper helper = new SMSHelper();
+
+                string smsLine1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRateSmsLine1")
                     .Select(c => c.Value)
                     .FirstOrDefault();
+
+                await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, url), user.PhoneNumber);
+            }
+        }
+
+        private static string CreateRatingMessageCustomer()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderRateLine1")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
 
                 string line2 = db.SiteConfigurations
                     .Where(c => c.Key == "OrderRateLine2")
@@ -456,13 +265,7 @@ namespace FreeMarket.Models
                     .Select(c => c.Value)
                     .FirstOrDefault();
 
-                var requestContext = HttpContext.Current.Request.RequestContext;
-                string url = "https://www.schoombeeandson.co.za" + new UrlHelper(requestContext).Action("RateOrder", "Manage", new { orderNumber = orderNumber });
-
-                iMessage.Body = string.Format((line1 + line2 + line3 + line4 + line5 + line6), user.Name, url);
-                iMessage.Subject = string.Format("Schoombee and Son Order");
-
-                await email.SendAsync(iMessage);
+                return line1 + line2 + line3 + line4 + line5 + line6;
             }
         }
 
@@ -476,8 +279,12 @@ namespace FreeMarket.Models
 
                 if (oh != null)
                 {
+                    string message1 = CreateRefundMessageCustomer();
 
-                    refundSummary = GetRefundReport(orderNumber);
+                    Support supportInfo = db.Supports
+                        .FirstOrDefault();
+
+                    refundSummary = GetReport(ReportType.Refund.ToString(), orderNumber);
 
                     ApplicationUser user = System.Web.HttpContext
                                 .Current
@@ -490,30 +297,7 @@ namespace FreeMarket.Models
                     IdentityMessage iMessage = new IdentityMessage();
                     iMessage.Destination = user.Email;
 
-                    string line1 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderRefundLine1")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    string line2 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderRefundLine2")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    string line3 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderRefundLine3")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    string line4 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderRefundLine4")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    Support supportInfo = db.Supports
-                        .FirstOrDefault();
-
-                    iMessage.Body = string.Format((line1 + line2 + line3 + line4), user.Name, orderNumber, supportInfo.Cellphone, supportInfo.Landline, supportInfo.Email);
+                    iMessage.Body = string.Format((message1), user.Name, orderNumber, supportInfo.Cellphone, supportInfo.Landline, supportInfo.Email);
                     iMessage.Subject = string.Format("Schoombee and Son Refund");
 
                     await email.SendAsync(iMessage, refundSummary.FirstOrDefault().Key);
@@ -530,7 +314,44 @@ namespace FreeMarket.Models
                     iMessageNotifyRefund.Subject = string.Format("Refund - Order {0}", orderNumber);
 
                     await email.SendAsync(iMessageNotifyRefund, refundSummary.FirstOrDefault().Key);
+
+                    SMSHelper helper = new SMSHelper();
+
+                    string smsLine1 = db.SiteConfigurations
+                        .Where(c => c.Key == "OrderRefundSmsLine1")
+                        .Select(c => c.Value)
+                        .FirstOrDefault();
+
+                    await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber), user.PhoneNumber);
                 }
+            }
+        }
+
+        private static string CreateRefundMessageCustomer()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRefundLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRefundLine2")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRefundLine3")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderRefundLine4")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                return line1 + line2 + line3 + line4;
             }
         }
 
@@ -549,6 +370,9 @@ namespace FreeMarket.Models
 
                 OrderHeader order = db.OrderHeaders.Find(orderNumber);
 
+                Support supportInfo = db.Supports
+                    .FirstOrDefault();
+
                 bool specialDelivery = false;
 
                 int postalCode = 0;
@@ -564,59 +388,32 @@ namespace FreeMarket.Models
 
                 if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
                 {
-                    orderSummary = GetStruisbaaiOrderReport(orderNumber);
-                    orderDeliveryInstruction = GetStruisbaaiOrderReport(orderNumber);
+                    orderSummary = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
+                    orderDeliveryInstruction = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
                     specialDelivery = true;
                 }
                 else
                 {
                     if (order.DeliveryType == "Courier")
                     {
-                        orderSummary = GetOrderReport(orderNumber);
-                        orderDeliveryInstruction = GetDeliveryInstructions(orderNumber);
+                        orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
+                        orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
                     }
                     else
                     {
-                        orderSummary = GetPostalReport(orderNumber);
-                        orderDeliveryInstruction = GetPostalInstructions(orderNumber);
+                        orderSummary = GetReport(ReportType.PostalConfirmation.ToString(), orderNumber);
+                        orderDeliveryInstruction = GetReport(ReportType.PostalInstructions.ToString(), orderNumber);
                     }
                 }
-
 
                 EmailService email = new EmailService();
 
                 IdentityMessage iMessage = new IdentityMessage();
                 iMessage.Destination = user.Email;
 
-                string line1 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationEmailLine1")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
+                string message1 = CreateConfirmationMessageCustomer();
 
-                string line2 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationEmailLine2")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
-
-                string line3 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationEmailLine3")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
-
-                string line4 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationEmailLine4")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
-
-                string line5 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationEmailLine5")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
-
-                Support supportInfo = db.Supports
-                    .FirstOrDefault();
-
-                iMessage.Body = string.Format((line1 + line2 + line3 + line4 + line5), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                iMessage.Body = string.Format((message1), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
                 iMessage.Subject = string.Format("Schoombee and Son Order");
 
                 await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
@@ -649,38 +446,16 @@ namespace FreeMarket.Models
 
                     if (courier != null)
                     {
-                        line1 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderDeliveryInstructionsLine1")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
-
-                        line2 = db.SiteConfigurations
-                           .Where(c => c.Key == "OrderDeliveryInstructionsLine2")
-                           .Select(c => c.Value)
-                           .FirstOrDefault();
-
-                        line3 = db.SiteConfigurations
-                           .Where(c => c.Key == "OrderDeliveryInstructionsLine3")
-                           .Select(c => c.Value)
-                           .FirstOrDefault();
-
-                        line4 = db.SiteConfigurations
-                           .Where(c => c.Key == "OrderDeliveryInstructionsLine4")
-                           .Select(c => c.Value)
-                           .FirstOrDefault();
+                        string message2 = CreateCourierInstructionsMessage();
 
                         IdentityMessage iMessageCourier = new IdentityMessage();
 
                         if (specialDelivery)
-                        {
                             iMessageCourier.Destination = supportInfo.OrdersEmail;
-                        }
                         else
-                        {
                             iMessageCourier.Destination = courier.MainContactEmailAddress;
-                        }
 
-                        iMessageCourier.Body = string.Format((line1 + line2 + line3 + line4), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+                        iMessageCourier.Body = string.Format((message2), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
                         iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
 
                         await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
@@ -697,29 +472,100 @@ namespace FreeMarket.Models
                         string.Format("{0:d}", dateDispatch))
                         , user.PhoneNumber);
 
-                    line1 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderPostOfficeLine1")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
-
-                    line2 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderPostOfficeLine2")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
-
-                    line3 = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderPostOfficeLine3")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
+                    string message3 = CreatePostOfficeInstructionsMessage();
 
                     IdentityMessage iMessageCourier = new IdentityMessage();
 
                     iMessageCourier.Destination = supportInfo.OrdersEmail;
-                    iMessageCourier.Body = string.Format((line1 + line2 + line3), orderNumber);
+                    iMessageCourier.Body = string.Format((message3), orderNumber);
                     iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
 
                     await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
                 }
+            }
+        }
+
+        private static string CreatePostOfficeInstructionsMessage()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderPostOfficeLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderPostOfficeLine2")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderPostOfficeLine3")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                return line1 + line2 + line3;
+            }
+        }
+
+        private static string CreateCourierInstructionsMessage()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderDeliveryInstructionsLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderDeliveryInstructionsLine2")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderDeliveryInstructionsLine3")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                   .Where(c => c.Key == "OrderDeliveryInstructionsLine4")
+                   .Select(c => c.Value)
+                   .FirstOrDefault();
+
+                return line1 + line2 + line3 + line4;
+            }
+        }
+
+        private static string CreateConfirmationMessageCustomer()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine2")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine3")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine4")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line5 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationEmailLine5")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                return line1 + line2 + line3 + line4 + line5;
             }
         }
 
@@ -751,13 +597,9 @@ namespace FreeMarket.Models
             int daysUntilFriday = 0;
 
             if (GetDaysToMinDate() >= 7)
-            {
                 daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
-            }
             else
-            {
                 daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
-            }
 
             DateTime nextFriday = today.AddDays(daysUntilFriday);
             nextFriday = nextFriday.AddHours(12);

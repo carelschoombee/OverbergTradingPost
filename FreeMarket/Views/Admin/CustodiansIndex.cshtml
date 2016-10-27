@@ -1,5 +1,5 @@
 ﻿@using FreeMarket.Models
-@model List<Custodian>
+@model List<ProductCustodian>
 @{
     ViewBag.Title = "Custodians and Stock";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,27 +11,48 @@
 
 @Html.ActionLink("Create New", "CreateCustodian", null, new { @class = "freemarket-link" })
 
-@if (Model.Count() > 0)
+@if (Model.Count > 0)
 {
     <table class="table table-bordered-custom table-responsive">
 
         <tr>
             <th class="col-sm-1">Edit</th>
-            <th class="col-sm-1">Postal Code Start Range</th>
-            <th class="col-sm-1">Postal Code End Range</th>
-            <th class="col-sm-1">Delivery Fee</th>
-            <th class="col-sm-1">Active</th>
-            <th class="col-sm-1">Date Added</th>
-            <th class="col-sm-1">Date Modified</th>
+            <th class="col-sm-1">Custodian Name</th>
+            <th class="col-sm-1">Supplier</th>
+            <th class="col-sm-1">Product</th>
+            <th class="col-sm-1">Qty on Hand</th>
+            <th class="col-sm-1">Stock Reserved</th>
+            <th class="col-sm-1">Last Modified</th>
+            <th class="col-sm-1">Last Modified Amount</th>
         </tr>
 
-    @foreach (Custodian item in Model)
+    @foreach (ProductCustodian item in Model)
     {
         <tr class="well">
             <td class="text-center">
-                @Html.ActionLink("Edit", "EditCustodian", new { custodianId = item.CustodianNumber }, new { @class = "freemarket-link" })
+                @Html.ActionLink("Edit", "EditCustodian", new { custodianNumber = item.CustodianNumber, supplierNumber = item.SupplierNumber, productNumber = item.ProductNumber }, new { @class = "freemarket-link" })
             </td>
-            
+            <td class="text-center">
+                @item.CustodianName
+            </td>
+            <td class="text-center">
+                @item.SupplierName
+            </td>
+            <td class="text-center">
+                @item.ProductName
+            </td>
+            <td class="text-center">
+                @item.QuantityOnHand
+            </td>
+            <td class="text-center">
+                (@item.StockReservedForOrders)
+            </td>
+            <td class="text-center">
+                @string.Format("{0:d}", item.DateLastIncreasedBySupplier)
+            </td>
+            <td class="text-center">
+                @item.AmountLastIncreasedBySupplier
+            </td>
         </tr>
     }
             

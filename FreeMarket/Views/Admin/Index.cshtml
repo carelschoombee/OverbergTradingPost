@@ -80,7 +80,7 @@
                                 <label class="col-sm-2 control-label">Select Period</label>
                                 <div class="col-sm-6">
                                     @Html.DropDownListFor(model => Model.SelectedYear, Model.YearOptions, "Choose", new { @class = "form-control-inline" })
-                                    @Html.ValidationMessageFor(m => m.SelectedYear, "", new { @class = "text-danger"})
+                                    @Html.ValidationMessageFor(m => m.SelectedYear, "", new { @class = "text-danger" })
                                     @Html.Hidden("yearView", "Year")
                                 </div>
                                 <div class="col-sm-3">
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             @Html.Hidden("monthView", "Month")
-                        }
+                                            }
                     </div>
                 </div>
             </div>
@@ -163,11 +163,11 @@
                     <h2 class="text-center">Order Statuses</h2>
                     <hr />
                     @if (Model.SalesInformation.TotalCancelledOrders == 0 &&
-                        Model.SalesInformation.TotalLockedOrders == 0 &&
-                        Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
-                        Model.SalesInformation.TotalConfirmedOrders == 0 &&
-                        Model.SalesInformation.TotalCompletedOrders == 0 &&
-                        Model.SalesInformation.TotalRefundedOrders == 0)
+                Model.SalesInformation.TotalLockedOrders == 0 &&
+                Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
+                Model.SalesInformation.TotalConfirmedOrders == 0 &&
+                Model.SalesInformation.TotalCompletedOrders == 0 &&
+                Model.SalesInformation.TotalRefundedOrders == 0)
                     {
                         <text>No transactions yet.</text>
                         <div id="orderStatuses" style="height: 0px;"></div>
@@ -175,6 +175,21 @@
                     else
                     {
                         <div id="orderStatuses" style="height: 250px;"></div>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    <h2 class="text-center">Number of items in Orders</h2>
+                    <hr />
+                    @if (Model.SalesInformation.NumberOrdersSingleItem == 0 &&
+                Model.SalesInformation.NumberOrdersTwoToFive == 0 &&
+                Model.SalesInformation.NumberOrdersGreaterFive == 0)
+                    {
+                        <text>No transactions yet.</text>
+                        <div id="itemsInOrders" style="height: 0px;"></div>
+                    }
+                    else
+                    {
+                        <div id="itemsInOrders" style="height: 250px;"></div>
                     }
                 </div>
             </div>
@@ -214,11 +229,11 @@
         <div class="tab-pane" id="customers">
             <h2 class="text-center">Customers</h2>
             <hr />
-           @if (Model.Customers != null && Model.Customers.Count > 0)
-           {
-               using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
-               {
-                   @Html.AntiForgeryToken()
+            @if (Model.Customers != null && Model.Customers.Count > 0)
+            {
+                using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
+                {
+                    @Html.AntiForgeryToken()
 
                     <div class="form-group center_div">
                         <div class="col-sm-6">
@@ -236,11 +251,11 @@
                         </div>
                     </div>
 
-                   <div id="customersResults">
-                       @Html.Partial("_ViewCustomers", Model.Customers)
-                   </div>
-               }
-           }
+                    <div id="customersResults">
+                        @Html.Partial("_ViewCustomers", Model.Customers)
+                    </div>
+                }
+            }
         </div>
         <div class="tab-pane" id="refunds">
             <div id="CancelledTable">
@@ -290,9 +305,9 @@
                     </li>
                     <li>
                         <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
-                    </li>       
+                    </li>
                 </ul>
-            </div>      
+            </div>
         </div>
     </div>
 </div>
@@ -334,108 +349,108 @@
         if (Model.Period == "Year")
         {
             <text>
-        new Morris.Line({
-            // ID of the element in which to draw the chart.
-            element: 'sales',
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
-            parseTime: false,
-            data: [
-            </text>
+    new Morris.Line({
+        // ID of the element in which to draw the chart.
+        element: 'sales',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        parseTime: false,
+        data: [
+        </text>
             foreach (KeyValuePair<string, decimal> record in Model.SalesInformation.SalesDetails)
             {
                 if (Model.SelectedYear == "0")
                 {
                         <text>
-                            { Year: '@record.Key', value: @(((int)record.Value)) },
-                        </text>
+                        { Year: '@record.Key', value: @(((int)record.Value)) },
+                    </text>
                 }
                 else
                 {
                         <text>
-                            { Month: '@record.Key', value: @(((int)record.Value)) },
-                        </text>
+                        { Month: '@record.Key', value: @(((int)record.Value)) },
+                    </text>
                 }
             }
             <text>
 
-            ],
-            </text>
+        ],
+        </text>
 
             if (Model.SelectedYear == "0")
             {
                 <text>
-            xkey: 'Year',
-            </text>
+        xkey: 'Year',
+        </text>
             }
             else
             {
                 <text>
-            xkey: 'Month',
-            </text>
+        xkey: 'Month',
+        </text>
             }
 
             <text>
-            // A list of names of data record attributes that contain y-values.
-            ykeys: ['value'],
-            // Labels for the ykeys -- will be displayed when you hover over the
-            // chart.
-            labels: ['Value'],
-            resize: true,
-            preUnits:  'R '
-        });
-        </text>
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['value'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['Value'],
+        resize: true,
+        preUnits:  'R '
+    });
+    </text>
 
         }
         else if (Model.Period == "Month")
         {
             <text>
-        new Morris.Line({
-            // ID of the element in which to draw the chart.
-            element: 'sales',
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
-            parseTime: false,
-            data: [
-            </text>
+    new Morris.Line({
+        // ID of the element in which to draw the chart.
+        element: 'sales',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        parseTime: false,
+        data: [
+        </text>
             foreach (KeyValuePair<string, decimal> record in Model.SalesInformation.SalesDetails)
             {
                 {
                         <text>
-                            { Week: '@record.Key', value: @(((int)record.Value)) },
-                        </text>
+                        { Week: '@record.Key', value: @(((int)record.Value)) },
+                    </text>
                 }
             }
             <text>
 
-            ],
-            </text>
-
-            <text>
-            xkey: 'Week',
-            </text>
-
-            <text>
-            // A list of names of data record attributes that contain y-values.
-            ykeys: ['value'],
-            // Labels for the ykeys -- will be displayed when you hover over the
-            // chart.
-            labels: ['Value'],
-            resize: true,
-            preUnits:  'R '
-        });
+        ],
         </text>
+
+            <text>
+        xkey: 'Week',
+        </text>
+
+            <text>
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['value'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['Value'],
+        resize: true,
+        preUnits:  'R '
+    });
+    </text>
         }
     }
 
-    @if (Model.SalesInformation.TransactionDetails == null)
+    @if (Model.SalesInformation.TransactionDetails == null || Model.SalesInformation.TransactionDetails.Count == 0)
     {
 
     }
     else
     {
         <text>
-        new Morris.Donut({
+    new Morris.Donut({
         element: 'transactionStatus',
         parseTime: false,
         data: [
@@ -461,7 +476,7 @@
     }
 
 
-    @if(Model.SalesInformation.PaymentDetails == null)
+    @if(Model.SalesInformation.PaymentDetails == null || Model.SalesInformation.PaymentDetails.Count == 0)
     {
 
     }
@@ -519,6 +534,33 @@
         '#cc0000',
         '#66ccff',
         '#ff9900'
+        ],
+    });
+    </text>
+    }
+
+    @if (Model.SalesInformation.NumberOrdersSingleItem == 0 &&
+            Model.SalesInformation.NumberOrdersTwoToFive == 0 &&
+            Model.SalesInformation.NumberOrdersGreaterFive == 0 )
+    {
+
+    }
+    else
+    {
+        <text>
+    new Morris.Donut({
+        element: 'itemsInOrders',
+        parseTime: false,
+        data: [
+            { label: "1", value: @Model.SalesInformation.NumberOrdersSingleItem },
+            { label: "2 - 5", value: @Model.SalesInformation.NumberOrdersTwoToFive },
+            { label: "> 5", value: @Model.SalesInformation.NumberOrdersGreaterFive }
+        ],
+        labelColor: '#ffffff',
+        colors: [
+        '#ffff33',
+        '#0BA462',
+        '#33ffbb'
         ],
     });
     </text>

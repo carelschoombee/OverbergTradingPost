@@ -20,6 +20,10 @@ namespace FreeMarket.Models
         public int TotalUnconfirmedOrders { get; set; }
         public int TotalRefundedOrders { get; set; }
 
+        public int NumberOrdersSingleItem { get; set; }
+        public int NumberOrdersTwoToFive { get; set; }
+        public int NumberOrdersGreaterFive { get; set; }
+
         public Dictionary<string, decimal> CalculateSalesDetails(int year, List<OrderHeader> orders)
         {
             Dictionary<string, decimal> sales;
@@ -345,6 +349,45 @@ namespace FreeMarket.Models
                 SalesDetails = CalculateSalesDetails(year, orders);
                 TransactionDetails = GetTransactionDetails(year, null, messages);
                 PaymentDetails = GetPaymentDetails(year, null, messages);
+
+                CalculateNumberOfItems(year);
+            }
+        }
+
+        private void CalculateNumberOfItems(int year)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                NumberOrdersSingleItem = 0;
+                NumberOrdersTwoToFive = 0;
+                NumberOrdersGreaterFive = 0;
+
+                List<GetNumberOfItemsStatistic_Result> result = db.GetNumberOfItemsStatistic().ToList();
+
+                foreach (GetNumberOfItemsStatistic_Result res in result)
+                {
+                    if (year == 0)
+                    {
+                        if (res.SumItems == 1)
+                            NumberOrdersSingleItem++;
+                        else if (res.SumItems > 1 && res.SumItems <= 5)
+                            NumberOrdersTwoToFive++;
+                        else
+                            NumberOrdersGreaterFive++;
+                    }
+                    else
+                    {
+                        if (res.OrderDatePlaced.HasValue && res.OrderDatePlaced.Value.Year == year)
+                        {
+                            if (res.SumItems == 1)
+                                NumberOrdersSingleItem++;
+                            else if (res.SumItems > 1 && res.SumItems <= 5)
+                                NumberOrdersTwoToFive++;
+                            else
+                                NumberOrdersGreaterFive++;
+                        }
+                    }
+                }
             }
         }
 
@@ -402,6 +445,36 @@ namespace FreeMarket.Models
                 SalesDetails = CalculateSalesDetails(date, orders);
                 TransactionDetails = GetTransactionDetails(null, date, messages);
                 PaymentDetails = GetPaymentDetails(null, date, messages);
+
+                CalculateNumberOfItems(date);
+            }
+        }
+
+        private void CalculateNumberOfItems(DateTime date)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                NumberOrdersSingleItem = 0;
+                NumberOrdersTwoToFive = 0;
+                NumberOrdersGreaterFive = 0;
+
+                List<GetNumberOfItemsStatistic_Result> result = db.GetNumberOfItemsStatistic().ToList();
+
+                foreach (GetNumberOfItemsStatistic_Result res in result)
+                {
+                    if (res.OrderDatePlaced.HasValue &&
+                        res.OrderDatePlaced.Value.Year == date.Year &&
+                        res.OrderDatePlaced.Value.Month == date.Month)
+                    {
+                        if (res.SumItems == 1)
+                            NumberOrdersSingleItem++;
+                        else if (res.SumItems > 1 && res.SumItems <= 5)
+                            NumberOrdersTwoToFive++;
+                        else
+                            NumberOrdersGreaterFive++;
+                    }
+
+                }
             }
         }
     }

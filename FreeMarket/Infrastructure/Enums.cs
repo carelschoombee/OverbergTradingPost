@@ -17,6 +17,16 @@ namespace FreeMarket.Models
         NoResult
     }
 
+    public enum ReportType
+    {
+        OrderConfirmation,
+        DeliveryInstructions,
+        StruisbaaiOrderConfirmation,
+        PostalConfirmation,
+        PostalInstructions,
+        Refund
+    }
+
     public class FreeMarketObject
     {
         public FreeMarketResult Result { get; set; }

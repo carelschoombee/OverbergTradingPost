@@ -256,5 +256,15 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCouriersReview_Result>("GetAllCouriersReview", orderNumberParameter);
         }
+    
+        public virtual ObjectResult<GetNumberOfItemsStatistic_Result> GetNumberOfItemsStatistic()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNumberOfItemsStatistic_Result>("GetNumberOfItemsStatistic");
+        }
+    
+        public virtual ObjectResult<GetAllProductCustodians_Result> GetAllProductCustodians()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductCustodians_Result>("GetAllProductCustodians");
+        }
     }
 }
