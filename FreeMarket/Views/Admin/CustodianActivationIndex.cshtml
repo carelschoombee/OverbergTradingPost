@@ -1,0 +1,65 @@
+﻿@using FreeMarket.Models
+@model List<Custodian>
+@{
+    ViewBag.Title = "Custodians";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Custodians</h2>
+<hr />
+
+@Html.ActionLink("Create New", "CreateCustodian", null, new { @class = "freemarket-link" })
+
+@if (Model.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Custodian Name</th>
+            <th class="col-sm-1">Can Sell Products</th>
+        </tr>
+
+    @foreach (Custodian item in Model)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditCustodianActivation", new { custodianNumber = item.CustodianNumber }, new { @class = "freemarket-link" })
+            </td>
+            <td class="text-center">
+                @item.CustodianName
+            </td>
+            <td class="text-center">
+                @if (item.ActivatedProducts != null && item.ActivatedProducts.Products.Count > 0)
+                {
+                    <table>
+                        @for (int i = 0; i < item.ActivatedProducts.Products.Count; i++)
+                        {
+
+                        <tr>
+                            <td>
+                                @item.ActivatedProducts.Products[i].Description
+                            </td>
+                            <td>
+                                @item.ActivatedProducts.Products[i].SupplierName
+                            </td>
+                            <td>
+                                @item.ActivatedProducts.Products[i].CustodianActivated
+                            </td>
+                        </tr>
+
+                        }
+                    </table>
+                }
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

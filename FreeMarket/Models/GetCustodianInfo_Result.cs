@@ -10,21 +10,16 @@
 namespace FreeMarket.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class ProductCustodian
+    public partial class GetCustodianInfo_Result
     {
         public int ProductNumber { get; set; }
+        public int SupplierNumber { get; set; }
         public int CustodianNumber { get; set; }
         public int QuantityOnHand { get; set; }
+        public Nullable<int> StockReservedForOrders { get; set; }
         public Nullable<System.DateTime> DateLastIncreasedBySupplier { get; set; }
         public Nullable<int> AmountLastIncreasedBySupplier { get; set; }
-        public int SupplierNumber { get; set; }
-        public Nullable<int> StockReservedForOrders { get; set; }
-        public Nullable<bool> Active { get; set; }
-    
-        public virtual Product Product { get; set; }
-        public virtual Supplier Supplier { get; set; }
-        public virtual Custodian Custodian { get; set; }
+        public string CustodianName { get; set; }
     }
 }

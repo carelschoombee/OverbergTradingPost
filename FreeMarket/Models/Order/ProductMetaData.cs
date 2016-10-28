@@ -50,6 +50,15 @@ namespace FreeMarket.Models
 
         public int ProductReviewsCount { get; set; }
 
+        public bool CustodianActivated { get; set; }
+
+        [Required]
+        [DisplayName("Custodian")]
+        public int SelectedCustodianNumber { get; set; }
+
+        public List<SelectListItem> Custodians { get; set; }
+        public Dictionary<string, int> CustodianInfo { get; set; }
+
         public static string GetFullDescription(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)
@@ -116,6 +125,19 @@ namespace FreeMarket.Models
                         Selected = c.DepartmentNumber == product.DepartmentNumber ? true : false
                     })
                     .ToList();
+
+                product.Custodians = db.Custodians
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.CustodianNumber + ") " + c.CustodianName,
+                        Value = c.CustodianNumber.ToString(),
+                        Selected = c.CustodianNumber == product.SelectedCustodianNumber ? true : false
+                    })
+                    .ToList();
+
+                product.CustodianInfo = db.GetCustodianInfo(product.ProductNumber, product.SupplierNumber)
+                    .Select(c => new { c.CustodianName, c.QuantityOnHand })
+                    .ToDictionary(c => c.CustodianName, c => c.QuantityOnHand);
             }
 
             return product;
@@ -128,23 +150,27 @@ namespace FreeMarket.Models
                 if (mode == "edit")
                 {
                     Departments = db.Departments
-                    .Select(c => new SelectListItem
-                    {
-                        Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
-                        Value = c.DepartmentNumber.ToString(),
-                        Selected = (c.DepartmentNumber == DepartmentNumber) ? true : false
-                    })
-                    .ToList();
+                        .Select(c => new SelectListItem
+                        {
+                            Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
+                            Value = c.DepartmentNumber.ToString(),
+                            Selected = (c.DepartmentNumber == DepartmentNumber) ? true : false
+                        })
+                        .ToList();
+
+                    CustodianInfo = db.GetCustodianInfo(this.ProductNumber, this.SupplierNumber)
+                        .Select(c => new { c.CustodianName, c.QuantityOnHand })
+                        .ToDictionary(c => c.CustodianName, c => c.QuantityOnHand);
                 }
                 else
                 {
                     Departments = db.Departments
-                    .Select(c => new SelectListItem
-                    {
-                        Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
-                        Value = c.DepartmentNumber.ToString(),
-                    })
-                    .ToList();
+                        .Select(c => new SelectListItem
+                        {
+                            Text = "(" + c.DepartmentNumber + ") " + c.DepartmentName,
+                            Value = c.DepartmentNumber.ToString(),
+                        })
+                        .ToList();
                 }
 
                 if (mode == "create")
@@ -154,6 +180,14 @@ namespace FreeMarket.Models
                         {
                             Text = "(" + c.SupplierNumber + ") " + c.SupplierName,
                             Value = c.SupplierNumber.ToString()
+                        })
+                        .ToList();
+
+                    Custodians = db.Custodians
+                        .Select(c => new SelectListItem
+                        {
+                            Text = "(" + c.CustodianNumber + ") " + c.CustodianName,
+                            Value = c.CustodianNumber.ToString(),
                         })
                         .ToList();
                 }
@@ -181,6 +215,14 @@ namespace FreeMarket.Models
                     {
                         Text = "(" + c.SupplierNumber + ")" + c.SupplierName,
                         Value = c.SupplierNumber.ToString()
+                    })
+                    .ToList();
+
+                product.Custodians = db.Custodians
+                    .Select(c => new SelectListItem
+                    {
+                        Text = "(" + c.CustodianNumber + ") " + c.CustodianName,
+                        Value = c.CustodianNumber.ToString(),
                     })
                     .ToList();
             }
@@ -216,6 +258,32 @@ namespace FreeMarket.Models
 
                 db.ProductSuppliers.Add(productSupplierDb);
                 db.SaveChanges();
+
+                Custodian custodian = db.Custodians.Find(product.SelectedCustodianNumber);
+
+                if (custodian == null)
+                    return;
+                try
+                {
+                    ProductCustodian productCustodianDb = new ProductCustodian()
+                    {
+                        AmountLastIncreasedBySupplier = null,
+                        CustodianNumber = product.SelectedCustodianNumber,
+                        DateLastIncreasedBySupplier = null,
+                        ProductNumber = product.ProductNumber,
+                        SupplierNumber = int.Parse(product.SelectedSupplier),
+                        QuantityOnHand = 0,
+                        StockReservedForOrders = 0
+                    };
+
+                    db.ProductCustodians.Add(productCustodianDb);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                }
+
             }
         }
 

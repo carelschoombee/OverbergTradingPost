@@ -21,6 +21,7 @@
             <th class="col-sm-2">Description</th>
             <th class="col-sm-2">Supplier</th>
             <th class="col-sm-2">Price Per Unit</th>
+            <th class="col-sm-2">Active</th>
         </tr>
 
     @foreach (Product product in Model.Products)
@@ -40,6 +41,9 @@
             </td>
             <td>
                 @String.Format("{0:C}", product.PricePerUnit)
+            </td>
+            <td>
+                @product.Activated
             </td>
         </tr>
     }

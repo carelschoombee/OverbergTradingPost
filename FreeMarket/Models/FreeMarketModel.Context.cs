@@ -51,7 +51,6 @@ namespace FreeMarket.Models
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<SupplierLocation> SupplierLocations { get; set; }
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
-        public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<CourierReview> CourierReviews { get; set; }
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
         public virtual DbSet<Support> Supports { get; set; }
@@ -63,6 +62,7 @@ namespace FreeMarket.Models
         public virtual DbSet<PostalFee> PostalFees { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
+        public virtual DbSet<Custodian> Custodians { get; set; }
     
         public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<int> weight, Nullable<int> orderNumber)
         {
@@ -265,6 +265,24 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllProductCustodians_Result> GetAllProductCustodians()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductCustodians_Result>("GetAllProductCustodians");
+        }
+    
+        public virtual ObjectResult<GetCustodianInfo_Result> GetCustodianInfo(Nullable<int> productNumber, Nullable<int> supplierNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("productNumber", productNumber) :
+                new ObjectParameter("productNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("supplierNumber", supplierNumber) :
+                new ObjectParameter("supplierNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustodianInfo_Result>("GetCustodianInfo", productNumberParameter, supplierNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetAllProductsIncludingDeactivated_Result> GetAllProductsIncludingDeactivated()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsIncludingDeactivated_Result>("GetAllProductsIncludingDeactivated");
         }
     }
 }

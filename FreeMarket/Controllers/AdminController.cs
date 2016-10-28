@@ -214,6 +214,12 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult CustodianActivationIndex()
+        {
+            List<Custodian> collection = Custodian.GetAllCustodians();
+            return View(collection);
+        }
+
         public ActionResult PriceHistoryIndex()
         {
             List<PriceHistory> collection = PriceHistory.GetAllHistories();
@@ -230,7 +236,7 @@ namespace FreeMarket.Controllers
 
         public ActionResult ProductsIndex()
         {
-            ProductCollection collection = ProductCollection.GetAllProducts();
+            ProductCollection collection = ProductCollection.GetAllProductsIncludingDeactivated();
 
             return View(collection);
         }
@@ -414,6 +420,19 @@ namespace FreeMarket.Controllers
             return RedirectToAction("CustodiansIndex", "Admin");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCustodianActivationProcess(Custodian model)
+        {
+            if (ModelState.IsValid)
+            {
+                Custodian.SaveCustodian(model);
+            }
+
+            return RedirectToAction("CustodianActivationIndex", "Admin");
+        }
+
+
         public ActionResult ViewOrder(int orderNumber, string customerNumber)
         {
             if (string.IsNullOrEmpty(customerNumber) || orderNumber == 0)
@@ -464,6 +483,16 @@ namespace FreeMarket.Controllers
                 return RedirectToAction("CustodianIndex", "Admin");
 
             ProductCustodian custodian = ProductCustodian.GetSpecificCustodian(custodianNumber, supplierNumber, productNumber);
+
+            return View(custodian);
+        }
+
+        public ActionResult EditCustodianActivation(int custodianNumber)
+        {
+            if (custodianNumber == 0)
+                return RedirectToAction("CustodianActivationIndex", "Admin");
+
+            Custodian custodian = Custodian.GetSpecificCustodian(custodianNumber);
 
             return View(custodian);
         }

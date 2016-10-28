@@ -58,6 +58,36 @@ else
     </div>
 }
 
+@if (Model.CustodianInfo == null || Model.CustodianInfo.Count == 0)
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.SelectedCustodianNumber, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.DropDownListFor(model => model.SelectedCustodianNumber, Model.Custodians, "Choose", new { @class = "form-control" })
+        </div>
+    </div>
+}
+else
+{
+    <table class="table table-bordered-custom table-responsive">
+        <tr>
+            <th>Custodian Name</th>
+            <th>Quantity On Hand</th>
+        </tr>
+        @foreach (KeyValuePair<string, int> item in Model.CustodianInfo)
+        {
+            <tr>
+                <td>
+                    @item.Key
+                </td>
+                <td>
+                    @item.Value units
+                </td>
+            </tr>
+        }
+    </table>
+}
+
 <div class="form-group">
     @Html.LabelFor(m => m.PricePerUnit, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">

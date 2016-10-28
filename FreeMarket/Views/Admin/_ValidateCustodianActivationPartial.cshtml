@@ -1,0 +1,49 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#custodiansActivationForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'CustodianName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 100.',
+                                    max: 100
+                                },
+                            }
+                        },
+                        'CustodianTelephoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                            }
+                        },
+                        'CustodianCellphoneNumber': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 50.',
+                                    max: 50
+                                },
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

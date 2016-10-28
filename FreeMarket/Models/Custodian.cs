@@ -22,7 +22,7 @@ namespace FreeMarket.Models
         }
     
         public int CustodianNumber { get; set; }
-        public int LocationNumber { get; set; }
+        public Nullable<int> LocationNumber { get; set; }
         public string CustodianName { get; set; }
         public string CustodianTelephoneNumber { get; set; }
         public string CustodianCellphoneNumber { get; set; }
