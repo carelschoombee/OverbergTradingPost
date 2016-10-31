@@ -1,0 +1,64 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#postalFeesForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Weight': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        'Price': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        },
+                        'PerKgExtraPrice': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                numeric: {
+                                    message: 'The field must be a number.',
+                                    separator: ','
+                                },
+                                greaterThan: {
+                                    message: 'Must be a positive number greater than zero.',
+                                    value: 0,
+                                    inclusive: false
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

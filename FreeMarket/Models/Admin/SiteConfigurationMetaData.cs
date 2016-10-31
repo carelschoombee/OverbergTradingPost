@@ -25,12 +25,18 @@ namespace FreeMarket.Models
             }
         }
 
-        public static void SaveConfig(SiteConfiguration config)
+        public static SiteConfiguration SaveConfig(SiteConfiguration config)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                SiteConfiguration oldConfig = db.SiteConfigurations.AsNoTracking()
+                    .Where(c => c.Key == config.Key)
+                    .FirstOrDefault();
+
                 db.Entry(config).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
+
+                return oldConfig;
             }
         }
     }

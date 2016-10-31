@@ -272,6 +272,7 @@ namespace FreeMarket.Controllers
 
                 sessionCart.UpdateDeliveryDetails(model);
                 result = CustomerAddress.AddOrUpdateAddress(model, userId);
+                AuditUser.LogAudit(27, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
                 if (result.Result == FreeMarketResult.Success)
                     TempData["message"] = result.Message;
@@ -343,6 +344,7 @@ namespace FreeMarket.Controllers
             {
                 sessionCart.Order.OrderStatus = "Locked";
                 sessionCart.Save();
+                AuditUser.LogAudit(28, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
                 bool specialDelivery = false;
                 string reference = sessionCart.Order.OrderNumber.ToString();
@@ -471,6 +473,7 @@ namespace FreeMarket.Controllers
             string userId = User.Identity.GetUserId();
             ShoppingCart cart = GetCartFromSession(userId);
             cart.CancelOrder(userId);
+            AuditUser.LogAudit(29, string.Format("Order Number: {0}", cart.Order.OrderNumber), User.Identity.GetUserId());
 
             return RedirectToAction("Index", "Home");
         }

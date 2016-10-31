@@ -87,6 +87,32 @@ namespace FreeMarket.Models
                 db.Entry(custodian).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
+                SaveActivatedProducts(custodian);
+            }
+        }
+
+        public static void CreateCustodian(Custodian custodian)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Custodian custodianDB = db.Custodians
+                    .Where(c => c.CustodianNumber == custodian.CustodianNumber)
+                    .FirstOrDefault();
+
+                if (custodianDB == null)
+                {
+                    db.Custodians.Add(custodian);
+                    db.SaveChanges();
+
+                    SaveActivatedProducts(custodian);
+                }
+            }
+        }
+
+        public static void SaveActivatedProducts(Custodian custodian)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
                 foreach (Product product in custodian.ActivatedProducts.Products)
                 {
                     if (product.CustodianActivated)
@@ -141,6 +167,15 @@ namespace FreeMarket.Models
                     }
                 }
             }
+        }
+
+        public static Custodian GetNewCustodian()
+        {
+            Custodian custodian = new Custodian();
+
+            custodian.InitializeActivatedProducts();
+
+            return custodian;
         }
     }
 

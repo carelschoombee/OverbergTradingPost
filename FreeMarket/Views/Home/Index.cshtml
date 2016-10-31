@@ -26,22 +26,37 @@
         <a data-id="@Url.Action("TermsAndConditionsModal", "Home")"
            class="conditionClass freemarket-link"><span class="glyphicon glyphicon-paperclip" aria-hidden="true">&nbsp; Click here to read our terms and conditions.</span></a>
     </div>
-    <div class="center_div text-center">
-        <div class="row">
-            <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
-        </div>
-        <div class="row">
-            &nbsp;
-        </div>
-        <div class="row">
-            <a class="btn btn-primary" href="@Url.Action("DeliveryOptionsInfo", "Home")"><span class="glyphicon glyphicon-piggy-bank">&nbsp;&nbsp;Learn about our delivery options...</span></a>
-        </div>
-        <div class="row">
-            <a class="btn btn-primary" href="@Url.Action("About", "Home")"><span class="glyphicon glyphicon-book">&nbsp;&nbsp;Learn more about us...</span></a>
-        </div>
-        <div class="row">
-            <a class="btn btn-primary" href="@Url.Action("Contact", "Home")"><span class="glyphicon glyphicon-pencil">&nbsp;&nbsp;Contact us...</span></a>
-        </div>
+    <div class="row text-center">
+        <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
+    </div>
+    <div class="row">
+        &nbsp;
+    </div>
+    <div class="text-center">
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-primary" href="@Url.Action("DeliveryOptionsInfo", "Home")"><span class="glyphicon glyphicon-cog">&nbsp;&nbsp;Learn about our delivery options...</span></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-primary" href="@Url.Action("About", "Home")"><span class="glyphicon glyphicon-book">&nbsp;&nbsp;Learn more about us...</span></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-primary" href="@Url.Action("Contact", "Home")"><span class="glyphicon glyphicon-pencil">&nbsp;&nbsp;Contact us...</span></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
     </div>
     
 </div>

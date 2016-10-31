@@ -1,17 +1,24 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FreeMarket.Models
 {
     [MetadataType(typeof(TimeFreightCourierFeeReferenceMetaData))]
     public partial class TimeFreightCourierFeeReference
     {
-        public static void SaveModel(TimeFreightCourierFeeReference model)
+        public static TimeFreightCourierFeeReference SaveModel(TimeFreightCourierFeeReference model)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                TimeFreightCourierFeeReference oldConfig = db.TimeFreightCourierFeeReferences.AsNoTracking()
+                    .Where(c => c.DeliveryCostID == model.DeliveryCostID)
+                    .FirstOrDefault();
+
                 db.Entry(model).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
+
+                return oldConfig;
             }
         }
     }

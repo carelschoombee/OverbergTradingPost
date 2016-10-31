@@ -34,10 +34,50 @@
                     </td>
                 </tr>
             </table>
-            @if (Model.Couriers != null && Model.Couriers.Count > 0)
+            @if (Model.SpecialDelivery)
             {
-                if (Model.SpecialDelivery)
+                if (Model.Cart.Order.DeliveryType == "PostOffice")
                 {
+                <table class="table table-bordered-custom table-responsive">
+                    <tr>
+                        <td colspan="2">
+                            Your order will be posted to you
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Courier Name:
+                        </th>
+                        <td>
+                            Schoombee and Son Delivery (deliver within 48 hours)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Email Address:
+                        </th>
+                        <td>
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;info@schoombeeandson.co.za
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Contact Number:
+                        </th>
+                        <td>
+                            <span class="glyphicon glyphicon-phone"></span>&nbsp;083 680 8780
+                        </td>
+                    </tr>
+                </table>
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
                     <table class="table table-bordered-custom table-responsive">
                         <tr>
                             <td colspan="2">
@@ -49,7 +89,7 @@
                                 Courier Name:
                             </th>
                             <td>
-                                Schoombee and Son Delivery (deliver within 48 hours)
+                                @Model.Courier.CourierName
                             </td>
                         </tr>
                         <tr>
@@ -57,7 +97,7 @@
                                 Email Address:
                             </th>
                             <td>
-                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;info@schoombeeandson.co.za
+                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
                             </td>
                         </tr>
                         <tr>
@@ -65,57 +105,12 @@
                                 Contact Number:
                             </th>
                             <td>
-                                <span class="glyphicon glyphicon-phone"></span>&nbsp;083 680 8780
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
                             </td>
                         </tr>
                     </table>
-                }
-                else
-                {
 
-                    if (Model.Couriers.Count > 1)
-                    {
-                        <div>Please note that we have assigned more than one courier to deliver your order.</div>
-                    }
-
-                    foreach (Courier courier in Model.Couriers)
-                    {
-                        <table class="table table-bordered-custom table-responsive">
-                            <tr>
-                                <td colspan="2">
-                                    Courier/Shipping Information
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Courier Name:
-                                </th>
-                                <td>
-                                    @courier.CourierName
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Email Address:
-                                </th>
-                                <td>
-                                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@courier.MainContactEmailAddress
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Contact Number:
-                                </th>
-                                <td>
-                                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@courier.MainContactTelephoneNumber
-                                </td>
-                            </tr>
-                        </table>
-                    }
-
-                }
             }
-
         </div>
         <div class="col-sm-6">
             <table class="table table-bordered-custom table-responsive">

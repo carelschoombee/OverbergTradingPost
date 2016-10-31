@@ -28,6 +28,13 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        public ActionResult EditDepartment(int departmentNumber)
+        {
+            Department model = Department.GetDepartment(departmentNumber);
+
+            return View(model);
+        }
+
         public ActionResult ViewCustomer(string customerNumber)
         {
             AspNetUserCustomer model = new AspNetUserCustomer(customerNumber, true);
@@ -123,6 +130,8 @@ namespace FreeMarket.Controllers
                             {
                                 OrderHeader.SendRatingEmail(order.CustomerNumber, order.OrderNumber);
                             }
+
+                            AuditUser.LogAudit(10, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
                         }
                     }
                 }
@@ -151,6 +160,8 @@ namespace FreeMarket.Controllers
                         {
                             order.OrderStatus = "Refunded";
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+
+                            AuditUser.LogAudit(11, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
                         }
                     }
 
@@ -176,6 +187,7 @@ namespace FreeMarket.Controllers
                     db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
                     OrderHeader.SendRefundEmail(order.CustomerNumber, order.OrderNumber);
+                    AuditUser.LogAudit(12, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
                 }
 
                 db.SaveChanges();
@@ -255,6 +267,20 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult PostOfficeIndex()
+        {
+            PostOfficeViewModel model = PostOfficeViewModel.GetModel();
+
+            return View(model);
+        }
+
+        public ActionResult DepartmentsIndex()
+        {
+            List<Department> model = Department.GetModel();
+
+            return View(model);
+        }
+
         public ActionResult SpecialsIndex()
         {
             SpecialsViewModel model = SpecialsViewModel.GetModel();
@@ -283,11 +309,25 @@ namespace FreeMarket.Controllers
             return View(special);
         }
 
+        public ActionResult CreateDepartment()
+        {
+            Department department = Department.GetNewDepartment();
+
+            return View(department);
+        }
+
         public ActionResult CreateSupplier()
         {
             Supplier supplier = Supplier.GetNewSupplier();
 
             return View(supplier);
+        }
+
+        public ActionResult CreateCustodian()
+        {
+            Custodian custodian = Custodian.GetNewCustodian();
+
+            return View(custodian);
         }
 
         public ActionResult DownloadReport()
@@ -365,6 +405,8 @@ namespace FreeMarket.Controllers
                 if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
 
+                AuditUser.LogAudit(13, string.Format("Product Description: {0}", product.Description));
+
                 return RedirectToAction("ProductsIndex", "Admin");
             }
 
@@ -381,10 +423,28 @@ namespace FreeMarket.Controllers
             {
                 Supplier.CreateNewSupplier(supplier);
 
+                AuditUser.LogAudit(14, string.Format("Supplier Name: {0}", supplier.SupplierName), User.Identity.GetUserId());
+
                 return RedirectToAction("SuppliersIndex", "Admin");
             }
 
             return View("CreateSupplier", supplier);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateDepartmentProcess(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                Department.CreateNewDepartment(department);
+
+                AuditUser.LogAudit(31, string.Format("Department Name: {0}", department.DepartmentName), User.Identity.GetUserId());
+
+                return RedirectToAction("DepartmentsIndex", "Admin");
+            }
+
+            return View("CreateDepartment", department);
         }
 
         [HttpPost]
@@ -394,6 +454,8 @@ namespace FreeMarket.Controllers
             if (ModelState.IsValid)
             {
                 Special.CreateNewSpecial(special);
+
+                AuditUser.LogAudit(15, string.Format("Special postal code range: {0} - {1}", special.SpecialPostalCodeRangeStart, special.SpecialPostalCodeRangeEnd), User.Identity.GetUserId());
 
                 return RedirectToAction("SpecialsIndex", "Admin");
             }
@@ -415,6 +477,8 @@ namespace FreeMarket.Controllers
                 {
                     ProductCustodian.RemoveStock(model.ProductNumber, model.SupplierNumber, model.CustodianNumber, model.QuantityChange);
                 }
+
+                AuditUser.LogAudit(16, string.Format("Product Number: {0}. Supplier Number: {1}. Custodian Number: {2}", model.ProductNumber, model.SupplierNumber, model.CustodianNumber), User.Identity.GetUserId());
             }
 
             return RedirectToAction("CustodiansIndex", "Admin");
@@ -427,6 +491,22 @@ namespace FreeMarket.Controllers
             if (ModelState.IsValid)
             {
                 Custodian.SaveCustodian(model);
+
+                AuditUser.LogAudit(17, string.Format("Custodian Name: {0}", model.CustodianName), User.Identity.GetUserId());
+            }
+
+            return RedirectToAction("CustodianActivationIndex", "Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCustodianProcess(Custodian model)
+        {
+            if (ModelState.IsValid)
+            {
+                Custodian.CreateCustodian(model);
+
+                AuditUser.LogAudit(18, string.Format("Custodian Name: {0}", model.CustodianName), User.Identity.GetUserId());
             }
 
             return RedirectToAction("CustodianActivationIndex", "Admin");
@@ -465,6 +545,16 @@ namespace FreeMarket.Controllers
             Special special = Special.GetSpecial(specialID);
 
             return View(special);
+        }
+
+        public ActionResult EditPostOffice(int Id)
+        {
+            if (Id == 0)
+                return RedirectToAction("PostOfficeIndex", "Admin");
+
+            PostalFee postalFee = PostalFee.GetPostalFee(Id);
+
+            return View(postalFee);
         }
 
         public ActionResult EditSiteConfig(int siteConfigNumber)
@@ -633,6 +723,8 @@ namespace FreeMarket.Controllers
 
                     await userManager.UpdateAsync(user);
 
+                    AuditUser.LogAudit(19, string.Format("User Name: {0}. User ID {1}.", user.Name, user.Id));
+
                     return RedirectToAction("Index", "Admin");
                 }
                 else
@@ -664,6 +756,8 @@ namespace FreeMarket.Controllers
                 if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
 
+                AuditUser.LogAudit(20, string.Format("Product Description: {0}", product.Description), User.Identity.GetUserId());
+
                 return RedirectToAction("ProductsIndex", "Admin");
             }
 
@@ -678,7 +772,12 @@ namespace FreeMarket.Controllers
         {
             if (ModelState.IsValid)
             {
-                SiteConfiguration.SaveConfig(config);
+                SiteConfiguration oldConfig = SiteConfiguration.SaveConfig(config);
+
+                if (oldConfig != null)
+                    AuditUser.LogAudit(21, string.Format("Key : {0}. Old Value: {1}. New Value {2}.", config.Key, oldConfig.Value, config.Value), User.Identity.GetUserId());
+                else
+                    AuditUser.LogAudit(21, string.Format("Key : {0}", config.Key), User.Identity.GetUserId());
 
                 return RedirectToAction("SiteConfigIndex", "Admin");
             }
@@ -692,7 +791,12 @@ namespace FreeMarket.Controllers
         {
             if (ModelState.IsValid)
             {
-                TimeFreightCourierFeeReference.SaveModel(model);
+                TimeFreightCourierFeeReference oldValue = TimeFreightCourierFeeReference.SaveModel(model);
+
+                if (oldValue != null)
+                    AuditUser.LogAudit(22, string.Format("Entry: {0}. Old Fee: {1}. New Fee: {2}", model.DeliveryCostID, oldValue.DeliveryFee, model.DeliveryFee), User.Identity.GetUserId());
+                else
+                    AuditUser.LogAudit(22, string.Format("Entry: {0}.", model.DeliveryCostID), User.Identity.GetUserId());
 
                 return RedirectToAction("TimeFreightIndex", "Admin");
             }
@@ -706,7 +810,12 @@ namespace FreeMarket.Controllers
         {
             if (ModelState.IsValid)
             {
-                Special.SaveModel(model);
+                Special oldSpecial = Special.SaveModel(model);
+
+                if (oldSpecial != null)
+                    AuditUser.LogAudit(23, string.Format("Entry: {0}. Old Fee: {1}. New Fee: {2}", model.SpecialID, oldSpecial.DeliveryFee, model.DeliveryFee), User.Identity.GetUserId());
+                else
+                    AuditUser.LogAudit(23, string.Format("Entry: {0}.", model.SpecialID), User.Identity.GetUserId());
 
                 return RedirectToAction("SpecialsIndex", "Admin");
             }
@@ -716,11 +825,33 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult EditPostalFeeProcess(PostalFee model)
+        {
+            if (ModelState.IsValid)
+            {
+                PostalFee oldPostalFee = PostalFee.SaveModel(model);
+
+                if (oldPostalFee != null)
+                    AuditUser.LogAudit(23, string.Format("Entry: {0}. Old Price: {1}. Old PerKGExtraRate: {2}. New Price: {3}. New PerKGExtraRate {4}.",
+                        model.Id, oldPostalFee.Price, oldPostalFee.PerKgExtraPrice, model.Price, model.PerKgExtraPrice), User.Identity.GetUserId());
+                else
+                    AuditUser.LogAudit(23, string.Format("Entry: {0}.", model.Id), User.Identity.GetUserId());
+
+                return RedirectToAction("PostOfficeIndex", "Admin");
+            }
+
+            return View("EditPostOffice", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditSupplierProcess(Supplier supplier)
         {
             if (ModelState.IsValid)
             {
                 Supplier.SaveSupplier(supplier);
+
+                AuditUser.LogAudit(24, string.Format("Supplier Name: {0}", supplier.SupplierName), User.Identity.GetUserId());
 
                 return RedirectToAction("SuppliersIndex", "Admin");
             }
@@ -736,10 +867,28 @@ namespace FreeMarket.Controllers
             {
                 Courier.SaveCourier(courier);
 
+                AuditUser.LogAudit(25, string.Format("Courier Name: {0}", courier.CourierName), User.Identity.GetUserId());
+
                 return RedirectToAction("CouriersIndex", "Admin");
             }
 
             return View("EditCourier", courier);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDepartmentProcess(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                Department.SaveModel(department);
+
+                AuditUser.LogAudit(30, string.Format("Department Name: {0}", department.DepartmentName), User.Identity.GetUserId());
+
+                return RedirectToAction("DepartmentsIndex", "Admin");
+            }
+
+            return View("EditDepartment", department);
         }
 
         [HttpPost]
@@ -795,6 +944,8 @@ namespace FreeMarket.Controllers
                 }
 
                 db.SaveChanges();
+
+                AuditUser.LogAudit(26, string.Format("Review ID: {0}. Approved?: {1}", reviewId, courierReview.Approved), User.Identity.GetUserId());
             }
 
             RatingsInfo info = new RatingsInfo();

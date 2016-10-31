@@ -241,6 +241,8 @@
     <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
     <Compile Include="Models\Admin\CouriersCollection.cs" />
     <Compile Include="Models\Admin\CustodianMetaData.cs" />
+    <Compile Include="Models\Admin\DepartmentMetaData.cs" />
+    <Compile Include="Models\Admin\PostOfficeViewModel.cs" />
     <Compile Include="Models\Admin\ProductCustodianMetaData.cs" />
     <Compile Include="Models\Admin\Dashboard.cs" />
     <Compile Include="Models\Admin\DownloadReportViewModel.cs" />
@@ -249,6 +251,7 @@
     <Compile Include="Models\Admin\SalesInfo.cs" />
     <Compile Include="Models\Admin\SiteConfigurationMetaData.cs" />
     <Compile Include="Models\Admin\SMSHelper.cs" />
+    <Compile Include="Models\Admin\PostalFeeMetaData.cs" />
     <Compile Include="Models\Admin\SpecialsMetaData.cs" />
     <Compile Include="Models\Admin\SpecialsViewModel.cs" />
     <Compile Include="Models\Admin\TimeFreightCourierFeeReferenceMetaData.cs" />
@@ -742,6 +745,16 @@
     <Content Include="Views\Admin\EditCustodianActivation.cshtml" />
     <Content Include="Views\Admin\_CustodianActivationPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateCustodianActivationPartial.cshtml" />
+    <Content Include="Views\Admin\CreateCustodian.cshtml" />
+    <Content Include="Views\Admin\PostOfficeIndex.cshtml" />
+    <Content Include="Views\Admin\EditPostOffice.cshtml" />
+    <Content Include="Views\Admin\_PostOfficePartial.cshtml" />
+    <Content Include="Views\Admin\_ValidatePostOfficePartial.cshtml" />
+    <Content Include="Views\Admin\DepartmentsIndex.cshtml" />
+    <Content Include="Views\Admin\EditDepartment.cshtml" />
+    <Content Include="Views\Admin\_DepartmentPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateDepartmentPartial.cshtml" />
+    <Content Include="Views\Admin\CreateDepartment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

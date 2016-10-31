@@ -1,0 +1,27 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#departmentForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {                        
+                        'DepartmentName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'The maximum string length is 200.',
+                                        max: 200
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

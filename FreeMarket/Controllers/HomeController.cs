@@ -1,4 +1,6 @@
 ﻿using FreeMarket.Models;
+using Microsoft.AspNet.Identity;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -9,6 +11,22 @@ namespace FreeMarket.Controllers
     {
         public ActionResult Index()
         {
+            if (User.Identity.Name != null)
+            {
+                if (User.Identity.Name == ConfigurationManager.AppSettings["developerIdentity"])
+                {
+
+                }
+                else
+                {
+                    AuditUser.LogAudit(32, "Hit", User.Identity.GetUserId());
+                }
+            }
+            else
+            {
+                AuditUser.LogAudit(32, "Hit");
+            }
+
             return View();
         }
 

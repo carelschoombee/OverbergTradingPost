@@ -1,0 +1,49 @@
+﻿@using FreeMarket.Models
+@model PostOfficeViewModel
+@{
+    ViewBag.Title = "Post Office Fees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Post Office Fees</h2>
+<hr />
+
+<br />
+
+@if (Model.PostOfficeFees != null && Model.PostOfficeFees.Count > 0)
+{
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Weight</th>
+            <th class="col-sm-1">Base Price</th>
+            <th class="col-sm-1">Price Extra per KG</th>
+        </tr>
+
+    @foreach (PostalFee item in Model.PostOfficeFees)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditPostOffice", new { Id = item.Id }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @item.Weight
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Price)
+            </td>
+            <td>
+                @string.Format("{0:C}", item.PerKgExtraPrice)
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+

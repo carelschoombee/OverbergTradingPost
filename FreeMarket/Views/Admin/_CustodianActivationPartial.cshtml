@@ -4,9 +4,18 @@
 <div class="form-group">
     @Html.LabelFor(m => m.CustodianName, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">
-        @Html.DisplayFor(m => m.CustodianName)
+        @if (!string.IsNullOrEmpty(Model.CustodianName))
+        {
+            @Html.DisplayFor(m => m.CustodianName)
+            @Html.HiddenFor(m => m.CustodianName)
+        }
+        else
+        {
+            @Html.TextBoxFor(m => m.CustodianName, new { @class = "form-control" })
+        }
+
         @Html.HiddenFor(m => m.CustodianNumber)
-        @Html.HiddenFor(m => m.CustodianName)
+        
     </div>
 </div>
 

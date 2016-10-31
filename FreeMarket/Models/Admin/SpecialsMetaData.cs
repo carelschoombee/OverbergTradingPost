@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace FreeMarket.Models
 {
@@ -22,13 +23,19 @@ namespace FreeMarket.Models
             }
         }
 
-        public static void SaveModel(Special model)
+        public static Special SaveModel(Special model)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                Special oldConfig = db.Specials.AsNoTracking()
+                    .Where(c => c.SpecialID == model.SpecialID)
+                    .FirstOrDefault();
+
                 model.DateModified = DateTime.Now;
                 db.Entry(model).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
+
+                return oldConfig;
             }
         }
 

@@ -1,0 +1,47 @@
+﻿@using FreeMarket.Models
+@model List<Department>
+@{
+    ViewBag.Title = "Departments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Departments</h2>
+<hr />
+
+<br />
+
+@if (Model != null && Model.Count > 0)
+{
+    @Html.ActionLink("Create New", "CreateDepartment", null, new { @class = "freemarket-link" })
+
+    <table class="table table-bordered-custom table-responsive">
+
+        <tr>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Department Number</th>
+            <th class="col-sm-1">Department Name</th>
+        </tr>
+
+    @foreach (Department item in Model)
+    {
+        <tr class="well">
+            <td class="text-center">
+                @Html.ActionLink("Edit", "EditDepartment", new { departmentNumber = item.DepartmentNumber }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @item.DepartmentNumber
+            </td>
+            <td>
+                @item.DepartmentName
+            </td>
+        </tr>
+    }
+            
+    </table>
+}
+
+
+
+
+
