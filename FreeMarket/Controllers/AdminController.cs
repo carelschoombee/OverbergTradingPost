@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -118,6 +119,7 @@ namespace FreeMarket.Controllers
                         if (order != null)
                         {
                             order.OrderStatus = "Complete";
+                            order.OrderDateClosed = DateTime.Now;
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
 

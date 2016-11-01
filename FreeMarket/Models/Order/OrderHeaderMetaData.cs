@@ -104,7 +104,20 @@ namespace FreeMarket.Models
 
         public void UpdateDeliveryDetails(SaveCartViewModel model)
         {
-            DeliveryDate = model.prefDeliveryDateTime;
+            if (model.prefDeliveryDateTime == null)
+            {
+                if (model.specialDeliveryDateTime != null)
+                {
+                    DeliveryDate = model.specialDeliveryDateTime;
+                }
+            }
+            else if (model.specialDeliveryDateTime == null)
+            {
+                if (model.prefDeliveryDateTime != null)
+                {
+                    DeliveryDate = model.prefDeliveryDateTime;
+                }
+            }
 
             DeliveryAddress = model.Address.ToString();
             DeliveryAddressCity = model.Address.AddressCity;
@@ -607,6 +620,21 @@ namespace FreeMarket.Models
             return nextFriday;
         }
 
+        public static DateTime GetSpecialSuggestedDeliveryTime()
+        {
+            DateTime today = DateTime.Today;
+            DateTime suggestedDate = today.AddDays(2);
+
+            while (suggestedDate.DayOfWeek == DayOfWeek.Saturday || suggestedDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                suggestedDate = suggestedDate.AddDays(1);
+            }
+
+            suggestedDate = suggestedDate.AddHours(12);
+
+            return suggestedDate;
+        }
+
         public static int GetDaysToMinDate()
         {
             DateTime today = DateTime.Today;
@@ -616,7 +644,6 @@ namespace FreeMarket.Models
             if (today.DayOfWeek == DayOfWeek.Tuesday)
             {
                 today = today.AddDays(1);
-                daysTillMinDate++;
             }
 
             if (today.DayOfWeek == DayOfWeek.Wednesday)

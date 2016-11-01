@@ -33,17 +33,34 @@ namespace FreeMarket.Models
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                reviews = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
-                    .OrderByDescending(c => c.StarRating)
-                    .Take(size)
-                    .ToList();
+                if (size == 0)
+                {
+                    reviews = db.ProductReviews
+                            .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
+                            .OrderByDescending(c => c.StarRating)
+                            .ToList();
+                }
+                else
+                {
+                    reviews = db.ProductReviews
+                                        .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
+                                        .OrderByDescending(c => c.StarRating)
+                                        .Take(size)
+                                        .ToList();
+                }
             }
 
             collection.Reviews = reviews;
             collection.ProductNumber = productNumber;
             collection.SupplierNumber = supplierNumber;
-            collection.PageSize = size;
+            if (size == 0)
+            {
+                collection.PageSize = collection.Reviews.Count;
+            }
+            else
+            {
+                collection.PageSize = size;
+            }
 
             return collection;
         }

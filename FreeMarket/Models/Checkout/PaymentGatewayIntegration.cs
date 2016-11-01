@@ -52,7 +52,7 @@ namespace FreeMarket.Models
 
         public void Execute()
         {
-            CreateTestMessage1();
+            CreateMessage1();
 
             bool checksumPassed = false;
             string response1 = SendMessage(Message1);

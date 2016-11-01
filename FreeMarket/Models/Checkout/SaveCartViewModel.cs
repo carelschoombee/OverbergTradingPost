@@ -12,6 +12,9 @@ namespace FreeMarket.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public Nullable<DateTime> prefDeliveryDateTime { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        public Nullable<DateTime> specialDeliveryDateTime { get; set; }
+
         [DisplayName("Delivery Address")]
         public int SelectedAddress { get; set; }
 
@@ -91,10 +94,27 @@ namespace FreeMarket.Models
                 if (order.DeliveryDate == null)
                 {
                     prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
+                    specialDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
                 }
                 else
                 {
-                    prefDeliveryDateTime = order.DeliveryDate;
+                    if (order.DeliveryDate < OrderHeader.GetSuggestedDeliveryTime())
+                    {
+                        prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
+                    }
+                    else
+                    {
+                        prefDeliveryDateTime = order.DeliveryDate;
+                    }
+
+                    if (order.DeliveryDate < OrderHeader.GetSpecialSuggestedDeliveryTime())
+                    {
+                        specialDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
+                    }
+                    else
+                    {
+                        specialDeliveryDateTime = order.DeliveryDate;
+                    }
                 }
 
                 AddressName = AddressNameOptions

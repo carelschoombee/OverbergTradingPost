@@ -18,6 +18,7 @@ namespace FreeMarket.Models
         public int ReviewPageSize { get; set; }
         public int CustodianQuantityOnHand { get; set; }
         public int CustodianNumber { get; set; }
+        public ProductReviewsCollection Reviews { get; set; }
 
         public void InitializeDefault()
         {

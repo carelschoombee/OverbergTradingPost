@@ -1,4 +1,5 @@
 ﻿using FreeMarket.Infrastructure;
+using System;
 using System.ComponentModel;
 using System.Linq;
 
@@ -11,6 +12,8 @@ namespace FreeMarket.Models
         public string Checksum { get; set; }
         public bool SpecialDelivery { get; set; }
         public Support Support { get; set; }
+
+        public DateTime MinDispatchDate { get; set; }
 
         [EnforceTrue(ErrorMessage = "You must accept the terms and conditions before you can place your order.")]
         [DisplayName("Terms and Conditions")]
@@ -29,6 +32,7 @@ namespace FreeMarket.Models
             Pay_Request_Id = payRequestId;
             Checksum = checksum;
             SpecialDelivery = specialDelivery;
+            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -40,6 +44,7 @@ namespace FreeMarket.Models
         public ConfirmOrderViewModel(ShoppingCart cart)
         {
             Cart = cart;
+            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {

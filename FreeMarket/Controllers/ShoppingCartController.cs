@@ -70,6 +70,20 @@ namespace FreeMarket.Controllers
             return PartialView("_ViewProductModal", model);
         }
 
+        public ActionResult ViewProduct(int id, int supplierNumber, int quantity)
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart cart = GetCartFromSession(userId);
+
+            ViewProductViewModel model = new ViewProductViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
+            if (model == null)
+                return RedirectToAction("Index", "Product");
+
+            model.Reviews = ProductReviewsCollection.GetReviewsOnly(id, supplierNumber, 0);
+
+            return View("ViewProduct", model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(ViewProductViewModel viewModel)
@@ -90,7 +104,15 @@ namespace FreeMarket.Controllers
                 if (cart.Order.OrderStatus == "Locked")
                 {
                     TempData["errorMessage"] = "Your cart is locked because you are in the process of checking out. Open your cart to complete or cancel the checkout process.";
-                    return JavaScript("window.location = window.location.href;");
+
+                    if (Request.IsAjaxRequest())
+                    {
+                        return JavaScript("window.location = window.location.href;");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Cart", "ShoppingCart");
+                    }
                 }
 
                 // CheckQuantity
@@ -98,7 +120,15 @@ namespace FreeMarket.Controllers
                 {
                     viewModel.SetInstances(viewModel.ProductNumber, viewModel.SupplierNumber);
 
-                    return PartialView("_CourierSelectionModal", viewModel);
+                    if (Request.IsAjaxRequest())
+                    {
+                        return PartialView("_ViewProductModal", viewModel);
+                    }
+                    else
+                    {
+                        viewModel.Reviews = ProductReviewsCollection.GetReviewsOnly(viewModel.ProductNumber, viewModel.SupplierNumber, 0);
+                        return View("ViewProduct", viewModel);
+                    }
                 }
 
                 FreeMarketObject result;
@@ -112,7 +142,15 @@ namespace FreeMarket.Controllers
                     if (!string.IsNullOrEmpty(result.Message))
                         TempData["errorMessage"] = result.Message;
 
-                return JavaScript("window.location = window.location.href;");
+                if (Request.IsAjaxRequest())
+                {
+                    return JavaScript("window.location = window.location.href;");
+                }
+                else
+                {
+                    viewModel.Reviews = ProductReviewsCollection.GetReviewsOnly(viewModel.ProductNumber, viewModel.SupplierNumber, 0);
+                    return RedirectToAction("Cart", "ShoppingCart");
+                }
             }
             // Validation Error
             else
@@ -120,7 +158,15 @@ namespace FreeMarket.Controllers
                 // Prepare
                 viewModel.SetInstances(viewModel.ProductNumber, viewModel.SupplierNumber);
 
-                return PartialView("_CourierSelectionModal", viewModel);
+                if (Request.IsAjaxRequest())
+                {
+                    return PartialView("_ViewProductModal", viewModel);
+                }
+                else
+                {
+                    viewModel.Reviews = ProductReviewsCollection.GetReviewsOnly(viewModel.ProductNumber, viewModel.SupplierNumber, 0);
+                    return View("ViewProduct", viewModel);
+                }
             }
         }
 
@@ -244,6 +290,30 @@ namespace FreeMarket.Controllers
         }
 
         [HttpPost]
+        public int IsSpecialDelivery(string id, string selectedDeliveryType)
+        {
+            int specialDelivery = 0;
+
+            //postalcode
+            if (!string.IsNullOrEmpty(id) && id.Length == 4)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    try
+                    {
+                        specialDelivery = (int)db.ValidateSpecialDeliveryCode(int.Parse(id)).FirstOrDefault();
+                    }
+                    catch (Exception e)
+                    {
+                        return 2;
+                    }
+                }
+            }
+
+            return specialDelivery;
+        }
+
+        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult UpdateDeliveryDetails(SaveCartViewModel model)
@@ -258,12 +328,51 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime &&
-                    model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
-                    model.prefDeliveryDateTime.Value > minDate &&
-                    (model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
-                     model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
-                     model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
+                try
+                {
+                    int postalCode = int.Parse(model.Address.AddressPostalCode);
+
+                    using (FreeMarketEntities db = new FreeMarketEntities())
+                    {
+                        int specialDeliveryDate = (int)db.ValidateSpecialDeliveryCode(postalCode).FirstOrDefault();
+
+                        if (specialDeliveryDate == 0)
+                        {
+                            if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime &&
+                                   model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
+                                   model.prefDeliveryDateTime.Value > minDate &&
+                                   (model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
+                                    model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
+                                    model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
+                            {
+                                model.SetAddressNameOptions(userId, model.SelectedAddress);
+
+                                return View("CheckoutDeliveryDetails", model);
+                            }
+
+                            model.specialDeliveryDateTime = null;
+                        }
+                        else if (specialDeliveryDate == 1)
+                        {
+                            if (!(model.specialDeliveryDateTime.Value.TimeOfDay > startTime &&
+                                   model.specialDeliveryDateTime.Value.TimeOfDay < endTime &&
+                                   model.specialDeliveryDateTime.Value > DateTime.Today &&
+                                   (model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Monday ||
+                                   model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Tuesday ||
+                                   model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
+                                    model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
+                                    model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
+                            {
+                                model.SetAddressNameOptions(userId, model.SelectedAddress);
+
+                                return View("CheckoutDeliveryDetails", model);
+                            }
+
+                            model.prefDeliveryDateTime = null;
+                        }
+                    }
+                }
+                catch (Exception e)
                 {
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 
@@ -271,7 +380,12 @@ namespace FreeMarket.Controllers
                 }
 
                 sessionCart.UpdateDeliveryDetails(model);
-                result = CustomerAddress.AddOrUpdateAddress(model, userId);
+                result = new FreeMarketObject { Result = FreeMarketResult.NoResult };
+                if (model.AddressName != "Current")
+                {
+                    result = CustomerAddress.AddOrUpdateAddress(model, userId);
+                }
+
                 AuditUser.LogAudit(27, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
                 if (result.Result == FreeMarketResult.Success)
@@ -280,13 +394,9 @@ namespace FreeMarket.Controllers
                     TempData["errorMessage"] = result.Message;
 
                 if (Request.IsAjaxRequest())
-                {
                     return JavaScript("window.location.reload();");
-                }
                 else
-                {
                     return RedirectToAction("ConfirmShoppingCart", "ShoppingCart");
-                }
             }
 
             model.SetAddressNameOptions(userId, model.SelectedAddress);

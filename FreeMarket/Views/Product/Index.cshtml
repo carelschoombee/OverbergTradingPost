@@ -13,6 +13,11 @@
         </div>
         @Html.Action("GetAllProducts")
     </div>
+    <div class="col-sm-12">
+        <div class="row text-center">
+            @Html.ActionLink("Back to Home", "Index", "Home", null,  new { @class = "freemarket-link" })
+        </div>
+    </div>
 </div>
 
 <div id="loadingDiv" style="display:none;"></div>

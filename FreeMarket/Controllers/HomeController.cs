@@ -69,5 +69,22 @@ namespace FreeMarket.Controllers
 
             return PartialView("_TermsAndConditionsModal", terms);
         }
+
+        public ActionResult TermsAndConditions()
+        {
+            string terms = "";
+            TermsAndConditionsViewModel model = new TermsAndConditionsViewModel();
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                SiteConfiguration temp = db.SiteConfigurations
+                    .Where(c => c.Key == "TermsAndConditions")
+                    .FirstOrDefault();
+
+                if (temp != null)
+                    model.Content = temp.Value;
+            }
+
+            return View("TermsAndConditions", model);
+        }
     }
 }

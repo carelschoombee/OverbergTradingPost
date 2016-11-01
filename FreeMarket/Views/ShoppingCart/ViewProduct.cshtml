@@ -1,0 +1,112 @@
+﻿@using FreeMarket.Models
+@model ViewProductViewModel
+
+@using (Html.BeginForm("AddToCart", "ShoppingCart", FormMethod.Post, new { @id = "editForm" }))
+{
+    @Html.AntiForgeryToken()
+
+        <div id="parent" class="form-horizontal well well-modal center_div">
+            <hr />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <th class="col-sm-6 text-center">Image</th>
+                    <th class="col-sm-6 text-center">Description</th>
+                </tr>
+                <tr>
+                    <td rowspan="4">
+                        <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                    </td>
+                    <td>
+                        <table class="table table-bordered-custom table-responsive well">
+                            <tr>
+                                <td class="text-center">
+                                    <div><u>Rest of RSA</u></div>
+                                    <div style="font-size:medium; font-weight:600;">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)</div>
+                                    <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
+                                </td>
+                                <td class="text-center">
+                                    <div><u>Struisbaai</u></div>
+                                    <div style="font-size:medium; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.SpecialPricePerUnit) </div>
+                                    <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">Supplied by: <span class="text-info">@Model.ProductInstance.SupplierName</span></td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-5" })
+                            <div class="col-md-6">
+                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @style = "width:125px", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="CourierContainer">
+
+                            @Html.Partial("_CourierData", Model)
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div>
+                <i>@Model.ProductInstance.LongDescription</i>
+            </div>
+
+            <br />
+
+            <div>
+                <strong>Average Rating:</strong>
+                @Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber }) / 3
+            </div>
+
+            <div id="ReviewsContainer">
+                <table class="table table-responsive">
+                    @if (Model.Reviews != null && Model.Reviews.Reviews.Count > 0)
+                    {
+                        foreach (ProductReview review in Model.Reviews.Reviews)
+                        {
+                            string formattedDate = review.Date.HasValue
+                                    ? review.Date.Value.ToLongDateString()
+                                    : "<not available>";
+                            <tr>
+                                <td><strong>On @formattedDate&nbsp;<span class="text-info">@review.Author</span> wrote:</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><label class="control-label">Quality:&nbsp;</label>@review.StarRating / 3</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><label class="control-label">Price:&nbsp;</label>@review.PriceRating / 3</td>
+                            </tr>
+                            <tr>
+                                <td style="white-space :pre-line" class="text-right">@review.ReviewContent</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+            <div>
+                @Html.HiddenFor(model => Model.ProductNumber)
+                @Html.HiddenFor(model => Model.SupplierNumber)
+                @Html.HiddenFor(model => Model.CustodianQuantityOnHand)
+                @Html.HiddenFor(model => Model.CustodianNumber)
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">Add to Cart</span></button>
+            </div>
+        </div>
+}

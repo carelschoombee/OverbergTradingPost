@@ -399,10 +399,16 @@ namespace FreeMarket.Controllers
 
                         if (review != null)
                         {
-                            review.Date = DateTime.Now;
-                            review.PriceRating = p.PriceRating;
-                            review.ReviewContent = p.ProductReviewText;
-                            review.StarRating = (short)p.ProductRating;
+                            if (review.PriceRating != p.PriceRating ||
+                                review.ReviewContent != p.ProductReviewText ||
+                                review.StarRating != (short)p.ProductRating)
+                            {
+                                review.Date = DateTime.Now;
+                                review.PriceRating = p.PriceRating;
+                                review.ReviewContent = p.ProductReviewText;
+                                review.StarRating = (short)p.ProductRating;
+                                review.Approved = null;
+                            }
 
                             db.Entry(review).State = System.Data.Entity.EntityState.Modified;
                         }

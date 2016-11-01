@@ -13,6 +13,7 @@ namespace FreeMarket.Models
         public Courier Courier { get; set; }
         public Support Support { get; set; }
         public bool SpecialDelivery { get; set; }
+        public DateTime MinDispatchDate { get; set; }
 
         public static OrderHeaderViewModel GetOrder(int orderNumber, string userId)
         {
@@ -64,6 +65,8 @@ namespace FreeMarket.Models
                 model.NumberOfItemsInOrder = db.GetNumberOfItemsInOrder(model.Order.OrderNumber)
                     .Select(c => c.Value)
                     .FirstOrDefault();
+
+                model.MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
             }
 
             return model;

@@ -23,7 +23,7 @@
         satisfied with your purchase. For more information see our terms and conditions.
     </div>
     <div class="row well text-center">
-        <a data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+        <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
            class="conditionClass freemarket-link"><span class="glyphicon glyphicon-paperclip" aria-hidden="true">&nbsp; Click here to read our terms and conditions.</span></a>
     </div>
     <div class="row text-center">
@@ -34,6 +34,13 @@
     </div>
     <div class="text-center">
         <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-primary" href="@Url.Action("Cart", "ShoppingCart")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;View your shopping cart...</span></a>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td>
                     <div class="row">
@@ -73,18 +80,6 @@ $(document).ready(function(){
 
      });
 
-});
-
-$(document).ready(function () {
-    $(".icon-input-btn").each(function () {
-        var btnFont = $(this).find(".btn").css("font-size");
-        var btnColor = $(this).find(".btn").css("color");
-        $(this).find(".glyphicon").css("font-size", btnFont);
-        $(this).find(".glyphicon").css("color", btnColor);
-        if ($(this).find(".btn-xs").length) {
-            $(this).find(".glyphicon").css("top", "24%");
-        }
-    });
 });
 
 </script>

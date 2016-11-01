@@ -15,29 +15,40 @@
             <h4 class="text-center">Manage Account</h4>
         </div>
 
-        <div>
-            @Model.ConfirmedEmail
-            @if (!String.IsNullOrWhiteSpace(Model.UnConfirmedEmail))
-            {
-                <em> - Unconfirmed: @Model.UnConfirmedEmail </em> @Html.ActionLink("Cancel", "CancelUnconfirmedEmail", new { emailOrUserId = Model.ConfirmedEmail })
-            }
-            else
-            {
-                @Html.ActionLink("Change Email", "ChangeEmail")
-            }
-        </div>
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td>
+                    <div class="text-center">
+                        @Model.ConfirmedEmail
+                        @if (!String.IsNullOrWhiteSpace(Model.UnConfirmedEmail))
+                        {
+                            <em> - Unconfirmed: @Model.UnConfirmedEmail </em> @Html.ActionLink("Cancel", "CancelUnconfirmedEmail", new { emailOrUserId = Model.ConfirmedEmail })
+                        }
+                        else
+                        {
+                            <div>
+                                 @Html.ActionLink("Change Email", "ChangeEmail")
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="text-center">
+                        @if (Model.HasPassword)
+                        {
+                            @Html.ActionLink("Modify Password", "ChangePassword")
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Create Password", "SetPassword")
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-
-        <div>
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Modify Password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create Password", "SetPassword")
-            }
-        </div>
     </div>
     @*<div class="form-group">
             @Html.Label("Google Login", new { @class = "col-sm-4 control-label" })
@@ -51,19 +62,30 @@
             <h4 class="text-center">Personal Details</h4>
         </div>
 
-        <div>
-            @Html.ActionLink("Change Personal Details", "ModifyAccountDetails")
-        </div>
-
-        <div>
-            @Html.ActionLink("Change Delivery Information", "ModifyDeliveryDetails")
-        </div>
-
-        <div>
-            @Html.ActionLink("View Order History", "ViewOrderHistory")
-        </div>
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td>
+                    <div class="text-center">
+                        @Html.ActionLink("Change Personal Details", "ModifyAccountDetails")
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="text-center">
+                        @Html.ActionLink("Change Delivery Information", "ModifyDeliveryDetails")
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="text-center">
+                        @Html.ActionLink("View Order History", "ViewOrderHistory")
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
-
 </div>
 
 @*<dl class="dl-horizontal">

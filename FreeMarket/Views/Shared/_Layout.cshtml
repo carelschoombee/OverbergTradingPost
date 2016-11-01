@@ -105,8 +105,8 @@
         </script>
         <noscript>
             <div class="alert alert-warning alert-dismissable text-center">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <span class="sr-only"></span><span class="glyphicon glyphicon-warning-sign text-center" style="font-size: 22px">Javascript is disabled in your browser. Please enable it to use this site.</span>
+                <button type="button" class="close"><span aria-hidden="true"></span></button>
+                <span class="sr-only"></span><span class="glyphicon glyphicon-warning-sign text-center" style="font-size: 22px">&nbsp;&nbsp; Javascript is disabled in your browser. Please enable it to use this site.</span>
             </div>
         </noscript>
         
@@ -165,8 +165,10 @@
 
         $(document).ready(function () {
             $(".animsition").animsition({
-                inClass: 'zoom-in-sm',
-                outClass: 'zoom-out-sm',
+                //inClass: 'zoom-in-sm',
+                //outClass: 'zoom-out-sm',
+                inClass: 'fade-in-up-sm',
+                outClass: 'fade-out-up-sm',
                 inDuration: 1500,
                 outDuration: 800,
                 linkElement: '.animsition-link',
