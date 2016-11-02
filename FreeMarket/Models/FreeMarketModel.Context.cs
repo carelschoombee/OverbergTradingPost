@@ -36,7 +36,6 @@ namespace FreeMarket.Models
         public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
-        public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
         public virtual DbSet<PaymentGatewayParameter> PaymentGatewayParameters { get; set; }
         public virtual DbSet<PaymentGatewayPaymentMethod> PaymentGatewayPaymentMethods { get; set; }
         public virtual DbSet<PaymentGatewayTransactionStatu> PaymentGatewayTransactionStatus { get; set; }
@@ -63,6 +62,7 @@ namespace FreeMarket.Models
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<Custodian> Custodians { get; set; }
+        public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
     
         public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<int> weight, Nullable<int> orderNumber)
         {
@@ -283,6 +283,15 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllProductsIncludingDeactivated_Result> GetAllProductsIncludingDeactivated()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsIncludingDeactivated_Result>("GetAllProductsIncludingDeactivated");
+        }
+    
+        public virtual ObjectResult<ValidatePaymentAmount_Result> ValidatePaymentAmount(string orderNumber)
+        {
+            var orderNumberParameter = orderNumber != null ?
+                new ObjectParameter("orderNumber", orderNumber) :
+                new ObjectParameter("orderNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ValidatePaymentAmount_Result>("ValidatePaymentAmount", orderNumberParameter);
         }
     }
 }

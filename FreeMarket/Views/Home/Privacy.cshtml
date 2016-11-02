@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Privacy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="parent" class="center_div container">
+    <div class="col-sm-12">
+        <div class="row">
+            <h1 class="text-center">Privacy</h1>
+            <hr />
+        </div>
+        <div class="row text-center">
+            <a href="https://www.rapidssl.com/learn-ssl/">
+                <img src="~/Content/Images/rapidssl.png" class="img-rounded img-thumbnail" alt="Rapid SSL" />
+            </a>
+        </div>
+        <div class="row well">
+            <div class="text-center">
+                We take your internet privacy seriously. This site is encrypted with a Rapid SSL (Secure Socket Layer) Certificate which ensures that your personal information remains confidential.
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 row">
+            <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
+        </div>
+    </div>
+</div>

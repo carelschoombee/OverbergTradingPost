@@ -350,6 +350,7 @@ namespace FreeMarket.Controllers
             if (user.Id == order.CustomerNumber)
             {
                 model = new RateOrderViewModel(orderNumber);
+                model.Unsubscribe = user.UnsubscribeFromRatings;
                 return View(model);
             }
             else
@@ -362,6 +363,48 @@ namespace FreeMarket.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UpdateReviews(RateOrderViewModel model)
         {
+            bool error = false;
+            foreach (Product p in model.Products.Products)
+            {
+                if (string.IsNullOrEmpty(p.ProductReviewText))
+                {
+                    ModelState.AddModelError("", string.Format("{0}'s review text may not be empty.", p.Description));
+                    error = true;
+                }
+
+                if (p.ProductRating == 0)
+                {
+                    ModelState.AddModelError("", string.Format("{0}'s product rating may not be empty.", p.Description));
+                    error = true;
+                }
+
+                if (p.PriceRating == 0)
+                {
+                    ModelState.AddModelError("", string.Format("{0}'s price rating may not be empty.", p.Description));
+                    error = true;
+                }
+            }
+
+            foreach (CourierReview c in model.CourierRatings)
+            {
+                if (string.IsNullOrEmpty(c.ReviewContent))
+                {
+                    ModelState.AddModelError("", string.Format("{0}'s review text may not be empty.", c.CourierName));
+                    error = true;
+                }
+
+                if (c.StarRating == 0)
+                {
+                    ModelState.AddModelError("", string.Format("{0}'s rating may not be empty.", c.CourierName));
+                    error = true;
+                }
+            }
+
+            if (error)
+            {
+                return View("RateOrder", model);
+            }
+
             var user = UserManager.FindById(User.Identity.GetUserId());
             if (user == null)
             {

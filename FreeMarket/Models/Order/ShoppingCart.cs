@@ -731,7 +731,7 @@ namespace FreeMarket.Models
             Order = new OrderHeader();
         }
 
-        public static void SetOrderConfirmed(int orderNumber)
+        public void SetOrderConfirmed(string userId, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -747,6 +747,7 @@ namespace FreeMarket.Models
                 db.SaveChanges();
 
                 ReleaseAllStock(orderNumber);
+                Initialize(userId);
             }
         }
 

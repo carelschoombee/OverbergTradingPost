@@ -70,21 +70,23 @@ namespace FreeMarket.Models
                     string check = PAYGATE_ID + PAY_REQUEST_ID + REFERENCE + Parameters.Key;
                     string checkTransaction = Extensions.CreateMD5(check);
                     if (CHECKSUM == checkTransaction)
+                    {
                         checksumPassed = true;
 
-                    Pay_Request_Id = PAY_REQUEST_ID;
-                    Checksum = CHECKSUM;
+                        Pay_Request_Id = PAY_REQUEST_ID;
+                        Checksum = CHECKSUM;
 
-                    PaymentGatewayMessage message = new PaymentGatewayMessage
-                    {
-                        PayGate_ID = Convert.ToDecimal(PAYGATE_ID),
-                        Reference = REFERENCE,
-                        Pay_Request_ID = PAY_REQUEST_ID,
-                        Checksum_Passed = checksumPassed
-                    };
+                        PaymentGatewayMessage message = new PaymentGatewayMessage
+                        {
+                            PayGate_ID = Convert.ToDecimal(PAYGATE_ID),
+                            Reference = REFERENCE,
+                            Pay_Request_ID = PAY_REQUEST_ID,
+                            Checksum_Passed = checksumPassed
+                        };
 
-                    db.PaymentGatewayMessages.Add(message);
-                    db.SaveChanges();
+                        db.PaymentGatewayMessages.Add(message);
+                        db.SaveChanges();
+                    }
                 }
             }
         }
@@ -95,16 +97,25 @@ namespace FreeMarket.Models
             {
                 string PAYGATE_ID = Parameters.PaymentGatewayID.ToString();
                 string REFERENCE = Reference;
-                string AMOUNT = Amount.ToString();
+                string AMOUNT = string.Format("{0:0}", Amount);
                 string CURRENCY = "ZAR";
                 string RETURN_URL = Parameters.Return_Url;
-                string TRANSACTION_DATE = DateTime.Now.ToString();
+                string TRANSACTION_DATE = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 string LOCALE = "en";
                 string COUNTRY = "ZAF";
                 string EMAIL = CustomerEmail;
+                string PAY_METHOD = null;
+                string PAY_METHOD_DETAIL = null;
+                string NOTIFY_URL = Parameters.Notify_Url;
+                string USER1 = null;
+                string USER2 = null;
+                string USER3 = null;
+                string VAULT_ID = null;
+
                 string KEY = Parameters.Key;
 
-                string hash = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}", PAYGATE_ID, REFERENCE, AMOUNT, CURRENCY, RETURN_URL, TRANSACTION_DATE, LOCALE, COUNTRY, EMAIL, KEY);
+                string hash = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}",
+                    PAYGATE_ID, REFERENCE, AMOUNT, CURRENCY, RETURN_URL, TRANSACTION_DATE, LOCALE, COUNTRY, EMAIL, PAY_METHOD, PAY_METHOD_DETAIL, NOTIFY_URL, USER1, USER2, USER3, VAULT_ID, KEY);
                 string checkSum = Extensions.CreateMD5(hash);
 
                 PaymentGatewayMessage message = new PaymentGatewayMessage
@@ -117,11 +128,19 @@ namespace FreeMarket.Models
                     Transaction_Date = TRANSACTION_DATE,
                     Locale = LOCALE,
                     Country = COUNTRY,
-                    Email = EMAIL
+                    Email = EMAIL,
+                    Notify_Url = NOTIFY_URL
                 };
 
-                db.PaymentGatewayMessages.Add(message);
-                db.SaveChanges();
+                try
+                {
+                    db.PaymentGatewayMessages.Add(message);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                }
 
                 Message1 = new[] {
                         new KeyValuePair<string, string>("PAYGATE_ID", PAYGATE_ID),
@@ -133,6 +152,7 @@ namespace FreeMarket.Models
                         new KeyValuePair<string, string>("LOCALE", LOCALE),
                         new KeyValuePair<string, string>("COUNTRY", COUNTRY),
                         new KeyValuePair<string, string>("EMAIL", EMAIL),
+                        new KeyValuePair<string, string>("NOTIFY_URL", NOTIFY_URL),
                         new KeyValuePair<string, string>("CHECKSUM", checkSum)
                     };
             }
@@ -173,14 +193,17 @@ namespace FreeMarket.Models
                 string REFERENCE = "PayGate Test";
                 string AMOUNT = "3299";
                 string CURRENCY = "ZAR";
-                string RETURN_URL = Parameters.Return_Url;
+                string RETURN_URL = "https://www.paygate.co.za/thankyou";
                 string TRANSACTION_DATE = "2016-03-10 10:49:16";
                 string LOCALE = "en";
                 string COUNTRY = "ZAF";
                 string EMAIL = "customer@paygate.co.za";
+                string NOTIFY_URL = "https://www.paygate.co.za/notify";
+                string USER1 = "SpecialKey";
                 string KEY = "secret";
 
-                string hash = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}", PAYGATE_ID, REFERENCE, AMOUNT, CURRENCY, RETURN_URL, TRANSACTION_DATE, LOCALE, COUNTRY, EMAIL, KEY);
+                string hash = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}",
+                    PAYGATE_ID, REFERENCE, AMOUNT, CURRENCY, RETURN_URL, TRANSACTION_DATE, LOCALE, COUNTRY, EMAIL, NOTIFY_URL, USER1, KEY);
                 string checkSum = Extensions.CreateMD5(hash);
 
                 PaymentGatewayMessage message = new PaymentGatewayMessage
@@ -209,6 +232,8 @@ namespace FreeMarket.Models
                         new KeyValuePair<string, string>("LOCALE", LOCALE),
                         new KeyValuePair<string, string>("COUNTRY", COUNTRY),
                         new KeyValuePair<string, string>("EMAIL", EMAIL),
+                        new KeyValuePair<string, string>("NOTIFY_URL", NOTIFY_URL),
+                        new KeyValuePair<string, string>("USER1", USER1),
                         new KeyValuePair<string, string>("CHECKSUM", checkSum)
                     };
             }

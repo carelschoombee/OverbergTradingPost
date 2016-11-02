@@ -6,21 +6,61 @@
 }
 
 <br />
-<h1 class="text-center">Order Complete</h1>
+
+@if (Model.TransactionStatus == 1)
+{
+    <h1 class="text-center">Order Successful</h1>
+}
+else
+{
+    <h1 class="text-center">Order not Successful</h1>
+}
+
 <hr />
 
 <div id="parent" class="well well-modal">
+    <div class="text-center">
+        <img src="~/Content/Images/ramLogo.jpg" alt="Schoombee and Son" />
+    </div>
+
     @if(Model.TransactionStatus == 1)
     {
         <div style="font-size:18px">
-            Your order has been approved and submitted. An email has been sent to you with the order details.
+            Thank you! Your payment has been approved and we will process it shortly. An email has been sent to you with the order details. You may also view your order history by clicking on the link below.
+        </div>
+        <div class="text-center">
+            @Html.ActionLink("View Order History", "ViewOrderHistory", "Manage")
         </div>
     }
-    else
+    else if (Model.TransactionStatus == 2)
     {
         <div style="font-size:18px" class="text-danger">
-            We cannot process your order.
+            The transaction was declined. You may try again by returning to the shopping cart and going through the checkout process again.
+        </div>
+        <div class="text-center">
+            @Html.ActionLink("Go back to Shopping Cart", "Cart", "ShoppingCart")
         </div>
     }
+    else if (Model.TransactionStatus == 3 || Model.TransactionStatus == 4)
+    {
+        <div style="font-size:18px" class="text-danger">
+            You cancelled the payment process. You may try again by returning to the shopping cart and going through the checkout process again.
+        </div>
+        <div class="text-center">
+            @Html.ActionLink("Go back to Shopping Cart", "Cart", "ShoppingCart")
+        </div>
+    }
+    else if (Model.TransactionStatus == 999)
+    {
+        <div style="font-size:18px" class="text-danger">
+            It is possible that the transaction did not complete correctly. Please contact support.
+        </div>
+        <div class="text-center">
+            @Html.ActionLink("Go back to Shopping Cart", "Cart", "ShoppingCart")
+        </div>
+    }
+    
+
+    
 </div>
 

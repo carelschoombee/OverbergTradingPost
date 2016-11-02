@@ -83,9 +83,26 @@ else if (Model.Cart.Order.DeliveryType == "PostOffice")
             </td>
         </tr>
         <tr>
-            <td>
-                <img src="~/Content/Images/slideCourier2.png" width="128" height="80" alt="Post Office"/>
+            <td colspan="2">
+                <img src="~/Content/Images/slideCourier2.png" width="128" height="80" alt="Post Office" />
             </td>
         </tr>
+        <tr>
+            <th>
+                Email Address:
+            </th>
+            <td>
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Contact Number:
+            </th>
+            <td>
+                <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
+            </td>
+        </tr>
+        
     </table>
 }

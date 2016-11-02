@@ -10,9 +10,8 @@
 namespace FreeMarket.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PaymentGatewayMessage
+    public partial class ValidatePaymentAmount_Result
     {
         public int MessageNumber { get; set; }
         public string Reference { get; set; }

@@ -3,14 +3,19 @@
 
 <div>
     @Html.HiddenFor(model => Model.Order.OrderNumber)
+    @Html.HiddenFor(model => Model.Order.OrderDatePlaced)
 </div>
 
 <div class="row well well-modal">
     <div class="form-group">
-        @Html.Label("Do you wish to be reminded to rate orders in the future?", new { @class = "col-md-4 control-label" })
-        <div class="col-md-6">
-            @Html.EditorFor(m => m.Unsubscribe, new { @class = "form-control" })
-        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "font-size:20px" })
+        @if (Model.Unsubscribe == false)
+        {
+            @Html.Label("Do you wish to opt out from being reminded to rate orders in the future?", new { @class = "col-md-4 control-label" })
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Unsubscribe, new { @class = "form-control" })
+            </div>
+        }
     </div>
 </div>
 
@@ -32,6 +37,7 @@
             <tr>
                 <td>
                     @Model.CourierRatings[i].CourierName
+                    @Html.HiddenFor(model => Model.CourierRatings[i].CourierName)
                     @Html.HiddenFor(model => Model.CourierRatings[i].CourierNumber)
                     @Html.HiddenFor(model => Model.CourierRatings[i].ReviewId)
                 </td>
@@ -81,9 +87,12 @@
                     <tr>
                         <td data-label="Item:">
                             <i>@Model.Products.Products[i].Description</i>
+                            @Html.HiddenFor(model => Model.Products.Products[i].Description)
                             @Html.HiddenFor(model => Model.Products.Products[i].ProductNumber)
                             @Html.HiddenFor(model => Model.Products.Products[i].SupplierNumber)
                             @Html.HiddenFor(model => Model.Products.Products[i].ReviewId)
+                            @Html.HiddenFor(model => Model.Products.Products[i].PriceOrder)
+                            @Html.HiddenFor(model => Model.Products.Products[i].MainImageNumber)
                         </td>
                     </tr>
                     <tr><td data-label="Price:"><i>@String.Format("{0:C}", Model.Products.Products[i].PriceOrder) each</i></td></tr>
@@ -109,6 +118,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => Model.Products.Products[i].ProductReviewText)
+                @Html.ValidationMessageFor(model => Model.Products.Products[i].ProductReviewText, "", new { @class = "text-danger" })
             </td>
         </tr>
     </table>

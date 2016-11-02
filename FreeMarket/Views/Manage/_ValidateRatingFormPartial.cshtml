@@ -1,0 +1,26 @@
+﻿<script type="text/javascript">
+    $(document).ready(function() {
+        $('#ratingForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Products.Products[].ProductReviewText': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max string length is 100.',
+                                    max: 100
+                                }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

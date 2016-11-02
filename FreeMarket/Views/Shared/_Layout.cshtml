@@ -114,13 +114,25 @@
         <hr />
         <footer>
             <p class="text-center">&copy; @DateTime.Now.Year - Schoombee & Son</p>
+            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link" })</div>
+            
             <div id="parent" class="center_div well">
-                <div>
+                <div class="text-center">Our payment partners:</div>
+
+                <a href="https://www.paygate.co.za/">
                     <img src="~/Content/Images/PayGate.png" />
+                </a>
+
+                <a href="http://www.visa.co.za/">
                     <img src="~/Content/Images/visa.png" />
+                </a>
+
+                <a href="http://www.mastercard.com/za/consumer/index.html">
                     <img src="~/Content/Images/MasterCard.png" />
-                </div>
+                </a>
+
             </div>
+            
         </footer>
 
     </div>

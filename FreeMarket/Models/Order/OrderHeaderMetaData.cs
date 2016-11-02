@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -208,6 +207,25 @@ namespace FreeMarket.Models
             return outCollection;
         }
 
+        public async static void SendWarningEmail(int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Support support = db.Supports.FirstOrDefault();
+                EmailService email = new EmailService();
+
+                IdentityMessage iMessage = new IdentityMessage();
+                iMessage.Destination = support.Email;
+
+                string message1 = "Possible fraudulent activity on order {0}. Checksum failed on payment.";
+
+                iMessage.Body = string.Format((message1), orderNumber);
+                iMessage.Subject = string.Format("Warning!");
+
+                await email.SendAsync(iMessage);
+            }
+        }
+
         public async static void SendRatingEmail(string customerNumber, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -218,8 +236,12 @@ namespace FreeMarket.Models
                             .GetUserManager<ApplicationUserManager>()
                             .FindById(customerNumber);
 
-                var requestContext = HttpContext.Current.Request.RequestContext;
-                string url = "https://www.schoombeeandson.co.za" + new UrlHelper(requestContext).Action("RateOrder", "Manage", new { orderNumber = orderNumber });
+                string url = db.SiteConfigurations
+                    .Where(c => c.Key == "RatingUrlCustomer")
+                    .FirstOrDefault()
+                    .Value;
+
+                url = string.Format("{0}?orderNumber={1}", url, orderNumber);
 
                 EmailService email = new EmailService();
 

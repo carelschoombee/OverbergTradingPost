@@ -38,6 +38,16 @@ namespace FreeMarket.Controllers
                 Session[sessionKey] = tempCart;
             }
 
+            if (tempCart.Order.OrderStatus == "Confirmed" || tempCart.Order.OrderStatus == "Completed")
+            {
+                if (userId == anonymous)
+                    tempCart = new ShoppingCart();
+                else
+                    tempCart = new ShoppingCart(userId);
+
+                Session[sessionKey] = tempCart;
+            }
+
             return tempCart;
         }
 
@@ -509,11 +519,12 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Notify(int PAYGATE_ID, string PAY_REQUEST_ID, string REFERENCE, int TRANSACTION_STATUS,
-            int RESULT_CODE, string AUTH_CODE, string CURRENCY, decimal AMOUNT, string RESULT_DESC, int TRANSACTION_ID,
+            int RESULT_CODE, string AUTH_CODE, string CURRENCY, int AMOUNT, string RESULT_DESC, int TRANSACTION_ID,
             string RISK_INDICATOR, string PAY_METHOD, string PAY_METHOD_DETAIL, string USER1, string USER2, string USER3,
             string VAULT_ID, string PAYVAULT_DATA_1, string PAYVAULT_DATA_2, string CHECKSUM)
         {
             bool checksumPassed = false;
+            bool priceSameAsRequest = false;
 
             PaymentGatewayParameter param = PaymentGatewayIntegration.GetParameters();
 
@@ -525,13 +536,88 @@ namespace FreeMarket.Controllers
             string checksum = Extensions.CreateMD5(check);
 
             if (CHECKSUM == checksum)
-                checksumPassed = true;
-            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                if (!string.IsNullOrEmpty(REFERENCE))
+                checksumPassed = true;
+                using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    int orderNumber = int.Parse(REFERENCE);
+                    if (!string.IsNullOrEmpty(REFERENCE))
+                    {
+                        ValidatePaymentAmount_Result request = db.ValidatePaymentAmount(REFERENCE).FirstOrDefault();
 
+                        if (request != null)
+                        {
+                            string requestedAmount = request.Amount.ToString();
+                            if (requestedAmount == AMOUNT.ToString())
+                            {
+                                priceSameAsRequest = true;
+                                PaymentGatewayMessage message = new PaymentGatewayMessage
+                                {
+                                    PayGate_ID = PAYGATE_ID,
+                                    Pay_Request_ID = PAY_REQUEST_ID,
+                                    Reference = REFERENCE,
+                                    TransactionStatus = TRANSACTION_STATUS,
+                                    Result_Code = RESULT_CODE,
+                                    Auth_Code = AUTH_CODE,
+                                    Currency = CURRENCY,
+                                    Amount = AMOUNT,
+                                    Result_Desc = RESULT_DESC,
+                                    Transaction_ID = TRANSACTION_ID,
+                                    Risk_Indicator = RISK_INDICATOR,
+                                    Pay_Method = PAY_METHOD,
+                                    Pay_Method_Detail = PAY_METHOD_DETAIL,
+                                    User1 = USER1,
+                                    User2 = USER2,
+                                    User3 = USER3,
+                                    Vault_ID = VAULT_ID,
+                                    Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                                    Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                                    Checksum_Passed = checksumPassed,
+                                    PriceSameAsRequest = priceSameAsRequest
+                                };
+
+                                db.PaymentGatewayMessages.Add(message);
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                priceSameAsRequest = false;
+                                PaymentGatewayMessage message = new PaymentGatewayMessage
+                                {
+                                    PayGate_ID = PAYGATE_ID,
+                                    Pay_Request_ID = PAY_REQUEST_ID,
+                                    Reference = REFERENCE,
+                                    TransactionStatus = TRANSACTION_STATUS,
+                                    Result_Code = RESULT_CODE,
+                                    Auth_Code = AUTH_CODE,
+                                    Currency = CURRENCY,
+                                    Amount = AMOUNT,
+                                    Result_Desc = RESULT_DESC,
+                                    Transaction_ID = TRANSACTION_ID,
+                                    Risk_Indicator = RISK_INDICATOR,
+                                    Pay_Method = PAY_METHOD,
+                                    Pay_Method_Detail = PAY_METHOD_DETAIL,
+                                    User1 = USER1,
+                                    User2 = USER2,
+                                    User3 = USER3,
+                                    Vault_ID = VAULT_ID,
+                                    Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                                    Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                                    Checksum_Passed = checksumPassed,
+                                    PriceSameAsRequest = priceSameAsRequest
+                                };
+
+                                db.PaymentGatewayMessages.Add(message);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                checksumPassed = false;
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
                     PaymentGatewayMessage message = new PaymentGatewayMessage
                     {
                         PayGate_ID = PAYGATE_ID,
@@ -558,20 +644,6 @@ namespace FreeMarket.Controllers
 
                     db.PaymentGatewayMessages.Add(message);
                     db.SaveChanges();
-
-                    if (RESULT_CODE == 1)
-                    {
-                        ShoppingCart.SetOrderConfirmed(orderNumber);
-
-                        string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
-                        .FirstOrDefault()
-                        .CustomerNumber;
-
-                        if (!string.IsNullOrEmpty(customerNumber))
-                        {
-                            OrderHeader.SendConfirmationEmail(customerNumber, orderNumber);
-                        }
-                    }
                 }
             }
 
@@ -588,10 +660,70 @@ namespace FreeMarket.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM)
+        [HttpPost]
+        public ActionResult TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM, string REFERENCE)
         {
-            ThankYouViewModel model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
-            return View("ThankYou", model);
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                int orderNumber = 0;
+                OrderHeader order = new OrderHeader();
+                ThankYouViewModel model;
+                ShoppingCart cart = GetCartFromSession(User.Identity.GetUserId());
+
+                try
+                {
+                    orderNumber = int.Parse(REFERENCE);
+                    order = db.OrderHeaders.Find(orderNumber);
+                    if (order == null)
+                    {
+                        model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
+                        return View("ThankYou", model);
+                    }
+                }
+                catch (Exception e)
+                {
+                    model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
+                    return View("ThankYou", model);
+                }
+
+                PaymentGatewayParameter parameters = db.PaymentGatewayParameters
+                    .Where(c => c.PaymentGatewayName == "PayGate")
+                    .FirstOrDefault();
+
+                string checkSource = string.Format("{0}{1}{2}{3}{4}",
+                    parameters.PaymentGatewayID, PAY_REQUEST_ID, TRANSACTION_STATUS, REFERENCE, parameters.Key);
+                string checkSum = Extensions.CreateMD5(checkSource);
+
+                if (checkSum == CHECKSUM)
+                {
+                    if (TRANSACTION_STATUS == 1)
+                    {
+                        if (cart.Order.OrderStatus == "Locked")
+                        {
+                            cart.SetOrderConfirmed(order.CustomerNumber, orderNumber);
+
+                            string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
+                                                                    .FirstOrDefault()
+                                                                    .CustomerNumber;
+
+                            if (!string.IsNullOrEmpty(customerNumber))
+                            {
+                                AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), customerNumber);
+                                OrderHeader.SendConfirmationEmail(customerNumber, orderNumber);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    OrderHeader.SendWarningEmail(orderNumber);
+                    model = new ThankYouViewModel { TransactionStatus = 999 };
+                    return View("ThankYou", model);
+                }
+
+                model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
+                return View("ThankYou", model);
+            }
         }
 
         public ActionResult UpdateCart()

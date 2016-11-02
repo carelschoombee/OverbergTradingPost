@@ -72,7 +72,6 @@ namespace FreeMarket.Controllers
 
         public ActionResult TermsAndConditions()
         {
-            string terms = "";
             TermsAndConditionsViewModel model = new TermsAndConditionsViewModel();
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -85,6 +84,11 @@ namespace FreeMarket.Controllers
             }
 
             return View("TermsAndConditions", model);
+        }
+
+        public ActionResult Privacy()
+        {
+            return View("Privacy");
         }
     }
 }
