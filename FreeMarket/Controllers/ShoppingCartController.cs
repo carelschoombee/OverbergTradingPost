@@ -38,16 +38,6 @@ namespace FreeMarket.Controllers
                 Session[sessionKey] = tempCart;
             }
 
-            if (tempCart.Order.OrderStatus == "Confirmed" || tempCart.Order.OrderStatus == "Completed")
-            {
-                if (userId == anonymous)
-                    tempCart = new ShoppingCart();
-                else
-                    tempCart = new ShoppingCart(userId);
-
-                Session[sessionKey] = tempCart;
-            }
-
             return tempCart;
         }
 
@@ -384,6 +374,8 @@ namespace FreeMarket.Controllers
                 }
                 catch (Exception e)
                 {
+                    ExceptionLogging.LogException(e);
+
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 
                     return View("CheckoutDeliveryDetails", model);
@@ -436,7 +428,7 @@ namespace FreeMarket.Controllers
             }
             catch (Exception e)
             {
-
+                ExceptionLogging.LogException(e);
             }
 
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -577,6 +569,8 @@ namespace FreeMarket.Controllers
 
                                 db.PaymentGatewayMessages.Add(message);
                                 db.SaveChanges();
+
+                                AuditUser.LogAudit(35, string.Format("Order Number: {0}", REFERENCE));
                             }
                             else
                             {
@@ -608,6 +602,18 @@ namespace FreeMarket.Controllers
 
                                 db.PaymentGatewayMessages.Add(message);
                                 db.SaveChanges();
+
+                                AuditUser.LogAudit(34, string.Format("Order Number: {0}. Request Amount: {1}. Notification Amount: {2}", REFERENCE, requestedAmount, AMOUNT));
+
+                                try
+                                {
+                                    int orderNumber = int.Parse(REFERENCE);
+                                    OrderHeader.SendWarningEmail(orderNumber);
+                                }
+                                catch (Exception e)
+                                {
+                                    ExceptionLogging.LogException(e);
+                                }
                             }
                         }
                     }
@@ -644,6 +650,18 @@ namespace FreeMarket.Controllers
 
                     db.PaymentGatewayMessages.Add(message);
                     db.SaveChanges();
+
+                    AuditUser.LogAudit(34, string.Format("Order Number: {0}. Checksum failed.", REFERENCE));
+
+                    try
+                    {
+                        int orderNumber = int.Parse(REFERENCE);
+                        OrderHeader.SendWarningEmail(orderNumber);
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionLogging.LogException(e);
+                    }
                 }
             }
 
@@ -660,63 +678,36 @@ namespace FreeMarket.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         [HttpPost]
-        public ActionResult TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM, string REFERENCE)
+        public async Task<ActionResult> TransactionComplete(string PAY_REQUEST_ID, int TRANSACTION_STATUS, string CHECKSUM)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                int orderNumber = 0;
-                OrderHeader order = new OrderHeader();
                 ThankYouViewModel model;
                 ShoppingCart cart = GetCartFromSession(User.Identity.GetUserId());
+                int orderNumber = cart.Order.OrderNumber;
 
-                try
-                {
-                    orderNumber = int.Parse(REFERENCE);
-                    order = db.OrderHeaders.Find(orderNumber);
-                    if (order == null)
-                    {
-                        model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
-                        return View("ThankYou", model);
-                    }
-                }
-                catch (Exception e)
-                {
-                    model = new ThankYouViewModel { TransactionStatus = TRANSACTION_STATUS };
-                    return View("ThankYou", model);
-                }
-
-                PaymentGatewayParameter parameters = db.PaymentGatewayParameters
-                    .Where(c => c.PaymentGatewayName == "PayGate")
-                    .FirstOrDefault();
+                PaymentGatewayParameter parameters = PaymentGatewayIntegration.GetParameters();
 
                 string checkSource = string.Format("{0}{1}{2}{3}{4}",
-                    parameters.PaymentGatewayID, PAY_REQUEST_ID, TRANSACTION_STATUS, REFERENCE, parameters.Key);
+                    parameters.PaymentGatewayID, PAY_REQUEST_ID, TRANSACTION_STATUS, cart.Order.OrderNumber.ToString(), parameters.Key);
                 string checkSum = Extensions.CreateMD5(checkSource);
 
                 if (checkSum == CHECKSUM)
                 {
                     if (TRANSACTION_STATUS == 1)
                     {
-                        if (cart.Order.OrderStatus == "Locked")
-                        {
-                            cart.SetOrderConfirmed(order.CustomerNumber, orderNumber);
+                        cart.SetOrderConfirmed(User.Identity.GetUserId());
 
-                            string customerNumber = db.OrderHeaders.Where(c => c.OrderNumber == orderNumber)
-                                                                    .FirstOrDefault()
-                                                                    .CustomerNumber;
-
-                            if (!string.IsNullOrEmpty(customerNumber))
-                            {
-                                AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), customerNumber);
-                                OrderHeader.SendConfirmationEmail(customerNumber, orderNumber);
-                            }
-                        }
+                        AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), User.Identity.GetUserId());
+                        OrderHeader.SendConfirmationEmail(User.Identity.GetUserId(), orderNumber);
                     }
                 }
                 else
                 {
                     OrderHeader.SendWarningEmail(orderNumber);
+                    AuditUser.LogAudit(34, string.Format("Order Number: {0}", orderNumber), User.Identity.GetUserId());
                     model = new ThankYouViewModel { TransactionStatus = 999 };
                     return View("ThankYou", model);
                 }
@@ -830,6 +821,7 @@ namespace FreeMarket.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [ChildActionOnly]
         public ActionResult SmallCartBody()
         {
             string userId = User.Identity.GetUserId();

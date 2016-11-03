@@ -207,7 +207,7 @@ namespace FreeMarket.Models
             return outCollection;
         }
 
-        public async static void SendWarningEmail(int orderNumber)
+        public async static void SendWarningEmail(int orderNumber = 0)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -218,8 +218,12 @@ namespace FreeMarket.Models
                 iMessage.Destination = support.Email;
 
                 string message1 = "Possible fraudulent activity on order {0}. Checksum failed on payment.";
+                string message2 = "Possible fraudulent activity. Reference could not be parsed. Check logs at about this time.";
 
-                iMessage.Body = string.Format((message1), orderNumber);
+                if (orderNumber == 0)
+                    iMessage.Body = message2;
+                else
+                    iMessage.Body = string.Format((message1), orderNumber);
                 iMessage.Subject = string.Format("Warning!");
 
                 await email.SendAsync(iMessage);
@@ -453,15 +457,18 @@ namespace FreeMarket.Models
 
                 await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
 
-                SMSHelper helper = new SMSHelper();
+                DateTime dateDispatch = DateTime.Now;
+                DateTime dateArrive = DateTime.Now;
 
-                DateTime dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-                DateTime dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+                dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                SMSHelper helper = new SMSHelper();
 
                 if (ConfigurationManager.AppSettings["sendSMSToSupportOnOrderConfirmed"] == "true")
                 {
-                    await helper.SendMessage(string.Format("Customer: {0}, has placed order {1}. Date of dispatch: {2}. Order Total: {3}. Delivery mechanism: {4}."
-                                           , user.Name, order.OrderNumber, string.Format("{0:f}", dateDispatch), string.Format("{0:C}", order.TotalOrderValue),
+                    await helper.SendMessage(string.Format("Customer: {0}, has placed order {1}. Date of delivery: {2}. Order Total: {3}. Delivery mechanism: {4}."
+                                           , user.Name, order.OrderNumber, string.Format("{0:f}", order.DeliveryDate), string.Format("{0:C}", order.TotalOrderValue),
                                            order.DeliveryType), string.Format("{0},{1}", supportInfo.Cellphone, supportInfo.Landline));
 
                 }
@@ -631,10 +638,15 @@ namespace FreeMarket.Models
             DateTime today = DateTime.Today;
             int daysUntilFriday = 0;
 
-            if (GetDaysToMinDate() >= 7)
-                daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
+            if (today.DayOfWeek == DayOfWeek.Friday)
+                daysUntilFriday = 7;
             else
-                daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            {
+                if (GetDaysToMinDate() >= 6)
+                    daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
+                else
+                    daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            }
 
             DateTime nextFriday = today.AddDays(daysUntilFriday);
             nextFriday = nextFriday.AddHours(12);

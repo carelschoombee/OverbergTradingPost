@@ -52,7 +52,6 @@ namespace FreeMarket.Models
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
         public virtual DbSet<CourierReview> CourierReviews { get; set; }
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
-        public virtual DbSet<Support> Supports { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Special> Specials { get; set; }
@@ -63,6 +62,7 @@ namespace FreeMarket.Models
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
         public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
+        public virtual DbSet<Support> Supports { get; set; }
     
         public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<int> weight, Nullable<int> orderNumber)
         {

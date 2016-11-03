@@ -9,11 +9,11 @@
 
 @if (Model.TransactionStatus == 1)
 {
-    <h1 class="text-center">Order Successful</h1>
+    <h1 class="text-center">Order Payment Successful</h1>
 }
 else
 {
-    <h1 class="text-center">Order not Successful</h1>
+    <h1 class="text-center">Order Payment Not Successful</h1>
 }
 
 <hr />
@@ -23,7 +23,16 @@ else
         <img src="~/Content/Images/ramLogo.jpg" alt="Schoombee and Son" />
     </div>
 
-    @if(Model.TransactionStatus == 1)
+    @if (Model.TransactionStatus == 0)
+    {
+        <div style="font-size:18px">
+            Your order could not be processed due to external system failure. You can visit the link below and try again in 10 minutes.
+        </div>
+        <div class="text-center">
+            @Html.ActionLink("Go back to Shopping Cart", "Cart", "ShoppingCart")
+        </div>
+    }
+    else if (Model.TransactionStatus == 1)
     {
         <div style="font-size:18px">
             Thank you! Your payment has been approved and we will process it shortly. An email has been sent to you with the order details. You may also view your order history by clicking on the link below.
@@ -58,9 +67,6 @@ else
         <div class="text-center">
             @Html.ActionLink("Go back to Shopping Cart", "Cart", "ShoppingCart")
         </div>
-    }
-    
-
-    
+    } 
 </div>
 

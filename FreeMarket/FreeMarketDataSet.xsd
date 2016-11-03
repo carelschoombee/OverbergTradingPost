@@ -51,9 +51,10 @@
               <Mapping SourceColumn="CourierName" DataSetColumn="CourierName" />
               <Mapping SourceColumn="MainContactTelephoneNumber" DataSetColumn="MainContactTelephoneNumber" />
               <Mapping SourceColumn="MainContactEmailAddress" DataSetColumn="MainContactEmailAddress" />
+              <Mapping SourceColumn="DeliveryType" DataSetColumn="DeliveryType" />
               <Mapping SourceColumn="StreetAddress" DataSetColumn="StreetAddress" />
               <Mapping SourceColumn="TownName" DataSetColumn="TownName" />
-              <Mapping SourceColumn="PostalCode1" DataSetColumn="PostalCode1" />
+              <Mapping SourceColumn="StruisbaaiPostalCode" DataSetColumn="StruisbaaiPostalCode" />
               <Mapping SourceColumn="Province" DataSetColumn="Province" />
             </Mappings>
             <Sources />
@@ -179,7 +180,7 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="MainContactTelephoneNumber" msprop:Generator_ColumnVarNameInTable="columnMainContactTelephoneNumber" msprop:Generator_ColumnPropNameInRow="MainContactTelephoneNumber" msprop:Generator_ColumnPropNameInTable="MainContactTelephoneNumberColumn" msprop:Generator_UserColumnName="MainContactTelephoneNumber" minOccurs="0">
+              <xs:element name="MainContactTelephoneNumber" msprop:Generator_ColumnVarNameInTable="columnMainContactTelephoneNumber" msprop:Generator_ColumnPropNameInRow="MainContactTelephoneNumber" msprop:Generator_ColumnPropNameInTable="MainContactTelephoneNumberColumn" msprop:Generator_UserColumnName="MainContactTelephoneNumber">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="25" />
@@ -193,6 +194,13 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="DeliveryType" msprop:Generator_ColumnVarNameInTable="columnDeliveryType" msprop:Generator_ColumnPropNameInRow="DeliveryType" msprop:Generator_ColumnPropNameInTable="DeliveryTypeColumn" msprop:Generator_UserColumnName="DeliveryType" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
               <xs:element name="StreetAddress" msprop:Generator_ColumnVarNameInTable="columnStreetAddress" msprop:Generator_ColumnPropNameInRow="StreetAddress" msprop:Generator_ColumnPropNameInTable="StreetAddressColumn" msprop:Generator_UserColumnName="StreetAddress" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -203,11 +211,11 @@
               <xs:element name="TownName" msprop:Generator_ColumnVarNameInTable="columnTownName" msprop:Generator_ColumnPropNameInRow="TownName" msprop:Generator_ColumnPropNameInTable="TownNameColumn" msprop:Generator_UserColumnName="TownName" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
-                    <xs:maxLength value="100" />
+                    <xs:maxLength value="200" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="PostalCode1" msprop:Generator_ColumnVarNameInTable="columnPostalCode1" msprop:Generator_ColumnPropNameInRow="PostalCode1" msprop:Generator_ColumnPropNameInTable="PostalCode1Column" msprop:Generator_UserColumnName="PostalCode1" minOccurs="0">
+              <xs:element name="StruisbaaiPostalCode" msprop:Generator_ColumnVarNameInTable="columnStruisbaaiPostalCode" msprop:Generator_ColumnPropNameInRow="StruisbaaiPostalCode" msprop:Generator_ColumnPropNameInTable="StruisbaaiPostalCodeColumn" msprop:Generator_UserColumnName="StruisbaaiPostalCode" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
@@ -217,7 +225,7 @@
               <xs:element name="Province" msprop:Generator_ColumnVarNameInTable="columnProvince" msprop:Generator_ColumnPropNameInRow="Province" msprop:Generator_ColumnPropNameInTable="ProvinceColumn" msprop:Generator_UserColumnName="Province" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
-                    <xs:maxLength value="100" />
+                    <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>

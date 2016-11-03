@@ -33,8 +33,12 @@ namespace FreeMarket.Models
             Parameters = new PaymentGatewayParameter();
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                //Parameters = db.PaymentGatewayParameters
+                //    .Where(c => c.PaymentGatewayName == "PayGate")
+                //    .FirstOrDefault();
+
                 Parameters = db.PaymentGatewayParameters
-                    .Where(c => c.PaymentGatewayName == "PayGate")
+                    .Where(c => c.PaymentGatewayName == "Test")
                     .FirstOrDefault();
             }
 
@@ -44,8 +48,12 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                //return db.PaymentGatewayParameters
+                //    .Where(c => c.PaymentGatewayName == "PayGate")
+                //    .FirstOrDefault();
+
                 return db.PaymentGatewayParameters
-                    .Where(c => c.PaymentGatewayName == "PayGate")
+                    .Where(c => c.PaymentGatewayName == "Test")
                     .FirstOrDefault();
             }
         }

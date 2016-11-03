@@ -449,6 +449,10 @@
           <Property Name="Landline" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
           <Property Name="OrdersEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="StreetAddress" Type="nvarchar" MaxLength="200" />
+          <Property Name="TownName" Type="nvarchar" MaxLength="200" />
+          <Property Name="PostalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Province" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="SystemActions">
           <Key>
@@ -1140,7 +1144,6 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductReview" EntitySet="ProductReviews" />
           </AssociationSet>
-          <EntitySet Name="Supports" EntityType="FreeMarketModel.Support" />
           <EntitySet Name="ProductSuppliers" EntityType="FreeMarketModel.ProductSupplier" />
           <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1249,8 +1252,9 @@
           </AssociationSet>
           <EntitySet Name="PaymentGatewayMessages" EntityType="FreeMarketModel.PaymentGatewayMessage" />
           <FunctionImport Name="ValidatePaymentAmount" ReturnType="Collection(FreeMarketModel.ValidatePaymentAmount_Result)">
-            <Parameter Name="orderNumber" Mode="In" Type="String" />
+          <Parameter Name="orderNumber" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Supports" EntityType="FreeMarketModel.Support" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1464,17 +1468,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Support">
-          <Key>
-            <PropertyRef Name="SupportID" />
-          </Key>
-          <Property Name="SupportID" Type="Int32" Nullable="false" />
-          <Property Name="Cellphone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Landline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MainContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OrdersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="ProductSupplier">
           <Key>
             <PropertyRef Name="ProductNumber" />
@@ -2071,6 +2064,21 @@
           <Property Type="Boolean" Name="Checksum_Passed" Nullable="true" />
           <Property Type="Boolean" Name="PriceSameAsRequest" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Support">
+          <Key>
+            <PropertyRef Name="SupportID" />
+          </Key>
+          <Property Name="SupportID" Type="Int32" Nullable="false" />
+          <Property Name="MainContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cellphone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Landline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrdersEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StreetAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TownName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Province" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2379,18 +2387,6 @@
                 <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
                 <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
                 <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Supports">
-            <EntityTypeMapping TypeName="FreeMarketModel.Support">
-              <MappingFragment StoreEntitySet="Support">
-                <ScalarProperty Name="OrdersEmail" ColumnName="OrdersEmail" />
-                <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Landline" ColumnName="Landline" />
-                <ScalarProperty Name="Cellphone" ColumnName="Cellphone" />
-                <ScalarProperty Name="SupportID" ColumnName="SupportID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2990,6 +2986,22 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Supports">
+            <EntityTypeMapping TypeName="FreeMarketModel.Support">
+              <MappingFragment StoreEntitySet="Support">
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="TownName" ColumnName="TownName" />
+                <ScalarProperty Name="StreetAddress" ColumnName="StreetAddress" />
+                <ScalarProperty Name="OrdersEmail" ColumnName="OrdersEmail" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Landline" ColumnName="Landline" />
+                <ScalarProperty Name="Cellphone" ColumnName="Cellphone" />
+                <ScalarProperty Name="MainContactName" ColumnName="MainContactName" />
+                <ScalarProperty Name="SupportID" ColumnName="SupportID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

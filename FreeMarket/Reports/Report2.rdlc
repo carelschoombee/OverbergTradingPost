@@ -4453,7 +4453,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Fields!PostalCode1.Value</Value>
+                <Value>=Fields!StruisbaaiPostalCode.Value</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontWeight>Normal</FontWeight>
@@ -4773,6 +4773,10 @@
           <DataField>MainContactEmailAddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="DeliveryType">
+          <DataField>DeliveryType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="StreetAddress">
           <DataField>StreetAddress</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -4781,8 +4785,8 @@
           <DataField>TownName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="PostalCode1">
-          <DataField>PostalCode1</DataField>
+        <Field Name="StruisbaaiPostalCode">
+          <DataField>StruisbaaiPostalCode</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Province">

@@ -335,11 +335,13 @@ namespace FreeMarket {
             
             private global::System.Data.DataColumn columnMainContactEmailAddress;
             
+            private global::System.Data.DataColumn columnDeliveryType;
+            
             private global::System.Data.DataColumn columnStreetAddress;
             
             private global::System.Data.DataColumn columnTownName;
             
-            private global::System.Data.DataColumn columnPostalCode1;
+            private global::System.Data.DataColumn columnStruisbaaiPostalCode;
             
             private global::System.Data.DataColumn columnProvince;
             
@@ -602,6 +604,14 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DeliveryTypeColumn {
+                get {
+                    return this.columnDeliveryType;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn StreetAddressColumn {
                 get {
                     return this.columnStreetAddress;
@@ -618,9 +628,9 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn PostalCode1Column {
+            public global::System.Data.DataColumn StruisbaaiPostalCodeColumn {
                 get {
-                    return this.columnPostalCode1;
+                    return this.columnStruisbaaiPostalCode;
                 }
             }
             
@@ -696,9 +706,10 @@ namespace FreeMarket {
                         string CourierName, 
                         string MainContactTelephoneNumber, 
                         string MainContactEmailAddress, 
+                        string DeliveryType, 
                         string StreetAddress, 
                         string TownName, 
-                        string PostalCode1, 
+                        string StruisbaaiPostalCode, 
                         string Province) {
                 GetOrderReportRow rowGetOrderReportRow = ((GetOrderReportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -730,9 +741,10 @@ namespace FreeMarket {
                         CourierName,
                         MainContactTelephoneNumber,
                         MainContactEmailAddress,
+                        DeliveryType,
                         StreetAddress,
                         TownName,
-                        PostalCode1,
+                        StruisbaaiPostalCode,
                         Province};
                 rowGetOrderReportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetOrderReportRow);
@@ -791,9 +803,10 @@ namespace FreeMarket {
                 this.columnCourierName = base.Columns["CourierName"];
                 this.columnMainContactTelephoneNumber = base.Columns["MainContactTelephoneNumber"];
                 this.columnMainContactEmailAddress = base.Columns["MainContactEmailAddress"];
+                this.columnDeliveryType = base.Columns["DeliveryType"];
                 this.columnStreetAddress = base.Columns["StreetAddress"];
                 this.columnTownName = base.Columns["TownName"];
-                this.columnPostalCode1 = base.Columns["PostalCode1"];
+                this.columnStruisbaaiPostalCode = base.Columns["StruisbaaiPostalCode"];
                 this.columnProvince = base.Columns["Province"];
             }
             
@@ -856,12 +869,14 @@ namespace FreeMarket {
                 base.Columns.Add(this.columnMainContactTelephoneNumber);
                 this.columnMainContactEmailAddress = new global::System.Data.DataColumn("MainContactEmailAddress", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMainContactEmailAddress);
+                this.columnDeliveryType = new global::System.Data.DataColumn("DeliveryType", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDeliveryType);
                 this.columnStreetAddress = new global::System.Data.DataColumn("StreetAddress", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStreetAddress);
                 this.columnTownName = new global::System.Data.DataColumn("TownName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTownName);
-                this.columnPostalCode1 = new global::System.Data.DataColumn("PostalCode1", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnPostalCode1);
+                this.columnStruisbaaiPostalCode = new global::System.Data.DataColumn("StruisbaaiPostalCode", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStruisbaaiPostalCode);
                 this.columnProvince = new global::System.Data.DataColumn("Province", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnProvince);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
@@ -901,13 +916,15 @@ namespace FreeMarket {
                 this.columnTotal.ReadOnly = true;
                 this.columnCourierName.AllowDBNull = false;
                 this.columnCourierName.MaxLength = 100;
+                this.columnMainContactTelephoneNumber.AllowDBNull = false;
                 this.columnMainContactTelephoneNumber.MaxLength = 25;
                 this.columnMainContactEmailAddress.AllowDBNull = false;
                 this.columnMainContactEmailAddress.MaxLength = 100;
+                this.columnDeliveryType.MaxLength = 50;
                 this.columnStreetAddress.MaxLength = 200;
-                this.columnTownName.MaxLength = 100;
-                this.columnPostalCode1.MaxLength = 50;
-                this.columnProvince.MaxLength = 100;
+                this.columnTownName.MaxLength = 200;
+                this.columnStruisbaaiPostalCode.MaxLength = 50;
+                this.columnProvince.MaxLength = 50;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1420,13 +1437,7 @@ namespace FreeMarket {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string MainContactTelephoneNumber {
                 get {
-                    try {
-                        return ((string)(this[this.tableGetOrderReport.MainContactTelephoneNumberColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'MainContactTelephoneNumber\' in table \'GetOrderReport\' is DB" +
-                                "Null.", e);
-                    }
+                    return ((string)(this[this.tableGetOrderReport.MainContactTelephoneNumberColumn]));
                 }
                 set {
                     this[this.tableGetOrderReport.MainContactTelephoneNumberColumn] = value;
@@ -1441,6 +1452,22 @@ namespace FreeMarket {
                 }
                 set {
                     this[this.tableGetOrderReport.MainContactEmailAddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string DeliveryType {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.DeliveryTypeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DeliveryType\' in table \'GetOrderReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.DeliveryTypeColumn] = value;
                 }
             }
             
@@ -1478,17 +1505,17 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string PostalCode1 {
+            public string StruisbaaiPostalCode {
                 get {
                     try {
-                        return ((string)(this[this.tableGetOrderReport.PostalCode1Column]));
+                        return ((string)(this[this.tableGetOrderReport.StruisbaaiPostalCodeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'PostalCode1\' in table \'GetOrderReport\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'StruisbaaiPostalCode\' in table \'GetOrderReport\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableGetOrderReport.PostalCode1Column] = value;
+                    this[this.tableGetOrderReport.StruisbaaiPostalCodeColumn] = value;
                 }
             }
             
@@ -1702,14 +1729,14 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsMainContactTelephoneNumberNull() {
-                return this.IsNull(this.tableGetOrderReport.MainContactTelephoneNumberColumn);
+            public bool IsDeliveryTypeNull() {
+                return this.IsNull(this.tableGetOrderReport.DeliveryTypeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetMainContactTelephoneNumberNull() {
-                this[this.tableGetOrderReport.MainContactTelephoneNumberColumn] = global::System.Convert.DBNull;
+            public void SetDeliveryTypeNull() {
+                this[this.tableGetOrderReport.DeliveryTypeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1738,14 +1765,14 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsPostalCode1Null() {
-                return this.IsNull(this.tableGetOrderReport.PostalCode1Column);
+            public bool IsStruisbaaiPostalCodeNull() {
+                return this.IsNull(this.tableGetOrderReport.StruisbaaiPostalCodeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetPostalCode1Null() {
-                this[this.tableGetOrderReport.PostalCode1Column] = global::System.Convert.DBNull;
+            public void SetStruisbaaiPostalCodeNull() {
+                this[this.tableGetOrderReport.StruisbaaiPostalCodeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1948,9 +1975,10 @@ namespace FreeMarket.FreeMarketDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("CourierName", "CourierName");
             tableMapping.ColumnMappings.Add("MainContactTelephoneNumber", "MainContactTelephoneNumber");
             tableMapping.ColumnMappings.Add("MainContactEmailAddress", "MainContactEmailAddress");
+            tableMapping.ColumnMappings.Add("DeliveryType", "DeliveryType");
             tableMapping.ColumnMappings.Add("StreetAddress", "StreetAddress");
             tableMapping.ColumnMappings.Add("TownName", "TownName");
-            tableMapping.ColumnMappings.Add("PostalCode1", "PostalCode1");
+            tableMapping.ColumnMappings.Add("StruisbaaiPostalCode", "StruisbaaiPostalCode");
             tableMapping.ColumnMappings.Add("Province", "Province");
             this._adapter.TableMappings.Add(tableMapping);
         }

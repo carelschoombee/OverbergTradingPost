@@ -82,8 +82,8 @@
             @using (Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://secure.paygate.co.za/payweb3/process.trans" }))
             {
                 <div>
-                    @Html.HiddenFor(model => Model.Pay_Request_Id)
-                    @Html.HiddenFor(model => Model.Checksum)
+                    @Html.Hidden("PAY_REQUEST_ID", Model.Pay_Request_Id)
+                    @Html.Hidden("CHECKSUM", Model.Checksum)
                     <input type="submit" value="Pay Securely With Pay Gate" class="btn btn-success" />
                 </div>
             }

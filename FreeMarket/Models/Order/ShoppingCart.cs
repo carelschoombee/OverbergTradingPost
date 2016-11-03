@@ -731,11 +731,11 @@ namespace FreeMarket.Models
             Order = new OrderHeader();
         }
 
-        public void SetOrderConfirmed(string userId, int orderNumber)
+        public void SetOrderConfirmed(string userId)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                OrderHeader order = db.OrderHeaders.Find(Order.OrderNumber);
 
                 if (order == null)
                     return;
@@ -746,7 +746,8 @@ namespace FreeMarket.Models
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
 
-                ReleaseAllStock(orderNumber);
+                ReleaseAllStock(order.OrderNumber);
+
                 Initialize(userId);
             }
         }
@@ -756,6 +757,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 OrderHeader order = db.OrderHeaders.Find(Order.OrderNumber);
+
+                if (order == null)
+                    return;
+
                 order.OrderStatus = "Cancelled";
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();

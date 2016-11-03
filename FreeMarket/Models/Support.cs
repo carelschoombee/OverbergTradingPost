@@ -15,10 +15,14 @@ namespace FreeMarket.Models
     public partial class Support
     {
         public int SupportID { get; set; }
+        public string MainContactName { get; set; }
         public string Cellphone { get; set; }
         public string Landline { get; set; }
         public string Email { get; set; }
-        public string MainContactName { get; set; }
         public string OrdersEmail { get; set; }
+        public string StreetAddress { get; set; }
+        public string TownName { get; set; }
+        public string PostalCode { get; set; }
+        public string Province { get; set; }
     }
 }
