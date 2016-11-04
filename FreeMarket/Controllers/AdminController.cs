@@ -621,6 +621,13 @@ namespace FreeMarket.Controllers
             return View(supplier);
         }
 
+        public ActionResult EditSupport()
+        {
+            Support support = Support.GetSupport();
+
+            return View(support);
+        }
+
         public ActionResult GetCustomerName(int orderNumber)
         {
             OrderHeader order = new OrderHeader();
@@ -785,6 +792,22 @@ namespace FreeMarket.Controllers
             }
 
             return View("EditSiteConfig", config);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditSupportProcess(Support support)
+        {
+            if (ModelState.IsValid)
+            {
+                Support.SaveModel(support);
+
+                AuditUser.LogAudit(36, "Support modified.", User.Identity.GetUserId());
+
+                return RedirectToAction("Index", "Admin");
+            }
+
+            return View("EditSupport", support);
         }
 
         [HttpPost]

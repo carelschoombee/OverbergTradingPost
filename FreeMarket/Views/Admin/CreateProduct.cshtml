@@ -21,11 +21,14 @@
 
             <div class="well well-modal">
                 @Html.Partial("_ProductPartial", Model)
-            </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" class="btn btn-info" value="Create" />
+                <hr />
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-info" value="Create" />
+                        @Html.ActionLink("Back", "ProductsIndex", "Admin", new { @class = "btn btn-success" })
+                    </div>
                 </div>
             </div>
         }

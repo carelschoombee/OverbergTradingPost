@@ -1,17 +1,41 @@
 ﻿@using FreeMarket.Models
 @model SaveCartViewModel
 
-<div id="radioDiv" class="form-group col-md-12">
-    <table class="table table-responsive table-condensed table-bordered-custom">
-        <tr>
-            <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl" })</td>
-            <td>Deliver via Courier</td>
-            <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
-        </tr>
-        <tr>
-            <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl" })</td>
-            <td>Collect from your Post Office</td>
-            <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
-        </tr>
-    </table>
-</div>
+@if (Model.OrderStatus == "Locked")
+{
+    <div id="radioDiv" class="form-group col-md-12">
+        <table class="table table-responsive table-condensed table-bordered-custom">
+            <tr>
+                <td>
+                    @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl", @disabled = "disabled" })
+                    @Html.HiddenFor(m => Model.DeliveryOptions.SelectedDeliveryType)
+                </td>
+                <td>Deliver via Courier</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+            </tr>
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl", @disabled = "disabled" })</td>
+                <td>Collect from your Post Office</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div id="radioDiv" class="form-group col-md-12">
+        <table class="table table-responsive table-condensed table-bordered-custom">
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl" })</td>
+                <td>Deliver via Courier</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+            </tr>
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl" })</td>
+                <td>Collect from your Post Office</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
+            </tr>
+        </table>
+    </div>
+}
+

@@ -27,6 +27,8 @@ namespace FreeMarket.Models
 
         public int DaysToAddToMinDate { get; set; }
 
+        public string OrderStatus { get; set; }
+
         public SaveCartViewModel() { }
 
         public SaveCartViewModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
@@ -38,6 +40,8 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                OrderStatus = order.OrderStatus;
+
                 DeliveryOptions = new DeliveryType()
                 {
                     SelectedDeliveryType = order.DeliveryType,

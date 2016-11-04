@@ -240,6 +240,7 @@
     <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
     <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
     <Compile Include="Models\Admin\CouriersCollection.cs" />
+    <Compile Include="Models\Admin\SupportMetaData.cs" />
     <Compile Include="Models\Admin\CustodianMetaData.cs" />
     <Compile Include="Models\Admin\DepartmentMetaData.cs" />
     <Compile Include="Models\Admin\PostOfficeViewModel.cs" />
@@ -765,6 +766,9 @@
     <Content Include="Views\ShoppingCart\ViewProduct.cshtml" />
     <Content Include="Views\Home\Privacy.cshtml" />
     <Content Include="Views\Manage\_ValidateRatingFormPartial.cshtml" />
+    <Content Include="Views\Admin\EditSupport.cshtml" />
+    <Content Include="Views\Admin\_SupportPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateSupportPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

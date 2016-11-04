@@ -22,9 +22,13 @@
                 @Html.TextBoxFor(m => m.UnConfirmedEmail, new { @class = "form-control" })
             </div>
         </div>
+
+        <hr />
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" class="btn btn-primary" value="Email Link" />
+                @Html.ActionLink("Back", "Index", "Manage", new { @class = "btn btn-primary" })
             </div>
         </div>
     }

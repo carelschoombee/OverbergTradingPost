@@ -1,0 +1,116 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#supportForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'LandLine': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'Cellphone': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'OrdersEmail': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'Email': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'MainContactName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'StreetAddress': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 200 characters.',
+                                    max: 200
+                                }
+                            }
+                        },
+                        'Province': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'PostalCode': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 50 characters.',
+                                    max: 50
+                                }
+                            }
+                        },
+                        'TownName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'Max length must be less than 200 characters.',
+                                    max: 200
+                                }
+                            }
+                        },
+                        
+                    }
+                })
+    });
+
+</script>

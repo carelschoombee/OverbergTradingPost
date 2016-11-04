@@ -52,7 +52,7 @@
           <Property Name="DateTime" Type="datetime" Nullable="false" />
           <Property Name="Identity" Type="nvarchar" MaxLength="100" />
           <Property Name="Action" Type="smallint" Nullable="false" />
-          <Property Name="Parameters" Type="varchar" MaxLength="255" />
+          <Property Name="Parameters" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Courier">
           <Key>
@@ -1271,7 +1271,7 @@
           <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Identity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Action" Type="Int16" Nullable="false" />
-          <Property Name="Parameters" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Parameters" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SitePicture">
           <Key>

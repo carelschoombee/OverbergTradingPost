@@ -439,7 +439,7 @@ namespace FreeMarket.Models
 
         [Required]
         [MinValue("0.1")]
-        [DisplayName("Weight")]
+        [DisplayName("Weight (KG)")]
         public decimal Weight { get; set; }
 
         [DisplayName("Product Number")]

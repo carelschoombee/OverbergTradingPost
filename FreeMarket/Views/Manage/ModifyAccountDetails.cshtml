@@ -20,9 +20,12 @@
 
     @Html.Partial("_ModifyCustomerPartial")
 
+    <hr />
+
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="text-center">
             <input type="submit" class="btn btn-primary" value="Update" />
+            @Html.ActionLink("Back", "Index", "Manage", new { @class = "btn btn-primary" })
         </div>
     </div>
 

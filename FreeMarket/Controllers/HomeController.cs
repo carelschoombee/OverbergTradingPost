@@ -27,6 +27,8 @@ namespace FreeMarket.Controllers
                 AuditUser.LogAudit(32, "Hit");
             }
 
+            OrderHeader.TestDates();
+
             return View();
         }
 

@@ -21,13 +21,14 @@
 
             <div>
                 @Html.Partial("_PostOfficePartial", Model)
-            </div>
-            
-            <hr />
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" class="btn btn-primary" value="Save" />
+                <hr />
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                        @Html.ActionLink("Back", "PostOfficeIndex", "Admin", new { @class = "btn btn-success" })
+                    </div>
                 </div>
             </div>
         }

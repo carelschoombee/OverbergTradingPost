@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FreeMarket.Models
@@ -22,7 +23,7 @@ namespace FreeMarket.Models
                     .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
                     .Average(m => m.PriceRating) ?? 0;
 
-                return (qualityRating + priceRating) / 2;
+                return Math.Round((qualityRating + priceRating) / 2, 2);
             }
         }
 
@@ -43,10 +44,10 @@ namespace FreeMarket.Models
                 else
                 {
                     reviews = db.ProductReviews
-                                        .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
-                                        .OrderByDescending(c => c.StarRating)
-                                        .Take(size)
-                                        .ToList();
+                            .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
+                            .OrderByDescending(c => c.StarRating)
+                            .Take(size)
+                            .ToList();
                 }
             }
 

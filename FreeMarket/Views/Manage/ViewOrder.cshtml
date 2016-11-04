@@ -92,6 +92,7 @@
     <div class="row">
         <div class="col-sm-6">
             <a class="btn btn-success btn-lg" href="@Url.Action("RateOrder", "Manage", new { orderNumber = Model.Order.OrderNumber })"><span class="glyphicon glyphicon-star"></span> &nbsp;&nbsp;Rate this order</a>
+            @Html.ActionLink("Back", "ViewOrderHistory", "Manage", new { @class = "btn btn-primary btn-lg" })
         </div>
         <div class="col-sm-6">
             <table class="table table-bordered-totals well well-banner">

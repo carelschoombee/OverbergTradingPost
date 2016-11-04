@@ -701,7 +701,7 @@ namespace FreeMarket.Controllers
                         cart.SetOrderConfirmed(User.Identity.GetUserId());
 
                         AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), User.Identity.GetUserId());
-                        OrderHeader.SendConfirmationEmail(User.Identity.GetUserId(), orderNumber);
+                        OrderHeader.SendConfirmationMessages(User.Identity.GetUserId(), orderNumber);
                     }
                 }
                 else

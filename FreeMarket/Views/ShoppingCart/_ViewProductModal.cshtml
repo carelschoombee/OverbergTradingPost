@@ -84,7 +84,8 @@
 
                         <div>
                             <strong>Average Rating:</strong>
-                            <input id="input-id" name="input-id" value="@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber })" data-min="0" data-max="3" class="rating-loading" data-show-caption="true" data-size="sm">
+                            <div><label style="font-size: 16px; color:gold">@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber }) / 3</label></div>
+                            @*<input id="input-id" name="input-id" value="@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber })" data-min="0" data-max="3" step="0.1" data-show-caption="true" data-size="sm">*@
                             <a id="readReviews"><span class="glyphicon glyphicon-plus-sign text-success">Read Reviews</span></a> <a id="closeReviews"><span class="glyphicon glyphicon-minus-sign text-info">Close Reviews</span></a>
                         </div>
 
@@ -112,7 +113,7 @@
 
 <script language="javascript" type="text/javascript">
 
-    $('#input-id').rating({displayOnly: true, step: 1, stars: 3, clearCaption: 'Not yet rated'});
+    $('#input-id').rating({displayOnly: true, step: 0.1, stars: 3});
 
     $("#readReviews").click(function () {
         $.ajax({

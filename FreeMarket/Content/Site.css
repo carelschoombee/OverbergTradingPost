@@ -489,3 +489,8 @@ a.freemarket-link { color: white }
   margin-left:20px;
   margin-right:20px;
 }
+
+input[readonly]
+{
+    background-color: #E6E6E6;
+}

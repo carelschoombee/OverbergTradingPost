@@ -394,25 +394,26 @@ namespace FreeMarket.Models
             }
         }
 
-        public async static void SendConfirmationEmail(string customerNumber, int orderNumber)
+        public async static void SendConfirmationMessages(string customerNumber, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
                 ApplicationUser user = System.Web.HttpContext
                             .Current
                             .GetOwinContext()
                             .GetUserManager<ApplicationUserManager>()
                             .FindById(customerNumber);
 
-                Dictionary<MemoryStream, string> orderSummary;
-                Dictionary<MemoryStream, string> orderDeliveryInstruction;
-
-                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                if (user == null)
+                    return;
 
                 Support supportInfo = db.Supports
                     .FirstOrDefault();
-
-                bool specialDelivery = false;
 
                 int postalCode = 0;
 
@@ -422,107 +423,201 @@ namespace FreeMarket.Models
                 }
                 catch (Exception e)
                 {
-
+                    ExceptionLogging.LogException(e);
                 }
 
-                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
+                bool specialDelivery = (db.ValidateSpecialDeliveryCode(postalCode).First() == 1);
+
+                Dictionary<MemoryStream, string> orderSummary = new Dictionary<MemoryStream, string>();
+                Dictionary<MemoryStream, string> orderDeliveryInstruction = new Dictionary<MemoryStream, string>();
+
+                GetConfirmationReports(orderNumber, order.DeliveryType, ref orderSummary, ref orderDeliveryInstruction, specialDelivery);
+
+                SendConfirmationEmailToCustomer(order, user, supportInfo, orderSummary);
+
+                if (ConfigurationManager.AppSettings["sendSMSToSupportOnOrderConfirmed"] == "true")
                 {
-                    orderSummary = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
-                    orderDeliveryInstruction = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
-                    specialDelivery = true;
+                    SendConfirmationSmsToSupport(user, supportInfo, order);
                 }
-                else
+
+                SendConfirmationSmsToCustomer(user, order);
+
+                SendConfirmationEmailToCourier(order, supportInfo, specialDelivery, orderDeliveryInstruction);
+            }
+        }
+
+        private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, bool specialDelivery, Dictionary<MemoryStream, string> orderDeliveryInstruction)
+        {
+            if (order.DeliveryType == "Courier")
+            {
+                Courier courier = new Courier();
+
+                using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    if (order.DeliveryType == "Courier")
-                    {
-                        orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
-                        orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
-                    }
+                    courier = db.Couriers.Find(order.CourierNumber);
+                }
+
+                if (courier != null)
+                {
+                    string message = CreateCourierInstructionsMessage();
+
+                    IdentityMessage iMessageCourier = new IdentityMessage();
+
+                    if (specialDelivery)
+                        iMessageCourier.Destination = supportInfo.OrdersEmail;
                     else
-                    {
-                        orderSummary = GetReport(ReportType.PostalConfirmation.ToString(), orderNumber);
-                        orderDeliveryInstruction = GetReport(ReportType.PostalInstructions.ToString(), orderNumber);
-                    }
+                        iMessageCourier.Destination = courier.MainContactEmailAddress;
+
+                    iMessageCourier.Body = string.Format((message)
+                        , order.OrderNumber
+                        , supportInfo.MainContactName
+                        , supportInfo.Landline
+                        , supportInfo.Cellphone
+                        , supportInfo.Email);
+
+                    iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
+
+                    EmailService email = new EmailService();
+
+                    await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
                 }
+            }
+            else if (order.DeliveryType == "PostOffice")
+            {
+                string message = CreatePostOfficeInstructionsMessage();
+
+                IdentityMessage iMessageCourier = new IdentityMessage();
+
+                iMessageCourier.Destination = supportInfo.OrdersEmail;
+                iMessageCourier.Body = string.Format((message), order.OrderNumber);
+                iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
 
                 EmailService email = new EmailService();
 
-                IdentityMessage iMessage = new IdentityMessage();
-                iMessage.Destination = user.Email;
+                await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
+            }
+        }
 
-                string message1 = CreateConfirmationMessageCustomer();
-
-                iMessage.Body = string.Format((message1), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
-                iMessage.Subject = string.Format("Schoombee and Son Order");
-
-                await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
-
+        private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order)
+        {
+            if (order.DeliveryType == "Courier")
+            {
                 DateTime dateDispatch = DateTime.Now;
                 DateTime dateArrive = DateTime.Now;
 
                 dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
                 dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
 
+                string message = "";
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    message = db.SiteConfigurations
+                           .Where(c => c.Key == "OrderConfirmationSmsLine1")
+                           .Select(c => c.Value)
+                           .FirstOrDefault();
+                }
+
                 SMSHelper helper = new SMSHelper();
 
-                if (ConfigurationManager.AppSettings["sendSMSToSupportOnOrderConfirmed"] == "true")
-                {
-                    await helper.SendMessage(string.Format("Customer: {0}, has placed order {1}. Date of delivery: {2}. Order Total: {3}. Delivery mechanism: {4}."
-                                           , user.Name, order.OrderNumber, string.Format("{0:f}", order.DeliveryDate), string.Format("{0:C}", order.TotalOrderValue),
-                                           order.DeliveryType), string.Format("{0},{1}", supportInfo.Cellphone, supportInfo.Landline));
+                await helper.SendMessage(string.Format(message
+                    , user.Name
+                    , order.OrderNumber
+                    , string.Format("{0:d}", dateDispatch)
+                    , string.Format("{0:f}", dateArrive))
+                    , user.PhoneNumber);
+            }
+            else if (order.DeliveryType == "PostOffice")
+            {
+                DateTime dateDispatch = DateTime.Now;
+                DateTime dateArrive = DateTime.Now;
 
+                dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                string message = "";
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    message = db.SiteConfigurations
+                       .Where(c => c.Key == "OrderConfirmationSmsPostOfficeLine1")
+                       .Select(c => c.Value)
+                       .FirstOrDefault();
                 }
 
-                if (order.DeliveryType == "Courier")
+                SMSHelper helper = new SMSHelper();
+
+                await helper.SendMessage(string.Format(message
+                    , user.Name
+                    , order.OrderNumber
+                    , string.Format("{0:d}", dateDispatch))
+                    , user.PhoneNumber);
+            }
+
+        }
+
+        private async static void SendConfirmationSmsToSupport(ApplicationUser user, Support supportInfo, OrderHeader order)
+        {
+            DateTime dateDispatch = DateTime.Now;
+            DateTime dateArrive = DateTime.Now;
+
+            dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+            dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+            string message = "";
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                message = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderConfirmationSMSSupport")
+                    .FirstOrDefault()
+                    .Value;
+            }
+
+            SMSHelper helper = new SMSHelper();
+
+            await helper.SendMessage(
+                    string.Format(message
+                    , user.Name, order.OrderNumber
+                    , string.Format("{0:f}", order.DeliveryDate)
+                    , string.Format("{0:C}", order.TotalOrderValue)
+                    , order.DeliveryType)
+                , string.Format("{0},{1}"
+                    , supportInfo.Cellphone
+                    , supportInfo.Landline));
+        }
+
+        private async static void SendConfirmationEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<MemoryStream, string> orderSummary)
+        {
+            IdentityMessage iMessage = new IdentityMessage();
+            iMessage.Destination = user.Email;
+
+            string message1 = CreateConfirmationMessageCustomer();
+
+            iMessage.Body = string.Format((message1), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+            iMessage.Subject = string.Format("Schoombee and Son Order");
+
+            EmailService email = new EmailService();
+
+            await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
+        }
+
+        private static void GetConfirmationReports(int orderNumber, string deliveryType, ref Dictionary<MemoryStream,
+            string> orderSummary, ref Dictionary<MemoryStream, string> orderDeliveryInstruction, bool specialDelivery)
+        {
+            if (specialDelivery)
+            {
+                orderSummary = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
+                orderDeliveryInstruction = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
+            }
+            else
+            {
+                if (deliveryType == "Courier")
                 {
-                    string smsLine1 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderConfirmationSmsLine1")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    await helper.SendMessage(string.Format(smsLine1, user.Name, order.OrderNumber,
-                        string.Format("{0:d}", dateDispatch), string.Format("{0:f}", dateArrive))
-                        , user.PhoneNumber);
-
-                    Courier courier = db.Couriers.Find(1);
-
-                    if (courier != null)
-                    {
-                        string message2 = CreateCourierInstructionsMessage();
-
-                        IdentityMessage iMessageCourier = new IdentityMessage();
-
-                        if (specialDelivery)
-                            iMessageCourier.Destination = supportInfo.OrdersEmail;
-                        else
-                            iMessageCourier.Destination = courier.MainContactEmailAddress;
-
-                        iMessageCourier.Body = string.Format((message2), orderNumber, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
-                        iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
-
-                        await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
-                    }
+                    orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
+                    orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
                 }
-                else
+                else if (deliveryType == "PostOffice")
                 {
-                    string smsLine1 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderConfirmationSmsPostOfficeLine1")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
-
-                    await helper.SendMessage(string.Format(smsLine1, user.Name, order.OrderNumber,
-                        string.Format("{0:d}", dateDispatch))
-                        , user.PhoneNumber);
-
-                    string message3 = CreatePostOfficeInstructionsMessage();
-
-                    IdentityMessage iMessageCourier = new IdentityMessage();
-
-                    iMessageCourier.Destination = supportInfo.OrdersEmail;
-                    iMessageCourier.Body = string.Format((message3), orderNumber);
-                    iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", orderNumber);
-
-                    await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
+                    orderSummary = GetReport(ReportType.PostalConfirmation.ToString(), orderNumber);
+                    orderDeliveryInstruction = GetReport(ReportType.PostalInstructions.ToString(), orderNumber);
                 }
             }
         }
@@ -615,8 +710,15 @@ namespace FreeMarket.Models
         {
             DateTime deliveryDate = preferredDeliveryTime;
 
-            while (deliveryDate.DayOfWeek != DayOfWeek.Tuesday)
-                deliveryDate = deliveryDate.AddDays(-1);
+            if (deliveryDate.DayOfWeek == DayOfWeek.Tuesday)
+            {
+                deliveryDate = deliveryDate.AddDays(7);
+            }
+            else
+            {
+                while (deliveryDate.DayOfWeek != DayOfWeek.Tuesday && deliveryDate > DateTime.Now)
+                    deliveryDate = deliveryDate.AddDays(-1);
+            }
 
             return deliveryDate;
         }
@@ -669,30 +771,191 @@ namespace FreeMarket.Models
             return suggestedDate;
         }
 
+        #region testing
+
+        public static void TestDates()
+        {
+            DateTime date1 = DateTime.Now;
+            DateTime date2 = date1;
+
+            int i = 0;
+
+            while (i < 14)
+            {
+                while (date2.DayOfWeek != DayOfWeek.Wednesday && date2.DayOfWeek != DayOfWeek.Thursday && date2.DayOfWeek != DayOfWeek.Friday)
+                {
+                    date2 = date2.AddDays(1);
+                }
+
+                Debug.WriteLine("-------------------------------------");
+                Debug.WriteLine("date2      : {0}", date2);
+                Debug.WriteLine("Dispatch   : {0}", GetDispatchDay(date2));
+                Debug.WriteLine("Arrive     : {0}", GetArriveDay(date2));
+                Debug.WriteLine("-------------------------------------");
+
+                date2 = date2.AddDays(1);
+
+                i++;
+            }
+
+            i = 0;
+
+            Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+            date2 = date1;
+
+            while (i < 14)
+            {
+                date2 = date2.AddDays(1);
+
+                Debug.WriteLine("-------------------------------------");
+                Debug.WriteLine("date2                      : {0}", date2);
+                Debug.WriteLine("SuggestedDelivery          : {0}", GetSuggestedDeliveryTimeTest(date2));
+                Debug.WriteLine("SuggestedSpecialDelivery   : {0}", GetSpecialSuggestedDeliveryTimeTest(date2));
+                Debug.WriteLine("DaysToMinDate              : {0}", GetDaysToMinDateTest(date2));
+                Debug.WriteLine("-------------------------------------");
+
+                i++;
+            }
+        }
+
+        public static DateTime GetSpecialSuggestedDeliveryTimeTest(DateTime todayTest)
+        {
+            DateTime today = todayTest;
+            DateTime suggestedDate = today.AddDays(2);
+
+            while (suggestedDate.DayOfWeek == DayOfWeek.Saturday || suggestedDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                suggestedDate = suggestedDate.AddDays(1);
+            }
+
+            suggestedDate = suggestedDate.AddHours(-12);
+
+            return suggestedDate;
+        }
+
+        public static DateTime GetSuggestedDeliveryTimeTest(DateTime todayDate)
+        {
+            DateTime today = todayDate;
+            int daysUntilFriday = 0;
+
+            if (today.DayOfWeek == DayOfWeek.Friday)
+                daysUntilFriday = 7;
+            else
+            {
+                if (GetDaysToMinDate() >= 6)
+                    daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
+                else
+                    daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            }
+
+            DateTime nextFriday = today.AddDays(daysUntilFriday);
+            nextFriday = nextFriday.AddHours(-12);
+
+            return nextFriday;
+        }
+
+        public static int GetDaysToMinDateTest(DateTime todayDay)
+        {
+            DateTime today = todayDay;
+
+            int daysTillMinDate = 0;
+
+            if (today.DayOfWeek == DayOfWeek.Monday)
+            {
+                daysTillMinDate = 1;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Tuesday)
+            {
+                daysTillMinDate = 7;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                daysTillMinDate = 6;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Thursday)
+            {
+                daysTillMinDate = 5;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Friday)
+            {
+                daysTillMinDate = 4;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Saturday)
+            {
+                daysTillMinDate = 3;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Sunday)
+            {
+                daysTillMinDate = 2;
+                return daysTillMinDate;
+            }
+
+            return 0;
+        }
+        #endregion
+
         public static int GetDaysToMinDate()
         {
             DateTime today = DateTime.Today;
 
             int daysTillMinDate = 0;
 
+            if (today.DayOfWeek == DayOfWeek.Monday)
+            {
+                daysTillMinDate = 1;
+                return daysTillMinDate;
+            }
+
             if (today.DayOfWeek == DayOfWeek.Tuesday)
             {
-                today = today.AddDays(1);
+                daysTillMinDate = 7;
+                return daysTillMinDate;
             }
 
             if (today.DayOfWeek == DayOfWeek.Wednesday)
             {
-                today = today.AddDays(1);
-                daysTillMinDate++;
+                daysTillMinDate = 6;
+                return daysTillMinDate;
             }
 
-            while (today.DayOfWeek != DayOfWeek.Wednesday)
+            if (today.DayOfWeek == DayOfWeek.Thursday)
             {
-                today = today.AddDays(1);
-                daysTillMinDate++;
+                daysTillMinDate = 5;
+                return daysTillMinDate;
             }
 
-            return daysTillMinDate;
+            if (today.DayOfWeek == DayOfWeek.Friday)
+            {
+                daysTillMinDate = 4;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Saturday)
+            {
+                daysTillMinDate = 3;
+                return daysTillMinDate;
+            }
+
+            if (today.DayOfWeek == DayOfWeek.Sunday)
+            {
+                daysTillMinDate = 2;
+                return daysTillMinDate;
+            }
+
+            return 0;
         }
 
         public override string ToString()
