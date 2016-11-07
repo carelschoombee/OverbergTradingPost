@@ -1,0 +1,142 @@
+﻿@using FreeMarket.Models
+@model OrderHeaderViewModel
+
+<hr />
+    <table class="table table-bordered-custom table-responsive">
+        <tr>
+            <th class="col-md-4"></th>
+            <th class="col-md-6"></th>
+        </tr>
+        <tr>
+            <td>Items in Order</td>
+            <td>
+                
+                    @if (Model.ItemsInOrder != null && Model.ItemsInOrder.Count > 0)
+                    {
+                        foreach (OrderDetail detail in Model.ItemsInOrder)
+                        {
+                            <table class="table table-bordered-custom table-responsive well">
+                                <tr>
+                                    <td>
+                                        Item number:
+                                    </td>
+                                    <td>
+                                        @detail.ItemNumber
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Product:
+                                    </td>
+                                    <td>
+                                        @detail.ProductDescription supplied by @detail.SupplierName
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Weight:
+                                    </td>
+                                    <td>
+                                        @detail.ProductWeight KG
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Price:
+                                    </td>
+                                    <td>
+                                        @string.Format("{0:C}", detail.Price)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Quantity:
+                                    </td>
+                                    <td>
+                                        @detail.Quantity
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total:
+                                    </td>
+                                    <td>
+                                        @string.Format("{0:C}", detail.OrderItemValue)
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+
+                    }
+                            
+            </td>
+        </tr>
+        <tr>
+            <td>Order Number:</td>
+            <td>@Model.Order.OrderNumber</td>
+        </tr>
+        <tr>
+            <td>Order Status:</td>
+            <td>@Model.Order.OrderStatus</td>
+        </tr>
+        <tr>
+            <td>Customer Name:</td>
+            <td>@Model.Order.CustomerName</td>
+        </tr>
+        <tr>
+            <td>Customer Email:</td>
+            <td>@Model.Order.CustomerEmail</td>
+        </tr>
+        <tr>
+            <td>Customer Phone Primary:</td>
+            <td>@Model.Order.CustomerPrimaryContactPhone</td>
+        </tr>
+        <tr>
+            <td>Customer Preferred Communication method:</td>
+            <td>@Model.Order.CustomerPreferredCommunicationMethod</td>
+        </tr>
+        <tr>
+            <td>Date Order Placed:</td>
+            <td>@Model.Order.OrderDatePlaced</td>
+        </tr>
+        <tr>
+            <td>Date Order Dispatched:</td>
+            <td>@Model.Order.DateDispatched</td>
+        </tr>
+        <tr>
+            <td>Date Order Refunded:</td>
+            <td>@Model.Order.DateRefunded</td>
+        </tr>
+        <tr>
+            <td>Date Order Closed:</td>
+            <td>@Model.Order.OrderDateClosed</td>
+        </tr>
+        <tr>
+            <td>Number of Items in Order:</td>
+            <td>@Model.NumberOfItemsInOrder</td>
+        </tr>
+        <tr>
+            <td>Shipping Cost Total:</td>
+            <td>@string.Format("{0:C}", Model.Order.ShippingTotal)</td>
+        </tr>
+        <tr>
+            <td>Subtotal:</td>
+            <td>@string.Format("{0:C}", Model.Order.SubTotal)</td>
+        </tr>
+        <tr>
+            <td>Grand Total:</td>
+            <td>@string.Format("{0:C}", @Model.Order.TotalOrderValue)</td>
+        </tr>
+        <tr>
+            <td>Payment Received?:</td>
+            <td>@Model.Order.PaymentReceived</td>
+        </tr>
+        <tr>
+            <td>Delivery Type:</td>
+            <td>@Model.Order.DeliveryType</td>
+        </tr>
+        <tr>
+            <td>Delivery Address:</td>
+            <td><span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span></td>
+        </tr>     
+    </table>

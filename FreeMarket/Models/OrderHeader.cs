@@ -42,6 +42,8 @@ namespace FreeMarket.Models
         public Nullable<decimal> SubTotal { get; set; }
         public decimal TotalOrderValue { get; set; }
         public Nullable<int> CourierNumber { get; set; }
+        public Nullable<System.DateTime> DateDispatched { get; set; }
+        public Nullable<System.DateTime> DateRefunded { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

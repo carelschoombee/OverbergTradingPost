@@ -19,6 +19,7 @@ namespace FreeMarket.Models
         public List<AspNetUser> Customers { get; set; }
 
         public List<OrderHeader> ConfirmedOrders { get; set; }
+        public List<OrderHeader> InTransitOrders { get; set; }
         public List<OrderHeader> RefundPending { get; set; }
 
         [DisplayName("Time Period")]
@@ -31,6 +32,13 @@ namespace FreeMarket.Models
         public DateTime SelectedMonth { get; set; }
 
         public string Period { get; set; }
+
+        [DisplayName("Filter")]
+        public int OrderSearchCriteria { get; set; }
+        public OrderHeaderViewModel SearchedOrder { get; set; }
+
+        [DisplayName("Filter")]
+        public string AuditSearchCriteria { get; set; }
 
         public Dashboard()
         {
@@ -76,6 +84,7 @@ namespace FreeMarket.Models
                 RatingsInformation = new RatingsInfo();
                 Customers = db.AspNetUsers.ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
         }
@@ -116,6 +125,7 @@ namespace FreeMarket.Models
                 RatingsInformation = new RatingsInfo();
                 Customers = db.AspNetUsers.ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
             }
         }

@@ -75,6 +75,62 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult SearchOrder(Dashboard model)
+        {
+            ModelState.Remove("SelectedYear");
+
+            if (ModelState.IsValid)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    OrderHeader order = db.OrderHeaders.Find(model.OrderSearchCriteria);
+
+                    if (order == null)
+                    {
+                        return Content("");
+                    }
+
+                    model.SearchedOrder = OrderHeaderViewModel.GetOrder(model.OrderSearchCriteria, order.CustomerNumber);
+                }
+
+                return PartialView("_ViewFullOrder", model.SearchedOrder);
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SearchAudit(Dashboard model)
+        {
+            List<AuditUser> audits = new List<AuditUser>();
+
+            ModelState.Remove("SelectedYear");
+
+            if (ModelState.IsValid)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    audits = AuditUser.GetAudits(model.AuditSearchCriteria);
+
+                    if (audits == null)
+                    {
+                        return Content("");
+                    }
+                }
+
+                return PartialView("_ViewAudits", audits);
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Dashboard(Dashboard data, string yearView, string monthView)
         {
             Dashboard model = new Dashboard();
@@ -118,7 +174,7 @@ namespace FreeMarket.Controllers
 
                         if (order != null)
                         {
-                            order.OrderStatus = "Complete";
+                            order.OrderStatus = "Completed";
                             order.OrderDateClosed = DateTime.Now;
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
@@ -134,6 +190,45 @@ namespace FreeMarket.Controllers
                             }
 
                             AuditUser.LogAudit(10, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("DeliverPartialInTransitTable", "Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarkInTransit(List<OrderHeader> orders)
+        {
+            List<OrderHeader> selected = orders
+                .Where(c => c.Selected)
+                .ToList();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (selected.Count > 0)
+                {
+                    foreach (OrderHeader oh in selected)
+                    {
+                        OrderHeader order = db.OrderHeaders.Find(oh.OrderNumber);
+
+                        if (order != null)
+                        {
+                            order.OrderStatus = "InTransit";
+                            order.DateDispatched = DateTime.Now;
+                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+
+                            ApplicationUser user = System.Web.HttpContext.Current
+                                .GetOwinContext()
+                                .GetUserManager<ApplicationUserManager>()
+                                .FindById(order.CustomerNumber);
+
+                            OrderHeader.SendDispatchMessage(order.CustomerNumber, order.OrderNumber);
+
+                            AuditUser.LogAudit(37, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
                         }
                     }
                 }
@@ -161,6 +256,7 @@ namespace FreeMarket.Controllers
                         if (order != null)
                         {
                             order.OrderStatus = "Refunded";
+                            order.DateRefunded = DateTime.Now;
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
                             AuditUser.LogAudit(11, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
@@ -208,6 +304,18 @@ namespace FreeMarket.Controllers
             }
 
             return PartialView("_ConfirmedOrders", confirmedOrders);
+        }
+
+        public ActionResult DeliverPartialInTransitTable()
+        {
+            List<OrderHeader> inTransitOrders = new List<OrderHeader>();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                inTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
+            }
+
+            return PartialView("_InTransitOrders", inTransitOrders);
         }
 
         public ActionResult RefundCompletedPartial()
@@ -976,6 +1084,37 @@ namespace FreeMarket.Controllers
             RatingsInfo info = new RatingsInfo();
 
             return RedirectToAction("Index", "Admin");
+        }
+
+
+        public ActionResult GetTotalWeightOfOrder(int orderNumber)
+        {
+            decimal totalWeight = 0;
+            OrderHeader order = new OrderHeader();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return Content("");
+
+                List<OrderDetail> details = db.OrderDetails
+                    .Where(c => c.OrderNumber == order.OrderNumber)
+                    .ToList();
+
+                foreach (OrderDetail detail in details)
+                {
+                    Product product = db.Products.Find(detail.ProductNumber);
+
+                    if (product != null)
+                    {
+                        totalWeight += product.Weight * detail.Quantity;
+                    }
+                }
+            }
+
+            return Content(Math.Round(totalWeight, 2).ToString());
         }
     }
 }

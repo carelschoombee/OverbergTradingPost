@@ -1,7 +1,7 @@
 ﻿@using FreeMarket.Models
 @model List<OrderHeader>
 
-<h2 class="text-center">Confirmed Orders</h2>
+<h2 class="text-center">Orders In Transit</h2>
 <table class="table table-bordered-custom table-responsive">
 
     @if (Model != null && Model.Count != 0)
@@ -22,11 +22,12 @@
             <th>
                 Total Weight
             </th>
+            
             <th>
                 Delivery Type
             </th>
             <th>
-                Dispatch and send SMS
+                Send Rating Email and Close Order
             </th>
         </tr>
         for (int i = 0; i < Model.Count; i++)
@@ -49,7 +50,7 @@
     { 
         <tr>
             <td style="font-size: 20px">
-                There are no new confirmed orders at the moment.
+                There are no orders currently in transit.
             </td>
         </tr>
     }

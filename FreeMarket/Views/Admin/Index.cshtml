@@ -30,6 +30,24 @@
         UpdateTargetId = "customersResults"
         //LoadingElementId = "loadingDiv",
     };
+
+    AjaxOptions ajaxOptsInTransit = new AjaxOptions
+    {
+        UpdateTargetId = "InTransitTable"
+        //LoadingElementId = "loadingDiv",
+    };
+
+    AjaxOptions ajaxOptsSearchOrder= new AjaxOptions
+    {
+        UpdateTargetId = "searchOrderResults"
+        //LoadingElementId = "loadingDiv",
+    };
+
+    AjaxOptions ajaxOptsSearchAudit = new AjaxOptions
+    {
+        UpdateTargetId = "searchAuditResults"
+        //LoadingElementId = "loadingDiv",
+    };
 }
 
 <br />
@@ -56,11 +74,14 @@
 
     <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
-        <li><a href="#orders" data-toggle="tab">Orders</a></li>
+        <li><a href="#dispatch" data-toggle="tab">Orders to be Dispatched</a></li>
+        <li><a href="#orders" data-toggle="tab">In Transit Orders</a></li>
         <li><a href="#customers" data-toggle="tab">Customers</a></li>
+        <li><a href="#orderSearch" data-toggle="tab">Search Order</a></li>
         <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
         <li><a href="#profile" data-toggle="tab">Functions</a></li>
         <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
+        <li><a href="#auditing" data-toggle="tab">Auditing</a></li>
     </ul>
 
     <div class="tab-content">
@@ -194,16 +215,33 @@
                 </div>
             </div>
         </div>
+        <div class="tab-pane" id="dispatch">
+            @using (Ajax.BeginForm("MarkInTransit", "Admin", null, ajaxOptsInTransit))
+            {
+                @Html.AntiForgeryToken()
+
+                <div id="InTransitTable">
+                    @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
+                </div>
+
+                if (Model.ConfirmedOrders != null && Model.ConfirmedOrders.Count > 0)
+                {
+                    <div class="col-sm-offset-5">
+                        <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
+                    </div>
+                }
+            }
+        </div>
         <div class="tab-pane" id="orders">
             @using (Ajax.BeginForm("MarkComplete", "Admin", null, ajaxOpts))
             {
                 @Html.AntiForgeryToken()
 
                 <div id="CompleteTable">
-                    @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
+                    @Html.Partial("_InTransitOrders", Model.InTransitOrders)
                 </div>
 
-                if (Model.ConfirmedOrders != null && Model.ConfirmedOrders.Count > 0)
+                if (Model.InTransitOrders != null && Model.InTransitOrders.Count > 0)
                 {
                     <div class="col-sm-offset-5">
                         <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
@@ -225,6 +263,41 @@
                 }
 
             </div>
+        </div>
+        <div class="tab-pane" id="orderSearch">
+            <h2 class="text-center">Search Orders</h2>
+            <hr />
+            
+            @using (Ajax.BeginForm("SearchOrder", "Admin", null, ajaxOptsSearchOrder, new { @id = "searchOrderForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group center_div">
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(c => c.OrderSearchCriteria, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.OrderSearchCriteria, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="submit" value="Filter by Order Number" class="btn btn-primary btn-sm" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                </div>
+
+                    
+            }
+
+            <br />
+            <br />
+            
+            <div id="searchOrderResults">
+                
+            </div>
+
         </div>
         <div class="tab-pane" id="customers">
             <h2 class="text-center">Customers</h2>
@@ -275,6 +348,40 @@
                     </div>
                 }
             }
+        </div>
+        <div class="tab-pane" id="auditing">
+            <h2 class="text-center">Search Audit</h2>
+            <hr />
+
+            @using (Ajax.BeginForm("SearchAudit", "Admin", null, ajaxOptsSearchAudit, new { @id = "searchAuditForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group center_div">
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(c => c.AuditSearchCriteria, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.AuditSearchCriteria, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                </div>
+
+
+            }
+
+            <br />
+            <br />
+
+            <div id="searchAuditResults">
+
+            </div>
         </div>
         <div class="tab-pane" id="profile">
             <div style="font-size:x-large">

@@ -73,6 +73,8 @@ namespace FreeMarket.Models
                         DeliveryDate = null,
                         DeliveryDateAgreed = null,
                         DeliveryType = "Courier",
+                        DateDispatched = null,
+                        DateRefunded = null,
 
                         CustomerName = user.Name,
                         CustomerEmail = user.Email,
@@ -227,6 +229,36 @@ namespace FreeMarket.Models
                 iMessage.Subject = string.Format("Warning!");
 
                 await email.SendAsync(iMessage);
+            }
+        }
+
+        public async static void SendDispatchMessage(string customerNumber, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                ApplicationUser user = System.Web.HttpContext
+                            .Current
+                            .GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(customerNumber);
+
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
+                string deliveryType = order.DeliveryType;
+                if (deliveryType == "PostOffice")
+                    deliveryType = "Post Office";
+
+                string smsLine1 = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderDispatchSmsLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                SMSHelper helper = new SMSHelper();
+
+                await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, deliveryType), user.PhoneNumber);
             }
         }
 

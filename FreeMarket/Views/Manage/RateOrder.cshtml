@@ -18,8 +18,9 @@
             @Html.AntiForgeryToken()
             
             @Html.Partial("_ReviewsPartial", Model)
-            <div class="col-md-offset-5">
+            <div class="text-center">
                 <input type="submit" value="Save/Update" class="btn btn-success" />
+                @Html.ActionLink("Back", "Index", "Manage", null, new { @class = "btn btn-primary" })
             </div>
         }
     </div>

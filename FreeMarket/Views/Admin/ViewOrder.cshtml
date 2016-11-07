@@ -137,6 +137,27 @@
                         <span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span>
                     </td>
                 </tr>
+                @if (Model.Order.DateDispatched != null)
+                {
+                    <tr>
+                        <th>Date Dispatched</th>
+
+                        <td>
+                            <span>@Model.Order.DateDispatched</span>
+                        </td>
+                    </tr>
+                }
+                @if (Model.Order.DateRefunded != null)
+                {
+                    <tr>
+                        <th>Date Dispatched</th>
+
+                        <td>
+                            <span>@Model.Order.DateRefunded</span>
+                        </td>
+                    </tr>
+                }
+                
             </table>
         </div>
     </div>

@@ -492,7 +492,7 @@ namespace FreeMarket.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("RateOrder", new { orderNumber = model.Order.OrderNumber });
+                return RedirectToAction("Index", "Manage");
             }
         }
 

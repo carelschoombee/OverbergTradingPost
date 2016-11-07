@@ -271,6 +271,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\FilterAuditUser_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FilterCustomers_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -311,6 +314,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetNumberOfItemsStatistic_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetOrderDetails_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderHistory_Result.cs">
@@ -769,6 +775,9 @@
     <Content Include="Views\Admin\EditSupport.cshtml" />
     <Content Include="Views\Admin\_SupportPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateSupportPartial.cshtml" />
+    <Content Include="Views\Admin\_InTransitOrders.cshtml" />
+    <Content Include="Views\Admin\_ViewFullOrder.cshtml" />
+    <Content Include="Views\Admin\_ViewAudits.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
