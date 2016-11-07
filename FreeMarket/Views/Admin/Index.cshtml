@@ -353,6 +353,10 @@
             <h2 class="text-center">Search Audit</h2>
             <hr />
 
+            <div>
+                Website hits since inception: @Model.WebsiteHits
+            </div>
+
             @using (Ajax.BeginForm("SearchAudit", "Admin", null, ajaxOptsSearchAudit, new { @id = "searchAuditForm" }))
             {
                 @Html.AntiForgeryToken()

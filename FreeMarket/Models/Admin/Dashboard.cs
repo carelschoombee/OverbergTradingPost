@@ -39,6 +39,7 @@ namespace FreeMarket.Models
 
         [DisplayName("Filter")]
         public string AuditSearchCriteria { get; set; }
+        public int WebsiteHits { get; set; }
 
         public Dashboard()
         {
@@ -86,6 +87,12 @@ namespace FreeMarket.Models
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+                List<AuditUser> hits = new List<AuditUser>();
+                hits = db.AuditUsers.Where(c => c.Action == 32).ToList();
+                if (hits.Count > 0)
+                {
+                    WebsiteHits = hits.Count();
+                }
             }
         }
 
@@ -127,6 +134,13 @@ namespace FreeMarket.Models
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+
+                List<AuditUser> hits = new List<AuditUser>();
+                hits = db.AuditUsers.Where(c => c.ActionNumber == 32).ToList();
+                if (hits.Count > 0)
+                {
+                    WebsiteHits = hits.Count();
+                }
             }
         }
     }
