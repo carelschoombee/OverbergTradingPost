@@ -9,6 +9,8 @@ using RestSharp.Authenticators;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,6 +20,73 @@ namespace FreeMarket
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
+        {
+            SmtpClient smtp = new SmtpClient();
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["systemEmail"]);
+            mail.To.Add(message.Destination);
+            mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));
+            mail.Subject = message.Subject;
+
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
+
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
+            imageResource.ContentId = "LogoImage";
+            htmlView.LinkedResources.Add(imageResource);
+
+            mail.AlternateViews.Add(htmlView);
+
+            smtp.Send(mail);
+
+            return Task.FromResult(0);
+        }
+
+        public Task SendAsync(IdentityMessage message, Stream attachment)
+        {
+            SmtpClient smtp = new SmtpClient();
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["systemEmail"]);
+            mail.To.Add(message.Destination);
+            mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));
+            mail.Subject = message.Subject;
+
+            if (attachment != null)
+            {
+                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
+                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment, ct);
+                attach.ContentDisposition.FileName = "Schoombee & Son Order";
+
+                mail.Attachments.Add(attach);
+            }
+
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
+
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
+            imageResource.ContentId = "LogoImage";
+            htmlView.LinkedResources.Add(imageResource);
+
+            mail.AlternateViews.Add(htmlView);
+
+            smtp.Send(mail);
+
+            return Task.FromResult(0);
+        }
+
+        private AlternateView getEmbeddedImage(String filePath)
+        {
+            LinkedResource inline = new LinkedResource(filePath);
+            inline.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = @"<img src='cid:" + inline.ContentId + @"'/>";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(inline);
+            return alternateView;
+        }
+
+        public Task SendAsyncSandBox(IdentityMessage message)
         {
             RestClient client = new RestClient();
             client.BaseUrl = new Uri("https://api.mailgun.net/v3");
@@ -41,7 +110,7 @@ namespace FreeMarket
             return Task.FromResult(0);
         }
 
-        public Task SendAsync(IdentityMessage message, MemoryStream attachment)
+        public Task SendAsyncSandBox(IdentityMessage message, MemoryStream attachment)
         {
             RestClient client = new RestClient();
             client.BaseUrl = new Uri("https://api.mailgun.net/v3");

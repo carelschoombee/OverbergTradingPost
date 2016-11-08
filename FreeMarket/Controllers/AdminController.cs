@@ -16,7 +16,7 @@ namespace FreeMarket.Controllers
     public class AdminController : Controller
     {
         // GET: Admin
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             Dashboard model = new Dashboard(null, "Year");
             return View(model);
@@ -451,11 +451,11 @@ namespace FreeMarket.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DownloadReportProcess(DownloadReportViewModel model)
         {
-            MemoryStream stream = new MemoryStream();
+            Stream stream = new MemoryStream();
 
             if (ModelState.IsValid)
             {
-                Dictionary<MemoryStream, string> obj = OrderHeader.GetReport(ReportType.OrderConfirmation.ToString(), model.OrderNumber);
+                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.OrderConfirmation.ToString(), model.OrderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {
@@ -474,11 +474,11 @@ namespace FreeMarket.Controllers
 
         public ActionResult DownloadReportConfirmed(int orderNumber)
         {
-            MemoryStream stream = new MemoryStream();
+            Stream stream = new MemoryStream();
 
             if (ModelState.IsValid)
             {
-                Dictionary<MemoryStream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
+                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {

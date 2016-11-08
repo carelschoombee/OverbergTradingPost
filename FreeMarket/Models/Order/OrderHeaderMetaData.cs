@@ -137,10 +137,10 @@ namespace FreeMarket.Models
             }
         }
 
-        public static Dictionary<MemoryStream, string> GetReport(string reportType, int orderNumber)
+        public static Dictionary<Stream, string> GetReport(string reportType, int orderNumber)
         {
-            MemoryStream stream = new MemoryStream();
-            Dictionary<MemoryStream, string> outCollection = new Dictionary<MemoryStream, string>();
+            Stream stream = new MemoryStream();
+            Dictionary<Stream, string> outCollection = new Dictionary<Stream, string>();
 
             try
             {
@@ -180,7 +180,7 @@ namespace FreeMarket.Models
                         rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report1.rdlc");
                         break;
                     default:
-                        return new Dictionary<MemoryStream, string>();
+                        return new Dictionary<Stream, string>();
 
                 }
 
@@ -344,7 +344,7 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                Dictionary<MemoryStream, string> refundSummary;
+                Dictionary<Stream, string> refundSummary;
 
                 OrderHeader oh = db.OrderHeaders.Find(orderNumber);
 
@@ -460,8 +460,8 @@ namespace FreeMarket.Models
 
                 bool specialDelivery = (db.ValidateSpecialDeliveryCode(postalCode).First() == 1);
 
-                Dictionary<MemoryStream, string> orderSummary = new Dictionary<MemoryStream, string>();
-                Dictionary<MemoryStream, string> orderDeliveryInstruction = new Dictionary<MemoryStream, string>();
+                Dictionary<Stream, string> orderSummary = new Dictionary<Stream, string>();
+                Dictionary<Stream, string> orderDeliveryInstruction = new Dictionary<Stream, string>();
 
                 GetConfirmationReports(orderNumber, order.DeliveryType, ref orderSummary, ref orderDeliveryInstruction, specialDelivery);
 
@@ -478,7 +478,7 @@ namespace FreeMarket.Models
             }
         }
 
-        private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, bool specialDelivery, Dictionary<MemoryStream, string> orderDeliveryInstruction)
+        private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, bool specialDelivery, Dictionary<Stream, string> orderDeliveryInstruction)
         {
             if (order.DeliveryType == "Courier")
             {
@@ -616,7 +616,7 @@ namespace FreeMarket.Models
                     , supportInfo.Landline));
         }
 
-        private async static void SendConfirmationEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<MemoryStream, string> orderSummary)
+        private async static void SendConfirmationEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<Stream, string> orderSummary)
         {
             IdentityMessage iMessage = new IdentityMessage();
             iMessage.Destination = user.Email;
@@ -631,8 +631,8 @@ namespace FreeMarket.Models
             await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
         }
 
-        private static void GetConfirmationReports(int orderNumber, string deliveryType, ref Dictionary<MemoryStream,
-            string> orderSummary, ref Dictionary<MemoryStream, string> orderDeliveryInstruction, bool specialDelivery)
+        private static void GetConfirmationReports(int orderNumber, string deliveryType, ref Dictionary<Stream,
+            string> orderSummary, ref Dictionary<Stream, string> orderDeliveryInstruction, bool specialDelivery)
         {
             if (specialDelivery)
             {
