@@ -525,6 +525,7 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\star-rating.css" />
     <Content Include="Content\star-rating.min.css" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\animsition.js" />
     <Content Include="Scripts\animsition.min.js" />
     <Content Include="Scripts\morris.min.js" />
@@ -572,6 +573,7 @@
     <Content Include="ConnectionStrings.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="sitemap.xml" />
     <EntityDeploy Include="Models\FreeMarketModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>FreeMarketModel.Designer.cs</LastGenOutput>
