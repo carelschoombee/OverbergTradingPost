@@ -269,7 +269,9 @@ namespace FreeMarket.Models
 
                 if (year == 0)
                 {
-                    messages = db.PaymentGatewayMessages.Where(c => c.TransactionStatus != null).ToList();
+                    messages = db.PaymentGatewayMessages
+                        .Where(c => c.TransactionStatus != null)
+                        .ToList();
 
                     TotalSalesGateway = messages
                         .Where(c => c.TransactionStatus == 1)

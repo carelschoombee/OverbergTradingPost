@@ -235,6 +235,7 @@
     <Compile Include="Infrastructure\EnforceTrueAttribute.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\Extensions.cs" />
+    <Compile Include="Infrastructure\LinqExtensions.cs" />
     <Compile Include="Infrastructure\MinAttribute.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
