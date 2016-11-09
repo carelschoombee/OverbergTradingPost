@@ -89,6 +89,7 @@ body {
     background-attachment: fixed;
     background-position: center;
     color: white;
+    background-color: black;
 }
 
 .date{
@@ -309,8 +310,8 @@ th, td {
     font-size: 24px;
 }
 
-/*@media (max-width: 1199px) {
-    .navbar-header {
+@media (max-width: 1199px) {
+    /*.navbar-header {
         float: none;
     }
 
@@ -348,8 +349,8 @@ th, td {
     .navbar-text {
         float: none;
         margin: 15px 0;
-    }
-    /* since 3.1.0 */
+    }*/
+
     .navbar-collapse.collapse.in {
         display: block !important;
     }
@@ -357,7 +358,7 @@ th, td {
     .collapsing {
         overflow: hidden !important;
     }
-}*/
+}
 
 .icon-input-btn {
     display: inline-block;
