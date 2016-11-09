@@ -28,11 +28,11 @@ namespace FreeMarket
                 if (Roles.RoleExists("Administrator") == false)
                     Roles.CreateRole("Administrator");
 
-                if (!Roles.IsUserInRole("carelschoombee@gmail.com", "Administrator"))
-                    Roles.AddUserToRole("carelschoombee@gmail.com", "Administrator");
+                if (!Roles.IsUserInRole("carel@schoombeeandson.co.za", "Administrator"))
+                    Roles.AddUserToRole("carel@schoombeeandson.co.za", "Administrator");
 
-                if (!Roles.IsUserInRole("ijschoombee@gmail.com", "Administrator"))
-                    Roles.AddUserToRole("ijschoombee@gmail.com", "Administrator");
+                if (!Roles.IsUserInRole("johan@schoombeeandson.co.za", "Administrator"))
+                    Roles.AddUserToRole("johan@schoombeeandson.co.za", "Administrator");
             }
             catch (Exception e)
             {
