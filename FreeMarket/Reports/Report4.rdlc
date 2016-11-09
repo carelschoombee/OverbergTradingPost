@@ -31,8 +31,7 @@
               <TextRun>
                 <Value>Schoombee &amp; Son</Value>
                 <Style>
-                  <FontFamily>Edwardian Script ITC</FontFamily>
-                  <FontSize>48pt</FontSize>
+                  <FontSize>28pt</FontSize>
                   <Color>Gold</Color>
                 </Style>
               </TextRun>
