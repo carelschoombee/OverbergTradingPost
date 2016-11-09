@@ -510,7 +510,7 @@ namespace FreeMarket.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Notify(int PAYGATE_ID, string PAY_REQUEST_ID, string REFERENCE, int TRANSACTION_STATUS,
+        public async Task<ActionResult> Notify(int? PAYGATE_ID, string PAY_REQUEST_ID, string REFERENCE, int TRANSACTION_STATUS,
             int RESULT_CODE, string AUTH_CODE, string CURRENCY, int AMOUNT, string RESULT_DESC, int TRANSACTION_ID,
             string RISK_INDICATOR, string PAY_METHOD, string PAY_METHOD_DETAIL, string USER1, string USER2, string USER3,
             string VAULT_ID, string PAYVAULT_DATA_1, string PAYVAULT_DATA_2, string CHECKSUM)
@@ -519,8 +519,14 @@ namespace FreeMarket.Controllers
             bool priceSameAsRequest = false;
 
             PaymentGatewayParameter param = PaymentGatewayIntegration.GetParameters();
+            string id = "";
 
-            string check = PAYGATE_ID.ToString() + PAY_REQUEST_ID + REFERENCE + TRANSACTION_STATUS.ToString()
+            if (PAYGATE_ID == null)
+                id = param.PaymentGatewayID.ToString();
+            else
+                id = PAYGATE_ID.ToString();
+
+            string check = id + PAY_REQUEST_ID + REFERENCE + TRANSACTION_STATUS.ToString()
                 + RESULT_CODE.ToString() + AUTH_CODE + CURRENCY + AMOUNT + RESULT_DESC + TRANSACTION_ID
                 + RISK_INDICATOR + PAY_METHOD + PAY_METHOD_DETAIL + USER1 + USER2 + USER3
                 + VAULT_ID + PAYVAULT_DATA_1 + PAYVAULT_DATA_2 + param.Key;
@@ -544,7 +550,7 @@ namespace FreeMarket.Controllers
                                 priceSameAsRequest = true;
                                 PaymentGatewayMessage message = new PaymentGatewayMessage
                                 {
-                                    PayGate_ID = PAYGATE_ID,
+                                    PayGate_ID = decimal.Parse(id),
                                     Pay_Request_ID = PAY_REQUEST_ID,
                                     Reference = REFERENCE,
                                     TransactionStatus = TRANSACTION_STATUS,
@@ -577,7 +583,7 @@ namespace FreeMarket.Controllers
                                 priceSameAsRequest = false;
                                 PaymentGatewayMessage message = new PaymentGatewayMessage
                                 {
-                                    PayGate_ID = PAYGATE_ID,
+                                    PayGate_ID = decimal.Parse(id),
                                     Pay_Request_ID = PAY_REQUEST_ID,
                                     Reference = REFERENCE,
                                     TransactionStatus = TRANSACTION_STATUS,

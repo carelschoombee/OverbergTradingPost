@@ -291,6 +291,12 @@ th, td {
         width: 50%;
     }
 
+    body {
+        background-color: black;
+        background-image: none;
+        margin: 0;
+        color: white;
+    }
 }
 
 /*.navbar-collapse.in {

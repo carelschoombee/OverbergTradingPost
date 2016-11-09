@@ -42,17 +42,19 @@
                     @Html.HiddenFor(model => Model.CourierRatings[i].ReviewId)
                 </td>
                 <td>
-                    <table>
+                    <table class="table table-bordered-custom table-responsive well well-modal">
                         <tr><th>Satisfaction</th></tr>
                         <tr>
                             <td data-label="Satisfaction:">
+                                <br />
                                 @Html.HiddenFor(model => Model.CourierRatings[i].StarRating, new { @class = "courierRating ratingLoading" })
                             </td>
                         </tr>
                     </table>
 
                 </td>
-                <td>
+                <td data-label="Comments:">
+                    <br />
                     @Html.EditorFor(model => Model.CourierRatings[i].ReviewContent)
                 </td>
             </tr>
@@ -83,9 +85,9 @@
                 <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products.Products[i].MainImageNumber })" alt="@Model.Products.Products[i].Description" title="@Model.Products.Products[i].Description" />
             </td>
             <td>
-                <table>
+                <table class="table table-bordered-custom table-condensed table-responsive well well-modal">
                     <tr>
-                        <td data-label="Item:">
+                        <td>
                             <i>@Model.Products.Products[i].Description</i>
                             @Html.HiddenFor(model => Model.Products.Products[i].Description)
                             @Html.HiddenFor(model => Model.Products.Products[i].ProductNumber)
@@ -95,28 +97,31 @@
                             @Html.HiddenFor(model => Model.Products.Products[i].MainImageNumber)
                         </td>
                     </tr>
-                    <tr><td data-label="Price:"><i>@String.Format("{0:C}", Model.Products.Products[i].PriceOrder) each</i></td></tr>
-                    <tr><td data-label="Purchase Date:"><i>@Model.Order.OrderDatePlaced.Value.ToShortDateString()</i></td></tr>
+                    <tr><td><i>@String.Format("{0:C}", Model.Products.Products[i].PriceOrder) each</i></td></tr>
+                    <tr><td><i>@Model.Order.OrderDatePlaced.Value.ToShortDateString()</i></td></tr>
                 </table>
             </td>
             <td>
-                <table>
+                <table class="table table-bordered-custom table-condensed table-responsive well well-modal">
                     <tr><th>Quality</th></tr>
                     <tr>
                         <td data-label="Quality:">
+                            <br />
                             @Html.HiddenFor(model => Model.Products.Products[i].ProductRating, new { @class = "starRating ratingLoading" })
                         </td>
                     </tr>
                     <tr><th>Price</th></tr>
                     <tr>
                         <td data-label="Price:">
+                            <br />
                             @Html.HiddenFor(model => Model.Products.Products[i].PriceRating, new { @class = "priceRating ratingLoading" })
                         </td>
                     </tr>
                 </table>
                 
             </td>
-            <td>
+            <td data-label="Comments:">
+                <br />
                 @Html.EditorFor(model => Model.Products.Products[i].ProductReviewText)
                 @Html.ValidationMessageFor(model => Model.Products.Products[i].ProductReviewText, "", new { @class = "text-danger" })
             </td>

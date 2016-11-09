@@ -366,12 +366,6 @@ namespace FreeMarket.Controllers
             bool error = false;
             foreach (Product p in model.Products.Products)
             {
-                if (string.IsNullOrEmpty(p.ProductReviewText))
-                {
-                    ModelState.AddModelError("", string.Format("{0}'s review text may not be empty.", p.Description));
-                    error = true;
-                }
-
                 if (p.ProductRating == 0)
                 {
                     ModelState.AddModelError("", string.Format("{0}'s product rating may not be empty.", p.Description));
@@ -387,12 +381,6 @@ namespace FreeMarket.Controllers
 
             foreach (CourierReview c in model.CourierRatings)
             {
-                if (string.IsNullOrEmpty(c.ReviewContent))
-                {
-                    ModelState.AddModelError("", string.Format("{0}'s review text may not be empty.", c.CourierName));
-                    error = true;
-                }
-
                 if (c.StarRating == 0)
                 {
                     ModelState.AddModelError("", string.Format("{0}'s rating may not be empty.", c.CourierName));
