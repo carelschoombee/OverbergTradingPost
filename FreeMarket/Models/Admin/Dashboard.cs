@@ -83,10 +83,10 @@ namespace FreeMarket.Models
                 SelectedMonth = DateTime.Now;
                 SalesInformation = new SalesInfo(int.Parse(SelectedYear));
                 RatingsInformation = new RatingsInfo();
-                Customers = db.AspNetUsers.ToList();
-                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
-                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
-                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+                Customers = db.AspNetUsers.OrderBy(c => c.Name).ToList();
+                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
+                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
+                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
                 List<AuditUser> hits = new List<AuditUser>();
                 hits = db.AuditUsers.Where(c => c.Action == 32).ToList();
                 if (hits.Count > 0)
@@ -130,10 +130,10 @@ namespace FreeMarket.Models
                 SelectedMonth = date;
                 SalesInformation = new SalesInfo(date);
                 RatingsInformation = new RatingsInfo();
-                Customers = db.AspNetUsers.ToList();
-                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
-                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
-                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+                Customers = db.AspNetUsers.OrderBy(c => c.Name).ToList();
+                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
+                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
+                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
 
                 List<AuditUser> hits = new List<AuditUser>();
                 hits = db.AuditUsers.Where(c => c.ActionNumber == 32).ToList();

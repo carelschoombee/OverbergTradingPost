@@ -501,3 +501,7 @@ input[readonly]
 {
     background-color: #E6E6E6;
 }
+
+tr.row2 td {
+    padding-top: 40px;
+}

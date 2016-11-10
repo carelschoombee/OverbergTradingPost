@@ -77,8 +77,7 @@ namespace FreeMarket.Models
                 model.Order.CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod;
 
                 model.NumberOfItemsInOrder = db.GetNumberOfItemsInOrder(model.Order.OrderNumber)
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
+                    .FirstOrDefault() ?? 0;
 
                 model.MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
             }

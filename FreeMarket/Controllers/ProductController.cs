@@ -83,8 +83,8 @@ namespace FreeMarket.Controllers
                 model.SupplierNumber = supplierNumber;
 
                 List<ProductReview> collection = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                    .OrderByDescending(p => p.StarRating)
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
+                    .OrderByDescending(p => p.ReviewId)
                     .Skip(size)
                     .Take(size)
                     .ToList();
@@ -92,7 +92,7 @@ namespace FreeMarket.Controllers
                 model.Reviews = collection;
 
                 int modelCount = db.ProductReviews
-                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
                     .Count();
 
                 if (model.Reviews.Any())

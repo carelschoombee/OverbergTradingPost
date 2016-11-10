@@ -38,14 +38,14 @@ namespace FreeMarket.Models
                 {
                     reviews = db.ProductReviews
                             .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
-                            .OrderByDescending(c => c.StarRating)
+                            .OrderByDescending(c => c.ReviewId)
                             .ToList();
                 }
                 else
                 {
                     reviews = db.ProductReviews
                             .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber && c.Approved == true)
-                            .OrderByDescending(c => c.StarRating)
+                            .OrderByDescending(c => c.ReviewId)
                             .Take(size)
                             .ToList();
                 }

@@ -300,7 +300,7 @@ namespace FreeMarket.Controllers
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").ToList();
+                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
             }
 
             return PartialView("_ConfirmedOrders", confirmedOrders);
@@ -312,7 +312,7 @@ namespace FreeMarket.Controllers
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                inTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").ToList();
+                inTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
             }
 
             return PartialView("_InTransitOrders", inTransitOrders);
@@ -324,7 +324,7 @@ namespace FreeMarket.Controllers
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                pendingOrders = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").ToList();
+                pendingOrders = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
             }
 
             return PartialView("_RefundPending", pendingOrders);
@@ -455,7 +455,7 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.OrderConfirmation.ToString(), model.OrderNumber);
+                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), model.OrderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {
@@ -476,23 +476,15 @@ namespace FreeMarket.Controllers
         {
             Stream stream = new MemoryStream();
 
-            if (ModelState.IsValid)
-            {
-                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
+            Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
 
-                if (obj == null || obj.Count == 0)
-                {
-                    TempData["errorMessage"] = "An error occurred during report creation.";
-                    return View("Index");
-                }
-
-                return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", orderNumber));
-            }
-            else
+            if (obj == null || obj.Count == 0)
             {
-                TempData["errorMessage"] = "That report does not exist";
+                TempData["errorMessage"] = "An error occurred during report creation.";
                 return View("Index");
             }
+
+            return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", orderNumber));
         }
 
         [HttpPost]

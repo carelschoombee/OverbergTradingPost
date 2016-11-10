@@ -3,7 +3,7 @@
 
 @if (Model != null && Model.Reviews.Count != 0)
 {
-    <table class="table table-scroll table-responsive">
+    <table class="table table-responsive">
 
         @foreach (ProductReview review in Model.Reviews)
         {
@@ -14,7 +14,10 @@
                 <td><strong>On @formattedDate&nbsp;<span class="text-info">@review.Author</span> wrote:</strong></td>
             </tr>
             <tr>
-                <td class="text-center"><input id="@review.ReviewId" name="input-id" value="@review.StarRating" data-min="0" data-max="5" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs"></td>
+                <td class="text-center"><label class="control-label">Quality</label><input id="@review.ReviewId" name="input-id" value="@review.StarRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs"></td>
+            </tr>
+            <tr>
+                <td class="text-center"><label class="control-label">Price</label><input name="input-id" value="@review.PriceRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs"></td>
             </tr>
             <tr>
                 <td style="white-space :pre-line" class="text-right">@review.ReviewContent</td>
@@ -25,5 +28,5 @@
 }
 
 <script language="javascript" type="text/javascript">
-    $('.ratingDisplay').rating({ displayOnly: true, step: 0.1, clearCaption: 'Not yet rated' });
+    $('.ratingDisplay').rating({ displayOnly: true, step: 1, stars: 3, clearCaption: 'Not yet rated' });
 </script>
