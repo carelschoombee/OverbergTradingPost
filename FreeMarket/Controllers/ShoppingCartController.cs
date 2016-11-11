@@ -548,68 +548,109 @@ namespace FreeMarket.Controllers
                             if (requestedAmount == AMOUNT.ToString())
                             {
                                 priceSameAsRequest = true;
-                                PaymentGatewayMessage message = new PaymentGatewayMessage
-                                {
-                                    PayGate_ID = decimal.Parse(id),
-                                    Pay_Request_ID = PAY_REQUEST_ID,
-                                    Reference = REFERENCE,
-                                    TransactionStatus = TRANSACTION_STATUS,
-                                    Transaction_Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                    Result_Code = RESULT_CODE,
-                                    Auth_Code = AUTH_CODE,
-                                    Currency = CURRENCY,
-                                    Amount = AMOUNT,
-                                    Result_Desc = RESULT_DESC,
-                                    Transaction_ID = TRANSACTION_ID,
-                                    Risk_Indicator = RISK_INDICATOR,
-                                    Pay_Method = PAY_METHOD,
-                                    Pay_Method_Detail = PAY_METHOD_DETAIL,
-                                    User1 = USER1,
-                                    User2 = USER2,
-                                    User3 = USER3,
-                                    Vault_ID = VAULT_ID,
-                                    Pay_Vault_Data1 = PAYVAULT_DATA_1,
-                                    Pay_Vault_Data2 = PAYVAULT_DATA_2,
-                                    Checksum_Passed = checksumPassed,
-                                    PriceSameAsRequest = priceSameAsRequest
-                                };
 
-                                db.PaymentGatewayMessages.Add(message);
-                                db.SaveChanges();
+                                string orderNumberString = REFERENCE.ToString();
+
+                                if (db.PaymentGatewayMessages
+                                    .Where(c => c.Reference == orderNumberString && c.TransactionStatus == TRANSACTION_STATUS)
+                                    .FirstOrDefault() == null)
+                                {
+                                    PaymentGatewayMessage message = new PaymentGatewayMessage
+                                    {
+                                        PayGate_ID = decimal.Parse(id),
+                                        Pay_Request_ID = PAY_REQUEST_ID,
+                                        Reference = REFERENCE,
+                                        TransactionStatus = TRANSACTION_STATUS,
+                                        Transaction_Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        Result_Code = RESULT_CODE,
+                                        Auth_Code = AUTH_CODE,
+                                        Currency = CURRENCY,
+                                        Amount = AMOUNT,
+                                        Result_Desc = RESULT_DESC,
+                                        Transaction_ID = TRANSACTION_ID,
+                                        Risk_Indicator = RISK_INDICATOR,
+                                        Pay_Method = PAY_METHOD,
+                                        Pay_Method_Detail = PAY_METHOD_DETAIL,
+                                        User1 = USER1,
+                                        User2 = USER2,
+                                        User3 = USER3,
+                                        Vault_ID = VAULT_ID,
+                                        Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                                        Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                                        Checksum_Passed = checksumPassed,
+                                        PriceSameAsRequest = priceSameAsRequest
+                                    };
+
+                                    db.PaymentGatewayMessages.Add(message);
+                                    db.SaveChanges();
+                                }
+
+                                try
+                                {
+                                    if (TRANSACTION_STATUS == 1)
+                                    {
+                                        int orderNumber = int.Parse(REFERENCE);
+                                        OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                                        if (order == null)
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            if (order.OrderStatus == "Locked")
+                                            {
+                                                ShoppingCart.SetOrderConfirmedFromNotify(orderNumber);
+                                                OrderHeader.SendConfirmationMessages(order.CustomerNumber, orderNumber);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    ExceptionLogging.LogException(e);
+                                }
 
                                 AuditUser.LogAudit(35, string.Format("Order Number: {0}", REFERENCE));
                             }
                             else
                             {
                                 priceSameAsRequest = false;
-                                PaymentGatewayMessage message = new PaymentGatewayMessage
-                                {
-                                    PayGate_ID = decimal.Parse(id),
-                                    Pay_Request_ID = PAY_REQUEST_ID,
-                                    Reference = REFERENCE,
-                                    TransactionStatus = TRANSACTION_STATUS,
-                                    Transaction_Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                    Result_Code = RESULT_CODE,
-                                    Auth_Code = AUTH_CODE,
-                                    Currency = CURRENCY,
-                                    Amount = AMOUNT,
-                                    Result_Desc = RESULT_DESC,
-                                    Transaction_ID = TRANSACTION_ID,
-                                    Risk_Indicator = RISK_INDICATOR,
-                                    Pay_Method = PAY_METHOD,
-                                    Pay_Method_Detail = PAY_METHOD_DETAIL,
-                                    User1 = USER1,
-                                    User2 = USER2,
-                                    User3 = USER3,
-                                    Vault_ID = VAULT_ID,
-                                    Pay_Vault_Data1 = PAYVAULT_DATA_1,
-                                    Pay_Vault_Data2 = PAYVAULT_DATA_2,
-                                    Checksum_Passed = checksumPassed,
-                                    PriceSameAsRequest = priceSameAsRequest
-                                };
 
-                                db.PaymentGatewayMessages.Add(message);
-                                db.SaveChanges();
+                                string orderNumberString = REFERENCE.ToString();
+
+                                if (db.PaymentGatewayMessages
+                                    .Where(c => c.Reference == orderNumberString && c.TransactionStatus == TRANSACTION_STATUS)
+                                    .FirstOrDefault() == null)
+                                {
+                                    PaymentGatewayMessage message = new PaymentGatewayMessage
+                                    {
+                                        PayGate_ID = decimal.Parse(id),
+                                        Pay_Request_ID = PAY_REQUEST_ID,
+                                        Reference = REFERENCE,
+                                        TransactionStatus = TRANSACTION_STATUS,
+                                        Transaction_Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        Result_Code = RESULT_CODE,
+                                        Auth_Code = AUTH_CODE,
+                                        Currency = CURRENCY,
+                                        Amount = AMOUNT,
+                                        Result_Desc = RESULT_DESC,
+                                        Transaction_ID = TRANSACTION_ID,
+                                        Risk_Indicator = RISK_INDICATOR,
+                                        Pay_Method = PAY_METHOD,
+                                        Pay_Method_Detail = PAY_METHOD_DETAIL,
+                                        User1 = USER1,
+                                        User2 = USER2,
+                                        User3 = USER3,
+                                        Vault_ID = VAULT_ID,
+                                        Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                                        Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                                        Checksum_Passed = checksumPassed,
+                                        PriceSameAsRequest = priceSameAsRequest
+                                    };
+
+                                    db.PaymentGatewayMessages.Add(message);
+                                    db.SaveChanges();
+                                }
 
                                 AuditUser.LogAudit(34, string.Format("Order Number: {0}. Request Amount: {1}. Notification Amount: {2}", REFERENCE, requestedAmount, AMOUNT));
 
@@ -632,32 +673,39 @@ namespace FreeMarket.Controllers
                 checksumPassed = false;
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
-                    PaymentGatewayMessage message = new PaymentGatewayMessage
-                    {
-                        PayGate_ID = PAYGATE_ID,
-                        Pay_Request_ID = PAY_REQUEST_ID,
-                        Reference = REFERENCE,
-                        TransactionStatus = TRANSACTION_STATUS,
-                        Result_Code = RESULT_CODE,
-                        Auth_Code = AUTH_CODE,
-                        Currency = CURRENCY,
-                        Amount = AMOUNT,
-                        Result_Desc = RESULT_DESC,
-                        Transaction_ID = TRANSACTION_ID,
-                        Risk_Indicator = RISK_INDICATOR,
-                        Pay_Method = PAY_METHOD,
-                        Pay_Method_Detail = PAY_METHOD_DETAIL,
-                        User1 = USER1,
-                        User2 = USER2,
-                        User3 = USER3,
-                        Vault_ID = VAULT_ID,
-                        Pay_Vault_Data1 = PAYVAULT_DATA_1,
-                        Pay_Vault_Data2 = PAYVAULT_DATA_2,
-                        Checksum_Passed = checksumPassed
-                    };
+                    string orderNumberString = REFERENCE.ToString();
 
-                    db.PaymentGatewayMessages.Add(message);
-                    db.SaveChanges();
+                    if (db.PaymentGatewayMessages
+                        .Where(c => c.Reference == orderNumberString && c.TransactionStatus == TRANSACTION_STATUS)
+                        .FirstOrDefault() == null)
+                    {
+                        PaymentGatewayMessage message = new PaymentGatewayMessage
+                        {
+                            PayGate_ID = PAYGATE_ID,
+                            Pay_Request_ID = PAY_REQUEST_ID,
+                            Reference = REFERENCE,
+                            TransactionStatus = TRANSACTION_STATUS,
+                            Result_Code = RESULT_CODE,
+                            Auth_Code = AUTH_CODE,
+                            Currency = CURRENCY,
+                            Amount = AMOUNT,
+                            Result_Desc = RESULT_DESC,
+                            Transaction_ID = TRANSACTION_ID,
+                            Risk_Indicator = RISK_INDICATOR,
+                            Pay_Method = PAY_METHOD,
+                            Pay_Method_Detail = PAY_METHOD_DETAIL,
+                            User1 = USER1,
+                            User2 = USER2,
+                            User3 = USER3,
+                            Vault_ID = VAULT_ID,
+                            Pay_Vault_Data1 = PAYVAULT_DATA_1,
+                            Pay_Vault_Data2 = PAYVAULT_DATA_2,
+                            Checksum_Passed = checksumPassed
+                        };
+
+                        db.PaymentGatewayMessages.Add(message);
+                        db.SaveChanges();
+                    }
 
                     AuditUser.LogAudit(34, string.Format("Order Number: {0}. Checksum failed.", REFERENCE));
 
@@ -706,10 +754,17 @@ namespace FreeMarket.Controllers
                 {
                     if (TRANSACTION_STATUS == 1)
                     {
-                        cart.SetOrderConfirmed(User.Identity.GetUserId());
+                        if (cart.Order.OrderStatus == "Locked")
+                        {
+                            cart.SetOrderConfirmed(User.Identity.GetUserId());
+                            OrderHeader.SendConfirmationMessages(User.Identity.GetUserId(), orderNumber);
+                        }
+                        else
+                        {
+                            cart.Initialize(User.Identity.GetUserId());
+                        }
 
                         AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), User.Identity.GetUserId());
-                        OrderHeader.SendConfirmationMessages(User.Identity.GetUserId(), orderNumber);
                     }
                 }
                 else

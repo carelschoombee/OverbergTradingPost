@@ -752,6 +752,25 @@ namespace FreeMarket.Models
             }
         }
 
+        public static void SetOrderConfirmedFromNotify(int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
+                order.OrderStatus = "Confirmed";
+                order.OrderDatePlaced = DateTime.Now;
+                order.PaymentReceived = true;
+                db.Entry(order).State = EntityState.Modified;
+                db.SaveChanges();
+
+                ReleaseAllStock(order.OrderNumber);
+            }
+        }
+
         public void CancelOrder(string userId)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
