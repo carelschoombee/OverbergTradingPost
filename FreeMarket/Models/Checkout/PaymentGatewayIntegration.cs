@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -33,13 +34,7 @@ namespace FreeMarket.Models
             Parameters = new PaymentGatewayParameter();
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                //Parameters = db.PaymentGatewayParameters
-                //    .Where(c => c.PaymentGatewayName == "PayGate")
-                //    .FirstOrDefault();
-
-                Parameters = db.PaymentGatewayParameters
-                    .Where(c => c.PaymentGatewayName == "Test")
-                    .FirstOrDefault();
+                Parameters = GetParameters();
             }
 
         }
@@ -48,13 +43,18 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                //return db.PaymentGatewayParameters
-                //    .Where(c => c.PaymentGatewayName == "PayGate")
-                //    .FirstOrDefault();
-
-                return db.PaymentGatewayParameters
+                if (ConfigurationManager.AppSettings["testMode"] == "true")
+                {
+                    return db.PaymentGatewayParameters
                     .Where(c => c.PaymentGatewayName == "Test")
                     .FirstOrDefault();
+                }
+                else
+                {
+                    return db.PaymentGatewayParameters
+                    .Where(c => c.PaymentGatewayName == "PayGate")
+                    .FirstOrDefault();
+                }
             }
         }
 

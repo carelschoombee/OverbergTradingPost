@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FreeMarket.Models
 {
@@ -34,6 +36,25 @@ namespace FreeMarket.Models
 
             string result = await QuerySmsServer(data);
             return result;
+        }
+
+        public async Task<string> CheckCredits()
+        {
+            IEnumerable<KeyValuePair<string, string>> data = new[]
+            {
+                new KeyValuePair<string, string>("Type", "credits"),
+                new KeyValuePair<string, string>("Username", UserName),
+                new KeyValuePair<string, string>("Password", Password),
+            };
+
+            string result = await QuerySmsServer(data);
+
+            var xdoc = XDocument.Parse(result);
+            var credits = xdoc.Descendants()
+                .Where(a => a.Name.LocalName == "credits")
+                .FirstOrDefault().Value;
+
+            return credits;
         }
 
         // query API server and return response in object format

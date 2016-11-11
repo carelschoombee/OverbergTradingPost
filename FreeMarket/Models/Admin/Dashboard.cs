@@ -41,6 +41,8 @@ namespace FreeMarket.Models
         public string AuditSearchCriteria { get; set; }
         public int WebsiteHits { get; set; }
 
+        public string SMSCredits { get; set; }
+
         public Dashboard()
         {
 
@@ -48,55 +50,30 @@ namespace FreeMarket.Models
 
         public Dashboard(string year, string period)
         {
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                DateTime minDate = (DateTime)db.OrderHeaders.Min(c => c.OrderDatePlaced);
-                DateTime maxDate = DateTime.Now;
+            if (!string.IsNullOrEmpty(year))
+                SelectedYear = year;
+            else
+                SelectedYear = DateTime.Now.Year.ToString();
 
-                int i = minDate.Year;
+            Period = period;
+            SelectedMonth = DateTime.Now;
+            SalesInformation = new SalesInfo(int.Parse(SelectedYear));
 
-                if (!string.IsNullOrEmpty(year))
-                    SelectedYear = year;
-                else
-                    SelectedYear = DateTime.Now.Year.ToString();
-
-                YearOptions = new List<SelectListItem>();
-
-                YearOptions.Add(new SelectListItem
-                {
-                    Text = "Since Inception",
-                    Value = "0"
-                });
-
-                while (i <= maxDate.Year)
-                {
-                    YearOptions.Add(new SelectListItem
-                    {
-                        Text = i.ToString(),
-                        Value = i.ToString(),
-                        Selected = (i.ToString() == SelectedYear ? true : false)
-                    });
-                    i++;
-                }
-
-                Period = period;
-                SelectedMonth = DateTime.Now;
-                SalesInformation = new SalesInfo(int.Parse(SelectedYear));
-                RatingsInformation = new RatingsInfo();
-                Customers = db.AspNetUsers.OrderBy(c => c.Name).ToList();
-                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
-                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
-                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
-                List<AuditUser> hits = new List<AuditUser>();
-                hits = db.AuditUsers.Where(c => c.Action == 32).ToList();
-                if (hits.Count > 0)
-                {
-                    WebsiteHits = hits.Count();
-                }
-            }
+            Initialize();
         }
 
         public Dashboard(DateTime date, string period)
+        {
+            SelectedYear = null;
+
+            Period = period;
+            SelectedMonth = date;
+            SalesInformation = new SalesInfo(date);
+
+            Initialize();
+        }
+
+        public async void Initialize()
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -105,8 +82,6 @@ namespace FreeMarket.Models
 
                 int i = minDate.Year;
 
-                SelectedYear = null;
-
                 YearOptions = new List<SelectListItem>();
 
                 YearOptions.Add(new SelectListItem
@@ -126,9 +101,6 @@ namespace FreeMarket.Models
                     i++;
                 }
 
-                Period = period;
-                SelectedMonth = date;
-                SalesInformation = new SalesInfo(date);
                 RatingsInformation = new RatingsInfo();
                 Customers = db.AspNetUsers.OrderBy(c => c.Name).ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
@@ -141,6 +113,9 @@ namespace FreeMarket.Models
                 {
                     WebsiteHits = hits.Count();
                 }
+
+                SMSHelper helper = new SMSHelper();
+                SMSCredits = await helper.CheckCredits();
             }
         }
     }

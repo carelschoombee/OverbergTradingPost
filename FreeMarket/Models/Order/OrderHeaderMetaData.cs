@@ -495,7 +495,7 @@ namespace FreeMarket.Models
 
                     IdentityMessage iMessageCourier = new IdentityMessage();
 
-                    if (specialDelivery)
+                    if (specialDelivery || ConfigurationManager.AppSettings["testMode"] == "true")
                         iMessageCourier.Destination = supportInfo.OrdersEmail;
                     else
                         iMessageCourier.Destination = courier.MainContactEmailAddress;
