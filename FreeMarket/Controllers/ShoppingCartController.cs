@@ -754,14 +754,25 @@ namespace FreeMarket.Controllers
                 {
                     if (TRANSACTION_STATUS == 1)
                     {
-                        if (cart.Order.OrderStatus == "Locked")
+                        // Get the order from the database, not the session.
+                        OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                        if (order == null)
                         {
-                            cart.SetOrderConfirmed(User.Identity.GetUserId());
-                            OrderHeader.SendConfirmationMessages(User.Identity.GetUserId(), orderNumber);
+
                         }
                         else
                         {
-                            cart.Initialize(User.Identity.GetUserId());
+                            // This will be executed if the notify url did not receive a response yet.
+                            if (order.OrderStatus == "Locked")
+                            {
+                                cart.SetOrderConfirmed(User.Identity.GetUserId());
+                                OrderHeader.SendConfirmationMessages(User.Identity.GetUserId(), orderNumber);
+                            }
+                            else
+                            {
+                                cart.Initialize(User.Identity.GetUserId());
+                            }
                         }
 
                         AuditUser.LogAudit(33, string.Format("Order Number: {0}", orderNumber), User.Identity.GetUserId());
