@@ -19,47 +19,50 @@
     </div>
 </div>
 
-@for (int i = 0; i < Model.CourierRatings.Count; i++)
+@if (Model.CourierRatings != null && Model.CourierRatings.Count > 0)
 {
-    <div class="row well well-modal">
-        <table class="table table-bordered-custom table-condensed table-responsive">
-            <tr>
-                <th class="col-sm-3">
-                    Courier Name
-                </th>
-                <th class="col-sm-3">
-                    Rating
-                </th>
-                <th class="col-sm-3">
-                    Review
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    @Model.CourierRatings[i].CourierName
-                    @Html.HiddenFor(model => Model.CourierRatings[i].CourierName)
-                    @Html.HiddenFor(model => Model.CourierRatings[i].CourierNumber)
-                    @Html.HiddenFor(model => Model.CourierRatings[i].ReviewId)
-                </td>
-                <td>
-                    <table class="table table-bordered-custom table-responsive well well-modal">
-                        <tr><th>Satisfaction</th></tr>
-                        <tr>
-                            <td data-label="Satisfaction:">
-                                <br />
-                                @Html.HiddenFor(model => Model.CourierRatings[i].StarRating, new { @class = "courierRating ratingLoading" })
-                            </td>
-                        </tr>
-                    </table>
+    for (int i = 0; i < Model.CourierRatings.Count; i++)
+    {
+        <div class="row well well-modal">
+            <table class="table table-bordered-custom table-condensed table-responsive">
+                <tr>
+                    <th class="col-sm-3">
+                        Courier Name
+                    </th>
+                    <th class="col-sm-3">
+                        Rating
+                    </th>
+                    <th class="col-sm-3">
+                        Review
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        @Model.CourierRatings[i].CourierName
+                        @Html.HiddenFor(model => Model.CourierRatings[i].CourierName)
+                        @Html.HiddenFor(model => Model.CourierRatings[i].CourierNumber)
+                        @Html.HiddenFor(model => Model.CourierRatings[i].ReviewId)
+                    </td>
+                    <td>
+                        <table class="table table-bordered-custom table-responsive well well-modal">
+                            <tr><th>Satisfaction</th></tr>
+                            <tr>
+                                <td data-label="Satisfaction:">
+                                    <br />
+                                    @Html.HiddenFor(model => Model.CourierRatings[i].StarRating, new { @class = "courierRating ratingLoading" })
+                                </td>
+                            </tr>
+                        </table>
 
-                </td>
-                <td data-label="Comments:">
-                    <br />
-                    @Html.EditorFor(model => Model.CourierRatings[i].ReviewContent)
-                </td>
-            </tr>
-        </table>
-    </div>
+                    </td>
+                    <td data-label="Comments:">
+                        <br />
+                        @Html.EditorFor(model => Model.CourierRatings[i].ReviewContent)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
 }
 
 @for (int i = 0; i < Model.Products.Products.Count; i++)

@@ -12,10 +12,10 @@ namespace FreeMarket.Models
         public decimal ShippingTotal { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public short CourierRating { get; set; }
+        public short? CourierRating { get; set; }
         public string CourierName { get; set; }
         public string CourierReviewContent { get; set; }
-        public int CourierReviewId { get; set; }
+        public int? CourierReviewId { get; set; }
     }
 
     public class ProductReviewMetaData

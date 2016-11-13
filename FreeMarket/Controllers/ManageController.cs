@@ -379,12 +379,15 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            foreach (CourierReview c in model.CourierRatings)
+            if (model.CourierRatings != null)
             {
-                if (c.StarRating == 0)
+                foreach (CourierReview c in model.CourierRatings)
                 {
-                    ModelState.AddModelError("", string.Format("{0}'s rating may not be empty.", c.CourierName));
-                    error = true;
+                    if (c.StarRating == 0)
+                    {
+                        ModelState.AddModelError("", string.Format("{0}'s rating may not be empty.", c.CourierName));
+                        error = true;
+                    }
                 }
             }
 
@@ -446,34 +449,37 @@ namespace FreeMarket.Controllers
                     }
                 }
 
-                foreach (CourierReview cReview in model.CourierRatings)
+                if (model.CourierRatings != null)
                 {
-                    if (cReview.ReviewId == 0)
+                    foreach (CourierReview cReview in model.CourierRatings)
                     {
-                        CourierReview review = new CourierReview
+                        if (cReview.ReviewId == 0)
                         {
-                            Author = user.Name,
-                            Date = DateTime.Now,
-                            OrderNumber = model.Order.OrderNumber,
-                            ReviewContent = cReview.ReviewContent,
-                            StarRating = (short)cReview.StarRating,
-                            CourierNumber = cReview.CourierNumber,
-                            UserId = user.Id
-                        };
+                            CourierReview review = new CourierReview
+                            {
+                                Author = user.Name,
+                                Date = DateTime.Now,
+                                OrderNumber = model.Order.OrderNumber,
+                                ReviewContent = cReview.ReviewContent,
+                                StarRating = (short)cReview.StarRating,
+                                CourierNumber = cReview.CourierNumber,
+                                UserId = user.Id
+                            };
 
-                        db.CourierReviews.Add(review);
-                    }
-                    else
-                    {
-                        CourierReview review = db.CourierReviews.Find(cReview.ReviewId);
-
-                        if (review != null)
+                            db.CourierReviews.Add(review);
+                        }
+                        else
                         {
-                            review.Date = DateTime.Now;
-                            review.ReviewContent = cReview.ReviewContent;
-                            review.StarRating = (short)cReview.StarRating;
+                            CourierReview review = db.CourierReviews.Find(cReview.ReviewId);
 
-                            db.Entry(review).State = System.Data.Entity.EntityState.Modified;
+                            if (review != null)
+                            {
+                                review.Date = DateTime.Now;
+                                review.ReviewContent = cReview.ReviewContent;
+                                review.StarRating = (short)cReview.StarRating;
+
+                                db.Entry(review).State = System.Data.Entity.EntityState.Modified;
+                            }
                         }
                     }
                 }

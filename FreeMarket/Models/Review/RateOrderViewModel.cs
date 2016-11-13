@@ -27,32 +27,39 @@ namespace FreeMarket.Models
                 if (Order == null)
                     return;
 
-                Courier courier = db.Couriers.Find(Order.CourierNumber);
-
                 Products = ProductCollection.GetProductsInOrder(orderNumber);
 
-                CourierRatings = db.GetAllCouriersReview(orderNumber)
-                    .Select(c => new CourierReview
-                    {
-                        CourierNumber = c.CourierNumber,
-                        ReviewContent = c.ReviewContent,
-                        StarRating = c.StarRating,
-                        CourierName = c.CourierName,
-                        ReviewId = c.ReviewId ?? 0
-                    }).ToList();
+                if (Order.DeliveryType == "Courier")
+                {
+                    Courier courier = db.Couriers.Find(Order.CourierNumber);
 
-                if (CourierRatings == null || CourierRatings.Count == 0)
+                    CourierRatings = db.GetAllCouriersReview(orderNumber)
+                        .Select(c => new CourierReview
+                        {
+                            CourierNumber = c.CourierNumber,
+                            ReviewContent = c.ReviewContent,
+                            StarRating = c.StarRating,
+                            CourierName = c.CourierName,
+                            ReviewId = c.ReviewId ?? 0
+                        }).ToList();
+
+                    if (CourierRatings == null || CourierRatings.Count == 0)
+                    {
+                        CourierRatings = new List<CourierReview>();
+                        CourierRatings.Add(new CourierReview
+                        {
+                            CourierNumber = courier.CourierNumber,
+                            CourierName = courier.CourierName,
+                            StarRating = 0,
+                            ReviewContent = "",
+                            ReviewId = 0
+                        }
+                        );
+                    }
+                }
+                else if (Order.DeliveryType == "PostOffice")
                 {
                     CourierRatings = new List<CourierReview>();
-                    CourierRatings.Add(new CourierReview
-                    {
-                        CourierNumber = courier.CourierNumber,
-                        CourierName = courier.CourierName,
-                        StarRating = 0,
-                        ReviewContent = "",
-                        ReviewId = 0
-                    }
-                    );
                 }
 
                 ApplicationUser user = System.Web.HttpContext.Current

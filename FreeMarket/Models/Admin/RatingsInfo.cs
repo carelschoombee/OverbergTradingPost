@@ -24,7 +24,7 @@ namespace FreeMarket.Models
                         Author = c.Author,
                         CourierName = c.CourierName,
                         CourierRating = c.CourierRating ?? 0,
-                        CourierReviewId = (int)c.CourierReviewId,
+                        CourierReviewId = c.CourierReviewId,
                         CourierReviewContent = c.CourierRatingReview,
                         Date = c.Date,
                         DeliveryCity = c.DeliveryAddressCity,

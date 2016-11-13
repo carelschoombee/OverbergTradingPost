@@ -1,4 +1,15 @@
-﻿input::-webkit-calendar-picker-indicator{
+﻿@import url(//db.onlinewebfonts.com/c/ca6f91c0cad2fe33614026d17117601d?family=Edwardian+Script+ITC);
+
+@font-face {font-family: "Edwardian Script ITC";
+    src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot");
+    src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot?#iefix") format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff2") format("woff2"),
+    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff") format("woff"),
+    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.ttf") format("truetype"),
+    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.svg#Edwardian Script ITC") format("svg");
+}
+
+input::-webkit-calendar-picker-indicator{
     display: none;
 }
 
@@ -293,10 +304,13 @@ th, td {
     }
 
     body {
-        background-color: black;
-        background-image: none;
+        background: #000000;
+        background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         margin: 0;
         color: white;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
 }
 

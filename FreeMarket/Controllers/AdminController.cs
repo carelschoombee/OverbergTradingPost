@@ -131,7 +131,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Dashboard(Dashboard data, string yearView, string monthView)
+        public async Task<ActionResult> Dashboard(Dashboard data, string yearView, string monthView)
         {
             Dashboard model = new Dashboard();
             string periodType = "";
@@ -1018,12 +1018,38 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApproveReview(string button, int reviewId, int courierReviewId, FormCollection collection)
+        public ActionResult ApproveReview(string button, int reviewId, int? courierReviewId, FormCollection collection)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 ProductReview review = db.ProductReviews.Find(reviewId);
-                CourierReview courierReview = db.CourierReviews.Find(courierReviewId);
+
+                if (courierReviewId != null)
+                {
+                    CourierReview courierReview = db.CourierReviews.Find(courierReviewId);
+
+                    if (courierReview == null)
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        if (button == "Approve")
+                        {
+                            courierReview.Approved = true;
+                        }
+                        else if (button == "Revoke")
+                        {
+                            courierReview.Approved = false;
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+
+                        db.Entry(courierReview).State = System.Data.Entity.EntityState.Modified;
+                    }
+                }
 
                 if (review == null)
                 {
@@ -1046,31 +1072,9 @@ namespace FreeMarket.Controllers
                     db.Entry(review).State = System.Data.Entity.EntityState.Modified;
                 }
 
-                if (courierReview == null)
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    if (button == "Approve")
-                    {
-                        courierReview.Approved = true;
-                    }
-                    else if (button == "Revoke")
-                    {
-                        courierReview.Approved = false;
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Admin");
-                    }
-
-                    db.Entry(courierReview).State = System.Data.Entity.EntityState.Modified;
-                }
-
                 db.SaveChanges();
 
-                AuditUser.LogAudit(26, string.Format("Review ID: {0}. Approved?: {1}", reviewId, courierReview.Approved), User.Identity.GetUserId());
+                AuditUser.LogAudit(26, string.Format("Review ID: {0}. Approved?: {1}", reviewId, review.Approved), User.Identity.GetUserId());
             }
 
             RatingsInfo info = new RatingsInfo();

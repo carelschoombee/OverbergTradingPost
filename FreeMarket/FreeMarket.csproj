@@ -334,6 +334,7 @@
     </Compile>
     <Compile Include="Models\Home\AboutViewModel.cs" />
     <Compile Include="Models\Home\TermsAndConditionsViewModel.cs" />
+    <Compile Include="Models\Home\WelcomeViewModel.cs" />
     <Compile Include="Models\Identity\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLogging.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>

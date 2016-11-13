@@ -1,4 +1,6 @@
-﻿
+﻿@using FreeMarket.Models
+@model WelcomeViewModel
+
 @{
     ViewBag.Title = "Pecan Nuts";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,14 +15,9 @@
         @Html.Partial("_ProductCarousel")
     </div>
     <div class="row well">
-        Welcome to Schoombee And Son.
-            
-        We specialize in premium Pecan nuts, straight from South Africa's most well respected
-        farms. On this website you can purchase nuts which we will either deliver to
-        your door by courier or which you can collect at your local post office.
 
-        We deliver in South Africa only and we will refund you in full if you are not
-        satisfied with your purchase. For more information see our terms and conditions.
+        @Html.Raw(Model.WelcomeText)
+        
     </div>
     <div class="row well text-center">
         <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"

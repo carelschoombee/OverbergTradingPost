@@ -472,7 +472,7 @@ namespace FreeMarket.Models
                     SendConfirmationSmsToSupport(user, supportInfo, order);
                 }
 
-                SendConfirmationSmsToCustomer(user, order);
+                SendConfirmationSmsToCustomer(user, order, specialDelivery);
 
                 SendConfirmationEmailToCourier(order, supportInfo, specialDelivery, orderDeliveryInstruction);
             }
@@ -530,15 +530,23 @@ namespace FreeMarket.Models
             }
         }
 
-        private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order)
+        private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order, bool specialDelivery)
         {
             if (order.DeliveryType == "Courier")
             {
                 DateTime dateDispatch = DateTime.Now;
                 DateTime dateArrive = DateTime.Now;
 
-                dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-                dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+                if (specialDelivery)
+                {
+                    dateDispatch = GetSpecialDispatchDay((DateTime)order.DeliveryDate);
+                    dateArrive = GetSpecialArriveDay((DateTime)order.DeliveryDate);
+                }
+                else
+                {
+                    dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                    dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+                }
 
                 string message = "";
                 using (FreeMarketEntities db = new FreeMarketEntities())
@@ -583,7 +591,6 @@ namespace FreeMarket.Models
                     , string.Format("{0:d}", dateDispatch))
                     , user.PhoneNumber);
             }
-
         }
 
         private async static void SendConfirmationSmsToSupport(ApplicationUser user, Support supportInfo, OrderHeader order)
@@ -758,13 +765,53 @@ namespace FreeMarket.Models
         public static DateTime GetArriveDay(DateTime preferredDeliveryTime)
         {
             DateTime today = GetDispatchDay(preferredDeliveryTime);
-            int daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            int daysUntilFriday = 0;
+
+            if (today.DayOfWeek == DayOfWeek.Friday)
+            {
+                daysUntilFriday = 7;
+            }
+            else
+            {
+                daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+            }
+
             DateTime nextFriday = today.AddDays(daysUntilFriday);
 
             TimeSpan ts = new TimeSpan(preferredDeliveryTime.Hour, preferredDeliveryTime.Minute, 0);
             nextFriday = nextFriday.Date + ts;
 
             return nextFriday;
+        }
+
+        public static DateTime GetSpecialDispatchDay(DateTime preferredDeliveryTime)
+        {
+            DateTime dispatchDate = preferredDeliveryTime;
+
+            if (dispatchDate.DayOfWeek == DayOfWeek.Monday)
+            {
+                return dispatchDate;
+            }
+
+            if (dispatchDate.DayOfWeek == DayOfWeek.Tuesday)
+            {
+                dispatchDate = dispatchDate.AddDays(-1);
+                return dispatchDate;
+            }
+
+            dispatchDate = dispatchDate.AddDays(-2);
+
+            while (dispatchDate < DateTime.Now)
+            {
+                dispatchDate = dispatchDate.AddDays(1);
+            }
+
+            return dispatchDate;
+        }
+
+        public static DateTime GetSpecialArriveDay(DateTime preferredDeliveryTime)
+        {
+            return preferredDeliveryTime;
         }
 
         public static DateTime GetSuggestedDeliveryTime()

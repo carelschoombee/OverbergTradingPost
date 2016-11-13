@@ -11,6 +11,8 @@ namespace FreeMarket.Controllers
     {
         public ActionResult Index()
         {
+            WelcomeViewModel model = new WelcomeViewModel();
+
             if (User.Identity.Name != null)
             {
                 if (User.Identity.Name == ConfigurationManager.AppSettings["developerIdentity"])
@@ -27,9 +29,7 @@ namespace FreeMarket.Controllers
                 AuditUser.LogAudit(32, "Hit");
             }
 
-            OrderHeader.TestDates();
-
-            return View();
+            return View(model);
         }
 
         public ActionResult DeliveryOptionsInfo()
