@@ -11,13 +11,13 @@
 
 @if (Model != null && Model.Count > 0)
 {
-    <table class="table table-bordered-custom">
+    <table class="table table-condensed table-bordered-custom">
 
         <tr>
-            <th class="col-sm-1"></th>
-            <th class="col-sm-1">ID</th>
-            <th class="col-sm-1">Key</th>
-            <th class="col-sm-2">Value</th>
+            <th class="col-xs-1"></th>
+            <th class="col-xs-1">ID</th>
+            <th class="col-xs-1">Key</th>
+            <th class="col-xs-1">Value</th>
         </tr>
 
     @foreach (SiteConfiguration config in Model)

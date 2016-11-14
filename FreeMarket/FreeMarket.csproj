@@ -496,6 +496,17 @@
   <ItemGroup>
     <Content Include="Content\Images\AboutUs.jpg" />
     <Content Include="Content\Images\MasterCard.png" />
+    <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode-Small.png" />
+    <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode.png" />
+    <Content Include="Content\Images\PayGate-3D-Secure-Logo-Verified-by-Visa.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logo-MasterCard-Small.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logo-MasterCard.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logo-Visa-Small.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logo-Visa.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logos-Small.png" />
+    <Content Include="Content\Images\PayGate-Card-Brand-Logos.png" />
+    <Content Include="Content\Images\PayGate-Direct-Pay-Online-Logo-Online-Payment-Processing-Small.png" />
+    <Content Include="Content\Images\PayGate-Direct-Pay-Online-Logo-Online-Payment-Processing.png" />
     <Content Include="Content\Images\PayGate.png" />
     <Content Include="Content\Images\rapidssl.png" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -516,6 +527,7 @@
     <Content Include="Content\Images\logoBig.jpg" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
+    <Content Include="Content\Images\RapidSSL_SEAL-90x50.gif" />
     <Content Include="Content\Images\slideCourier2.png" />
     <Content Include="Content\Images\slideLocation1.jpg" />
     <Content Include="Content\Images\slideLocation2.jpg" />
