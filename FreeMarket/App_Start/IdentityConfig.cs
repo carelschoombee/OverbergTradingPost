@@ -43,7 +43,7 @@ namespace FreeMarket
             return Task.FromResult(0);
         }
 
-        public Task SendAsync(IdentityMessage message, Stream attachment)
+        public Task SendAsync(IdentityMessage message, Stream attachment, string CC = null)
         {
             SmtpClient smtp = new SmtpClient();
             MailMessage mail = new MailMessage();
@@ -62,6 +62,43 @@ namespace FreeMarket
             }
 
             string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
+
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
+            imageResource.ContentId = "LogoImage";
+            htmlView.LinkedResources.Add(imageResource);
+
+            mail.AlternateViews.Add(htmlView);
+
+            smtp.Send(mail);
+
+            return Task.FromResult(0);
+        }
+
+        public Task SendAsync(string subject, string destination, string cc, string bodyContent, Stream attachment)
+        {
+            SmtpClient smtp = new SmtpClient();
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["systemEmail"]);
+            mail.To.Add(destination);
+
+            if (ConfigurationManager.AppSettings["ccTimeFreightManagement"] == "true")
+                mail.CC.Add(new MailAddress(cc));
+
+            mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));
+            mail.Subject = subject;
+
+            if (attachment != null)
+            {
+                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
+                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment, ct);
+                attach.ContentDisposition.FileName = "Schoombee & Son Order";
+
+                mail.Attachments.Add(attach);
+            }
+
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", bodyContent);
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
             string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");

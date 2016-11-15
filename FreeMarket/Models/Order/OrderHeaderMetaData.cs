@@ -489,29 +489,34 @@ namespace FreeMarket.Models
                     courier = db.Couriers.Find(order.CourierNumber);
                 }
 
+                string destination = "";
+                string body = "";
+                string subject = "";
+                string cc = "";
+
                 if (courier != null)
                 {
                     string message = CreateCourierInstructionsMessage();
 
-                    IdentityMessage iMessageCourier = new IdentityMessage();
-
                     if (specialDelivery || ConfigurationManager.AppSettings["testMode"] == "true")
-                        iMessageCourier.Destination = supportInfo.OrdersEmail;
+                        destination = supportInfo.OrdersEmail;
                     else
-                        iMessageCourier.Destination = courier.MainContactEmailAddress;
+                        destination = courier.MainContactEmailAddress;
 
-                    iMessageCourier.Body = string.Format((message)
+                    body = string.Format((message)
                         , order.OrderNumber
                         , supportInfo.MainContactName
                         , supportInfo.Landline
                         , supportInfo.Cellphone
                         , supportInfo.Email);
 
-                    iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
+                    subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
+
+                    cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
 
                     EmailService email = new EmailService();
 
-                    await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
+                    await email.SendAsync(subject, destination, cc, body, orderDeliveryInstruction.FirstOrDefault().Key);
                 }
             }
             else if (order.DeliveryType == "PostOffice")
