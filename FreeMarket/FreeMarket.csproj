@@ -498,6 +498,7 @@
     <Content Include="Content\Images\MasterCard.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode-Small.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode.png" />
+    <Content Include="Content\Images\PayGate-3D-Secure-Logo-Verified-by-Visa-Small.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-Verified-by-Visa.png" />
     <Content Include="Content\Images\PayGate-Card-Brand-Logo-MasterCard-Small.png" />
     <Content Include="Content\Images\PayGate-Card-Brand-Logo-MasterCard.png" />
@@ -794,6 +795,9 @@
     <Content Include="Views\Admin\_InTransitOrders.cshtml" />
     <Content Include="Views\Admin\_ViewFullOrder.cshtml" />
     <Content Include="Views\Admin\_ViewAudits.cshtml" />
+    <Content Include="Views\Home\_PaymentOptions.cshtml" />
+    <Content Include="Views\Shared\_PaymentPartners.cshtml" />
+    <Content Include="Views\ShoppingCart\_PaymentOptions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

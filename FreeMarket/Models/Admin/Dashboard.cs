@@ -108,10 +108,10 @@ namespace FreeMarket.Models
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
 
                 List<AuditUser> hits = new List<AuditUser>();
-                hits = db.AuditUsers.Where(c => c.ActionNumber == 32).ToList();
+                hits = db.AuditUsers.Where(c => c.Action == 32).ToList();
                 if (hits.Count > 0)
                 {
-                    WebsiteHits = hits.Count();
+                    WebsiteHits = hits.Count;
                 }
 
                 SMSHelper helper = new SMSHelper();

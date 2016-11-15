@@ -26,6 +26,9 @@
                 Delivery Type
             </th>
             <th>
+                Delivery Address
+            </th>
+            <th>
                 Delivery Date
             </th>
             <th>
@@ -34,6 +37,7 @@
         </tr>
         for (int i = 0; i < Model.Count; i++)
         {
+            
             <tr>
                 <td data-label="#:" class="text-center">
                     @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
@@ -44,13 +48,21 @@
                 <td data-label="Total:" class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
                 <td data-label="KG:" class="text-center">@Html.Action("GetTotalWeightOfOrder", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center">@Model[i].DeliveryType</td>
-                <td class="text-center">@string.Format("{0:D}", Model[i].DeliveryDate)</td>
+                <td class="text-center"><span style="white-space:pre-line">@Model[i].DeliveryAddress</span></td>
+                @if (Model[i].DeliveryDate < DateTime.Now)
+                {
+                    <td class="text-center"><font class="text-danger">@string.Format("{0:D}", Model[i].DeliveryDate)</font></td>
+                }
+                else
+                {
+                    <td class="text-center">@string.Format("{0:D}", Model[i].DeliveryDate)</td>
+                }
                 <td data-label="Dispatch:" class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
             </tr>
         }
     }
     else
-    { 
+    {
         <tr>
             <td style="font-size: 20px">
                 There are no new confirmed orders at the moment.

@@ -861,15 +861,21 @@ namespace FreeMarket.Models
 
             while (i < 14)
             {
-                while (date2.DayOfWeek != DayOfWeek.Wednesday && date2.DayOfWeek != DayOfWeek.Thursday && date2.DayOfWeek != DayOfWeek.Friday)
-                {
-                    date2 = date2.AddDays(1);
-                }
+                //while (date2.DayOfWeek != DayOfWeek.Wednesday && date2.DayOfWeek != DayOfWeek.Thursday && date2.DayOfWeek != DayOfWeek.Friday)
+                //{
+                //    date2 = date2.AddDays(1);
+                //}
+
+                //Debug.WriteLine("-------------------------------------");
+                //Debug.WriteLine("date2      : {0}", date2);
+                //Debug.WriteLine("Dispatch   : {0}", GetDispatchDay(date2));
+                //Debug.WriteLine("Arrive     : {0}", GetArriveDay(date2));
+                //Debug.WriteLine("-------------------------------------");
 
                 Debug.WriteLine("-------------------------------------");
                 Debug.WriteLine("date2      : {0}", date2);
-                Debug.WriteLine("Dispatch   : {0}", GetDispatchDay(date2));
-                Debug.WriteLine("Arrive     : {0}", GetArriveDay(date2));
+                Debug.WriteLine("Dispatch   : {0}", GetSpecialDispatchDay(date2));
+                Debug.WriteLine("Arrive     : {0}", GetSpecialArriveDay(date2));
                 Debug.WriteLine("-------------------------------------");
 
                 date2 = date2.AddDays(1);

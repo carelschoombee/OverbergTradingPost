@@ -22,8 +22,8 @@
     <div class="row well text-center">
 
         We offer the following payment options:
-        <img src="~/Content/Images/PayGate-Card-Brand-Logos-Small.png" />
-
+        @Html.Partial("_PaymentOptions")
+        
     </div>
     <div class="row well text-center">
         <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
