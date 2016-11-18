@@ -41,7 +41,7 @@ namespace FreeMarket.Models
         public string MainContactEmailAddress { get; set; }
         public string StreetAddress { get; set; }
         public string TownName { get; set; }
-        public string PostalCode1 { get; set; }
+        public string StruisbaaiPostalCode { get; set; }
         public string Province { get; set; }
     }
 }

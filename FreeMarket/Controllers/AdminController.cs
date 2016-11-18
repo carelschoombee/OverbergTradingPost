@@ -1112,5 +1112,40 @@ namespace FreeMarket.Controllers
 
             return Content(Math.Round(totalWeight, 2).ToString());
         }
+
+        //public ActionResult ExportToCsv(string id)
+        //{
+        //    using (FreeMarketEntities db = new FreeMarketEntities())
+        //    {
+        //        var temp = db.OrderHeaders.ToList();
+
+        //        string csv = String.Empty;
+
+        //        id = id ?? String.Empty;
+
+        //        var listCSV = temp.Where(c => (c.MsiFileName != null && c.MsiFileName.ToUpper().Contains(id.ToUpper()))
+        //                || (c.PatchNo != null && c.PatchNo.ToUpper().Contains(id.ToUpper()))
+        //                || (c.Status != null && c.Status.ToUpper().Contains(id.ToUpper())))
+        //                .OrderBy(c => c.MsiFileName)
+        //                .Select(c =>
+        //                    new
+        //                    {
+        //                        c.MsiFileName,
+        //                        c.PatchNo,
+        //                        c.CreateDate,
+        //                        c.Status,
+        //                        c.AddRemoveName,
+        //                        c.MsiFullPath,
+        //                        c.Md5,
+        //                        c.Version
+        //                    })
+        //                .ToList();
+
+        //        csv = listCSV.ToCsv();
+
+        //        return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "Report.csv");
+        //    }
+
+        //}
     }
 }

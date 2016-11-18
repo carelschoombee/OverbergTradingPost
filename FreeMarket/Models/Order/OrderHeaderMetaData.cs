@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace FreeMarket.Models
@@ -483,10 +484,12 @@ namespace FreeMarket.Models
             if (order.DeliveryType == "Courier")
             {
                 Courier courier = new Courier();
+                List<GetOrderReport_Result> result = new List<GetOrderReport_Result>();
 
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
                     courier = db.Couriers.Find(order.CourierNumber);
+                    result = db.GetOrderReport(order.OrderNumber).ToList();
                 }
 
                 string destination = "";
@@ -503,8 +506,25 @@ namespace FreeMarket.Models
                     else
                         destination = courier.MainContactEmailAddress;
 
+                    string itemsTable = OrderHeader.BuildItemsTableForEmail(result);
+
                     body = string.Format((message)
-                        , order.OrderNumber
+                        , result.FirstOrDefault().OrderNumber
+                        , result.FirstOrDefault().OrderNumber
+                        , result.FirstOrDefault().CustomerName
+                        , result.FirstOrDefault().CustomerPhone1
+                        , result.FirstOrDefault().CustomerPhone2
+                        , result.FirstOrDefault().CustomerEmail
+                        , string.Format("{0:f}", result.FirstOrDefault().PreferredDeliveryDate)
+                        , result.FirstOrDefault().AddressLine1
+                        , result.FirstOrDefault().Suburb
+                        , result.FirstOrDefault().City
+                        , result.FirstOrDefault().PostalCode
+                        , result.FirstOrDefault().StreetAddress
+                        , result.FirstOrDefault().TownName
+                        , result.FirstOrDefault().StruisbaaiPostalCode
+                        , result.FirstOrDefault().Province
+                        , itemsTable
                         , supportInfo.MainContactName
                         , supportInfo.Landline
                         , supportInfo.Cellphone
@@ -533,6 +553,49 @@ namespace FreeMarket.Models
 
                 await email.SendAsync(iMessageCourier, orderDeliveryInstruction.FirstOrDefault().Key);
             }
+        }
+
+        private static string BuildItemsTableForEmail(List<GetOrderReport_Result> result)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("<table>");
+
+            builder.Append("<tr>");
+            builder.Append("<th>");
+            builder.Append("Item");
+            builder.Append("</th>");
+            builder.Append("<th>");
+            builder.Append("Weight (KG)");
+            builder.Append("</th>");
+            builder.Append("<th>");
+            builder.Append("Size");
+            builder.Append("</th>");
+            builder.Append("<th>");
+            builder.Append("Quantity");
+            builder.Append("</th>");
+            builder.Append("</tr>");
+
+            foreach (GetOrderReport_Result res in result)
+            {
+                builder.Append("<tr>");
+                builder.Append("<td>");
+                builder.Append(res.Description);
+                builder.Append("</td>");
+                builder.Append("<td>");
+                builder.Append(Math.Round(res.Weight, 2));
+                builder.Append("</td>");
+                builder.Append("<td>");
+                builder.Append(res.Size);
+                builder.Append("</td>");
+                builder.Append("<td>");
+                builder.Append(res.Quantity);
+                builder.Append("</td>");
+                builder.Append("</tr>");
+            }
+
+            builder.Append("</table>");
+
+            return builder.ToString();
         }
 
         private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order, bool specialDelivery)

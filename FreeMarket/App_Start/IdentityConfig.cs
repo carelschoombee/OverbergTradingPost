@@ -98,7 +98,7 @@ namespace FreeMarket
                 mail.Attachments.Add(attach);
             }
 
-            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", bodyContent);
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", EmailService.Borderify(bodyContent));
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
             string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
