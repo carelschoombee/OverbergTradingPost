@@ -726,6 +726,7 @@
           <Parameter Name="productNumber" Type="int" Mode="In" />
           <Parameter Name="supplierNumber" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetDeliveryLabels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetDeliveryTypeHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerNumber" Type="nvarchar" Mode="In" />
         </Function>
@@ -1267,8 +1268,9 @@
           <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetOrderReport" ReturnType="Collection(FreeMarketModel.GetOrderReport_Result)">
-            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetDeliveryLabels" ReturnType="Collection(FreeMarketModel.GetDeliveryLabels_Result)" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -2121,6 +2123,27 @@
           <Property Type="String" Name="TownName" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="StruisbaaiPostalCode" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Province" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetDeliveryLabels_Result">
+          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="DeliveryAddress" Nullable="true" MaxLength="1200" />
+          <Property Type="String" Name="DeliveryAddressLine1" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DeliveryAddressLine2" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DeliveryAddressLine3" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DeliveryAddressLine4" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DeliveryAddressSuburb" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DeliveryAddressCity" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DeliveryAddressPostalCode" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="DeliveryDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="StreetAddress" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="TownName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PostalCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Province" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Cellphone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SupportEmail" Nullable="true" MaxLength="50" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3079,6 +3102,31 @@
                 <ScalarProperty Name="TownName" ColumnName="TownName" />
                 <ScalarProperty Name="StruisbaaiPostalCode" ColumnName="StruisbaaiPostalCode" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDeliveryLabels" FunctionName="FreeMarketModel.Store.GetDeliveryLabels">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetDeliveryLabels_Result">
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
+                <ScalarProperty Name="DeliveryAddressLine1" ColumnName="DeliveryAddressLine1" />
+                <ScalarProperty Name="DeliveryAddressLine2" ColumnName="DeliveryAddressLine2" />
+                <ScalarProperty Name="DeliveryAddressLine3" ColumnName="DeliveryAddressLine3" />
+                <ScalarProperty Name="DeliveryAddressLine4" ColumnName="DeliveryAddressLine4" />
+                <ScalarProperty Name="DeliveryAddressSuburb" ColumnName="DeliveryAddressSuburb" />
+                <ScalarProperty Name="DeliveryAddressCity" ColumnName="DeliveryAddressCity" />
+                <ScalarProperty Name="DeliveryAddressPostalCode" ColumnName="DeliveryAddressPostalCode" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="StreetAddress" ColumnName="StreetAddress" />
+                <ScalarProperty Name="TownName" ColumnName="TownName" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Cellphone" ColumnName="Cellphone" />
+                <ScalarProperty Name="SupportEmail" ColumnName="SupportEmail" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

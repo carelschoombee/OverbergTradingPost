@@ -311,5 +311,10 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderReport_Result>("GetOrderReport", orderNumberParameter);
         }
+    
+        public virtual ObjectResult<GetDeliveryLabels_Result> GetDeliveryLabels()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDeliveryLabels_Result>("GetDeliveryLabels");
+        }
     }
 }

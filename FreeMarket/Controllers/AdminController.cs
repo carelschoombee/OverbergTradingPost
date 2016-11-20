@@ -1,6 +1,7 @@
 ﻿using FreeMarket.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1113,39 +1114,49 @@ namespace FreeMarket.Controllers
             return Content(Math.Round(totalWeight, 2).ToString());
         }
 
-        //public ActionResult ExportToCsv(string id)
-        //{
-        //    using (FreeMarketEntities db = new FreeMarketEntities())
-        //    {
-        //        var temp = db.OrderHeaders.ToList();
+        public ActionResult ExportToCsv(string id)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                var temp = OrderHeader.GetDeliveryLabels();
 
-        //        string csv = String.Empty;
+                string csv = String.Empty;
 
-        //        id = id ?? String.Empty;
+                id = id ?? String.Empty;
 
-        //        var listCSV = temp.Where(c => (c.MsiFileName != null && c.MsiFileName.ToUpper().Contains(id.ToUpper()))
-        //                || (c.PatchNo != null && c.PatchNo.ToUpper().Contains(id.ToUpper()))
-        //                || (c.Status != null && c.Status.ToUpper().Contains(id.ToUpper())))
-        //                .OrderBy(c => c.MsiFileName)
-        //                .Select(c =>
-        //                    new
-        //                    {
-        //                        c.MsiFileName,
-        //                        c.PatchNo,
-        //                        c.CreateDate,
-        //                        c.Status,
-        //                        c.AddRemoveName,
-        //                        c.MsiFullPath,
-        //                        c.Md5,
-        //                        c.Version
-        //                    })
-        //                .ToList();
+                var listCSV = temp
+                        .Select(c =>
+                            new
+                            {
+                                c.OrderNumber,
+                                c.Name,
+                                c.PhoneNumber,
+                                c.Email,
+                                c.DeliveryAddress,
+                                c.DeliveryAddressLine1,
+                                c.DeliveryAddressLine2,
+                                c.DeliveryAddressLine3,
+                                c.DeliveryAddressLine4,
+                                c.DeliveryAddressSuburb,
+                                c.DeliveryAddressCity,
+                                c.DeliveryAddressPostalCode,
+                                c.DeliveryDate,
+                                c.StreetAddress,
+                                c.TownName,
+                                c.Province,
+                                c.PostalCode,
+                                c.SupportEmail,
+                                c.Cellphone
+                            })
+                        .ToList();
 
-        //        csv = listCSV.ToCsv();
+                csv = listCSV.ToCsv();
 
-        //        return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "Report.csv");
-        //    }
+                string title = string.Format("Labels {0}.csv", DateTime.Now);
 
-        //}
+                return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", title);
+            }
+
+        }
     }
 }

@@ -1111,6 +1111,14 @@ namespace FreeMarket.Models
             return 0;
         }
 
+        public static List<GetDeliveryLabels_Result> GetDeliveryLabels()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.GetDeliveryLabels().ToList();
+            }
+        }
+
         public override string ToString()
         {
             string toString = "";
