@@ -1,4 +1,6 @@
-﻿
+﻿@using FreeMarket.Models
+@model DeliveryOptionsViewModel
+
 @{
     ViewBag.Title = "Delivery Options";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,29 +17,14 @@
         </div>
         <div class="row well">
             <h2>Door to Door Courier Delivery</h2>
-            We are very aware that a critical aspect for our business to be successful,
-            is that deliveries from us to you need to be done professionally.  We chose
-            Time Freight as our service provider and have faith in their efficiency and
-            effectiveness.  Obviously cost is a major concern for us.  Please note that
-            cost of delivery is fixed, up and to 40 Kg's.  Therefore, the bigger your
-            order the more cost effective it will be to you.  We have benchmarked Time
-            Freights delivery costs with those of other couriers and found it very
-            compettitive.
-
-            Our Pecan nuts have been vacuum packed and stored in an airconditioned
-            facility.  You can either keep yours in a freezer or in your fridge for
-            anything from 12 months to 24 months, without a loss in freshness.  In South
-            Africa Pecan nuts are harvested in May, so it is best pratice to schedule
-            your annual purchases shortly thereafter.
+            @Html.Raw(Model.CourierDeliveryDescription)
         </div>
         <div class="row text-center">
             <img class="img-thumbnail img-rounded" src="~/Content/Images/slideCourier2.png" />
         </div>
         <div class="row well">
             <h2>Collect at Your Post Office</h2>
-            Should you choose to, you may collect your order from your local post office.
-            Please note that we cannot be held responsible for any products that may be
-            lost or damaged during the posting process.
+            @Html.Raw(Model.PostOfficeDeliveryDescription)
         </div>
         <div class="col-md-offset-4 row">
             <a class="btn btn-success" href="@Url.Action("Index", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>

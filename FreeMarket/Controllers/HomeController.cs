@@ -34,7 +34,8 @@ namespace FreeMarket.Controllers
 
         public ActionResult DeliveryOptionsInfo()
         {
-            return View();
+            DeliveryOptionsViewModel model = new DeliveryOptionsViewModel();
+            return View(model);
         }
 
         public ActionResult About()
