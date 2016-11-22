@@ -571,7 +571,14 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculatePostOfficeFee(totalWeight).FirstOrDefault();
+                if (totalWeight != 0)
+                {
+                    return (decimal)db.CalculatePostOfficeFee(totalWeight).FirstOrDefault();
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
 

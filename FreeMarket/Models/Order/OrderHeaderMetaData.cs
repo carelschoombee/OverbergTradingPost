@@ -50,6 +50,16 @@ namespace FreeMarket.Models
                     address = new CustomerAddress();
                 }
 
+                int result = 0;
+                if (!string.IsNullOrEmpty(address.AddressPostalCode))
+                    result = (int)db.ValidateSpecialDeliveryCode(int.Parse(address.AddressPostalCode)).FirstOrDefault();
+
+                string deliveryType = "";
+                if (result == 1)
+                    deliveryType = "Courier";
+                else
+                    deliveryType = "PostOffice";
+
                 // The customer has no unconfirmed orders
                 if (order == null)
                 {
@@ -73,7 +83,7 @@ namespace FreeMarket.Models
                         DeliveryAddressPostalCode = address.AddressPostalCode,
                         DeliveryDate = null,
                         DeliveryDateAgreed = null,
-                        DeliveryType = "Courier",
+                        DeliveryType = deliveryType,
                         DateDispatched = null,
                         DateRefunded = null,
 
