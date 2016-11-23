@@ -58,7 +58,7 @@ namespace FreeMarket.Models
                 }
                 catch (Exception e)
                 {
-
+                    ExceptionLogging.LogException(e);
                 }
 
                 if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)

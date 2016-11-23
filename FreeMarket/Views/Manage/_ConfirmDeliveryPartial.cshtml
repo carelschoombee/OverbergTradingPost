@@ -65,6 +65,17 @@
                         <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
                     </td>
                 </tr>
+                @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))
+                {
+                    <tr>
+                        <th>
+                            Tracking Number:
+                        </th>
+                        <td>
+                            @Model.Order.TrackingCodes
+                        </td>
+                    </tr>
+                }
             </table>
 
     }
@@ -87,5 +98,13 @@ else if (Model.Order.DeliveryType == "PostOffice")
                 <img src="~/Content/Images/slideCourier2.png" width="128" height="80" alt="Post Office"/>
             </td>
         </tr>
+        @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))
+        {
+            <tr>
+                <td>
+                    Tracking Number: @Model.Order.TrackingCodes
+                </td>
+            </tr>
+        }
     </table>
 }

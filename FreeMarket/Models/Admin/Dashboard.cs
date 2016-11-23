@@ -21,6 +21,7 @@ namespace FreeMarket.Models
         public List<OrderHeader> ConfirmedOrders { get; set; }
         public List<OrderHeader> InTransitOrders { get; set; }
         public List<OrderHeader> RefundPending { get; set; }
+        public List<OrderHeader> RefundableOrders { get; set; }
 
         [DisplayName("Time Period")]
         [Required]
@@ -106,6 +107,7 @@ namespace FreeMarket.Models
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
+                RefundableOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed" || c.OrderStatus == "InTransit").ToList();
 
                 List<AuditUser> hits = new List<AuditUser>();
                 hits = db.AuditUsers.Where(c => c.Action == 32).ToList();

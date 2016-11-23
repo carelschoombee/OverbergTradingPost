@@ -219,6 +219,7 @@ namespace FreeMarket.Controllers
                         {
                             order.OrderStatus = "InTransit";
                             order.DateDispatched = DateTime.Now;
+                            order.TrackingCodes = oh.TrackingCodes;
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
 
@@ -1128,25 +1129,9 @@ namespace FreeMarket.Controllers
                         .Select(c =>
                             new
                             {
-                                c.OrderNumber,
-                                c.Name,
-                                c.PhoneNumber,
-                                c.Email,
                                 c.DeliveryAddress,
-                                c.DeliveryAddressLine1,
-                                c.DeliveryAddressLine2,
-                                c.DeliveryAddressLine3,
-                                c.DeliveryAddressLine4,
-                                c.DeliveryAddressSuburb,
-                                c.DeliveryAddressCity,
-                                c.DeliveryAddressPostalCode,
-                                c.DeliveryDate,
-                                c.StreetAddress,
-                                c.TownName,
-                                c.Province,
-                                c.PostalCode,
-                                c.SupportEmail,
-                                c.Cellphone
+                                c.From,
+                                c.To
                             })
                         .ToList();
 
@@ -1156,7 +1141,6 @@ namespace FreeMarket.Controllers
 
                 return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", title);
             }
-
         }
     }
 }

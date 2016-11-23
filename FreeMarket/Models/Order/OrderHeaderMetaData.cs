@@ -46,13 +46,18 @@ namespace FreeMarket.Models
                     .FirstOrDefault();
 
                 if (address == null)
-                {
                     address = new CustomerAddress();
-                }
 
                 int result = 0;
-                if (!string.IsNullOrEmpty(address.AddressPostalCode))
-                    result = (int)db.ValidateSpecialDeliveryCode(int.Parse(address.AddressPostalCode)).FirstOrDefault();
+                try
+                {
+                    if (!string.IsNullOrEmpty(address.AddressPostalCode))
+                        result = (int)db.ValidateSpecialDeliveryCode(int.Parse(address.AddressPostalCode)).FirstOrDefault();
+                }
+                catch (Exception e)
+                {
+                    ExceptionLogging.LogException(e);
+                }
 
                 string deliveryType = "";
                 if (result == 1)
@@ -267,9 +272,17 @@ namespace FreeMarket.Models
                     .Select(c => c.Value)
                     .FirstOrDefault();
 
+                string smsLine1TrackingNumber = db.SiteConfigurations
+                    .Where(c => c.Key == "OrderDispatchSmsLine1TrackingNumber")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
                 SMSHelper helper = new SMSHelper();
 
-                await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, deliveryType), user.PhoneNumber);
+                if (string.IsNullOrEmpty(order.TrackingCodes))
+                    await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, deliveryType), user.PhoneNumber);
+                else
+                    await helper.SendMessage(string.Format(smsLine1TrackingNumber, user.Name, orderNumber, deliveryType, order.TrackingCodes), user.PhoneNumber);
             }
         }
 
@@ -1154,5 +1167,9 @@ namespace FreeMarket.Models
 
         [DisplayName("Order Number")]
         public int OrderNumber { get; set; }
+
+        [DisplayName("Tracking Codes")]
+        [StringLength(700)]
+        public int TrackingCodes { get; set; }
     }
 }

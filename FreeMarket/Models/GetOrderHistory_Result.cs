@@ -32,5 +32,6 @@ namespace FreeMarket.Models
         public string OrderStatus { get; set; }
         public bool PaymentReceived { get; set; }
         public string DeliveryType { get; set; }
+        public string TrackingCodes { get; set; }
     }
 }

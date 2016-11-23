@@ -102,6 +102,17 @@
                                 <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
                             </td>
                         </tr>
+                        @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))
+                        {
+                            <tr>
+                                <th>
+                                    Tracking Number:
+                                </th>
+                                <td>
+                                    @Model.Order.TrackingCodes
+                                </td>
+                            </tr>
+                        }
                     </table>
                 }
             }

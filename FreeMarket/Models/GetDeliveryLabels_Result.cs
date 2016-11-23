@@ -13,24 +13,8 @@ namespace FreeMarket.Models
     
     public partial class GetDeliveryLabels_Result
     {
-        public int OrderNumber { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
         public string DeliveryAddress { get; set; }
-        public string DeliveryAddressLine1 { get; set; }
-        public string DeliveryAddressLine2 { get; set; }
-        public string DeliveryAddressLine3 { get; set; }
-        public string DeliveryAddressLine4 { get; set; }
-        public string DeliveryAddressSuburb { get; set; }
-        public string DeliveryAddressCity { get; set; }
-        public string DeliveryAddressPostalCode { get; set; }
-        public Nullable<System.DateTime> DeliveryDate { get; set; }
-        public string StreetAddress { get; set; }
-        public string TownName { get; set; }
-        public string PostalCode { get; set; }
-        public string Province { get; set; }
-        public string Cellphone { get; set; }
-        public string SupportEmail { get; set; }
     }
 }

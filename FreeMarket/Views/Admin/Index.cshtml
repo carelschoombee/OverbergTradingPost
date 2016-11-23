@@ -332,7 +332,7 @@
         </div>
         <div class="tab-pane" id="refunds">
             <div id="CancelledTable">
-                @Html.Partial("_RefundOrders", Model.ConfirmedOrders)
+                @Html.Partial("_RefundOrders", Model.RefundableOrders)
             </div>
             @using (Ajax.BeginForm("MarkRefundComplete", "Admin", null, ajaxOptsRefund))
             {
