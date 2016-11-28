@@ -16,6 +16,7 @@ namespace FreeMarket.Models
         public bool SpecialDelivery { get; set; }
         public DateTime MinDispatchDate { get; set; }
         public List<OrderDetail> ItemsInOrder { get; set; }
+        public List<GetPaymentGatewayMessages_Result> PaymentMessages { get; set; }
 
         public static OrderHeaderViewModel GetOrder(int orderNumber, string userId)
         {
@@ -80,6 +81,12 @@ namespace FreeMarket.Models
                     .FirstOrDefault() ?? 0;
 
                 model.MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
+
+                // Get Payment information
+
+                string orderNumberString = model.Order.OrderNumber.ToString();
+                model.PaymentMessages = new List<GetPaymentGatewayMessages_Result>();
+                model.PaymentMessages = db.GetPaymentGatewayMessages(orderNumberString).ToList();
             }
 
             return model;

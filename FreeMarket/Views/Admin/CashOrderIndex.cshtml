@@ -1,0 +1,52 @@
+﻿@using FreeMarket.Models
+@model CashCustomerViewModel
+
+@{
+    ViewBag.Title = "CashOrderIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    AjaxOptions ajaxOptsCashSales = new AjaxOptions
+    {
+        UpdateTargetId = "cashSalesResults"
+    };
+}
+
+<h2>Cash Customers</h2>
+
+@using (Ajax.BeginForm("SearchCashOrderCustomers", "Admin", null, ajaxOptsCashSales, new { @id = "searchCashSalesForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group center_div">
+        <div class="col-sm-6">
+            @Html.TextBoxFor(c => c.CustomerCriteria, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.CustomerCriteria, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-sm-3">
+            <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-12">
+            <br />
+        </div>
+    </div>
+}
+
+<br />
+<br />
+
+<div id="cashSalesResults">
+
+</div>
+
+<div class="form-group">
+    <div class="text-center">
+        <input type="submit" class="btn btn-info" value="Update" />
+        @Html.ActionLink("Back", "Index", "Admin", new { @class = "btn btn-success" })
+    </div>
+</div>
+

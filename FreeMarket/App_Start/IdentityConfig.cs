@@ -83,7 +83,7 @@ namespace FreeMarket
             mail.From = new MailAddress(ConfigurationManager.AppSettings["systemEmail"]);
             mail.To.Add(destination);
 
-            if (ConfigurationManager.AppSettings["ccTimeFreightManagement"] == "true")
+            if (ConfigurationManager.AppSettings["ccTimeFreightManagement"] == "true" && !string.IsNullOrEmpty(cc))
                 mail.CC.Add(new MailAddress(cc));
 
             mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));

@@ -48,6 +48,12 @@
         UpdateTargetId = "searchAuditResults"
         //LoadingElementId = "loadingDiv",
     };
+
+    AjaxOptions ajaxOptsCashSales = new AjaxOptions
+    {
+        UpdateTargetId = "cashSalesResults"
+        //LoadingElementId = "loadingDiv",
+    };
 }
 
 <br />
@@ -81,6 +87,7 @@
         <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
         <li><a href="#profile" data-toggle="tab">Functions</a></li>
         <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
+        <li><a href="#cashSales" data-toggle="tab">Cash Sales</a></li>
         <li><a href="#auditing" data-toggle="tab">Auditing</a></li>
     </ul>
 
@@ -286,9 +293,7 @@
                     <div class="col-sm-12">
                         <br />
                     </div>
-                </div>
-
-                    
+                </div>     
             }
 
             <br />
@@ -348,6 +353,40 @@
                     </div>
                 }
             }
+        </div>
+        <div class="tab-pane" id="cashSales">
+            <h2 class="text-center">Cash Sales</h2>
+            <hr />
+
+            @Html.ActionLink("New Cash Order", "CashOrderIndex", "Admin", null, new { @class = "btn btn-success" })
+
+            @using (Ajax.BeginForm("SearchCashOrders", "Admin", null, ajaxOptsCashSales, new { @id = "searchCashSalesForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group center_div">
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(c => c.CashSalesCriteria, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CashSalesCriteria, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                </div>
+            }
+
+            <br />
+            <br />
+
+            <div id="cashSalesResults">
+
+            </div>
         </div>
         <div class="tab-pane" id="auditing">
             <h2 class="text-center">Search Audit</h2>

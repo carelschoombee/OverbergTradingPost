@@ -1,0 +1,98 @@
+﻿@using FreeMarket.Models
+@model List<CashOrderViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+
+<table class="table table-bordered-custom table-responsive">
+
+    <tr>
+        <th>
+            #
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Phone
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Total
+        </th>
+        <th>
+            Items
+        </th>
+    </tr>
+    @foreach (CashOrderViewModel result in Model)
+    {
+        <tr>
+            <td>
+                @result.Order.OrderId
+            </td>
+            <td>
+                @result.Order.CustomerName
+            </td>
+            <td>
+                @result.Order.CustomerPhone
+            </td>
+            <td>
+                @result.Order.CustomerDeliveryAddress
+            </td>
+            <td>
+                @result.Order.Total
+            </td>
+            <td>
+                @if (result.OrderDetails != null && result.OrderDetails.Count > 0)
+                {
+                    
+                    <table class="table table-bordered-custom table-responsive well">
+                        <tr>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Qty
+                            </th>
+                            <th>
+                                Weight
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Total
+                            </th>
+                        </tr>
+                        @foreach (CashOrderDetail item in result.OrderDetails)
+                        {
+                        
+                        <tr>
+                            <td>
+                                @item.Description from @item.SupplierName
+                            </td>                               
+                            <td data-label="Qty">
+                                @item.Quantity
+                            </td>
+                            <td data-label="Weight">
+                                @item.Weight
+                            </td>
+                            <td data-label="Price">
+                                @string.Format("{0:C}", item.Price)
+                            </td>
+                            <td data-label="Total">
+                                @string.Format("{0:C}", item.OrderItemTotal)
+                            </td>
+                        </tr>
+                        }
+                    </table>
+                    
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+}

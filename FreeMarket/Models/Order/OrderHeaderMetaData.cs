@@ -555,7 +555,10 @@ namespace FreeMarket.Models
 
                     subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
 
-                    cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
+                    if (!specialDelivery)
+                        cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
+                    else
+                        cc = string.Empty;
 
                     EmailService email = new EmailService();
 

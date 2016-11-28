@@ -44,6 +44,9 @@ namespace FreeMarket.Models
 
         public string SMSCredits { get; set; }
 
+        [DisplayName("Filter")]
+        public string CashSalesCriteria { get; set; }
+
         public Dashboard()
         {
 
@@ -116,8 +119,15 @@ namespace FreeMarket.Models
                     WebsiteHits = hits.Count;
                 }
 
-                SMSHelper helper = new SMSHelper();
-                SMSCredits = await helper.CheckCredits();
+                try
+                {
+                    SMSHelper helper = new SMSHelper();
+                    SMSCredits = await helper.CheckCredits();
+                }
+                catch (Exception e)
+                {
+                    ExceptionLogging.LogException(e);
+                }
             }
         }
     }

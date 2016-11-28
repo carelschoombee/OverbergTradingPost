@@ -139,4 +139,71 @@
             <td>Delivery Address:</td>
             <td><span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span></td>
         </tr>     
+        <tr>
+            <td>Payment Info:</td>
+            <td>
+                @if (Model.PaymentMessages != null && Model.PaymentMessages.Count > 0)
+                {
+                    foreach (GetPaymentGatewayMessages_Result message in Model.PaymentMessages)
+                    {
+                        <table class="table table-bordered-custom table-responsive well">
+                            <tr>
+                                <td>Order #:</td>
+                                <td>@message.Reference</td>
+                            </tr>
+                            <tr>
+                                <td>Date:</td>
+                                <td>@message.Transaction_Date</td>
+                            </tr>
+                            <tr>
+                                <td>Amount:</td>
+                                <td>@message.Amount</td>
+                            </tr>
+                            <tr>
+                                <td>Method:</td>
+                                <td>@message.Description</td>
+                            </tr>
+                            <tr>
+                                <td>Method Detail:</td>
+                                <td>@message.Pay_Method_Detail</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td>@message.Status</td>
+                            </tr>
+                            <tr>
+                                <td>Result Code:</td>
+                                <td>@message.Result_Code</td>
+                            </tr>
+                            <tr>
+                                <td>Auth Code:</td>
+                                <td>@message.Auth_Code</td>
+                            </tr>
+                            <tr>
+                                <td>Result Description:</td>
+                                <td>@message.Result_Desc</td>
+                            </tr>
+                            <tr>
+                                <td>Transaction ID:</td>
+                                <td>@message.Transaction_ID</td>
+                            </tr>
+                            <tr>
+                                <td>Checksum Passed:</td>
+                                <td>@message.Checksum_Passed</td>
+                            </tr>
+                            <tr>
+                                <td>Same Price:</td>
+                                <td>@message.PriceSameAsRequest</td>
+                            </tr>
+                        </table>
+                    }
+                }
+                else
+                {
+                    <text>
+                        No Messages yet.
+                    </text>
+                }
+            </td>
+        </tr> 
     </table>

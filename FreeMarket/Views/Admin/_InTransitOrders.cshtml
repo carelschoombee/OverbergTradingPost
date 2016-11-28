@@ -48,7 +48,14 @@
                     <div>@Model[i].DeliveryType @(@Model[i].TrackingCodes == null ? "" : " - Tracking Code:")</div>
                     <div>@Model[i].TrackingCodes</div>
                 </td>
-                <td class="text-center">@string.Format("{0:f}", Model[i].DeliveryDate)</td>
+                @if (Model[i].DeliveryDate < DateTime.Now)
+                {
+                    <td class="text-center"><font class="text-danger">@string.Format("{0:f}", Model[i].DeliveryDate)</font></td>
+                }
+                else
+                {
+                    <td class="text-center">@string.Format("{0:f}", Model[i].DeliveryDate)</td>
+                }
                 <td data-label="Feedback:" class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
             </tr>
         }

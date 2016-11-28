@@ -132,6 +132,60 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult SearchCashOrders(Dashboard model)
+        {
+            List<CashOrderViewModel> cashOrders = new List<CashOrderViewModel>();
+
+            ModelState.Remove("SelectedYear");
+
+            if (ModelState.IsValid)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    cashOrders = CashOrderViewModel.GetOrders(model.CashSalesCriteria);
+
+                    if (cashOrders == null)
+                    {
+                        return Content("");
+                    }
+                }
+
+                return PartialView("_ViewCashOrders", cashOrders);
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SearchCashOrderCustomers(CashCustomerViewModel model)
+        {
+            List<CashCustomer> cashOrders = new List<CashCustomer>();
+
+            if (ModelState.IsValid)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    cashOrders = CashCustomerViewModel.GetCustomers(model.CustomerCriteria);
+
+                    if (cashOrders == null)
+                    {
+                        return Content("");
+                    }
+                }
+
+                return PartialView("_ViewCashCustomers", cashOrders);
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Dashboard(Dashboard data, string yearView, string monthView)
         {
             Dashboard model = new Dashboard();
@@ -403,6 +457,13 @@ namespace FreeMarket.Controllers
         public ActionResult TimeFreightIndex()
         {
             List<TimeFreightCourierFeeReference> model = Courier.GetTimeFreightPrices();
+
+            return View(model);
+        }
+
+        public ActionResult CashOrderIndex()
+        {
+            CashCustomerViewModel model = new CashCustomerViewModel();
 
             return View(model);
         }
@@ -699,6 +760,16 @@ namespace FreeMarket.Controllers
             Courier courier = Courier.GetCourier(courierNumber);
 
             return View(courier);
+        }
+
+        public ActionResult EditCashCustomer(int id)
+        {
+            if (id == 0)
+                return RedirectToAction("CashOrderIndex", "Admin");
+
+            CashCustomer customer = CashCustomer.GetCustomer(id);
+
+            return View(customer);
         }
 
         public ActionResult TimeFreightPrices(int deliveryCostID)

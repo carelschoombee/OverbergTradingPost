@@ -1,0 +1,39 @@
+﻿@using FreeMarket.Models
+@model CashCustomer
+@{
+    ViewBag.Title = "Edit Cash Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Cash Customer</h2>
+<hr />
+
+<div id="parent" class="container center_div">
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditCashCustomerProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "cashCustomerForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="well well-modal">
+                @Html.Partial("_CashCustomerPartial", Model)
+
+                <hr />
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-info" value="Update" />
+                        @Html.ActionLink("Back", "CashOrderIndex", "Admin", new { @class = "btn btn-success" })
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+@Html.Partial("_ValidateCashCustomerPartial", Model)

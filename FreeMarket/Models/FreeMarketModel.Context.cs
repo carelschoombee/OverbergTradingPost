@@ -63,6 +63,9 @@ namespace FreeMarket.Models
         public virtual DbSet<Custodian> Custodians { get; set; }
         public virtual DbSet<PaymentGatewayMessage> PaymentGatewayMessages { get; set; }
         public virtual DbSet<Support> Supports { get; set; }
+        public virtual DbSet<CashCustomer> CashCustomers { get; set; }
+        public virtual DbSet<CashOrderDetail> CashOrderDetails { get; set; }
+        public virtual DbSet<CashOrder> CashOrders { get; set; }
     
         public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<int> weight, Nullable<int> orderNumber)
         {
@@ -315,6 +318,42 @@ namespace FreeMarket.Models
                 new ObjectParameter("CustomerNumber", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderHistory_Result>("GetOrderHistory", customerNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetPaymentGatewayMessages_Result> GetPaymentGatewayMessages(string orderNumber)
+        {
+            var orderNumberParameter = orderNumber != null ?
+                new ObjectParameter("orderNumber", orderNumber) :
+                new ObjectParameter("orderNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPaymentGatewayMessages_Result>("GetPaymentGatewayMessages", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<FilterCashOrder_Result> FilterCashOrder(string filterCriteria)
+        {
+            var filterCriteriaParameter = filterCriteria != null ?
+                new ObjectParameter("filterCriteria", filterCriteria) :
+                new ObjectParameter("filterCriteria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashOrder_Result>("FilterCashOrder", filterCriteriaParameter);
+        }
+    
+        public virtual ObjectResult<GetCashOrderDetails_Result> GetCashOrderDetails(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("orderNumber", orderNumber) :
+                new ObjectParameter("orderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCashOrderDetails_Result>("GetCashOrderDetails", orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<FilterCashCustomers_Result> FilterCashCustomers(string filterCriteria)
+        {
+            var filterCriteriaParameter = filterCriteria != null ?
+                new ObjectParameter("filterCriteria", filterCriteria) :
+                new ObjectParameter("filterCriteria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashCustomers_Result>("FilterCashCustomers", filterCriteriaParameter);
         }
     }
 }

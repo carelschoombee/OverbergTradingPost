@@ -267,6 +267,20 @@
     <Compile Include="Models\Binders\CartModelBinder.cs" />
     <Compile Include="Models\Binders\DateTimeModelBinder.cs" />
     <Compile Include="Models\Binders\DecimalModelBinder.cs" />
+    <Compile Include="Models\CashCustomer.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CashOrder.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CashOrderDetail.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CashOrder\CashOrderDetailMetaData.cs" />
+    <Compile Include="Models\CashOrder\CashCustomerMetaData.cs" />
+    <Compile Include="Models\CashOrder\CashOrderMetaData.cs" />
+    <Compile Include="Models\CashOrder\CashCustomerViewModel.cs" />
+    <Compile Include="Models\CashOrder\CashOrderViewModel.cs" />
     <Compile Include="Models\Checkout\CheckOutViewModel.cs" />
     <Compile Include="Models\Checkout\PaymentGatewayIntegration.cs" />
     <Compile Include="Models\CourierReview.cs">
@@ -277,6 +291,12 @@
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
     <Compile Include="Models\FilterAuditUser_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FilterCashCustomers_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FilterCashOrder_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FilterCustomers_Result.cs">
@@ -306,6 +326,9 @@
     <Compile Include="Models\GetAllProducts_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetCashOrderDetails_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetCustodianInfo_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -331,6 +354,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderReport_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPaymentGatewayMessages_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetPriceHistories_Result.cs">
@@ -806,6 +832,12 @@
     <Content Include="Views\Home\_PaymentOptions.cshtml" />
     <Content Include="Views\Shared\_PaymentPartners.cshtml" />
     <Content Include="Views\ShoppingCart\_PaymentOptions.cshtml" />
+    <Content Include="Views\Admin\_ViewCashOrders.cshtml" />
+    <Content Include="Views\Admin\CashOrderIndex.cshtml" />
+    <Content Include="Views\Admin\_ViewCashCustomers.cshtml" />
+    <Content Include="Views\Admin\EditCashCustomer.cshtml" />
+    <Content Include="Views\Admin\_CashCustomerPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateCashCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
