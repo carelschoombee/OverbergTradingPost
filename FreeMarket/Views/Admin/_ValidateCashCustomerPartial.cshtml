@@ -1,0 +1,46 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#cashCustomerForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Name': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'Email': {
+                            validators: {
+                                emailAddress: {
+                                    message: 'Email addresses only.'
+                                }
+                            }
+                        },
+                        'PhoneNumber': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max string length is 256.',
+                                    max: 256
+                                }                            
+                            }
+                        },
+                        'DeliveryAddress': {
+                            validators: {
+                                    stringLength: {
+                                    message: 'Max string length is 1100.',
+                                    max: 1100
+                                    }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

@@ -28,7 +28,7 @@
     </tr>
     @foreach (CashCustomer result in Model)
     {
-        <tr>
+        <tr class="well">
             <td>
                 @Html.ActionLink("Edit", "EditCashCustomer", "Admin", new { id = result.Id }, new { @class = "freemarket-link"})
             </td>

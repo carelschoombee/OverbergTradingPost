@@ -17,6 +17,15 @@ namespace FreeMarket.Models
 
             return customer;
         }
+
+        public static void SaveCustomer(CashCustomer model)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                db.Entry(model).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
     }
 
     public class CashCustomerMetaData

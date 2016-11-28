@@ -875,6 +875,22 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditCashCustomerProcess(CashCustomer model)
+        {
+            if (ModelState.IsValid)
+            {
+                CashCustomer.SaveCustomer(model);
+
+                AuditUser.LogAudit(38, string.Format("Customer Name: {0}", model.Name), User.Identity.GetUserId());
+
+                return RedirectToAction("CashOrderIndex", "Admin");
+            }
+
+            return View("EditCashCustomer", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditCustomerProcess(AspNetUserCustomer model)
         {
             ApplicationUser user = new ApplicationUser();

@@ -730,7 +730,7 @@
     <Content Include="Views\Admin\EditProduct.cshtml" />
     <Content Include="Views\Admin\CreateProduct.cshtml" />
     <Content Include="Views\Admin\_ProductPartial.cshtml" />
-    <Content Include="Views\Admin\_ValidateProductPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateCashCustomerPartial.cshtml" />
     <Content Include="Views\ShoppingCart\_CourierData.cshtml" />
     <Content Include="Views\Manage\ViewOrderHistory.cshtml" />
     <Content Include="Views\Manage\ViewOrder.cshtml" />
@@ -837,7 +837,7 @@
     <Content Include="Views\Admin\_ViewCashCustomers.cshtml" />
     <Content Include="Views\Admin\EditCashCustomer.cshtml" />
     <Content Include="Views\Admin\_CashCustomerPartial.cshtml" />
-    <Content Include="Views\Admin\_ValidateCashCustomer.cshtml" />
+    <Content Include="Views\Admin\_ValidateProductPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
