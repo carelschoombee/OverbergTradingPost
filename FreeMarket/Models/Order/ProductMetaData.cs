@@ -59,6 +59,11 @@ namespace FreeMarket.Models
         public List<SelectListItem> Custodians { get; set; }
         public Dictionary<string, int> CustodianInfo { get; set; }
 
+        [DisplayName("Qty")]
+        public int CashQuantity { get; set; }
+        public string SelectedPrice { get; set; }
+        public List<SelectListItem> Prices { get; set; }
+
         public static string GetFullDescription(int productNumber, int supplierNumber)
         {
             if (productNumber == 0 || supplierNumber == 0)

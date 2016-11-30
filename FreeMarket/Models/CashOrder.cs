@@ -15,6 +15,7 @@ namespace FreeMarket.Models
     public partial class CashOrder
     {
         public int OrderId { get; set; }
+        public Nullable<System.DateTime> DatePlaced { get; set; }
         public int CashCustomerId { get; set; }
         public Nullable<decimal> Total { get; set; }
     }

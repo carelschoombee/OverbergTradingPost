@@ -1,0 +1,38 @@
+﻿@using FreeMarket.Models
+@model CashOrderViewModel
+@{
+    ViewBag.Title = "Create Cash Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Create Cash Order</h2>
+<hr />
+
+<div>
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("CreateCashOrderProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "createCashOrderForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="well well-modal">
+                
+                @Html.Partial("_CreateCashOrderPartial", Model)
+
+                <hr />
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-info" value="Create" />
+                        @Html.ActionLink("Back", "CashOrderIndex", "Admin", new { @class = "btn btn-success" })
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    
+</div>
+
+@Html.Partial("_ValidateCashOrderCreationPartial")

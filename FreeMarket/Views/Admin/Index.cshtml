@@ -358,13 +358,14 @@
             <h2 class="text-center">Cash Sales</h2>
             <hr />
 
+            @Html.ActionLink("New Cash Order", "CashOrderIndex", "Admin", null, new { @class = "btn btn-success" })
+
             @using (Ajax.BeginForm("SearchCashOrders", "Admin", null, ajaxOptsCashSales, new { @id = "searchCashSalesForm" }))
             {
                 @Html.AntiForgeryToken()
 
                 <div class="form-group center_div">
                     <div class="col-sm-6">
-                        @Html.ActionLink("New Cash Order", "CashOrderIndex", "Admin", null, new { @class = "btn btn-success" })
                         @Html.TextBoxFor(c => c.CashSalesCriteria, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.CashSalesCriteria, "", new { @class = "text-danger" })
                     </div>

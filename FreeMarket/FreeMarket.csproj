@@ -644,6 +644,9 @@
     <Content Include="FreeMarketDataSet.xsc">
       <DependentUpon>FreeMarketDataSet.xsd</DependentUpon>
     </Content>
+    <Content Include="fonts\EdwardianScriptITC.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="FreeMarketDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>FreeMarketDataSet.Designer.cs</LastGenOutput>
@@ -838,6 +841,9 @@
     <Content Include="Views\Admin\EditCashCustomer.cshtml" />
     <Content Include="Views\Admin\_CashCustomerPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateProductPartial.cshtml" />
+    <Content Include="Views\Admin\CreateCashOrder.cshtml" />
+    <Content Include="Views\Admin\_CreateCashOrderPartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateCashOrderCreationPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

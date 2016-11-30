@@ -14,6 +14,7 @@ namespace FreeMarket.Models
     public partial class FilterCashOrder_Result
     {
         public Nullable<int> Id { get; set; }
+        public Nullable<System.DateTime> DatePlaced { get; set; }
         public string Name { get; set; }
         public string DeliveryAddress { get; set; }
         public string Email { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace FreeMarket.Models
 {
@@ -54,6 +55,26 @@ namespace FreeMarket.Models
 
                         product.MainImageNumber = imageNumber;
                         product.SecondaryImageNumber = imageNumberSecondary;
+
+                        product.Prices = new List<SelectListItem>();
+
+                        string normalPrice = string.Format("{0:C}", product.PricePerUnit);
+                        string specialPrice = string.Format("{0:C}", product.SpecialPricePerUnit);
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = normalPrice,
+                            Value = product.PricePerUnit.ToString()
+                        });
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = specialPrice,
+                            Value = product.SpecialPricePerUnit.ToString(),
+                            Selected = true
+                        });
+
+                        product.CashQuantity = 0;
                     }
                 }
 

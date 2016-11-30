@@ -1,0 +1,46 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#createCashOrderForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Order.CustomerName': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+                        'Order.CustomerEmail': {
+                            validators: {
+                                emailAddress: {
+                                    message: 'Email addresses only.'
+                                }
+                            }
+                        },
+                        'Order.CustomerPhoneNumber': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max string length is 256.',
+                                    max: 256
+                                }                            
+                            }
+                        },
+                        'Order.CustomerDeliveryAddress': {
+                            validators: {
+                                stringLength: {
+                                    message: 'Max string length is 1100.',
+                                    max: 1100
+                                    }
+                            }
+                        }
+                    }
+                })
+    });
+
+</script>

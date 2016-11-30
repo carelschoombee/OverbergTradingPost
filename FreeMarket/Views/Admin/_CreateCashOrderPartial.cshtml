@@ -1,0 +1,93 @@
+﻿@using FreeMarket.Models
+@model CashOrderViewModel
+
+<div id="parent" class="center_div">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger", @style = "font-size:20px" })
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Order.CustomerName, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.Order.CustomerName, new { @class = "form-control" })
+            @Html.HiddenFor(m => m.Order.CashCustomerId)
+            @Html.HiddenFor(m => m.Order.OrderId)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Order.CustomerDeliveryAddress, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.TextAreaFor(m => m.Order.CustomerDeliveryAddress, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Order.CustomerEmail, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.Order.CustomerEmail, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Order.CustomerPhone, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.Order.CustomerPhone, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.CustodianName, new { @class = "col-md-4 control-label" })
+        <div class="col-md-6">
+            @Html.DropDownListFor(model => model.SelectedCustodian, Model.Custodians, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+<table class="table table-responsive table-bordered-custom">
+    <tr>
+        <th class="col-md-1">
+
+        </th>
+        <th class="col-md-3">
+            Item
+        </th>
+        <th class="col-md-3">
+            Quantity
+        </th>
+        <th class="col-md-1">
+            Price
+        </th>
+    </tr>
+    @for (int i = 0; i < Model.Products.Products.Count; i++)
+    {
+        <tr>
+            <td>
+                <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products.Products[i].SecondaryImageNumber})" alt="@Model.Products.Products[i].Description" title="@Model.Products.Products[i].Description" />
+                @Html.HiddenFor(c => Model.Products.Products[i].SecondaryImageNumber)
+            </td>
+            <td class="text-center">
+                @Model.Products.Products[i].Weight KG @Model.Products.Products[i].Description from @Model.Products.Products[i].SupplierName
+                @Html.HiddenFor(c => Model.Products.Products[i].Weight)
+                @Html.HiddenFor(c => Model.Products.Products[i].Description)
+                @Html.HiddenFor(c => Model.Products.Products[i].SupplierName)
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Products.Products[i].CashQuantity, new { @class = "col-md-4 control-label" })
+                    <div class="form-group text-center">
+                        @Html.EditorFor(model => Model.Products.Products[i].CashQuantity, new { htmlAttributes = new { @class = "form-control", @style = "width:125px" } })
+                        @Html.HiddenFor(c => Model.Products.Products[i].ProductNumber)
+                        @Html.HiddenFor(c => Model.Products.Products[i].SupplierNumber)
+                    </div>
+                </div>
+            </td>
+            <td class="text-center">
+                @Html.DropDownListFor(model => Model.Products.Products[i].SelectedPrice, Model.Products.Products[i].Prices, new { @class = "form-control", @style = "width:125px" })
+                @Html.HiddenFor(c => Model.Products.Products[i].SupplierNumber)
+                @Html.HiddenFor(c => Model.Products.Products[i].PricePerUnit)
+                @Html.HiddenFor(c => Model.Products.Products[i].SpecialPricePerUnit)
+                @Html.HiddenFor(c => Model.Products.Products[i].Size)
+            </td>
+        </tr>
+    }
+</table>

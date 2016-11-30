@@ -11,6 +11,9 @@
             #
         </th>
         <th>
+            Date
+        </th>
+        <th>
             Name
         </th>
         <th>
@@ -31,6 +34,9 @@
         <tr>
             <td>
                 @result.Order.OrderId
+            </td>
+            <td>
+                @string.Format("{0:D}", result.Order.DatePlaced)
             </td>
             <td>
                 @result.Order.CustomerName

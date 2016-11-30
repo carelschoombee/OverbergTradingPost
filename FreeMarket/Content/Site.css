@@ -1,12 +1,14 @@
-﻿@import url(//db.onlinewebfonts.com/c/ca6f91c0cad2fe33614026d17117601d?family=Edwardian+Script+ITC);
+﻿/*@import url(//db.onlinewebfonts.com/c/ca6f91c0cad2fe33614026d17117601d?family=Edwardian+Script+ITC);*/
 
 @font-face {font-family: "Edwardian Script ITC";
-    src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot");
+    /*src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot");
     src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot?#iefix") format("embedded-opentype"),
     url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff2") format("woff2"),
-    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff") format("woff"),
-    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.ttf") format("truetype"),
-    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.svg#Edwardian Script ITC") format("svg");
+    url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff") format("woff"),*/
+    /*src: url("https://localhost:44316/fonts/EdwardianScriptITC.ttf") format("truetype"),*/
+    src: url("https:///www.schoombeeandson.co.za/fonts/EdwardianScriptITC.ttf") format("truetype"),
+    /*url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.ttf") format("truetype"),*/
+    /*url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.svg#Edwardian Script ITC") format("svg");*/
 }
 
 input::-webkit-calendar-picker-indicator{

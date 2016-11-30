@@ -503,6 +503,13 @@ namespace FreeMarket.Controllers
             return View(custodian);
         }
 
+        public ActionResult CreateCashOrder(int id = 0)
+        {
+            CashOrderViewModel model = CashOrderViewModel.CreateNewOrder(id);
+
+            return View(model);
+        }
+
         public ActionResult DownloadReport()
         {
             DownloadReportViewModel model = new DownloadReportViewModel();
@@ -578,6 +585,29 @@ namespace FreeMarket.Controllers
             product.InitializeDropDowns("create");
 
             return View("CreateProduct", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCashOrderProcess(CashOrderViewModel model)
+        {
+            if (!model.Products.Products.Any(c => c.CashQuantity > 0))
+            {
+                ModelState.AddModelError("", "The order must contain at least one item.");
+                CashOrderViewModel.InitializeDropDowns(model);
+                return View("CreateCashOrder", model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                CashOrder.CreateNewCashOrder(model);
+
+                AuditUser.LogAudit(39, string.Format("Cash Order Number: {0}", model.Order.OrderId), User.Identity.GetUserId());
+
+                return RedirectToAction("Index", "Admin");
+            }
+
+            return View("CreateCashOrder", model);
         }
 
         [HttpPost]

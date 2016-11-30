@@ -329,15 +329,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPaymentGatewayMessages_Result>("GetPaymentGatewayMessages", orderNumberParameter);
         }
     
-        public virtual ObjectResult<FilterCashOrder_Result> FilterCashOrder(string filterCriteria)
-        {
-            var filterCriteriaParameter = filterCriteria != null ?
-                new ObjectParameter("filterCriteria", filterCriteria) :
-                new ObjectParameter("filterCriteria", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashOrder_Result>("FilterCashOrder", filterCriteriaParameter);
-        }
-    
         public virtual ObjectResult<GetCashOrderDetails_Result> GetCashOrderDetails(Nullable<int> orderNumber)
         {
             var orderNumberParameter = orderNumber.HasValue ?
@@ -354,6 +345,15 @@ namespace FreeMarket.Models
                 new ObjectParameter("filterCriteria", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashCustomers_Result>("FilterCashCustomers", filterCriteriaParameter);
+        }
+    
+        public virtual ObjectResult<FilterCashOrder_Result> FilterCashOrder(string filterCriteria)
+        {
+            var filterCriteriaParameter = filterCriteria != null ?
+                new ObjectParameter("filterCriteria", filterCriteria) :
+                new ObjectParameter("filterCriteria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashOrder_Result>("FilterCashOrder", filterCriteriaParameter);
         }
     }
 }
