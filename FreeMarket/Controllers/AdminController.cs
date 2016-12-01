@@ -468,6 +468,11 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        public ActionResult InitiateCashOrder()
+        {
+            return View();
+        }
+
         public ActionResult CreateProduct()
         {
             Product product = Product.GetNewProduct();
@@ -515,6 +520,15 @@ namespace FreeMarket.Controllers
             DownloadReportViewModel model = new DownloadReportViewModel();
 
             return View(model);
+        }
+
+        public ActionResult RefundCashOrder(int id)
+        {
+            CashOrder.RefundOrder(id);
+
+            TempData["errorMessage"] = "Cash order has been changed to refunded state.";
+
+            return RedirectToAction("Index", "Admin");
         }
 
         [HttpPost]
@@ -608,6 +622,29 @@ namespace FreeMarket.Controllers
             }
 
             return View("CreateCashOrder", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCashOrderProcess(CashOrderViewModel model)
+        {
+            if (!model.Products.Products.Any(c => c.CashQuantity > 0))
+            {
+                ModelState.AddModelError("", "The order must contain at least one item.");
+                CashOrderViewModel.InitializeDropDowns(model);
+                return View("CreateCashOrder", model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                CashOrder.ModifyOrder(model);
+
+                AuditUser.LogAudit(40, string.Format("Cash Order Number: {0}", model.Order.OrderId), User.Identity.GetUserId());
+
+                return RedirectToAction("Index", "Admin");
+            }
+
+            return View("EditCashOrder", model);
         }
 
         [HttpPost]
@@ -800,6 +837,17 @@ namespace FreeMarket.Controllers
             CashCustomer customer = CashCustomer.GetCustomer(id);
 
             return View(customer);
+        }
+
+        public ActionResult EditCashOrder(int id)
+        {
+            if (id == 0)
+                return RedirectToAction("Index", "Admin");
+
+            CashOrderViewModel model = CashOrderViewModel.GetOrder(id);
+            CashOrderViewModel.InitializeDropDowns(model);
+
+            return View(model);
         }
 
         public ActionResult TimeFreightPrices(int deliveryCostID)

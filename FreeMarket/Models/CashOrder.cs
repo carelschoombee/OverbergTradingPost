@@ -18,5 +18,6 @@ namespace FreeMarket.Models
         public Nullable<System.DateTime> DatePlaced { get; set; }
         public int CashCustomerId { get; set; }
         public Nullable<decimal> Total { get; set; }
+        public string Status { get; set; }
     }
 }

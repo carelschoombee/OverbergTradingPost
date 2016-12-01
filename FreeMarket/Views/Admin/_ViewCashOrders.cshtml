@@ -17,10 +17,7 @@
             Name
         </th>
         <th>
-            Phone
-        </th>
-        <th>
-            Address
+            Contact
         </th>
         <th>
             Total
@@ -33,7 +30,7 @@
     {
         <tr>
             <td>
-                @result.Order.OrderId
+                @Html.ActionLink(result.Order.OrderId.ToString(), "EditCashOrder", "Admin", new { id = result.Order.OrderId }, new { @class = "freemarket-link" })
             </td>
             <td>
                 @string.Format("{0:D}", result.Order.DatePlaced)
@@ -43,12 +40,11 @@
             </td>
             <td>
                 @result.Order.CustomerPhone
-            </td>
-            <td>
+                @result.Order.CustomerEmail
                 @result.Order.CustomerDeliveryAddress
             </td>
             <td>
-                @result.Order.Total
+                @string.Format("{0:C}", result.Order.Total)
             </td>
             <td>
                 @if (result.OrderDetails != null && result.OrderDetails.Count > 0)
@@ -63,13 +59,10 @@
                                 Qty
                             </th>
                             <th>
-                                Weight
-                            </th>
-                            <th>
                                 Price
                             </th>
                             <th>
-                                Total
+                                Sub-Total
                             </th>
                         </tr>
                         @foreach (CashOrderDetail item in result.OrderDetails)
@@ -81,9 +74,6 @@
                             </td>                               
                             <td data-label="Qty">
                                 @item.Quantity
-                            </td>
-                            <td data-label="Weight">
-                                @item.Weight
                             </td>
                             <td data-label="Price">
                                 @string.Format("{0:C}", item.Price)

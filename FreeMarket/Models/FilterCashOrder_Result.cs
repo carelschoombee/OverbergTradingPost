@@ -21,6 +21,7 @@ namespace FreeMarket.Models
         public string PhoneNumber { get; set; }
         public Nullable<int> OrderId { get; set; }
         public Nullable<int> CashCustomerId { get; set; }
+        public string Status { get; set; }
         public Nullable<decimal> Total { get; set; }
     }
 }

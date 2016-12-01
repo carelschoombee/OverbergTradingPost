@@ -844,6 +844,8 @@
     <Content Include="Views\Admin\CreateCashOrder.cshtml" />
     <Content Include="Views\Admin\_CreateCashOrderPartial.cshtml" />
     <Content Include="Views\Admin\_ValidateCashOrderCreationPartial.cshtml" />
+    <Content Include="Views\Admin\InitiateCashOrder.cshtml" />
+    <Content Include="Views\Admin\EditCashOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

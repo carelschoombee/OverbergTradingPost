@@ -355,10 +355,8 @@
             }
         </div>
         <div class="tab-pane" id="cashSales">
-            <h2 class="text-center">Cash Sales</h2>
+            <h2 class="text-center">Cash Orders</h2>
             <hr />
-
-            @Html.ActionLink("New Cash Order", "CashOrderIndex", "Admin", null, new { @class = "btn btn-success" })
 
             @using (Ajax.BeginForm("SearchCashOrders", "Admin", null, ajaxOptsCashSales, new { @id = "searchCashSalesForm" }))
             {
@@ -372,9 +370,12 @@
                     <div class="col-sm-3">
                         <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
                     </div>
+                    <div class="col-sm-3">
+                        @Html.ActionLink("New Cash Order", "InitiateCashOrder", "Admin", null, new { @class = "btn btn-success" })
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group center_div">
                     <div class="col-sm-12">
                         <br />
                     </div>

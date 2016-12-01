@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Initiate Cash Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">Initiate Cash Order</h2>
+
+<div id="parent" class="center_div well well-modal">
+    <div class="text-center">
+        @Html.ActionLink("Choose Existing Customer", "CashOrderIndex", "Admin", new { @class = "btn btn-success" })
+    </div>
+    <br />
+    <div class="text-center">
+        @Html.ActionLink("New Customer", "CreateCashOrder", "Admin", new { @class = "btn btn-success" })
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="text-center">
+        @Html.ActionLink("Back", "Index", "Admin", new { @class = "btn btn-success" })
+    </div>
+</div>
+

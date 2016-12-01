@@ -1,0 +1,46 @@
+﻿@using FreeMarket.Models
+@model CashOrderViewModel
+@{
+    ViewBag.Title = "Edit Cash Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center"><span class="glyphicon glyphicon-edit text-success"></span>&nbsp;Edit Cash Order</h2>
+<hr />
+
+<div>
+
+    @if (Model != null)
+    {
+        using (Html.BeginForm("EditCashOrderProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "createCashOrderForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="well well-modal">
+                
+                @Html.Partial("_CreateCashOrderPartial", Model)
+
+                <hr />
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-info" value="Edit" />
+                        @Html.ActionLink("Back", "CashOrderIndex", "Admin", new { @class = "btn btn-success" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="text-center">
+                        @Html.ActionLink("Refund", "RefundCashOrder", "Admin", new { id = Model.Order.OrderId }, new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+
+
+            </div>
+        }
+    }
+    
+</div>
+
+@Html.Partial("_ValidateCashOrderCreationPartial")

@@ -70,6 +70,65 @@ namespace FreeMarket.Models
             return model;
         }
 
+        public static CashOrderViewModel GetOrder(int id)
+        {
+            CashOrderViewModel model = new CashOrderViewModel();
+
+            if (id == 0)
+                return model;
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                model.Order = db.CashOrders.Find(id);
+                CashCustomer customer = db.CashCustomers.Find(model.Order.CashCustomerId);
+
+                model.Order.CustomerDeliveryAddress = customer.DeliveryAddress;
+                model.Order.CustomerEmail = customer.Email;
+                model.Order.CustomerName = customer.Name;
+                model.Order.CustomerPhone = customer.PhoneNumber;
+
+                model.OrderDetails = db.GetCashOrderDetails(model.Order.OrderId)
+                    .Select(c => new CashOrderDetail
+                    {
+                        CashOrderId = c.CashOrderId,
+                        CashOrderItemId = c.CashOrderItemId,
+                        CustodianNumber = c.CustodianNumber,
+                        Price = c.Price,
+                        ProductNumber = c.ProductNumber,
+                        Quantity = c.Quantity,
+                        SupplierNumber = c.SupplierNumber,
+                        Description = c.Description,
+                        SupplierName = c.SupplierName,
+                        Weight = (int)c.Weight,
+                        OrderItemTotal = c.OrderItemTotal
+                    })
+                    .ToList();
+
+                model.Products = ProductCollection.GetAllProducts();
+
+                for (int i = 0; i < model.Products.Products.Count; i++)
+                {
+                    CashOrderDetail qty = model.OrderDetails
+                        .Where(c => c.ProductNumber == model.Products.Products[i].ProductNumber && c.SupplierNumber == model.Products.Products[i].SupplierNumber)
+                        .FirstOrDefault();
+
+                    if (qty != null)
+                        model.Products.Products[i].CashQuantity = qty.Quantity;
+                    else
+                        model.Products.Products[i].CashQuantity = 0;
+                }
+
+                model.Custodians = db.Custodians.Select
+                    (c => new SelectListItem
+                    {
+                        Text = c.CustodianName,
+                        Value = c.CustodianNumber.ToString()
+                    }).ToList();
+            }
+
+            return model;
+        }
+
         public static CashOrderViewModel CreateNewOrder(int id = 0)
         {
             CashOrderViewModel model = new CashOrderViewModel();
@@ -136,8 +195,6 @@ namespace FreeMarket.Models
                         Value = product.SpecialPricePerUnit.ToString(),
                         Selected = true
                     });
-
-                    product.CashQuantity = 0;
                 }
             }
         }
