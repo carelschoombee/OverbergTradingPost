@@ -23,6 +23,20 @@ namespace FreeMarket.Controllers
             return View(model);
         }
 
+        public ActionResult GetAddress(string userId, string addressName)
+        {
+            CustomerAddress address = new CustomerAddress();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                address = db.CustomerAddresses
+                    .Where(c => c.CustomerNumber == userId && c.AddressName == addressName)
+                    .FirstOrDefault();
+            }
+
+            return Content(address.ToString());
+        }
+
         public ActionResult EditCustomer(string customerNumber)
         {
             AspNetUserCustomer model = new AspNetUserCustomer(customerNumber, false);

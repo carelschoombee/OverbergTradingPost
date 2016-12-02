@@ -106,7 +106,7 @@ namespace FreeMarket.Models
                 }
 
                 RatingsInformation = new RatingsInfo();
-                Customers = db.AspNetUsers.OrderBy(c => c.Name).ToList();
+                Customers = new List<AspNetUser>();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();

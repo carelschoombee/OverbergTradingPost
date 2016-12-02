@@ -307,32 +307,31 @@
         <div class="tab-pane" id="customers">
             <h2 class="text-center">Customers</h2>
             <hr />
-            @if (Model.Customers != null && Model.Customers.Count > 0)
+            @using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
             {
-                using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
-                {
-                    @Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()
 
-                    <div class="form-group center_div">
-                        <div class="col-sm-6">
-                            @Html.TextBoxFor(c => c.CustomerSearchCriteria, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.CustomerSearchCriteria, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="col-sm-3">
-                            <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
-                        </div>
+                <div class="form-group center_div">
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(c => c.CustomerSearchCriteria, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CustomerSearchCriteria, "", new { @class = "text-danger" })
                     </div>
+                    <div class="col-sm-3">
+                        <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+                    </div>
+                </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <br />
-                        </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <br />
                     </div>
+                </div>
 
-                    <div id="customersResults">
-                        @Html.Partial("_ViewCustomers", Model.Customers)
-                    </div>
-                }
+                <br />
+                <br />
+
+                <div id="customersResults">
+                </div>
             }
         </div>
         <div class="tab-pane" id="refunds">
@@ -362,16 +361,16 @@
             {
                 @Html.AntiForgeryToken()
 
-                <div class="form-group center_div">
-                    <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.ActionLink("New Cash Order", "InitiateCashOrder", "Admin", null, new { @class = "btn btn-success" })
+                    </div>
+                    <div class="col-md-3">
                         @Html.TextBoxFor(c => c.CashSalesCriteria, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.CashSalesCriteria, "", new { @class = "text-danger" })
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
-                    </div>
-                    <div class="col-sm-3">
-                        @Html.ActionLink("New Cash Order", "InitiateCashOrder", "Admin", null, new { @class = "btn btn-success" })
                     </div>
                 </div>
 

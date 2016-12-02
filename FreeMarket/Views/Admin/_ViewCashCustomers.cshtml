@@ -8,9 +8,6 @@
 
     <tr>
         <th>
-            Edit
-        </th>
-        <th>
             #
         </th>
         <th>
@@ -20,18 +17,21 @@
             Phone
         </th>
         <th>
+            Email
+        </th>
+        <th>
             Address
         </th>
         <th>
-            Create Order
+            Edit
+        </th>
+        <th>
+            Create New Order
         </th>
     </tr>
     @foreach (CashCustomer result in Model)
     {
         <tr class="well">
-            <td>
-                @Html.ActionLink("Edit", "EditCashCustomer", "Admin", new { id = result.Id }, new { @class = "freemarket-link"})
-            </td>
             <td>
                 @result.Id
             </td>
@@ -42,10 +42,16 @@
                 @result.PhoneNumber
             </td>
             <td>
+                @result.Email
+            </td>
+            <td>
                 @result.DeliveryAddress
             </td>
             <td>
-                @Html.ActionLink("Create Order", "CreateCashOrder", "Admin", new { id = result.Id }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Edit Customer Details", "EditCashCustomer", "Admin", new { id = result.Id }, new { @class = "freemarket-link" })
+            </td>
+            <td>
+                @Html.ActionLink("Create Order For This Customer", "CreateCashOrder", "Admin", new { id = result.Id }, new { @class = "btn btn-success" })
             </td>
         </tr>
     }

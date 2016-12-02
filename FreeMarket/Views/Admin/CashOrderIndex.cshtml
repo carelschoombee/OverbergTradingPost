@@ -9,13 +9,18 @@
 @{
     AjaxOptions ajaxOptsCashSales = new AjaxOptions
     {
-        UpdateTargetId = "cashSalesResults"
+        UpdateTargetId = "cashSalesResults",
+        LoadingElementId = "loadingDiv"
     };
 }
 
 <h2 class="text-center">Cash Customers</h2>
 
 <div class="well well-modal text-center">Filter by customer name and then click on "create order".</div>
+
+<div id="loadingDiv" style="display:none;">
+    <img src="@Url.Content("~/Content/Images/loading.gif")" />
+</div>
 
 @using (Ajax.BeginForm("SearchCashOrderCustomers", "Admin", null, ajaxOptsCashSales, new { @id = "searchCashSalesForm" }))
 {

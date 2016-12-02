@@ -19,6 +19,9 @@
             Phone 2
         </th>
         <th>
+            Delivery Address
+        </th>
+        <th>
             Last Visited
         </th>
         <th>
@@ -44,10 +47,13 @@
                 @item.SecondaryPhoneNumber
             </td>
             <td>
+                @Html.Action("GetAddress", "Admin", new { userId = item.Id, addressName = item.DefaultAddress })
+            </td>
+            <td>
                 @item.LastVisited
             </td>
             <td>
-                @Html.ActionLink("History", "ViewOrderHistory", new { customerNumber = item.Id })
+                <span style="white-space:pre-line">@Html.ActionLink("History", "ViewOrderHistory", new { customerNumber = item.Id })</span>
             </td>
             <td>
                 @Html.ActionLink("Edit", "EditCustomer", new { customerNumber = item.Id } )

@@ -145,14 +145,21 @@ namespace FreeMarket.Models
                                 .FirstOrDefault();
                             existingDetail.Price = price;
                             existingDetail.OrderItemTotal = price * p.CashQuantity;
+
+                            if (existingDetail.Quantity > p.CashQuantity)
+                            {
+                                int stock = existingDetail.Quantity - p.CashQuantity;
+                                AddStockToCustodian(order.OrderId, p.ProductNumber, p.SupplierNumber, model.SelectedCustodian, stock);
+                            }
+                            else
+                            {
+                                int stock = p.CashQuantity - existingDetail.Quantity;
+                                RemoveStockFromCustodian(order.OrderId, p.ProductNumber, p.SupplierNumber, model.SelectedCustodian, stock);
+                            }
+
                             existingDetail.Quantity = p.CashQuantity;
 
                             db.Entry(existingDetail).State = System.Data.Entity.EntityState.Modified;
-                            db.SaveChanges();
-
-                            order.Total += existingDetail.OrderItemTotal;
-
-                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
                         }
                         else
@@ -171,22 +178,8 @@ namespace FreeMarket.Models
                             db.CashOrderDetails.Add(detail);
                             db.SaveChanges();
 
-                            order.Total += detail.OrderItemTotal;
-
-                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-                            db.SaveChanges();
+                            RemoveStockFromCustodian(order.OrderId, p.ProductNumber, p.SupplierNumber, model.SelectedCustodian, p.CashQuantity);
                         }
-
-                        ProductCustodian custodian = db.ProductCustodians
-                            .Where(c => c.CustodianNumber == model.SelectedCustodian &&
-                                                c.ProductNumber == p.ProductNumber &&
-                                                c.SupplierNumber == p.SupplierNumber)
-                                                .FirstOrDefault();
-
-                        custodian.QuantityOnHand -= p.CashQuantity;
-
-                        db.Entry(custodian).State = System.Data.Entity.EntityState.Modified;
-                        db.SaveChanges();
                     }
                     else
                     {
@@ -196,15 +189,19 @@ namespace FreeMarket.Models
 
                         if (toRemove != null)
                         {
-                            order.Total -= toRemove.OrderItemTotal;
-
                             db.CashOrderDetails.Remove(toRemove);
-                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-                            db.SaveChanges();
+
+                            AddStockToCustodian(order.OrderId, p.ProductNumber, p.SupplierNumber, model.SelectedCustodian, toRemove.Quantity);
                         }
                     }
                 }
 
+                db.SaveChanges();
+
+                List<GetCashOrderDetails_Result> details = db.GetCashOrderDetails(order.OrderId).ToList();
+                order.Total = details.Sum(c => c.OrderItemTotal);
+                order.DatePlaced = DateTime.Now;
+                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
                 if (customer != null && order != null && db.CashOrderDetails.Any(c => c.CashOrderId == order.OrderId))
@@ -228,6 +225,42 @@ namespace FreeMarket.Models
                     db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                     db.SaveChanges();
                 }
+            }
+        }
+
+        public static void AddStockToCustodian(int orderId, int productNumber, int supplierNumber, int custodianNumber, int quantity)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+
+                ProductCustodian custodian = db.ProductCustodians
+                                .Where(c => c.CustodianNumber == custodianNumber &&
+                                                    c.ProductNumber == productNumber &&
+                                                    c.SupplierNumber == supplierNumber)
+                                                    .FirstOrDefault();
+
+                custodian.QuantityOnHand += quantity;
+
+                db.Entry(custodian).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public static void RemoveStockFromCustodian(int orderId, int productNumber, int supplierNumber, int custodianNumber, int quantity)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+
+                ProductCustodian custodian = db.ProductCustodians
+                                .Where(c => c.CustodianNumber == custodianNumber &&
+                                                    c.ProductNumber == productNumber &&
+                                                    c.SupplierNumber == supplierNumber)
+                                                    .FirstOrDefault();
+
+                custodian.QuantityOnHand -= quantity;
+
+                db.Entry(custodian).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
             }
         }
     }
