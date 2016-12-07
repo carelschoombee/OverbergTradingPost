@@ -50,13 +50,11 @@
                 <tr>
                     <td>
                         @Html.Raw(Model.TextBlock1)
-                        @*<div style="font-size:large" class="text-center">If you are visiting Struisbaai or L'Agulhas, enter <b class="text-info"><i>7285 or 7287</i></b> as the postal code along with your address while in Struisbaai/L'Agulhas and we will deliver to you personally and for free.</div>*@
                     </td>
                 </tr>
                 <tr>
                     <td>
                         @Html.Raw(Model.TextBlock2)
-                        @*<div class="text-center"><i>Free delivery is a special offer available only within Struisbaai and L'Agulhas.</i></div>*@
                     </td>
                 </tr>
             </table>
@@ -68,13 +66,11 @@
                 <tr>
                     <td>
                         @Html.Raw(Model.TextBlock3)
-                        @*<div class="text-center"><i>For deliveries outside of Struisbaai/L'Agulhas please note that we only dispatch orders on a Tuesday. Orders are delivered on Wednesday, Thursday or Friday at the latest.</i></div>*@
                     </td>
                 </tr>
                 <tr>
                     <td>
                         @Html.Raw(Model.TextBlock4)
-                        @*<div class="text-center"><i>For all orders using the POST OFFICE we cannot guaruntee a delivery date, but you can expect to collect your order within 7 to 14 days after the order is dispatched.</i></div>*@
                     </td>
                 </tr>
             </table>
@@ -474,13 +470,21 @@
                     if (data == 1) { //if it is a special delivery and by courier
                         if (selectedVal == "Courier")
                         {
+                            // hide delivery options
+                            $("#radioDiv").hide();
+                            var div = document.getElementById('specialMessage');
+                            div.innerHTML = 'Free door to door delivery within 48 hours.';
                             // hide normal picker
-                            $("#deliveryDateContainer").hide()
+                            $("#deliveryDateContainer").hide();
                             // show special picker
                             $("#specialDeliveryDateContainer").show().fadeIn(2000);
                         }
                         else if (selectedVal = "PostOffice")
                         {
+                            // hide delivery options
+                            $("#radioDiv").hide();
+                            var div = document.getElementById('specialMessage');
+                            div.innerHTML = 'Free door to door delivery within 48 hours.';
                             // hide both pickers
                             $("#specialDeliveryDateContainer").hide();
                             $("#deliveryDateContainer").hide();
@@ -491,12 +495,16 @@
                         // if it is not a special delivery and by courier
                         if (selectedVal == "Courier")
                         {
+                            // show delivery options
+                            $("#radioDiv").show();
                             // hide the special picker and show the normal picker
                             $("#specialDeliveryDateContainer").hide();
                             $("#deliveryDateContainer").show().fadeIn(2000);
                         }
                         else if (selectedVal = "PostOffice")
                         {
+                            // show delivery options
+                            $("#radioDiv").show();
                             // hide both pickers
                             $("#specialDeliveryDateContainer").hide();
                             $("#deliveryDateContainer").hide();

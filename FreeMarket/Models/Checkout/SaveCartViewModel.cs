@@ -29,6 +29,8 @@ namespace FreeMarket.Models
 
         public string OrderStatus { get; set; }
 
+        public bool SpecialDelivery { get; set; }
+
         public string TextBlock1 { get; set; }
         public string TextBlock2 { get; set; }
         public string TextBlock3 { get; set; }
@@ -99,6 +101,11 @@ namespace FreeMarket.Models
                 {
                     Address = address;
                 }
+
+                if (db.ValidateSpecialDeliveryCode(int.Parse(Address.AddressPostalCode)).FirstOrDefault() == 1)
+                    SpecialDelivery = true;
+                else
+                    SpecialDelivery = false;
 
                 if (order.DeliveryDate == null)
                 {

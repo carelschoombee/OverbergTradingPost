@@ -305,6 +305,7 @@ namespace FreeMarket.Controllers
                     }
                     catch (Exception e)
                     {
+                        ExceptionLogging.LogException(e);
                         return 2;
                     }
                 }
