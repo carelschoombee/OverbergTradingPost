@@ -82,11 +82,11 @@
             <span style="font-size:60px; color:gold; font-family: 'Pacifico', cursive">Schoombee & Son</span>@*&nbsp;<img src="~/Content/Images/ramLogo.jpg" width="64" height="90" />*@
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 well-banner well-sm text-center">
-            <span style="font-size:30px; color:gold;">Please note that we are away to procure nuts from Vaalharts and will deliver all Struisbaai and L'Agulhas orders accrued from Saturday 10 December to Thursday 15 December on Friday 16 December. We apologize for any inconvenience caused.</span>@*&nbsp;<img src="~/Content/Images/ramLogo.jpg" width="64" height="90" />*@
-        </div>
-    </div>
+    
+    @if (System.Web.Configuration.WebConfigurationManager.AppSettings["specialMessage"] == "true")
+    {
+        @Html.Action("SpecialMessage", "Home"); 
+    }
 
     <div class="navbar-fixed-bottom">
         @if (TempData["message"] != null)

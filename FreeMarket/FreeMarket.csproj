@@ -365,6 +365,7 @@
     <Compile Include="Models\GetProduct_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Home\SpecialMessageViewModel.cs" />
     <Compile Include="Models\Home\DeliveryOptionsViewModel.cs" />
     <Compile Include="Models\Home\AboutViewModel.cs" />
     <Compile Include="Models\Home\TermsAndConditionsViewModel.cs" />
@@ -846,6 +847,7 @@
     <Content Include="Views\Admin\_ValidateCashOrderCreationPartial.cshtml" />
     <Content Include="Views\Admin\InitiateCashOrder.cshtml" />
     <Content Include="Views\Admin\EditCashOrder.cshtml" />
+    <Content Include="Views\Home\_SpecialMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

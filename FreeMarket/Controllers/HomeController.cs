@@ -93,5 +93,13 @@ namespace FreeMarket.Controllers
         {
             return View("Privacy");
         }
+
+        [ChildActionOnly]
+        public ActionResult SpecialMessage()
+        {
+            SpecialMessageViewModel model = new SpecialMessageViewModel();
+
+            return PartialView("_SpecialMessage", model);
+        }
     }
 }
