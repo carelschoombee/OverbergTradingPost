@@ -913,15 +913,20 @@ namespace FreeMarket.Models
             DateTime today = DateTime.Today;
             int daysUntilFriday = 0;
 
-            if (today.DayOfWeek == DayOfWeek.Friday)
+            if (today.DayOfWeek == DayOfWeek.Monday)
+                daysUntilFriday = 4;
+            else if (today.DayOfWeek == DayOfWeek.Tuesday)
+                daysUntilFriday = 10;
+            else if (today.DayOfWeek == DayOfWeek.Wednesday)
+                daysUntilFriday = 9;
+            else if (today.DayOfWeek == DayOfWeek.Thursday)
+                daysUntilFriday = 8;
+            else if (today.DayOfWeek == DayOfWeek.Friday)
                 daysUntilFriday = 7;
-            else
-            {
-                if (GetDaysToMinDate() >= 6)
-                    daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
-                else
-                    daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
-            }
+            else if (today.DayOfWeek == DayOfWeek.Saturday)
+                daysUntilFriday = 6;
+            else if (today.DayOfWeek == DayOfWeek.Sunday)
+                daysUntilFriday = 5;
 
             DateTime nextFriday = today.AddDays(daysUntilFriday);
             nextFriday = nextFriday.AddHours(12);
@@ -944,147 +949,147 @@ namespace FreeMarket.Models
             return suggestedDate;
         }
 
-        #region testing
+        //#region testing
 
-        public static void TestDates()
-        {
-            DateTime date1 = DateTime.Now;
-            DateTime date2 = date1;
+        //public static void TestDates()
+        //{
+        //    DateTime date1 = DateTime.Now;
+        //    DateTime date2 = date1;
 
-            int i = 0;
+        //    int i = 0;
 
-            while (i < 14)
-            {
-                //while (date2.DayOfWeek != DayOfWeek.Wednesday && date2.DayOfWeek != DayOfWeek.Thursday && date2.DayOfWeek != DayOfWeek.Friday)
-                //{
-                //    date2 = date2.AddDays(1);
-                //}
+        //    while (i < 14)
+        //    {
+        //        //while (date2.DayOfWeek != DayOfWeek.Wednesday && date2.DayOfWeek != DayOfWeek.Thursday && date2.DayOfWeek != DayOfWeek.Friday)
+        //        //{
+        //        //    date2 = date2.AddDays(1);
+        //        //}
 
-                //Debug.WriteLine("-------------------------------------");
-                //Debug.WriteLine("date2      : {0}", date2);
-                //Debug.WriteLine("Dispatch   : {0}", GetDispatchDay(date2));
-                //Debug.WriteLine("Arrive     : {0}", GetArriveDay(date2));
-                //Debug.WriteLine("-------------------------------------");
+        //        //Debug.WriteLine("-------------------------------------");
+        //        //Debug.WriteLine("date2      : {0}", date2);
+        //        //Debug.WriteLine("Dispatch   : {0}", GetDispatchDay(date2));
+        //        //Debug.WriteLine("Arrive     : {0}", GetArriveDay(date2));
+        //        //Debug.WriteLine("-------------------------------------");
 
-                Debug.WriteLine("-------------------------------------");
-                Debug.WriteLine("date2      : {0}", date2);
-                Debug.WriteLine("Dispatch   : {0}", GetSpecialDispatchDay(date2));
-                Debug.WriteLine("Arrive     : {0}", GetSpecialArriveDay(date2));
-                Debug.WriteLine("-------------------------------------");
+        //        Debug.WriteLine("-------------------------------------");
+        //        Debug.WriteLine("date2      : {0}", date2);
+        //        Debug.WriteLine("Dispatch   : {0}", GetSpecialDispatchDay(date2));
+        //        Debug.WriteLine("Arrive     : {0}", GetSpecialArriveDay(date2));
+        //        Debug.WriteLine("-------------------------------------");
 
-                date2 = date2.AddDays(1);
+        //        date2 = date2.AddDays(1);
 
-                i++;
-            }
+        //        i++;
+        //    }
 
-            i = 0;
+        //    i = 0;
 
-            Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        //    Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
-            date2 = date1;
+        //    date2 = date1;
 
-            while (i < 14)
-            {
-                date2 = date2.AddDays(1);
+        //    while (i < 14)
+        //    {
+        //        date2 = date2.AddDays(1);
 
-                Debug.WriteLine("-------------------------------------");
-                Debug.WriteLine("date2                      : {0}", date2);
-                Debug.WriteLine("SuggestedDelivery          : {0}", GetSuggestedDeliveryTimeTest(date2));
-                Debug.WriteLine("SuggestedSpecialDelivery   : {0}", GetSpecialSuggestedDeliveryTimeTest(date2));
-                Debug.WriteLine("DaysToMinDate              : {0}", GetDaysToMinDateTest(date2));
-                Debug.WriteLine("-------------------------------------");
+        //        Debug.WriteLine("-------------------------------------");
+        //        Debug.WriteLine("date2                      : {0}", date2);
+        //        Debug.WriteLine("SuggestedDelivery          : {0}", GetSuggestedDeliveryTimeTest(date2));
+        //        Debug.WriteLine("SuggestedSpecialDelivery   : {0}", GetSpecialSuggestedDeliveryTimeTest(date2));
+        //        Debug.WriteLine("DaysToMinDate              : {0}", GetDaysToMinDateTest(date2));
+        //        Debug.WriteLine("-------------------------------------");
 
-                i++;
-            }
-        }
+        //        i++;
+        //    }
+        //}
 
-        public static DateTime GetSpecialSuggestedDeliveryTimeTest(DateTime todayTest)
-        {
-            DateTime today = todayTest;
-            DateTime suggestedDate = today.AddDays(2);
+        //public static DateTime GetSpecialSuggestedDeliveryTimeTest(DateTime todayTest)
+        //{
+        //    DateTime today = todayTest;
+        //    DateTime suggestedDate = today.AddDays(2);
 
-            while (suggestedDate.DayOfWeek == DayOfWeek.Saturday || suggestedDate.DayOfWeek == DayOfWeek.Sunday)
-            {
-                suggestedDate = suggestedDate.AddDays(1);
-            }
+        //    while (suggestedDate.DayOfWeek == DayOfWeek.Saturday || suggestedDate.DayOfWeek == DayOfWeek.Sunday)
+        //    {
+        //        suggestedDate = suggestedDate.AddDays(1);
+        //    }
 
-            suggestedDate = suggestedDate.AddHours(-12);
+        //    suggestedDate = suggestedDate.AddHours(-12);
 
-            return suggestedDate;
-        }
+        //    return suggestedDate;
+        //}
 
-        public static DateTime GetSuggestedDeliveryTimeTest(DateTime todayDate)
-        {
-            DateTime today = todayDate;
-            int daysUntilFriday = 0;
+        //public static DateTime GetSuggestedDeliveryTimeTest(DateTime todayDate)
+        //{
+        //    DateTime today = todayDate;
+        //    int daysUntilFriday = 0;
 
-            if (today.DayOfWeek == DayOfWeek.Friday)
-                daysUntilFriday = 7;
-            else
-            {
-                if (GetDaysToMinDate() >= 6)
-                    daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
-                else
-                    daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Friday)
+        //        daysUntilFriday = 7;
+        //    else
+        //    {
+        //        if (GetDaysToMinDate() >= 6)
+        //            daysUntilFriday = (((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7) + 7;
+        //        else
+        //            daysUntilFriday = ((int)DayOfWeek.Friday - (int)today.DayOfWeek + 7) % 7;
+        //    }
 
-            DateTime nextFriday = today.AddDays(daysUntilFriday);
-            nextFriday = nextFriday.AddHours(-12);
+        //    DateTime nextFriday = today.AddDays(daysUntilFriday);
+        //    nextFriday = nextFriday.AddHours(-12);
 
-            return nextFriday;
-        }
+        //    return nextFriday;
+        //}
 
-        public static int GetDaysToMinDateTest(DateTime todayDay)
-        {
-            DateTime today = todayDay;
+        //public static int GetDaysToMinDateTest(DateTime todayDay)
+        //{
+        //    DateTime today = todayDay;
 
-            int daysTillMinDate = 0;
+        //    int daysTillMinDate = 0;
 
-            if (today.DayOfWeek == DayOfWeek.Monday)
-            {
-                daysTillMinDate = 1;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Monday)
+        //    {
+        //        daysTillMinDate = 1;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Tuesday)
-            {
-                daysTillMinDate = 7;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Tuesday)
+        //    {
+        //        daysTillMinDate = 7;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Wednesday)
-            {
-                daysTillMinDate = 6;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Wednesday)
+        //    {
+        //        daysTillMinDate = 6;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Thursday)
-            {
-                daysTillMinDate = 5;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Thursday)
+        //    {
+        //        daysTillMinDate = 5;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Friday)
-            {
-                daysTillMinDate = 4;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Friday)
+        //    {
+        //        daysTillMinDate = 4;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Saturday)
-            {
-                daysTillMinDate = 3;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Saturday)
+        //    {
+        //        daysTillMinDate = 3;
+        //        return daysTillMinDate;
+        //    }
 
-            if (today.DayOfWeek == DayOfWeek.Sunday)
-            {
-                daysTillMinDate = 2;
-                return daysTillMinDate;
-            }
+        //    if (today.DayOfWeek == DayOfWeek.Sunday)
+        //    {
+        //        daysTillMinDate = 2;
+        //        return daysTillMinDate;
+        //    }
 
-            return 0;
-        }
-        #endregion
+        //    return 0;
+        //}
+        //#endregion
 
         public static int GetDaysToMinDate()
         {
