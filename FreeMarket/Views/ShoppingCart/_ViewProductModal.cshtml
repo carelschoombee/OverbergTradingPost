@@ -37,16 +37,20 @@
                                 <td>
                                     <table class="table table-bordered-custom table-responsive well">
                                         <tr>
-                                            <td class="text-center">
-                                                <div><u>Rest of RSA</u></div>
+                                            <td class="text-center" colspan="2">
+                                                @*<div><u>Rest of RSA</u></div>*@
                                                 <div style="font-size:medium; font-weight:600;">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)</div>
                                                 <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
+                                                @if (Model.ProductInstance.DepartmentName == "Snacking Nuts")
+                                                {
+                                                    <div style="font-size:small"><u>Free Delivery in Struisbaai, L'Agulhas and Suiderstrand</u></div>
+                                                }
                                             </td>
-                                            <td class="text-center">
+                                            @*<td class="text-center">
                                                 <div><u>Struisbaai</u></div>
                                                 <div style="font-size:medium; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.SpecialPricePerUnit) </div>
                                                 <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
-                                            </td>
+                                            </td>*@
                                         </tr>
                                     </table>
                                 </td>

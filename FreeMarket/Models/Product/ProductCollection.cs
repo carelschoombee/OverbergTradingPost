@@ -84,6 +84,148 @@ namespace FreeMarket.Models
             }
         }
 
+        public static ProductCollection GetAllSnackingNuts()
+        {
+            ProductCollection allProducts = new ProductCollection();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                allProducts.Products = db.GetAllProducts()
+                    .Where(c => c.DepartmentName == "Snacking Nuts")
+                    .Select(c => new Product
+                    {
+                        Activated = c.Activated,
+                        DateAdded = c.DateAdded,
+                        DateModified = c.DateModified,
+                        DepartmentName = c.DepartmentName,
+                        DepartmentNumber = c.DepartmentNumber,
+                        Description = c.Description,
+                        PricePerUnit = c.PricePerUnit,
+                        ProductNumber = c.ProductNumberID,
+                        Size = c.Size,
+                        SupplierName = c.SupplierName,
+                        SupplierNumber = c.SupplierNumberID,
+                        SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
+                        Weight = c.Weight
+                    }
+                    ).ToList();
+
+                if (allProducts.Products != null && allProducts.Products.Count > 0)
+                {
+                    foreach (Product product in allProducts.Products)
+                    {
+                        int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Medium.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        int imageNumberSecondary = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        product.MainImageNumber = imageNumber;
+                        product.SecondaryImageNumber = imageNumberSecondary;
+
+                        product.Prices = new List<SelectListItem>();
+
+                        string normalPrice = string.Format("{0:C}", product.PricePerUnit);
+                        string specialPrice = string.Format("{0:C}", product.SpecialPricePerUnit);
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = normalPrice,
+                            Value = product.PricePerUnit.ToString()
+                        });
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = specialPrice,
+                            Value = product.SpecialPricePerUnit.ToString(),
+                            Selected = true
+                        });
+
+                        product.CashQuantity = 0;
+                    }
+                }
+
+                Debug.Write(allProducts);
+
+                return allProducts;
+            }
+        }
+
+        public static ProductCollection GetAllBakingNuts()
+        {
+            ProductCollection allProducts = new ProductCollection();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                allProducts.Products = db.GetAllProducts()
+                    .Where(c => c.DepartmentName == "Baking Nuts")
+                    .Select(c => new Product
+                    {
+                        Activated = c.Activated,
+                        DateAdded = c.DateAdded,
+                        DateModified = c.DateModified,
+                        DepartmentName = c.DepartmentName,
+                        DepartmentNumber = c.DepartmentNumber,
+                        Description = c.Description,
+                        PricePerUnit = c.PricePerUnit,
+                        ProductNumber = c.ProductNumberID,
+                        Size = c.Size,
+                        SupplierName = c.SupplierName,
+                        SupplierNumber = c.SupplierNumberID,
+                        SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
+                        Weight = c.Weight
+                    }
+                    ).ToList();
+
+                if (allProducts.Products != null && allProducts.Products.Count > 0)
+                {
+                    foreach (Product product in allProducts.Products)
+                    {
+                        int imageNumber = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Medium.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        int imageNumberSecondary = db.ProductPictures
+                            .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        product.MainImageNumber = imageNumber;
+                        product.SecondaryImageNumber = imageNumberSecondary;
+
+                        product.Prices = new List<SelectListItem>();
+
+                        string normalPrice = string.Format("{0:C}", product.PricePerUnit);
+                        string specialPrice = string.Format("{0:C}", product.SpecialPricePerUnit);
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = normalPrice,
+                            Value = product.PricePerUnit.ToString()
+                        });
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = specialPrice,
+                            Value = product.SpecialPricePerUnit.ToString(),
+                            Selected = true
+                        });
+
+                        product.CashQuantity = 0;
+                    }
+                }
+
+                Debug.Write(allProducts);
+
+                return allProducts;
+            }
+        }
+
         public static ProductCollection GetAllProductsIncludingDeactivated()
         {
             ProductCollection allProducts = new ProductCollection();

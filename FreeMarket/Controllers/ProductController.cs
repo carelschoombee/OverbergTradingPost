@@ -33,6 +33,28 @@ namespace FreeMarket.Controllers
                 return PartialView("_ShowAllProducts", new ProductCollection());
         }
 
+        [ChildActionOnly]
+        public ActionResult GetSnackingNuts()
+        {
+            ProductCollection products = ProductCollection.GetAllSnackingNuts();
+
+            if (products.Products != null && products.Products.Count > 0)
+                return PartialView("_ShowAllProducts", products);
+            else
+                return PartialView("_ShowAllProducts", new ProductCollection());
+        }
+
+        [ChildActionOnly]
+        public ActionResult GetBakingNuts()
+        {
+            ProductCollection products = ProductCollection.GetAllBakingNuts();
+
+            if (products.Products != null && products.Products.Count > 0)
+                return PartialView("_ShowAllProducts", products);
+            else
+                return PartialView("_ShowAllProducts", new ProductCollection());
+        }
+
         public ActionResult GetFullDescription(int productNumber, int supplierNumber)
         {
             return Content(Product.GetFullDescription(productNumber, supplierNumber));

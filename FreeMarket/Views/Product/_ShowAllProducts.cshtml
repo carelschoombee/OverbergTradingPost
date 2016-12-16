@@ -20,16 +20,19 @@
                 </td>
             </tr>
             <tr>
-                <td class="text-center">
-                    <div style="color:black"><u>Regular Price</u></div>  
+                <td class="text-center" colspan="2">
+                    @*<div style="color:black"><u>Regular Price</u></div>*@  
                     <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>    
-                    <div style="font-size: 16px"><i>South Africa</i></div>           
+                    @if (Model.Products[i].DepartmentName == "Snacking Nuts")
+                    {
+                        <div style="font-size:small"><u>Free Delivery in Struisbaai, L'Agulhas and Suiderstrand</u></div>
+                    }       
                 </td>
-                <td class="text-center">
+                @*<td class="text-center">
                     <div style="color:black"><u>Special Offer</u></div>
                     <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].SpecialPricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>
                     <div style="font-size: 16px"><i>Struisbaai and L'Agulhas Visitors Only</i></div>
-                </td>
+                </td>*@
             </tr>
             
             <tr>
