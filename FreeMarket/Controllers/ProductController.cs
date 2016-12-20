@@ -1,4 +1,5 @@
 ﻿using FreeMarket.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,7 +76,12 @@ namespace FreeMarket.Controllers
                        .FirstOrDefault();
 
                     if (product != null)
-                        toReturn = string.Format("{0} {1}", product.Weight, "KG");
+                    {
+                        if (product.Weight < 1)
+                            toReturn = string.Format("{0} {1}", Math.Round(product.Weight * 1000, 0), "Grams");
+                        else
+                            toReturn = string.Format("{0} {1}", product.Weight, "KG");
+                    }
                 }
             }
 

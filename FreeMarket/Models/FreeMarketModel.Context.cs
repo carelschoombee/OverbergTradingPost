@@ -56,7 +56,6 @@ namespace FreeMarket.Models
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Special> Specials { get; set; }
         public virtual DbSet<PriceHistory> PriceHistories { get; set; }
-        public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
         public virtual DbSet<PostalFee> PostalFees { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
@@ -66,67 +65,7 @@ namespace FreeMarket.Models
         public virtual DbSet<CashCustomer> CashCustomers { get; set; }
         public virtual DbSet<CashOrderDetail> CashOrderDetails { get; set; }
         public virtual DbSet<CashOrder> CashOrders { get; set; }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<int> weight, Nullable<int> orderNumber)
-        {
-            var weightParameter = weight.HasValue ?
-                new ObjectParameter("weight", weight) :
-                new ObjectParameter("weight", typeof(int));
-    
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("orderNumber", orderNumber) :
-                new ObjectParameter("orderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateDeliveryFee", weightParameter, orderNumberParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFeeAdhoc(Nullable<int> weight, Nullable<int> postalCode)
-        {
-            var weightParameter = weight.HasValue ?
-                new ObjectParameter("weight", weight) :
-                new ObjectParameter("weight", typeof(int));
-    
-            var postalCodeParameter = postalCode.HasValue ?
-                new ObjectParameter("postalCode", postalCode) :
-                new ObjectParameter("postalCode", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateDeliveryFeeAdhoc", weightParameter, postalCodeParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculatePostOfficeFee(Nullable<decimal> totalWeight)
-        {
-            var totalWeightParameter = totalWeight.HasValue ?
-                new ObjectParameter("totalWeight", totalWeight) :
-                new ObjectParameter("totalWeight", typeof(decimal));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculatePostOfficeFee", totalWeightParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculateTimeFreightFee(Nullable<int> weight, Nullable<int> orderNumber, ObjectParameter courierFee)
-        {
-            var weightParameter = weight.HasValue ?
-                new ObjectParameter("weight", weight) :
-                new ObjectParameter("weight", typeof(int));
-    
-            var orderNumberParameter = orderNumber.HasValue ?
-                new ObjectParameter("orderNumber", orderNumber) :
-                new ObjectParameter("orderNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFee", weightParameter, orderNumberParameter, courierFee);
-        }
-    
-        public virtual ObjectResult<Nullable<decimal>> CalculateTimeFreightFeeAdhoc(Nullable<int> weight, Nullable<int> postalCode, ObjectParameter courierFee)
-        {
-            var weightParameter = weight.HasValue ?
-                new ObjectParameter("weight", weight) :
-                new ObjectParameter("weight", typeof(int));
-    
-            var postalCodeParameter = postalCode.HasValue ?
-                new ObjectParameter("postalCode", postalCode) :
-                new ObjectParameter("postalCode", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFeeAdhoc", weightParameter, postalCodeParameter, courierFee);
-        }
+        public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
     
         public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
         {
@@ -354,6 +293,67 @@ namespace FreeMarket.Models
                 new ObjectParameter("filterCriteria", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FilterCashOrder_Result>("FilterCashOrder", filterCriteriaParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFee(Nullable<decimal> weight, Nullable<int> orderNumber)
+        {
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("weight", weight) :
+                new ObjectParameter("weight", typeof(decimal));
+    
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("orderNumber", orderNumber) :
+                new ObjectParameter("orderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateDeliveryFee", weightParameter, orderNumberParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> CalculateDeliveryFeeAdhoc(Nullable<decimal> weight, Nullable<int> postalCode)
+        {
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("weight", weight) :
+                new ObjectParameter("weight", typeof(decimal));
+    
+            var postalCodeParameter = postalCode.HasValue ?
+                new ObjectParameter("postalCode", postalCode) :
+                new ObjectParameter("postalCode", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateDeliveryFeeAdhoc", weightParameter, postalCodeParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> CalculatePostOfficeFee(Nullable<decimal> totalWeight)
+        {
+            var totalWeightParameter = totalWeight.HasValue ?
+                new ObjectParameter("totalWeight", totalWeight) :
+                new ObjectParameter("totalWeight", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculatePostOfficeFee", totalWeightParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> CalculateTimeFreightFee(Nullable<decimal> weight, Nullable<int> orderNumber, ObjectParameter courierFee)
+        {
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("weight", weight) :
+                new ObjectParameter("weight", typeof(decimal));
+    
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("orderNumber", orderNumber) :
+                new ObjectParameter("orderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFee", weightParameter, orderNumberParameter, courierFee);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> CalculateTimeFreightFeeAdhoc(Nullable<decimal> weight, Nullable<int> postalCode, ObjectParameter courierFee)
+        {
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("weight", weight) :
+                new ObjectParameter("weight", typeof(decimal));
+    
+            var postalCodeParameter = postalCode.HasValue ?
+                new ObjectParameter("postalCode", postalCode) :
+                new ObjectParameter("postalCode", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFeeAdhoc", weightParameter, postalCodeParameter, courierFee);
         }
     }
 }

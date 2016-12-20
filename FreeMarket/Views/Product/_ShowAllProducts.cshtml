@@ -22,11 +22,20 @@
             <tr>
                 <td class="text-center" colspan="2">
                     @*<div style="color:black"><u>Regular Price</u></div>*@  
-                    <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>    
-                    @if (Model.Products[i].DepartmentName == "Snacking Nuts")
+                    @if (Model.Products[i].Weight < 1)
+                    {
+                        string weight = string.Format("{0}", Math.Round((Model.Products[i].Weight * 1000), 0).ToString());
+                        <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @weight&nbsp;Grams</div>
+                    }
+                    else
+                    {
+                        <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>
+                    }
+
+                        @if (Model.Products[i].DepartmentName == "Snacking Nuts")
                     {
                         <div style="font-size:small"><u>Free Delivery in Struisbaai, L'Agulhas and Suiderstrand</u></div>
-                    }       
+                    }
                 </td>
                 @*<td class="text-center">
                     <div style="color:black"><u>Special Offer</u></div>

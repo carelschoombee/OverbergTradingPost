@@ -42,11 +42,13 @@ namespace FreeMarket.Models
 
         [Required]
         [DisplayName("Weight Range Start")]
-        public int WeightStartRange { get; set; }
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
+        public decimal WeightStartRange { get; set; }
 
         [Required]
         [DisplayName("Weight Range End")]
-        public int WeightEndRange { get; set; }
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
+        public decimal WeightEndRange { get; set; }
 
         [StringLength(50)]
         [DisplayName("Main Centre")]

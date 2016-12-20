@@ -553,7 +553,7 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateDeliveryFee((int)totalWeight, Order.OrderNumber).FirstOrDefault();
+                return (decimal)db.CalculateDeliveryFee(totalWeight, Order.OrderNumber).FirstOrDefault();
             }
         }
 
@@ -562,7 +562,7 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateDeliveryFeeAdhoc((int)totalWeight, postalCode).FirstOrDefault();
+                return (decimal)db.CalculateDeliveryFeeAdhoc(totalWeight, postalCode).FirstOrDefault();
             }
         }
 

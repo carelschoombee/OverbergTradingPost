@@ -505,8 +505,8 @@
           <Property Name="Code" Type="nvarchar" MaxLength="10" />
           <Property Name="PostalCodeRangeStart" Type="int" Nullable="false" />
           <Property Name="PostalCodeRangeEnd" Type="int" Nullable="false" />
-          <Property Name="WeightStartRange" Type="int" />
-          <Property Name="WeightEndRange" Type="int" />
+          <Property Name="WeightStartRange" Type="decimal" Precision="8" Scale="2" />
+          <Property Name="WeightEndRange" Type="decimal" Precision="8" Scale="2" />
           <Property Name="MainCentre" Type="nvarchar" MaxLength="50" />
           <Property Name="DialingCode" Type="nvarchar" MaxLength="10" />
           <Property Name="DeliveryFee" Type="money" Nullable="false" />
@@ -716,23 +716,23 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="CalculateDeliveryFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="weight" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculateDeliveryFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="weight" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="postalCode" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculatePostOfficeFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="totalWeight" Type="decimal" Mode="In" />
         </Function>
         <Function Name="CalculateTimeFreightFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="weight" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="orderNumber" Type="int" Mode="In" />
           <Parameter Name="courierFee" Type="money" Mode="InOut" />
         </Function>
         <Function Name="CalculateTimeFreightFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="weight" Type="int" Mode="In" />
+          <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="postalCode" Type="int" Mode="In" />
           <Parameter Name="courierFee" Type="money" Mode="InOut" />
         </Function>
@@ -1214,7 +1214,6 @@
           <EntitySet Name="AspNetUsers" EntityType="FreeMarketModel.AspNetUser" />
           <EntitySet Name="Specials" EntityType="FreeMarketModel.Special" />
           <EntitySet Name="PriceHistories" EntityType="FreeMarketModel.PriceHistory" />
-          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
           <EntitySet Name="PostalFees" EntityType="FreeMarketModel.PostalFee" />
           <EntitySet Name="OrderDetails" EntityType="FreeMarketModel.OrderDetail" />
           <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
@@ -1230,27 +1229,6 @@
             <End Role="OrderHeader" EntitySet="OrderHeaders" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
-          <FunctionImport Name="CalculateDeliveryFee" ReturnType="Collection(Decimal)">
-            <Parameter Name="weight" Mode="In" Type="Int32" />
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="CalculateDeliveryFeeAdhoc" ReturnType="Collection(Decimal)">
-            <Parameter Name="weight" Mode="In" Type="Int32" />
-            <Parameter Name="postalCode" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="CalculatePostOfficeFee" ReturnType="Collection(Decimal)">
-          <Parameter Name="totalWeight" Mode="In" Type="Decimal" />
-          </FunctionImport>
-          <FunctionImport Name="CalculateTimeFreightFee" ReturnType="Collection(Decimal)">
-            <Parameter Name="weight" Mode="In" Type="Int32" />
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
-            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
-          </FunctionImport>
-          <FunctionImport Name="CalculateTimeFreightFeeAdhoc" ReturnType="Collection(Decimal)">
-            <Parameter Name="weight" Mode="In" Type="Int32" />
-            <Parameter Name="postalCode" Mode="In" Type="Int32" />
-            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
-          </FunctionImport>
           <FunctionImport Name="FilterCustomers" ReturnType="Collection(FreeMarketModel.FilterCustomers_Result)">
           <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
@@ -1333,7 +1311,29 @@
           </FunctionImport>
           <EntitySet Name="CashOrders" EntityType="FreeMarketModel.CashOrder" />
           <FunctionImport Name="FilterCashOrder" ReturnType="Collection(FreeMarketModel.FilterCashOrder_Result)">
-            <Parameter Name="filterCriteria" Mode="In" Type="String" />
+          <Parameter Name="filterCriteria" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
+          <FunctionImport Name="CalculateDeliveryFee" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateDeliveryFeeAdhoc" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CalculatePostOfficeFee" ReturnType="Collection(Decimal)">
+            <Parameter Name="totalWeight" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateTimeFreightFee" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateTimeFreightFeeAdhoc" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
+            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1632,20 +1632,6 @@
           <Property Name="NewPrice" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Date" Type="DateTime" Precision="3" />
-        </EntityType>
-        <EntityType Name="TimeFreightCourierFeeReference">
-          <Key>
-            <PropertyRef Name="DeliveryCostID" />
-          </Key>
-          <Property Name="DeliveryCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCodeRangeStart" Type="Int32" Nullable="false" />
-          <Property Name="PostalCodeRangeEnd" Type="Int32" Nullable="false" />
-          <Property Name="WeightStartRange" Type="Int32" />
-          <Property Name="WeightEndRange" Type="Int32" />
-          <Property Name="MainCentre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DialingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="PostalFee">
           <Key>
@@ -2293,6 +2279,20 @@
           <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
           <Property Type="Decimal" Name="Total" Nullable="true" Precision="19" />
         </ComplexType>
+        <EntityType Name="TimeFreightCourierFeeReference">
+          <Key>
+            <PropertyRef Name="DeliveryCostID" />
+          </Key>
+          <Property Name="DeliveryCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCodeRangeStart" Type="Int32" Nullable="false" />
+          <Property Name="PostalCodeRangeEnd" Type="Int32" Nullable="false" />
+          <Property Name="WeightStartRange" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="WeightEndRange" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="MainCentre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DialingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2666,21 +2666,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TimeFreightCourierFeeReferences">
-            <EntityTypeMapping TypeName="FreeMarketModel.TimeFreightCourierFeeReference">
-              <MappingFragment StoreEntitySet="TimeFreightCourierFeeReference">
-                <ScalarProperty Name="DeliveryFee" ColumnName="DeliveryFee" />
-                <ScalarProperty Name="DialingCode" ColumnName="DialingCode" />
-                <ScalarProperty Name="MainCentre" ColumnName="MainCentre" />
-                <ScalarProperty Name="WeightEndRange" ColumnName="WeightEndRange" />
-                <ScalarProperty Name="WeightStartRange" ColumnName="WeightStartRange" />
-                <ScalarProperty Name="PostalCodeRangeEnd" ColumnName="PostalCodeRangeEnd" />
-                <ScalarProperty Name="PostalCodeRangeStart" ColumnName="PostalCodeRangeStart" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="DeliveryCostID" ColumnName="DeliveryCostID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PostalFees">
             <EntityTypeMapping TypeName="FreeMarketModel.PostalFee">
               <MappingFragment StoreEntitySet="PostalFees">
@@ -2742,11 +2727,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee" />
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc" />
-          <FunctionImportMapping FunctionImportName="CalculatePostOfficeFee" FunctionName="FreeMarketModel.Store.CalculatePostOfficeFee" />
-          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFee" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFee" />
-          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFeeAdhoc" />
           <FunctionImportMapping FunctionImportName="FilterCustomers" FunctionName="FreeMarketModel.Store.FilterCustomers">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FreeMarketModel.FilterCustomers_Result">
@@ -3381,6 +3361,26 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="TimeFreightCourierFeeReferences">
+            <EntityTypeMapping TypeName="FreeMarketModel.TimeFreightCourierFeeReference">
+              <MappingFragment StoreEntitySet="TimeFreightCourierFeeReference">
+                <ScalarProperty Name="DeliveryFee" ColumnName="DeliveryFee" />
+                <ScalarProperty Name="DialingCode" ColumnName="DialingCode" />
+                <ScalarProperty Name="MainCentre" ColumnName="MainCentre" />
+                <ScalarProperty Name="WeightEndRange" ColumnName="WeightEndRange" />
+                <ScalarProperty Name="WeightStartRange" ColumnName="WeightStartRange" />
+                <ScalarProperty Name="PostalCodeRangeEnd" ColumnName="PostalCodeRangeEnd" />
+                <ScalarProperty Name="PostalCodeRangeStart" ColumnName="PostalCodeRangeStart" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="DeliveryCostID" ColumnName="DeliveryCostID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee" />
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc" />
+          <FunctionImportMapping FunctionImportName="CalculatePostOfficeFee" FunctionName="FreeMarketModel.Store.CalculatePostOfficeFee" />
+          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFee" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFee" />
+          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFeeAdhoc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
