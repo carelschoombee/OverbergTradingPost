@@ -47,6 +47,8 @@ namespace FreeMarket.Models
         [DisplayName("Filter")]
         public string CashSalesCriteria { get; set; }
 
+        public decimal TotalSales { get; set; }
+
         public Dashboard()
         {
 
@@ -111,6 +113,8 @@ namespace FreeMarket.Models
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
                 RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
                 RefundableOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed" || c.OrderStatus == "InTransit").ToList();
+
+                TotalSales = SalesInformation.SalesDetails.Sum(c => c.Value);
 
                 List<AuditUser> hits = new List<AuditUser>();
                 hits = db.AuditUsers.Where(c => c.Action == 32).ToList();
