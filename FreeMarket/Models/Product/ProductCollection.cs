@@ -35,6 +35,7 @@ namespace FreeMarket.Models
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,
                         SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
+                        RetailPricePerUnit = c.RetailPricePerUnit ?? c.PricePerUnit,
                         Weight = c.Weight
                     }
                     ).ToList();
@@ -60,6 +61,7 @@ namespace FreeMarket.Models
 
                         string normalPrice = string.Format("{0:C}", product.PricePerUnit);
                         string specialPrice = string.Format("{0:C}", product.SpecialPricePerUnit);
+                        string retailPrice = string.Format("{0:C}", product.RetailPricePerUnit);
 
                         product.Prices.Add(new SelectListItem
                         {
@@ -71,6 +73,13 @@ namespace FreeMarket.Models
                         {
                             Text = specialPrice,
                             Value = product.SpecialPricePerUnit.ToString(),
+                            Selected = true
+                        });
+
+                        product.Prices.Add(new SelectListItem
+                        {
+                            Text = retailPrice,
+                            Value = product.RetailPricePerUnit.ToString(),
                             Selected = true
                         });
 

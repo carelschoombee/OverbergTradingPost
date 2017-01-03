@@ -40,9 +40,6 @@
         <EntityTypeShape EntityType="FreeMarketModel.ProductReview" Width="1.5" PointX="5.25" PointY="30.5" />
         <AssociationConnector Association="FreeMarketModel.FK_CourierReview_Courier" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductReview_Product" />
-        <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="8.25" PointY="14.375" />
-        <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
-        <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
         <EntityTypeShape EntityType="FreeMarketModel.AspNetUser" Width="1.5" PointX="17.375" PointY="0.75" />
         <EntityTypeShape EntityType="FreeMarketModel.Special" Width="1.5" PointX="7.375" PointY="8.75" />
         <EntityTypeShape EntityType="FreeMarketModel.PriceHistory" Width="1.5" PointX="5.375" PointY="13.75" />
@@ -61,6 +58,9 @@
         <EntityTypeShape EntityType="FreeMarketModel.CashOrderDetail" Width="1.5" PointX="0.75" PointY="18.75" />
         <EntityTypeShape EntityType="FreeMarketModel.CashOrder" Width="1.5" PointX="17.375" PointY="9.75" />
         <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="13.25" PointY="21.25" />
+        <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
+        <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

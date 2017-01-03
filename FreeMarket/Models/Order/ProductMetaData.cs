@@ -34,6 +34,10 @@ namespace FreeMarket.Models
         [DisplayName("Special Price Per Unit")]
         public decimal SpecialPricePerUnit { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
+        [DisplayName("Retail Price Per Unit")]
+        public decimal RetailPricePerUnit { get; set; }
+
         public string SelectedDepartment { get; set; }
         public List<SelectListItem> Departments { get; set; }
 
@@ -108,6 +112,7 @@ namespace FreeMarket.Models
                     SupplierName = productInfo.SupplierName,
                     SupplierNumber = productInfo.SupplierNumberID,
                     SpecialPricePerUnit = productInfo.SpecialPricePerUnit ?? productInfo.PricePerUnit,
+                    RetailPricePerUnit = productInfo.RetailPricePerUnit ?? productInfo.PricePerUnit,
                     Weight = productInfo.Weight,
                     LongDescription = productInfo.LongDescription
                 };
@@ -345,10 +350,26 @@ namespace FreeMarket.Models
                     db.PriceHistories.Add(history);
                 }
 
+                if (product.RetailPricePerUnit != productSupplierDb.RetailPricePerUnit)
+                {
+                    PriceHistory history = new PriceHistory()
+                    {
+                        OldPrice = productSupplierDb.RetailPricePerUnit,
+                        NewPrice = product.RetailPricePerUnit,
+                        ProductNumber = product.ProductNumber,
+                        SupplierNumber = product.SupplierNumber,
+                        Date = DateTime.Now,
+                        Type = "Retail"
+                    };
+
+                    db.PriceHistories.Add(history);
+                }
+
                 if (productSupplierDb != null)
                 {
                     productSupplierDb.PricePerUnit = product.PricePerUnit;
                     productSupplierDb.SpecialPricePerUnit = product.SpecialPricePerUnit;
+                    productSupplierDb.RetailPricePerUnit = product.RetailPricePerUnit;
                     db.Entry(productSupplierDb).State = EntityState.Modified;
                 }
 
@@ -443,7 +464,7 @@ namespace FreeMarket.Models
         public string Size { get; set; }
 
         [Required]
-        [MinValue("0.1")]
+        //[MinValue("0.1")]
         [DisplayName("Weight (KG)")]
         public decimal Weight { get; set; }
 

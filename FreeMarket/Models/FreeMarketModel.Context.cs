@@ -52,7 +52,6 @@ namespace FreeMarket.Models
         public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
         public virtual DbSet<CourierReview> CourierReviews { get; set; }
         public virtual DbSet<ProductReview> ProductReviews { get; set; }
-        public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Special> Specials { get; set; }
         public virtual DbSet<PriceHistory> PriceHistories { get; set; }
@@ -66,6 +65,7 @@ namespace FreeMarket.Models
         public virtual DbSet<CashOrderDetail> CashOrderDetails { get; set; }
         public virtual DbSet<CashOrder> CashOrders { get; set; }
         public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
+        public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
     
         public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
         {
@@ -79,11 +79,6 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllCouriersReviewList_Result> GetAllCouriersReviewList()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCouriersReviewList_Result>("GetAllCouriersReviewList");
-        }
-    
-        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
         }
     
         public virtual ObjectResult<GetAllProductsByDepartment_Result> GetAllProductsByDepartment(Nullable<int> departmentNumber)
@@ -139,19 +134,6 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetPriceHistories_Result> GetPriceHistories()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPriceHistories_Result>("GetPriceHistories");
-        }
-    
-        public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
-        {
-            var productNumberParameter = productNumber.HasValue ?
-                new ObjectParameter("ProductNumber", productNumber) :
-                new ObjectParameter("ProductNumber", typeof(int));
-    
-            var supplierNumberParameter = supplierNumber.HasValue ?
-                new ObjectParameter("SupplierNumber", supplierNumber) :
-                new ObjectParameter("SupplierNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> ValidateSpecialDeliveryCode(Nullable<int> postalCode)
@@ -354,6 +336,24 @@ namespace FreeMarket.Models
                 new ObjectParameter("postalCode", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFeeAdhoc", weightParameter, postalCodeParameter, courierFee);
+        }
+    
+        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
+        }
+    
+        public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
+        {
+            var productNumberParameter = productNumber.HasValue ?
+                new ObjectParameter("ProductNumber", productNumber) :
+                new ObjectParameter("ProductNumber", typeof(int));
+    
+            var supplierNumberParameter = supplierNumber.HasValue ?
+                new ObjectParameter("SupplierNumber", supplierNumber) :
+                new ObjectParameter("SupplierNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
         }
     }
 }
