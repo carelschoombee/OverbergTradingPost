@@ -429,6 +429,15 @@ namespace FreeMarket.Models
 
         public void Save(string userId = null)
         {
+            if (Order.OrderNumber == 0)
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    db.OrderHeaders.Add(Order);
+                    db.SaveChanges();
+                }
+            }
+
             // Compare the Session cart to the database cart and resolve differences
             Compare();
 
@@ -504,7 +513,7 @@ namespace FreeMarket.Models
 
         public void Merge(string userId, CartBody tempBody)
         {
-            if (Order.OrderNumber != 0 && Order.OrderStatus != "Locked")
+            if (Order.OrderStatus != "Locked")
             {
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
@@ -525,10 +534,9 @@ namespace FreeMarket.Models
                                 .Quantity += item.Quantity;
                     }
                 }
-            }
 
-            UpdateTotal();
-            Save();
+                UpdateTotal();
+            }
         }
 
         public void UpdateDeliveryDetails(SaveCartViewModel model)

@@ -4,9 +4,13 @@
     string shippingMessage = "";
     string deliveryType = "";
 
-    if (Model.Order.OrderNumber == 0)
+    if (!User.Identity.IsAuthenticated)
     {
-        shippingMessage = "Please Log in to calculate Shipping costs.";
+        shippingMessage = "Please log in to calculate delivery costs.";
+    }
+    else if (Model.Order.OrderNumber == 0)
+    {
+        shippingMessage = "Please save your order to calculate shipping costs.";
     }
     else
     {

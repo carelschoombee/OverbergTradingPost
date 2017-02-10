@@ -98,8 +98,8 @@ namespace FreeMarket.Models
                         CustomerPreferredCommunicationMethod = user.PreferredCommunicationMethod
                     };
 
-                    db.OrderHeaders.Add(order);
-                    db.SaveChanges();
+                    //db.OrderHeaders.Add(order);
+                    //db.SaveChanges();
 
                     Debug.Write(string.Format("New order for shopping cart: {0}", order.ToString()));
                 }

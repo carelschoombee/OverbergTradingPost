@@ -239,6 +239,7 @@ namespace FreeMarket.Controllers
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
+            sessionCart.Save();
 
             decimal courierCost = sessionCart.CalculateCourierFee();
             decimal postOfficeCost = sessionCart.CalculatePostalFee();
