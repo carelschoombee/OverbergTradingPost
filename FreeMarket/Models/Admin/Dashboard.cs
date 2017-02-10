@@ -83,7 +83,12 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                DateTime minDate = (DateTime)db.OrderHeaders.Min(c => c.OrderDatePlaced);
+                DateTime minDate;
+                if (db.OrderHeaders.FirstOrDefault() == null)
+                    minDate = DateTime.Now.AddYears(-1);
+                else
+                    minDate = (DateTime)db.OrderHeaders.Min(c => c.OrderDatePlaced);
+
                 DateTime maxDate = DateTime.Now;
 
                 int i = minDate.Year;
