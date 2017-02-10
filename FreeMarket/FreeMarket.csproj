@@ -620,9 +620,6 @@
       <LastGenOutput>FreeMarketModel.cs</LastGenOutput>
     </Content>
     <Content Include="ReportViewerWebForm.aspx" />
-    <Content Include="ConnectionStrings.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="sitemap.xml" />
     <EntityDeploy Include="Models\FreeMarketModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
