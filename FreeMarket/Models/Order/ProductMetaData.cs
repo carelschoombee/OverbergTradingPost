@@ -1,5 +1,4 @@
-﻿using FreeMarket.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -263,7 +262,8 @@ namespace FreeMarket.Models
                     ProductNumber = product.ProductNumber,
                     SupplierNumber = int.Parse(product.SelectedSupplier),
                     PricePerUnit = product.PricePerUnit,
-                    SpecialPricePerUnit = product.SpecialPricePerUnit
+                    SpecialPricePerUnit = 0,
+                    RetailPricePerUnit = 0
                 };
 
                 db.ProductSuppliers.Add(productSupplierDb);
@@ -291,9 +291,8 @@ namespace FreeMarket.Models
                 }
                 catch (Exception e)
                 {
-
+                    ExceptionLogging.LogException(e);
                 }
-
             }
         }
 

@@ -15,3 +15,56 @@
         @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
     </div>
 </div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Activated, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.EditorFor(m => m.Activated)
+    </div>
+</div>
+
+<hr />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div style="position:relative;">
+                        <label>Image Medium (256 x 192)</label>
+                        <a class='btn' href='javascript:;'>
+                            Choose...
+                            <input type="file" name="imagePrimary" size="40"
+                                   style="position:absolute;z-index:2;top:0;
+                                left:0;filter: alpha(opacity=0); opacity:0;
+                                background-color:transparent;color:transparent;"
+                                   onchange="readURLPrimary(this);">
+                        </a>
+                        <div class="col-sm-12">
+                            <img id="imagePrimaryPreview" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model.MainImageNumber })" alt="Free Market" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div style="position:relative;">
+                        <label>Image Small (80 x 79)</label>
+                        <a class='btn' href='javascript:;'>
+                            Choose...
+                            <input type="file" name="imageSecondary" size="40"
+                                   style="position:absolute;z-index:2;top:0;
+                                left:0;filter: alpha(opacity=0); opacity:0;
+                                background-color:transparent;color:transparent;"
+                                   onchange="readURLSecondary(this);">
+                        </a>
+                        <div class="col-sm-12">
+                            <img id="imageSecondaryPreview" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model.SecondaryImageNumber, DefaultSize = PictureSize.Small })" alt="Free Market" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

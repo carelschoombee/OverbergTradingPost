@@ -12,16 +12,13 @@ namespace FreeMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TimeFreightCourierFeeReference
+    public partial class DepartmentPicture
     {
-        public int DeliveryCostID { get; set; }
-        public string Code { get; set; }
-        public int PostalCodeRangeStart { get; set; }
-        public int PostalCodeRangeEnd { get; set; }
-        public Nullable<int> WeightStartRange { get; set; }
-        public Nullable<int> WeightEndRange { get; set; }
-        public string MainCentre { get; set; }
-        public string DialingCode { get; set; }
-        public decimal DeliveryFee { get; set; }
+        public int PictureNumber { get; set; }
+        public int DepartmentNumber { get; set; }
+        public byte[] Picture { get; set; }
+        public string Dimensions { get; set; }
+        public string PictureMimeType { get; set; }
+        public string Annotation { get; set; }
     }
 }

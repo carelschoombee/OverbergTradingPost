@@ -13,7 +13,7 @@
 
     @if (Model != null)
     {
-        using (Html.BeginForm("CreateDepartmentProcess", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "departmentForm" }))
+        using (Html.BeginForm("CreateDepartmentProcess", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", @id = "departmentForm" }))
         {
             @Html.AntiForgeryToken()
 

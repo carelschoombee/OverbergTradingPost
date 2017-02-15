@@ -27,5 +27,6 @@ namespace FreeMarket.Models
         public string DepartmentName { get; set; }
         public decimal PricePerUnit { get; set; }
         public Nullable<decimal> SpecialPricePerUnit { get; set; }
+        public Nullable<decimal> RetailPricePerUnit { get; set; }
     }
 }

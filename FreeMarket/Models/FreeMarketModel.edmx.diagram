@@ -57,10 +57,11 @@
         <EntityTypeShape EntityType="FreeMarketModel.CashCustomer" Width="1.5" PointX="9.75" PointY="10.75" />
         <EntityTypeShape EntityType="FreeMarketModel.CashOrderDetail" Width="1.5" PointX="0.75" PointY="18.75" />
         <EntityTypeShape EntityType="FreeMarketModel.CashOrder" Width="1.5" PointX="17.375" PointY="9.75" />
-        <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="FreeMarketModel.ProductSupplier" Width="1.5" PointX="13.25" PointY="21.25" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
+        <EntityTypeShape EntityType="FreeMarketModel.DepartmentPicture" Width="1.5" PointX="7.375" PointY="13.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

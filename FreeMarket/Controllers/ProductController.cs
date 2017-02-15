@@ -13,9 +13,11 @@ namespace FreeMarket.Controllers
         FreeMarketEntities db = new FreeMarketEntities();
 
         // GET: Product
-        public ActionResult Index()
+        public ActionResult View(int id)
         {
-            return View();
+            ProductCollection model = ProductCollection.GetProductsByDepartment(id);
+
+            return View("Index", model);
         }
 
         public ActionResult IndexPlain()
@@ -23,32 +25,20 @@ namespace FreeMarket.Controllers
             return View();
         }
 
+        public ActionResult Departments()
+        {
+            List<Department> departments = Department.GetModel();
+
+            if (departments != null && departments.Count > 0)
+                return View(departments);
+
+            return View();
+        }
+
         [ChildActionOnly]
         public ActionResult GetAllProducts()
         {
             ProductCollection products = ProductCollection.GetAllProducts();
-
-            if (products.Products != null && products.Products.Count > 0)
-                return PartialView("_ShowAllProducts", products);
-            else
-                return PartialView("_ShowAllProducts", new ProductCollection());
-        }
-
-        [ChildActionOnly]
-        public ActionResult GetSnackingNuts()
-        {
-            ProductCollection products = ProductCollection.GetAllSnackingNuts();
-
-            if (products.Products != null && products.Products.Count > 0)
-                return PartialView("_ShowAllProducts", products);
-            else
-                return PartialView("_ShowAllProducts", new ProductCollection());
-        }
-
-        [ChildActionOnly]
-        public ActionResult GetBakingNuts()
-        {
-            ProductCollection products = ProductCollection.GetAllBakingNuts();
 
             if (products.Products != null && products.Products.Count > 0)
                 return PartialView("_ShowAllProducts", products);

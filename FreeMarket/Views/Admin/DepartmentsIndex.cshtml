@@ -21,6 +21,8 @@
             <th class="col-sm-1">Edit</th>
             <th class="col-sm-1">Department Number</th>
             <th class="col-sm-1">Department Name</th>
+            <th class="col-sm-1">Image</th>
+            <th class="col-sm-1">Active</th>
         </tr>
 
     @foreach (Department item in Model)
@@ -34,6 +36,12 @@
             </td>
             <td>
                 @item.DepartmentName
+            </td>
+            <td>
+                <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = item.MainImageNumber})" alt="@item.DepartmentName" title="@item.DepartmentName" />
+            </td>
+            <td>
+                @item.Activated
             </td>
         </tr>
     }

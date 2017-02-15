@@ -1,0 +1,128 @@
+﻿@using FreeMarket.Models
+@model List<Department>
+
+@{
+    ViewBag.Title = "Overberg Trading Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@helper ListDepartment(int i)
+{
+    <div>
+        <table class="table table-bordered-custom table-responsive well">
+            <tr class="well well-modal">
+                <th class="col-sm-2"></th>
+                <th class="col-sm-2"></th>
+            </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model[i].MainImageNumber})" alt="@Model[i].DepartmentName" title="@Model[i].DepartmentName" />
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    <div style="font-size: 24px; color:black"><i><strong>@Model[i].DepartmentName</strong></i></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="text-center" colspan="2">
+                    <a href="@Url.Action("View", "Product")/@Model[i].DepartmentNumber"
+                       class="btn btn-success editClass"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true">&nbsp;&nbsp;View Products</span></a>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+}
+
+<br />
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">Categories</h1>
+        <hr />
+    </div>
+
+    <div class="col-sm-12">
+        @if (Model.Count == 1)
+        {
+            <div class="row">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-6">
+                    @ListDepartment(0)
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-3">
+                </div>
+            </div>
+        }
+        else if (Model.Count == 2)
+        {
+            <div class="row">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                    @ListDepartment(0)
+                </div>
+
+                <div class="col-sm-4">
+                    @ListDepartment(1)
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+            </div>
+        }
+        else if (Model.Count == 3)
+        {
+            <div class="row">
+                <div class="col-sm-4">
+                    @ListDepartment(0)
+                </div>
+                <div class="col-sm-4">
+                    @ListDepartment(1)
+                </div>
+                <div class="col-sm-4">
+                    @ListDepartment(2)
+                </div>
+            </div>
+        }
+        else
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="row">
+                    @if (i < Model.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListDepartment(i)
+                        </div>
+                    }
+                    @if (++i < Model.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListDepartment(i)
+                        </div>
+                    }
+                    @if (++i < Model.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListDepartment(i)
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+    <div class="col-sm-12">
+        <div class="row text-center">
+            @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "freemarket-link" })
+        </div>
+    </div>
+</div>
+
+<div id="loadingDiv" style="display:none;"></div>

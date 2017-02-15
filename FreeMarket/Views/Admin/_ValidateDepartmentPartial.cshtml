@@ -1,5 +1,31 @@
 ﻿<script type="text/javascript">
 
+    function readURLPrimary(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imagePrimaryPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readURLSecondary(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imageSecondaryPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function () {
         $('#departmentForm')
                 .bootstrapValidator({
@@ -8,7 +34,7 @@
                         invalid: 'glyphicon glyphicon-remove',
                         validating: 'glyphicon glyphicon-refresh'
                     },
-                    fields: {                        
+                    fields: {
                         'DepartmentName': {
                             validators: {
                                 notEmpty: {
@@ -16,7 +42,14 @@
                                 },
                                 stringLength: {
                                     message: 'The maximum string length is 200.',
-                                        max: 200
+                                    max: 200
+                                }
+                            }
+                        },
+                        'imagePrimary': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
                                 }
                             }
                         }

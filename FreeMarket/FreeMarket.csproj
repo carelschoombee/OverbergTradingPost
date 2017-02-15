@@ -289,6 +289,9 @@
     <Compile Include="Models\CustomerAddress.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DepartmentPicture.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
     <Compile Include="Models\FilterAuditUser_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -848,6 +851,7 @@
     <Content Include="Views\Admin\InitiateCashOrder.cshtml" />
     <Content Include="Views\Admin\EditCashOrder.cshtml" />
     <Content Include="Views\Home\_SpecialMessage.cshtml" />
+    <Content Include="Views\Product\Departments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

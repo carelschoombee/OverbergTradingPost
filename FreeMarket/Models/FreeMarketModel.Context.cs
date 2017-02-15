@@ -64,8 +64,9 @@ namespace FreeMarket.Models
         public virtual DbSet<CashCustomer> CashCustomers { get; set; }
         public virtual DbSet<CashOrderDetail> CashOrderDetails { get; set; }
         public virtual DbSet<CashOrder> CashOrders { get; set; }
-        public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
         public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        public virtual DbSet<DepartmentPicture> DepartmentPictures { get; set; }
+        public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
     
         public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
         {
@@ -79,15 +80,6 @@ namespace FreeMarket.Models
         public virtual ObjectResult<GetAllCouriersReviewList_Result> GetAllCouriersReviewList()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCouriersReviewList_Result>("GetAllCouriersReviewList");
-        }
-    
-        public virtual ObjectResult<GetAllProductsByDepartment_Result> GetAllProductsByDepartment(Nullable<int> departmentNumber)
-        {
-            var departmentNumberParameter = departmentNumber.HasValue ?
-                new ObjectParameter("DepartmentNumber", departmentNumber) :
-                new ObjectParameter("DepartmentNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsByDepartment_Result>("GetAllProductsByDepartment", departmentNumberParameter);
         }
     
         public virtual ObjectResult<GetAllProductsReview_Result> GetAllProductsReview()
@@ -184,11 +176,6 @@ namespace FreeMarket.Models
                 new ObjectParameter("supplierNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustodianInfo_Result>("GetCustodianInfo", productNumberParameter, supplierNumberParameter);
-        }
-    
-        public virtual ObjectResult<GetAllProductsIncludingDeactivated_Result> GetAllProductsIncludingDeactivated()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsIncludingDeactivated_Result>("GetAllProductsIncludingDeactivated");
         }
     
         public virtual ObjectResult<ValidatePaymentAmount_Result> ValidatePaymentAmount(string orderNumber)
@@ -338,11 +325,6 @@ namespace FreeMarket.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("CalculateTimeFreightFeeAdhoc", weightParameter, postalCodeParameter, courierFee);
         }
     
-        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
-        }
-    
         public virtual ObjectResult<GetProduct_Result> GetProduct(Nullable<int> productNumber, Nullable<int> supplierNumber)
         {
             var productNumberParameter = productNumber.HasValue ?
@@ -354,6 +336,25 @@ namespace FreeMarket.Models
                 new ObjectParameter("SupplierNumber", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProduct_Result>("GetProduct", productNumberParameter, supplierNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetAllProducts_Result> GetAllProducts()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProducts_Result>("GetAllProducts");
+        }
+    
+        public virtual ObjectResult<GetAllProductsByDepartment_Result> GetAllProductsByDepartment(Nullable<int> departmentNumber)
+        {
+            var departmentNumberParameter = departmentNumber.HasValue ?
+                new ObjectParameter("DepartmentNumber", departmentNumber) :
+                new ObjectParameter("DepartmentNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsByDepartment_Result>("GetAllProductsByDepartment", departmentNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetAllProductsIncludingDeactivated_Result> GetAllProductsIncludingDeactivated()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsIncludingDeactivated_Result>("GetAllProductsIncludingDeactivated");
         }
     }
 }

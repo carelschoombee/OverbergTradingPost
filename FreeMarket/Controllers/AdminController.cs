@@ -456,7 +456,7 @@ namespace FreeMarket.Controllers
 
         public ActionResult DepartmentsIndex()
         {
-            List<Department> model = Department.GetModel();
+            List<Department> model = Department.GetModelIncludingAllDepartments();
 
             return View(model);
         }
@@ -679,11 +679,23 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateDepartmentProcess(Department department)
+        public ActionResult CreateDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
         {
             if (ModelState.IsValid)
             {
                 Department.CreateNewDepartment(department);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Medium, imagePrimary);
+
+                if (imageSecondary != null)
+                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Small, imageSecondary);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded for department {0}.", department.DepartmentNumber);
 
                 AuditUser.LogAudit(31, string.Format("Department Name: {0}", department.DepartmentName), User.Identity.GetUserId());
 
@@ -1183,11 +1195,23 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditDepartmentProcess(Department department)
+        public ActionResult EditDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
         {
             if (ModelState.IsValid)
             {
                 Department.SaveModel(department);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Medium, imagePrimary);
+
+                if (imageSecondary != null)
+                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Small, imageSecondary);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded for department {0}.", department.DepartmentNumber);
 
                 AuditUser.LogAudit(30, string.Format("Department Name: {0}", department.DepartmentName), User.Identity.GetUserId());
 

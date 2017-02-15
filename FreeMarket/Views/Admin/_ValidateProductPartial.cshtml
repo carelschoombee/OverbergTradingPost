@@ -68,32 +68,32 @@
                                 }
                             }
                         },
-                        'SpecialPricePerUnit': {
-                            validators: {
-                                regexp: {
-                                    regexp: /^[\d,\s]+$/,
-                                    message: 'Only numbers, spaces and commas.'
-                                },
-                                greaterThan: {
-                                    message: 'Must be a positive number greater than zero.',
-                                    value: 0,
-                                    inclusive: false
-                                }
-                            }
-                        },
-                        'RetailPricePerUnit': {
-                            validators: {
-                                regexp: {
-                                    regexp: /^[\d,\s]+$/,
-                                    message: 'Only numbers, spaces and commas.'
-                                },
-                                greaterThan: {
-                                    message: 'Must be a positive number greater than zero.',
-                                    value: 0,
-                                    inclusive: false
-                                }
-                            }
-                        },
+                        //'SpecialPricePerUnit': {
+                        //    validators: {
+                        //        regexp: {
+                        //            regexp: /^[\d,\s]+$/,
+                        //            message: 'Only numbers, spaces and commas.'
+                        //        },
+                        //        greaterThan: {
+                        //            message: 'Must be a positive number greater than zero.',
+                        //            value: 0,
+                        //            inclusive: false
+                        //        }
+                        //    }
+                        //},
+                        //'RetailPricePerUnit': {
+                        //    validators: {
+                        //        regexp: {
+                        //            regexp: /^[\d,\s]+$/,
+                        //            message: 'Only numbers, spaces and commas.'
+                        //        },
+                        //        greaterThan: {
+                        //            message: 'Must be a positive number greater than zero.',
+                        //            value: 0,
+                        //            inclusive: false
+                        //        }
+                        //    }
+                        //},
                         'Weight': {
                             validators: {
                                 notEmpty: {
