@@ -7,7 +7,7 @@
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Schoombee And Son</title>
+    <title>Overberg Trading Post</title>
     <link rel="shortcut icon" href="siteIcon.ico" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     @Styles.Render("~/Content/css")
@@ -21,13 +21,13 @@
 
 </head>
 <body>
-    <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div class="container">
 
             <!-- Title -->
             <div class="navbar-header pull-left">
                 <a href="@Url.Action("Departments", "Product")">
-                    <img class="img-rounded img-thumbnail" src="@Url.Content("~/Content/Images/logoSmall.png")" alt="Schoombee & Son" title="Buy" />
+                    <img class="img-rounded img-thumbnail" src="@Url.Content("~/Content/Images/logoSmall.png")" alt="Overberg Trading Post" title="Buy" />
                 </a>
             </div>
 
@@ -36,13 +36,12 @@
                 <ul class="nav navbar-nav pull-right">
                     <li>
                         <a class="dropdown-toggle navbar-brand" data-toggle="dropdown" href="#">
-                            Schoombee &amp; Son
+                            Overberg Trading Post
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Premium Nuts", "Index", "Product", new { area = "" }, null)</li>
-                            @*<li>@Html.ActionLink("Our Suppliers", "", "", new { area = "" }, null)</li>*@
+                            <li>@Html.ActionLink("Shop", "Departments", "Product", new { area = "" }, null)</li>
                             <li>@Html.ActionLink("Delivery Options", "DeliveryOptionsInfo", "Home", new { area = "" }, null)</li>
                             <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, null)</li>
                             <li>@Html.ActionLink("Contact Us", "Contact", "Home", new { area = "" }, null)</li>
@@ -79,7 +78,7 @@
 
     <div class="row">
         <div class="col-md-12 well-banner well-sm text-center">
-            <span style="font-size:60px; color:gold; font-family: 'Pacifico', cursive">Schoombee & Son</span>@*&nbsp;<img src="~/Content/Images/ramLogo.jpg" width="64" height="90" />*@
+            <span style="font-size:60px; color:gold; font-family: 'Pacifico', cursive">Overberg Trading Post</span>
         </div>
     </div>
     
@@ -121,7 +120,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p class="text-center">&copy; @DateTime.Now.Year - Schoombee & Son</p>
+            <p class="text-center">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
             <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link" })</div>
             
             <div id="parent" class="center_div text-center">
