@@ -36,7 +36,7 @@
                             @Model.ProductRatings[i].SupplierName
                         </div>
                     </td>
-                    <td  class="text-center">
+                    <td class="text-center">
                         <label class="control-label text-info">Quality Rating</label>
                         <input id="@Model.ProductRatings[i].ReviewId" name="input-id" value="@Model.ProductRatings[i].StarRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
                         @if (Model.ProductRatings[i].StarRating == 1)
@@ -75,24 +75,33 @@
                         <div>
                             <label class="control-label text-info">Courier Rating</label>
                         </div>
-                        <span>@Model.ProductRatings[i].CourierName</span>
-                        <input name="input-id" value="@Model.ProductRatings[i].CourierRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
-                        @if (Model.ProductRatings[i].CourierRating == 1)
+                        @if (Model.ProductRatings[i].CourierRating == 0)
                         {
-                            <span class="btn btn-danger">Poor</span>
+                            <span>No Rating</span>
                         }
-                        else if (Model.ProductRatings[i].CourierRating == 2)
+                        else
                         {
-                            <span class="btn btn-warning">Good</span>
+                            <span>@Model.ProductRatings[i].CourierName</span>
+                            <input name="input-id" value="@Model.ProductRatings[i].CourierRating" data-min="0" data-max="3" class="ratingDisplay rating-loading" data-show-caption="true" data-size="xs">
+
+                            if (Model.ProductRatings[i].CourierRating == 1)
+                            {
+                                <span class="btn btn-danger">Poor</span>
+                            }
+                            else if (Model.ProductRatings[i].CourierRating == 2)
+                            {
+                                <span class="btn btn-warning">Good</span>
+                            }
+                            else if (Model.ProductRatings[i].CourierRating == 3)
+                            {
+                                <span class="btn btn-success">Excellent</span>
+                            }
                         }
-                        else if (Model.ProductRatings[i].CourierRating == 3)
-                        {
-                            <span class="btn btn-success">Excellent</span>
-                        }
+
                     </td>
 
                 </tr>
-                
+
                 <tr>
                     <td colspan="4"><div class="text-info">Product Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].ReviewContent </span></td>
                 </tr>
@@ -102,7 +111,7 @@
 
                 }
                 else
-                {                    
+                {
                     <tr>
                         <td colspan="4"><div class="text-info">Courier Review:</div><span style="white-space :pre-line" class="text-right">@Model.ProductRatings[i].CourierReviewContent </span></td>
                     </tr>

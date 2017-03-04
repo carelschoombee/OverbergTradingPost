@@ -1,82 +1,82 @@
 ﻿@using FreeMarket.Models
 @model OrderHeaderViewModel
 
-@if (Model.Order.DeliveryType == "Courier")
+@if (Model.Order.DeliveryType == "Courier" || Model.Order.DeliveryType == "LocalCourier")
 {
-        if (Model.SpecialDelivery)
-        {
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2">
-                        Courier
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <div>Schoombee and Son Delivery (deliver within 48 hours)</div>
-                        <img src="~/Content/Images/ramLogo.jpg" width="128" height="80" alt="Time Freight" />
-                    </td>
-                </tr>
+    if (Model.SpecialDelivery)
+    {
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td colspan="2">
+                    Courier
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Schoombee and Son Delivery (deliver within 48 hours)</div>
+                    <img src="~/Content/Images/ramLogo.jpg" width="128" height="80" alt="Time Freight" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Email Address:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact Number:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td colspan="2">
+                    Courier
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>@Model.Courier.CourierName</div>
+                    <img src="~/Content/Images/delivery.jpg" width="128" height="80" alt="Delivery" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Email Address:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact Number:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
+                </td>
+            </tr>
+            @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))
+            {
                 <tr>
                     <th>
-                        Email Address:
+                        Tracking Number:
                     </th>
                     <td>
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
+                        @Model.Order.TrackingCodes
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        Contact Number:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
-                    </td>
-                </tr>
-            </table>
-        }
-        else
-        {
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2">
-                        Courier
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <div>@Model.Courier.CourierName</div>
-                        <img src="~/Content/Images/slideCourier1.png" width="128" height="80" alt="Time Freight" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Email Address:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Contact Number:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
-                    </td>
-                </tr>
-                @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))
-                {
-                    <tr>
-                        <th>
-                            Tracking Number:
-                        </th>
-                        <td>
-                            @Model.Order.TrackingCodes
-                        </td>
-                    </tr>
-                }
-            </table>
+            }
+        </table>
 
     }
 }
@@ -95,7 +95,7 @@ else if (Model.Order.DeliveryType == "PostOffice")
         </tr>
         <tr>
             <td>
-                <img src="~/Content/Images/slideCourier2.png" width="128" height="80" alt="Post Office"/>
+                <img src="~/Content/Images/slideCourier2.png" width="128" height="80" alt="Post Office" />
             </td>
         </tr>
         @if (!string.IsNullOrEmpty(Model.Order.TrackingCodes))

@@ -29,7 +29,7 @@ namespace FreeMarket.Models
 
                 Products = ProductCollection.GetProductsInOrder(orderNumber);
 
-                if (Order.DeliveryType == "Courier")
+                if (Order.DeliveryType == "Courier" || Order.DeliveryType == "LocalCourier")
                 {
                     Courier courier = db.Couriers.Find(Order.CourierNumber);
 
