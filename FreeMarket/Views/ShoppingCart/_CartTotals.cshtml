@@ -1,6 +1,6 @@
 ﻿@model FreeMarket.Models.ShoppingCart
 
-@{ 
+@{
     string shippingMessage = "";
     string deliveryType = "";
 
@@ -14,7 +14,7 @@
     }
     else
     {
-        if(Model.Order.ShippingTotal == 0)
+        if (Model.Order.ShippingTotal == 0)
         {
             shippingMessage = "Free!";
         }
@@ -27,6 +27,10 @@
     if (Model.Order.DeliveryType == "PostOffice")
     {
         deliveryType = "(Post Office)";
+    }
+    else if (Model.Order.DeliveryType == "LocalCourier")
+    {
+        deliveryType = "(Local Courier)";
     }
     else if (Model.Order.DeliveryType == "Courier")
     {
@@ -44,7 +48,7 @@
     </tr>
     <tr>
         <td class="col-sm-2 text-left"><strong style="font-size: 24px">Total:</strong></td>
-        <td class="col-sm-2 text-right" ><strong style="font-size: 24px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
+        <td class="col-sm-2 text-right"><strong style="font-size: 24px">@string.Format("{0:C}", Model.Order.TotalOrderValue)</strong></td>
     </tr>
 </table>
 

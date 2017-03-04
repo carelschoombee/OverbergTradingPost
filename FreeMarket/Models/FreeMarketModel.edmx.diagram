@@ -62,6 +62,8 @@
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Supplier" />
         <EntityTypeShape EntityType="FreeMarketModel.DepartmentPicture" Width="1.5" PointX="7.375" PointY="13.75" />
         <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.PaymentOption" Width="1.5" PointX="9.375" PointY="13.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.CharliesTransportCourierFeeReference" Width="1.5" PointX="17.375" PointY="18.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

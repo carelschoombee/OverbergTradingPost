@@ -49,10 +49,15 @@ namespace FreeMarket.Models
                     address = new CustomerAddress();
 
                 int result = 0;
+                int localCourierResult = 0;
+                int weightDummy = 1;
                 try
                 {
                     if (!string.IsNullOrEmpty(address.AddressPostalCode))
+                    {
                         result = (int)db.ValidateSpecialDeliveryCode(int.Parse(address.AddressPostalCode)).FirstOrDefault();
+                        localCourierResult = (int)db.CalculateLocalDeliveryFeeAdhoc(weightDummy, int.Parse(address.AddressPostalCode)).FirstOrDefault();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -62,6 +67,8 @@ namespace FreeMarket.Models
                 string deliveryType = "";
                 if (result == 1)
                     deliveryType = "Courier";
+                else if (localCourierResult != -1)
+                    deliveryType = "LocalCourier";
                 else
                     deliveryType = "PostOffice";
 
@@ -77,6 +84,7 @@ namespace FreeMarket.Models
                         PaymentReceived = false,
                         TotalOrderValue = 0,
                         CourierNumber = 1,
+                        PaymentOption = 1,
 
                         DeliveryAddress = address.ToString(),
                         DeliveryAddressLine1 = address.AddressLine1,
@@ -119,7 +127,7 @@ namespace FreeMarket.Models
             return order;
         }
 
-        public void UpdateDeliveryDetails(SaveCartViewModel model)
+        public void UpdateDeliveryDetails(SaveCartViewModel model, bool specialDelivery)
         {
             if (model.prefDeliveryDateTime == null)
             {
@@ -144,7 +152,16 @@ namespace FreeMarket.Models
             DeliveryAddressLine2 = model.Address.AddressLine2;
             DeliveryAddressLine3 = model.Address.AddressLine3;
             DeliveryAddressLine4 = model.Address.AddressLine4;
-            DeliveryType = model.DeliveryOptions.SelectedDeliveryType;
+
+            if (specialDelivery)
+                DeliveryType = "Courier";
+            else
+                DeliveryType = model.DeliveryOptions.SelectedDeliveryType;
+
+            if (DeliveryType == "Courier")
+                CourierNumber = 1;
+            else if (DeliveryType == "LocalCourier")
+                CourierNumber = 2;
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -504,7 +521,7 @@ namespace FreeMarket.Models
 
         private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, bool specialDelivery, Dictionary<Stream, string> orderDeliveryInstruction)
         {
-            if (order.DeliveryType == "Courier")
+            if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
             {
                 Courier courier = new Courier();
                 List<GetOrderReport_Result> result = new List<GetOrderReport_Result>();
@@ -555,7 +572,7 @@ namespace FreeMarket.Models
 
                     subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
 
-                    if (!specialDelivery)
+                    if (!specialDelivery && order.DeliveryType != "LocalCourier")
                         cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
                     else
                         cc = string.Empty;
@@ -626,7 +643,7 @@ namespace FreeMarket.Models
 
         private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order, bool specialDelivery)
         {
-            if (order.DeliveryType == "Courier")
+            if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
             {
                 DateTime dateDispatch = DateTime.Now;
                 DateTime dateArrive = DateTime.Now;
@@ -742,7 +759,7 @@ namespace FreeMarket.Models
             }
             else
             {
-                if (deliveryType == "Courier")
+                if (deliveryType == "Courier" || deliveryType == "LocalCourier")
                 {
                     orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
                     orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);

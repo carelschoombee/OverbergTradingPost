@@ -19,23 +19,20 @@
         @Html.Raw(Model.WelcomeText)
         
     </div>
-    <div class="row well text-center">
+    @*<div class="row well text-center">
 
         We offer the following payment options:
         @Html.Partial("_PaymentOptions")
         
-    </div>
-    <div class="row well text-center">
-        <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
-           class="conditionClass freemarket-link"><span class="glyphicon glyphicon-paperclip" aria-hidden="true">&nbsp; Click here to read our terms and conditions.</span></a>
-    </div>
+    </div>*@
+    
     <div class="row text-center">
         <a class="btn btn-success" href="@Url.Action("Departments", "Product")"><span class="glyphicon glyphicon-shopping-cart">&nbsp;&nbsp;Start Shopping!</span></a>
     </div>
     <div class="row">
         &nbsp;
     </div>
-    <div class="text-center">
+    @*<div class="text-center">
         <table class="table table-bordered-custom table-responsive">
             <tr>
                 <td>
@@ -63,11 +60,11 @@
             </tr>
         </table>
 
-    </div>
+    </div>*@
     
 </div>
 
-@Html.Partial("_TermsAndConditionsContainer")
+@*@Html.Partial("_TermsAndConditionsContainer")*@
 
 <script type="text/javascript">
 

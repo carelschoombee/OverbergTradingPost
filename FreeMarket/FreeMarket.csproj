@@ -281,7 +281,11 @@
     <Compile Include="Models\CashOrder\CashOrderMetaData.cs" />
     <Compile Include="Models\CashOrder\CashCustomerViewModel.cs" />
     <Compile Include="Models\CashOrder\CashOrderViewModel.cs" />
+    <Compile Include="Models\CharliesTransportCourierFeeReference.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Checkout\CheckOutViewModel.cs" />
+    <Compile Include="Models\Checkout\ConfirmInvoiceViewModel.cs" />
     <Compile Include="Models\Checkout\PaymentGatewayIntegration.cs" />
     <Compile Include="Models\CourierReview.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
@@ -437,6 +441,7 @@
     </Compile>
     <Compile Include="Models\Order\CartBody.cs" />
     <Compile Include="Models\Checkout\ConfirmOrderViewModel.cs" />
+    <Compile Include="Models\Order\PaymentOptionViewModel.cs" />
     <Compile Include="Models\Order\ViewProductViewModel.cs" />
     <Compile Include="Models\Order\CourierLocationMetaData.cs" />
     <Compile Include="Models\Order\CourierMetaData.cs" />
@@ -459,6 +464,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PaymentGatewayTransactionStatu.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PaymentOption.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PostalFee.cs">
@@ -533,6 +541,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\AboutUs.jpg" />
+    <Content Include="Content\Images\delivery.jpg" />
     <Content Include="Content\Images\MasterCard.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode-Small.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode.png" />
@@ -852,6 +861,8 @@
     <Content Include="Views\Admin\EditCashOrder.cshtml" />
     <Content Include="Views\Home\_SpecialMessage.cshtml" />
     <Content Include="Views\Product\Departments.cshtml" />
+    <Content Include="Views\ShoppingCart\ChoosePaymentOption.cshtml" />
+    <Content Include="Views\ShoppingCart\ConfirmInvoice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

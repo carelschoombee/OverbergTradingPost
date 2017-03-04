@@ -38,23 +38,18 @@ namespace FreeMarket.Models
 
         public SaveCartViewModel() { }
 
-        public SaveCartViewModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
+        public SaveCartViewModel(string customerNumber, OrderHeader order, decimal localCourierFee, decimal courierFee, decimal postalFee)
         {
-            SetModel(customerNumber, order, courierFee, postalFee);
+            SetModel(customerNumber, order, localCourierFee, courierFee, postalFee);
         }
 
-        public void SetModel(string customerNumber, OrderHeader order, decimal courierFee, decimal postalFee)
+        public void SetModel(string customerNumber, OrderHeader order, decimal localCourierFee, decimal courierFee, decimal postalFee)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 OrderStatus = order.OrderStatus;
 
-                DeliveryOptions = new DeliveryType()
-                {
-                    SelectedDeliveryType = order.DeliveryType,
-                    CourierCost = courierFee,
-                    PostOfficeCost = postalFee
-                };
+                SetDeliveryOptions(order, localCourierFee, courierFee, postalFee);
 
                 List<CustomerAddress> addresses = db.CustomerAddresses
                     .Where(c => c.CustomerNumber == customerNumber)
@@ -142,9 +137,17 @@ namespace FreeMarket.Models
 
                 DaysToAddToMinDate = OrderHeader.GetDaysToMinDate();
 
+                SetTextBlocks();
+            }
+        }
+
+        public void SetTextBlocks()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
                 TextBlock1 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock1")
-                    .FirstOrDefault()
-                    .Value;
+                        .FirstOrDefault()
+                        .Value;
 
                 TextBlock2 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock2")
                     .FirstOrDefault()
@@ -179,6 +182,17 @@ namespace FreeMarket.Models
                    .Select(c => c.Text)
                    .FirstOrDefault();
             }
+        }
+
+        public void SetDeliveryOptions(OrderHeader order, decimal localCourierFee, decimal courierFee, decimal postalFee)
+        {
+            DeliveryOptions = new DeliveryType()
+            {
+                SelectedDeliveryType = order.DeliveryType,
+                LocalCourierCost = localCourierFee,
+                CourierCost = courierFee,
+                PostOfficeCost = postalFee
+            };
         }
     }
 }

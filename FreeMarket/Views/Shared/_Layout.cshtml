@@ -123,14 +123,24 @@
             <p class="text-center">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
             <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link" })</div>
             
+            <div class="row text-center">
+                <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+                   class="conditionClass freemarket-link"><span aria-hidden="true">&nbsp; Terms and Conditions</span></a>
+            </div>
+
             <div id="parent" class="center_div text-center">
-                <div class="text-center">Our payment partners:</div>
+               @* <div class="text-center">Our payment partners:</div>*@
 
                 @Html.Partial("_PaymentPartners")
                 
             </div>
             
         </footer>
+
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
+            <div id='EditContainer'>
+            </div>
+        </div>
 
     </div>
 
@@ -215,6 +225,23 @@
                 .resize(resize)
                 .trigger('resize');
         })(jQuery);
+
+        $(document).ready(function () {
+            $('.conditionClass').click(function (evt) {
+                evt.preventDefault();
+                var urlId = $(this).data('id');
+                $.ajax({
+                    url: urlId,
+                    cache: false
+                }).done
+                (function (data) {
+                    $('#EditContainer').html(data);
+                });
+                $('.modal-content').empty();
+                $('#EditModal').removeData('bs.modal');
+                $('#EditModal').modal('show');
+            });
+        });
 
     </script>
 

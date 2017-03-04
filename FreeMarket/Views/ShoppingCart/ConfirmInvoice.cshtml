@@ -1,5 +1,5 @@
 ﻿@using FreeMarket.Models
-@model ConfirmOrderViewModel
+@model ConfirmInvoiceViewModel
 
 @{
     ViewBag.Title = "Secure Checkout - Confirm Items";
@@ -14,7 +14,7 @@
 
     <div class="row well well-modal">
         <div class="col-sm-6">
-            <table class="table table-bordered-custom table-responsive">
+            <table class="table table-bordered-custom table-responsive" >
                 <tr>
                     <td colspan="2">
                         Customer Details
@@ -34,7 +34,7 @@
                     </td>
                 </tr>
             </table>
-
+            
             @Html.Partial("_ConfirmDeliveryPartial", Model)
 
         </div>
@@ -54,7 +54,7 @@
                     </td>
                 </tr>
                 <tr>
-                    @if (Model.Cart.Order.DeliveryType == "Courier" || Model.Cart.Order.DeliveryType == "LocalCourier")
+                    @if (Model.Cart.Order.DeliveryType == "Courier")
                     {
                         <th>
                             Preferred Delivery Date
@@ -74,7 +74,7 @@
                     }
                 </tr>
                 <tr>
-                    @if (Model.Cart.Order.DeliveryType == "Courier" || Model.Cart.Order.DeliveryType == "LocalCourier")
+                    @if (Model.Cart.Order.DeliveryType == "Courier")
                     {
                         <th>Delivery Address<span class="glyphicon glyphicon-home"></span>&nbsp; </th>
                     }
@@ -95,13 +95,11 @@
             @using (Html.BeginForm("LockOrder", "ShoppingCart", FormMethod.Post))
             {
                 @Html.AntiForgeryToken();
-                <div style="font-size:20px">
-                    To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
-                                                                                                                             class="conditionClass freemarket-link">terms and conditions (here)</a>:
-                </div>
-                    <div class="col-sm-offset-3">@Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div>@Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
-                    <input type="submit" value="Confirm" class="btn btn-success" />
+                <div style="font-size:20px">To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+                     class="conditionClass freemarket-link">terms and conditions (here)</a>: </div>
+                <div class="col-sm-offset-3">@Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div>@Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>
+                <input type="submit" value="Confirm" class="btn btn-success" />
             }
         </div>
         <div class="col-sm-6">

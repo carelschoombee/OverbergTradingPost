@@ -87,6 +87,18 @@
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="OrderItemTotal" Type="money" Nullable="false" />
         </EntityType>
+        <EntityType Name="CharliesTransportCourierFeeReference">
+          <Key>
+            <PropertyRef Name="DeliveryCostID" />
+          </Key>
+          <Property Name="DeliveryCostID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PostalCodeRangeStart" Type="int" Nullable="false" />
+          <Property Name="PostalCodeRangeEnd" Type="int" Nullable="false" />
+          <Property Name="WeightStartRange" Type="decimal" Precision="8" Scale="2" />
+          <Property Name="WeightEndRange" Type="decimal" Precision="8" Scale="2" />
+          <Property Name="MainCentre" Type="nvarchar" MaxLength="50" />
+          <Property Name="DeliveryFee" Type="money" Nullable="false" />
+        </EntityType>
         <EntityType Name="Courier">
           <Key>
             <PropertyRef Name="CourierNumber" />
@@ -267,6 +279,7 @@
           <Property Name="DateDispatched" Type="datetime" />
           <Property Name="DateRefunded" Type="datetime" />
           <Property Name="TrackingCodes" Type="nvarchar" MaxLength="700" />
+          <Property Name="PaymentOption" Type="int" />
         </EntityType>
         <EntityType Name="OrderStatus">
           <Key>
@@ -335,6 +348,15 @@
           </Key>
           <Property Name="TransactionCode" Type="int" Nullable="false" />
           <Property Name="Status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentOption">
+          <Key>
+            <PropertyRef Name="PaymentOptionID" />
+          </Key>
+          <Property Name="PaymentOptionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Activated" Type="bit" Nullable="false" />
+          <Property Name="LongDescription" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="PostalFees">
           <Key>
@@ -716,11 +738,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CalculateCharliesFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="weight" Type="decimal" Mode="In" />
+          <Parameter Name="orderNumber" Type="int" Mode="In" />
+          <Parameter Name="courierFee" Type="money" Mode="InOut" />
+        </Function>
+        <Function Name="CalculateCharliesFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="weight" Type="decimal" Mode="In" />
+          <Parameter Name="postalCode" Type="int" Mode="In" />
+          <Parameter Name="courierFee" Type="money" Mode="InOut" />
+        </Function>
         <Function Name="CalculateDeliveryFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="orderNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="CalculateDeliveryFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="weight" Type="decimal" Mode="In" />
+          <Parameter Name="postalCode" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CalculateLocalDeliveryFee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="weight" Type="decimal" Mode="In" />
+          <Parameter Name="orderNumber" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CalculateLocalDeliveryFeeAdhoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="weight" Type="decimal" Mode="In" />
           <Parameter Name="postalCode" Type="int" Mode="In" />
         </Function>
@@ -815,6 +855,7 @@
           <EntitySet Name="CashCustomer" EntityType="Self.CashCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CashOrder" EntityType="Self.CashOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CashOrderDetail" EntityType="Self.CashOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CharliesTransportCourierFeeReference" EntityType="Self.CharliesTransportCourierFeeReference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Courier" EntityType="Self.Courier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierReview" EntityType="Self.CourierReview" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourierStockMovementLog" EntityType="Self.CourierStockMovementLog" Schema="dbo" store:Type="Tables" />
@@ -832,6 +873,7 @@
           <EntitySet Name="PaymentGatewayParameter" EntityType="Self.PaymentGatewayParameter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentGatewayPaymentMethods" EntityType="Self.PaymentGatewayPaymentMethods" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentGatewayTransactionStatus" EntityType="Self.PaymentGatewayTransactionStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentOption" EntityType="Self.PaymentOption" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostalFees" EntityType="Self.PostalFees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PreferredCommunicationMethod" EntityType="Self.PreferredCommunicationMethod" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PriceHistory" EntityType="Self.PriceHistory" Schema="dbo" store:Type="Tables" />
@@ -1294,6 +1336,38 @@
           <FunctionImport Name="FilterCashOrder" ReturnType="Collection(FreeMarketModel.FilterCashOrder_Result)">
           <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="ProductSuppliers" EntityType="FreeMarketModel.ProductSupplier" />
+          <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Supplier" Association="FreeMarketModel.FK_ProductSupplier_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
+          </AssociationSet>
+          <FunctionImport Name="GetProduct" ReturnType="Collection(FreeMarketModel.GetProduct_Result)">
+            <Parameter Name="ProductNumber" Mode="In" Type="Int32" />
+            <Parameter Name="SupplierNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="DepartmentPictures" EntityType="FreeMarketModel.DepartmentPicture" />
+          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
+          <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
+          <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
+          <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllProductsIncludingDeactivated" ReturnType="Collection(FreeMarketModel.GetAllProductsIncludingDeactivated_Result)" />
+          <EntitySet Name="PaymentOptions" EntityType="FreeMarketModel.PaymentOption" />
+          <EntitySet Name="CharliesTransportCourierFeeReferences" EntityType="FreeMarketModel.CharliesTransportCourierFeeReference" />
+          <FunctionImport Name="CalculateCharliesFee" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="CalculateCharliesFeeAdhoc" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
+            <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
+          </FunctionImport>
           <FunctionImport Name="CalculateDeliveryFee" ReturnType="Collection(Decimal)">
             <Parameter Name="weight" Mode="In" Type="Decimal" />
             <Parameter Name="orderNumber" Mode="In" Type="Int32" />
@@ -1315,26 +1389,14 @@
             <Parameter Name="postalCode" Mode="In" Type="Int32" />
             <Parameter Name="courierFee" Mode="InOut" Type="Decimal" />
           </FunctionImport>
-          <EntitySet Name="ProductSuppliers" EntityType="FreeMarketModel.ProductSupplier" />
-          <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSupplier_Supplier" Association="FreeMarketModel.FK_ProductSupplier_Supplier">
-            <End Role="Supplier" EntitySet="Suppliers" />
-            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
-          </AssociationSet>
-          <FunctionImport Name="GetProduct" ReturnType="Collection(FreeMarketModel.GetProduct_Result)">
-            <Parameter Name="ProductNumber" Mode="In" Type="Int32" />
-            <Parameter Name="SupplierNumber" Mode="In" Type="Int32" />
+          <FunctionImport Name="CalculateLocalDeliveryFee" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="DepartmentPictures" EntityType="FreeMarketModel.DepartmentPicture" />
-          <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
-          <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
-          <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
-          <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          <FunctionImport Name="CalculateLocalDeliveryFeeAdhoc" ReturnType="Collection(Decimal)">
+            <Parameter Name="weight" Mode="In" Type="Decimal" />
+            <Parameter Name="postalCode" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetAllProductsIncludingDeactivated" ReturnType="Collection(FreeMarketModel.GetAllProductsIncludingDeactivated_Result)" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -1682,6 +1744,7 @@
           <Property Name="DateDispatched" Type="DateTime" Precision="3" />
           <Property Name="DateRefunded" Type="DateTime" Precision="3" />
           <Property Name="TrackingCodes" Type="String" MaxLength="700" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentOption" Type="Int32" />
         </EntityType>
         <Association Name="FK_OrderDetail_OrderHeader">
           <End Type="FreeMarketModel.OrderHeader" Role="OrderHeader" Multiplicity="1" />
@@ -2309,6 +2372,27 @@
           <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
           <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
         </ComplexType>
+        <EntityType Name="PaymentOption">
+          <Key>
+            <PropertyRef Name="PaymentOptionID" />
+          </Key>
+          <Property Name="PaymentOptionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+          <Property Name="LongDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CharliesTransportCourierFeeReference">
+          <Key>
+            <PropertyRef Name="DeliveryCostID" />
+          </Key>
+          <Property Name="DeliveryCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PostalCodeRangeStart" Type="Int32" Nullable="false" />
+          <Property Name="PostalCodeRangeEnd" Type="Int32" Nullable="false" />
+          <Property Name="WeightStartRange" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="WeightEndRange" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="MainCentre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2706,6 +2790,7 @@
           <EntitySetMapping Name="OrderHeaders">
             <EntityTypeMapping TypeName="FreeMarketModel.OrderHeader">
               <MappingFragment StoreEntitySet="OrderHeader">
+                <ScalarProperty Name="PaymentOption" ColumnName="PaymentOption" />
                 <ScalarProperty Name="TrackingCodes" ColumnName="TrackingCodes" />
                 <ScalarProperty Name="DateRefunded" ColumnName="DateRefunded" />
                 <ScalarProperty Name="DateDispatched" ColumnName="DateDispatched" />
@@ -3289,11 +3374,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee" />
-          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc" />
-          <FunctionImportMapping FunctionImportName="CalculatePostOfficeFee" FunctionName="FreeMarketModel.Store.CalculatePostOfficeFee" />
-          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFee" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFee" />
-          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFeeAdhoc" />
           <EntitySetMapping Name="ProductSuppliers">
             <EntityTypeMapping TypeName="FreeMarketModel.ProductSupplier">
               <MappingFragment StoreEntitySet="ProductSupplier">
@@ -3415,6 +3495,38 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="PaymentOptions">
+            <EntityTypeMapping TypeName="FreeMarketModel.PaymentOption">
+              <MappingFragment StoreEntitySet="PaymentOption">
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PaymentOptionID" ColumnName="PaymentOptionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CharliesTransportCourierFeeReferences">
+            <EntityTypeMapping TypeName="FreeMarketModel.CharliesTransportCourierFeeReference">
+              <MappingFragment StoreEntitySet="CharliesTransportCourierFeeReference">
+                <ScalarProperty Name="DeliveryFee" ColumnName="DeliveryFee" />
+                <ScalarProperty Name="MainCentre" ColumnName="MainCentre" />
+                <ScalarProperty Name="WeightEndRange" ColumnName="WeightEndRange" />
+                <ScalarProperty Name="WeightStartRange" ColumnName="WeightStartRange" />
+                <ScalarProperty Name="PostalCodeRangeEnd" ColumnName="PostalCodeRangeEnd" />
+                <ScalarProperty Name="PostalCodeRangeStart" ColumnName="PostalCodeRangeStart" />
+                <ScalarProperty Name="DeliveryCostID" ColumnName="DeliveryCostID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CalculateCharliesFee" FunctionName="FreeMarketModel.Store.CalculateCharliesFee" />
+          <FunctionImportMapping FunctionImportName="CalculateCharliesFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateCharliesFeeAdhoc" />
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateDeliveryFee" />
+          <FunctionImportMapping FunctionImportName="CalculateDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateDeliveryFeeAdhoc" />
+          <FunctionImportMapping FunctionImportName="CalculatePostOfficeFee" FunctionName="FreeMarketModel.Store.CalculatePostOfficeFee" />
+          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFee" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFee" />
+          <FunctionImportMapping FunctionImportName="CalculateTimeFreightFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateTimeFreightFeeAdhoc" />
+          <FunctionImportMapping FunctionImportName="CalculateLocalDeliveryFee" FunctionName="FreeMarketModel.Store.CalculateLocalDeliveryFee" />
+          <FunctionImportMapping FunctionImportName="CalculateLocalDeliveryFeeAdhoc" FunctionName="FreeMarketModel.Store.CalculateLocalDeliveryFeeAdhoc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

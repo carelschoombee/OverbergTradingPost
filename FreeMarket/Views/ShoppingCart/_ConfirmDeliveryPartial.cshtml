@@ -1,71 +1,79 @@
 ﻿@using FreeMarket.Models
 @model ConfirmOrderViewModel
 
-@if (Model.Cart.Order.DeliveryType == "Courier")
+@if (Model.Cart.Order.DeliveryType == "Courier" || Model.Cart.Order.DeliveryType == "LocalCourier")
 {
-        if (Model.SpecialDelivery)
-        {
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2">
-                        Courier
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <div>Schoombee and Son Delivery (deliver within 48 hours)</div>
-                        <img src="~/Content/Images/ramLogo.jpg" width="128" height="80" alt="Time Freight" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Email Address:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Contact Number:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
-                    </td>
-                </tr>
-            </table>
-        }
-        else
-        {
-            <table class="table table-bordered-custom table-responsive">
-                <tr>
-                    <td colspan="2">
-                        Courier
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <div>@Model.Courier.CourierName</div>
+    if (Model.SpecialDelivery)
+    {
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td colspan="2">
+                    Courier
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Schoombee and Son Delivery (deliver within 48 hours)</div>
+                    <img src="~/Content/Images/ramLogo.jpg" width="128" height="80" alt="Time Freight" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Email Address:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact Number:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <table class="table table-bordered-custom table-responsive">
+            <tr>
+                <td colspan="2">
+                    Courier
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>@Model.Courier.CourierName</div>
+                    @if (Model.Courier.CourierNumber == 1)
+                    {
                         <img src="~/Content/Images/slideCourier1.png" width="128" height="80" alt="Time Freight" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Email Address:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Contact Number:
-                    </th>
-                    <td>
-                        <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
-                    </td>
-                </tr>
-            </table>
+                    }
+                    else if (Model.Courier.CourierNumber == 2)
+                    {
+                        <img src="~/Content/Images/delivery.jpg" width="128" height="80" alt="Time Freight" />
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Email Address:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Courier.MainContactEmailAddress
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact Number:
+                </th>
+                <td>
+                    <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Courier.MainContactTelephoneNumber
+                </td>
+            </tr>
+        </table>
 
     }
 }
@@ -103,6 +111,6 @@ else if (Model.Cart.Order.DeliveryType == "PostOffice")
                 <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
             </td>
         </tr>
-        
+
     </table>
 }
