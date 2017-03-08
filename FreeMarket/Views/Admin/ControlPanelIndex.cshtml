@@ -1,0 +1,51 @@
+﻿@using FreeMarket.Models
+@model List<WebsiteFunction>
+
+<h2 class="text-center">Website Functions</h2>
+
+@using (Html.BeginForm("EditWebsiteFunction", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table table-bordered-custom table-responsive well-modal">
+
+        @if (Model != null && Model.Count != 0)
+        {
+            <tr>
+                <th>
+                    Function
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Activated
+                </th>
+            </tr>
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td class="text-center">
+                        @Model[i].FunctionDescription
+                        @Html.HiddenFor(c => Model[i].FunctionId)
+                    </td>
+                
+                    <td class="text-center">@Model[i].Comment</td>
+               
+                    <td data-label="Activated:" class="text-center">@Html.EditorFor(c => Model[i].Activated)</td>
+                </tr>
+            }
+        }
+
+    </table>
+
+    
+        <div class="col-sm-offset-5">
+            @if (Model != null && Model.Count > 0)
+            {
+                <input type="submit" value="Save/Update" class="btn btn-primary" />
+                @Html.ActionLink("Back", "Index", "Admin", new { @class = "btn btn-success" })
+            }
+        </div>
+    
+}

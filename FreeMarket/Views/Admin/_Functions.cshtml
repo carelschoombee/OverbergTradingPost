@@ -25,6 +25,14 @@
     </tr>
     <tr>
         <td>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Departments", "DepartmentsIndex")</div>
+        </td>
+        <td>
+            Add or modify departments.
+        </td>
+    </tr>
+    <tr>
+        <td>
             <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Couriers", "CouriersIndex")</div>
         </td>
         <td>
@@ -33,18 +41,34 @@
     </tr>
     <tr>
         <td>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Custodians", "CustodianActivationIndex")</div>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Stock", "CustodiansIndex")</div>
         </td>
         <td>
-            Add or modify custodians. Activate or deactivate products which custodians can sell.
+            Add or remove stock.
         </td>
     </tr>
     <tr>
         <td>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Departments", "DepartmentsIndex")</div>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Support Details", "EditSupport")</div>
         </td>
         <td>
-            Add or modify departments.
+            Modify the support details.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Control Panel", "ControlPanelIndex")</div>
+        </td>
+        <td>
+            Activate or deactivate functions of your website, such as whether SMS's or emails are sent to customers.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
+        </td>
+        <td>
+            Download reports by order number.
         </td>
     </tr>
     <tr>
@@ -74,27 +98,24 @@
             Modify post office delivery fees.
         </td>
     </tr>
-    <tr>
+    @*<tr>
         <td>
             <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Specials", "SpecialsIndex")</div>
         </td>
         <td>
             Modify which postal codes are considered free delivery zones and which postal codes have special prices.
         </td>
-    </tr>
+    </tr>*@  
     <tr>
         <td colspan="2" class="well"></td>
     </tr>
     <tr>
         <td>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Stock", "CustodiansIndex")</div>
+            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Custodians", "CustodianActivationIndex")</div>
         </td>
         <td>
-            Add or remove stock.
+            Add or modify custodians. Activate or deactivate products which custodians can sell.
         </td>
-    </tr>
-    <tr>
-        <td colspan="2" class="well"></td>
     </tr>
     <tr>
         <td>
@@ -104,29 +125,12 @@
             Modify configurations which influence the text displayed on the website as well as the text displayed in emails and SMS's.
         </td>
     </tr>
-    <tr>
-        <td>
-            <div><span class="glyphicon glyphicon-edit"></span>&nbsp;@Html.ActionLink("Support Details", "EditSupport")</div>
-        </td>
-        <td>
-            Modify the support details.
-        </td>
-    </tr>
-    <tr>
+    @*<tr>
         <td>
             <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Labels", "ExportToCsv")</div>
         </td>
         <td>
             Download labels for current confirmed orders.
         </td>
-    </tr>
-    <tr>
-        <td>
-            <div><span class="glyphicon glyphicon-download"></span>&nbsp;@Html.ActionLink("Download Reports", "DownloadReport")</div>
-        </td>
-        <td>
-            Download reports by order number.
-        </td>
-    </tr>
-
+    </tr>*@
 </table>

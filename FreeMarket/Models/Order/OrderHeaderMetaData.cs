@@ -48,14 +48,12 @@ namespace FreeMarket.Models
                 if (address == null)
                     address = new CustomerAddress();
 
-                int result = 0;
                 int localCourierResult = 0;
                 int weightDummy = 1;
                 try
                 {
                     if (!string.IsNullOrEmpty(address.AddressPostalCode))
                     {
-                        result = (int)db.ValidateSpecialDeliveryCode(int.Parse(address.AddressPostalCode)).FirstOrDefault();
                         localCourierResult = (int)db.CalculateLocalDeliveryFeeAdhoc(weightDummy, int.Parse(address.AddressPostalCode)).FirstOrDefault();
                     }
                 }
@@ -65,9 +63,10 @@ namespace FreeMarket.Models
                 }
 
                 string deliveryType = "";
-                if (result == 1)
+
+                if (localCourierResult == -1)
                     deliveryType = "Courier";
-                else if (localCourierResult != -1)
+                else if (localCourierResult > 0)
                     deliveryType = "LocalCourier";
                 else
                     deliveryType = "PostOffice";
@@ -100,6 +99,8 @@ namespace FreeMarket.Models
                         DateDispatched = null,
                         DateRefunded = null,
 
+                        InvoiceSent = false,
+
                         CustomerName = user.Name,
                         CustomerEmail = user.Email,
                         CustomerPrimaryContactPhone = user.PhoneNumber,
@@ -127,22 +128,9 @@ namespace FreeMarket.Models
             return order;
         }
 
-        public void UpdateDeliveryDetails(SaveCartViewModel model, bool specialDelivery)
+        public void UpdateDeliveryDetails(SaveCartViewModel model)
         {
-            if (model.prefDeliveryDateTime == null)
-            {
-                if (model.specialDeliveryDateTime != null)
-                {
-                    DeliveryDate = model.specialDeliveryDateTime;
-                }
-            }
-            else if (model.specialDeliveryDateTime == null)
-            {
-                if (model.prefDeliveryDateTime != null)
-                {
-                    DeliveryDate = model.prefDeliveryDateTime;
-                }
-            }
+            DeliveryDate = model.prefDeliveryDateTime;
 
             DeliveryAddress = model.Address.ToString();
             DeliveryAddressCity = model.Address.AddressCity;
@@ -153,10 +141,7 @@ namespace FreeMarket.Models
             DeliveryAddressLine3 = model.Address.AddressLine3;
             DeliveryAddressLine4 = model.Address.AddressLine4;
 
-            if (specialDelivery)
-                DeliveryType = "Courier";
-            else
-                DeliveryType = model.DeliveryOptions.SelectedDeliveryType;
+            DeliveryType = model.DeliveryOptions.SelectedDeliveryType;
 
             if (DeliveryType == "Courier")
                 CourierNumber = 1;
@@ -194,6 +179,9 @@ namespace FreeMarket.Models
 
                 switch (reportType)
                 {
+                    case "Invoice":
+                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report7.rdlc");
+                        break;
                     case "Refund":
                         rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report6.rdlc");
                         break;
@@ -236,7 +224,7 @@ namespace FreeMarket.Models
             }
             catch (Exception e)
             {
-
+                ExceptionLogging.LogException(e);
             }
 
             return outCollection;
@@ -269,37 +257,45 @@ namespace FreeMarket.Models
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                ApplicationUser user = System.Web.HttpContext
-                            .Current
-                            .GetOwinContext()
-                            .GetUserManager<ApplicationUserManager>()
-                            .FindById(customerNumber);
+                // Query the database to determine whether dispatch message is activated
+                WebsiteFunction function = db.WebsiteFunctions.Find(3);
+                if (function != null)
+                {
+                    if (function.Activated == true)
+                    {
+                        ApplicationUser user = System.Web.HttpContext
+                        .Current
+                        .GetOwinContext()
+                        .GetUserManager<ApplicationUserManager>()
+                        .FindById(customerNumber);
 
-                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                        OrderHeader order = db.OrderHeaders.Find(orderNumber);
 
-                if (order == null)
-                    return;
+                        if (order == null)
+                            return;
 
-                string deliveryType = order.DeliveryType;
-                if (deliveryType == "PostOffice")
-                    deliveryType = "Post Office";
+                        string deliveryType = order.DeliveryType;
+                        if (deliveryType == "PostOffice")
+                            deliveryType = "Post Office";
 
-                string smsLine1 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderDispatchSmsLine1")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
+                        string smsLine1 = db.SiteConfigurations
+                            .Where(c => c.Key == "OrderDispatchSmsLine1")
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
 
-                string smsLine1TrackingNumber = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderDispatchSmsLine1TrackingNumber")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
+                        string smsLine1TrackingNumber = db.SiteConfigurations
+                            .Where(c => c.Key == "OrderDispatchSmsLine1TrackingNumber")
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
 
-                SMSHelper helper = new SMSHelper();
+                        SMSHelper helper = new SMSHelper();
 
-                if (string.IsNullOrEmpty(order.TrackingCodes))
-                    await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, deliveryType), user.PhoneNumber);
-                else
-                    await helper.SendMessage(string.Format(smsLine1TrackingNumber, user.Name, orderNumber, deliveryType, order.TrackingCodes), user.PhoneNumber);
+                        if (string.IsNullOrEmpty(order.TrackingCodes))
+                            await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, deliveryType), user.PhoneNumber);
+                        else
+                            await helper.SendMessage(string.Format(smsLine1TrackingNumber, user.Name, orderNumber, deliveryType, order.TrackingCodes), user.PhoneNumber);
+                    }
+                }
             }
         }
 
@@ -332,14 +328,22 @@ namespace FreeMarket.Models
 
                 await email.SendAsync(iMessage);
 
-                SMSHelper helper = new SMSHelper();
+                // Query the database to determine whether rating sms is activated
+                WebsiteFunction function = db.WebsiteFunctions.Find(4);
+                if (function != null)
+                {
+                    if (function.Activated == true)
+                    {
+                        SMSHelper helper = new SMSHelper();
 
-                string smsLine1 = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderRateSmsLine1")
-                    .Select(c => c.Value)
-                    .FirstOrDefault();
+                        string smsLine1 = db.SiteConfigurations
+                            .Where(c => c.Key == "OrderRateSmsLine1")
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
 
-                await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, url), user.PhoneNumber);
+                        await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber, url), user.PhoneNumber);
+                    }
+                }
             }
         }
 
@@ -467,6 +471,41 @@ namespace FreeMarket.Models
             }
         }
 
+        public async static void SendInvoice(string customerNumber, int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+
+                if (order == null)
+                    return;
+
+                ApplicationUser user = System.Web.HttpContext
+                            .Current
+                            .GetOwinContext()
+                            .GetUserManager<ApplicationUserManager>()
+                            .FindById(customerNumber);
+
+                if (user == null)
+                    return;
+
+                Support supportInfo = db.Supports
+                   .FirstOrDefault();
+
+                Dictionary<Stream, string> orderSummary = new Dictionary<Stream, string>();
+
+                orderSummary = GetReport(ReportType.Invoice.ToString(), orderNumber);
+
+                SendInvoiceEmailToCustomer(order, user, supportInfo, orderSummary);
+
+                SendInvoiceSmsToCustomer(user, order);
+
+                order.InvoiceSent = true;
+                db.Entry(order).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
         public async static void SendConfirmationMessages(string customerNumber, int orderNumber)
         {
             using (FreeMarketEntities db = new FreeMarketEntities())
@@ -488,38 +527,22 @@ namespace FreeMarket.Models
                 Support supportInfo = db.Supports
                     .FirstOrDefault();
 
-                int postalCode = 0;
-
-                try
-                {
-                    postalCode = int.Parse(order.DeliveryAddressPostalCode);
-                }
-                catch (Exception e)
-                {
-                    ExceptionLogging.LogException(e);
-                }
-
-                bool specialDelivery = (db.ValidateSpecialDeliveryCode(postalCode).First() == 1);
-
                 Dictionary<Stream, string> orderSummary = new Dictionary<Stream, string>();
                 Dictionary<Stream, string> orderDeliveryInstruction = new Dictionary<Stream, string>();
 
-                GetConfirmationReports(orderNumber, order.DeliveryType, ref orderSummary, ref orderDeliveryInstruction, specialDelivery);
+                GetConfirmationReports(orderNumber, order.DeliveryType, ref orderSummary, ref orderDeliveryInstruction);
 
                 SendConfirmationEmailToCustomer(order, user, supportInfo, orderSummary);
 
-                if (ConfigurationManager.AppSettings["sendSMSToSupportOnOrderConfirmed"] == "true")
-                {
-                    SendConfirmationSmsToSupport(user, supportInfo, order);
-                }
+                SendConfirmationSmsToSupport(user, supportInfo, order);
 
-                SendConfirmationSmsToCustomer(user, order, specialDelivery);
+                SendConfirmationSmsToCustomer(user, order);
 
-                SendConfirmationEmailToCourier(order, supportInfo, specialDelivery, orderDeliveryInstruction);
+                SendConfirmationEmailToCourier(order, supportInfo, orderDeliveryInstruction);
             }
         }
 
-        private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, bool specialDelivery, Dictionary<Stream, string> orderDeliveryInstruction)
+        private async static void SendConfirmationEmailToCourier(OrderHeader order, Support supportInfo, Dictionary<Stream, string> orderDeliveryInstruction)
         {
             if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
             {
@@ -541,7 +564,7 @@ namespace FreeMarket.Models
                 {
                     string message = CreateCourierInstructionsMessage();
 
-                    if (specialDelivery || ConfigurationManager.AppSettings["testMode"] == "true")
+                    if (ConfigurationManager.AppSettings["testMode"] == "true")
                         destination = supportInfo.OrdersEmail;
                     else
                         destination = courier.MainContactEmailAddress;
@@ -572,7 +595,7 @@ namespace FreeMarket.Models
 
                     subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
 
-                    if (!specialDelivery && order.DeliveryType != "LocalCourier")
+                    if (order.DeliveryType == "Courier")
                         cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
                     else
                         cc = string.Empty;
@@ -641,97 +664,139 @@ namespace FreeMarket.Models
             return builder.ToString();
         }
 
-        private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order, bool specialDelivery)
+        private async static void SendConfirmationSmsToCustomer(ApplicationUser user, OrderHeader order)
         {
-            if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                DateTime dateDispatch = DateTime.Now;
-                DateTime dateArrive = DateTime.Now;
-
-                if (specialDelivery)
+                // Query the database to determine whether confirmation sms to customer is activated
+                WebsiteFunction function = db.WebsiteFunctions.Find(2);
+                if (function != null)
                 {
-                    dateDispatch = GetSpecialDispatchDay((DateTime)order.DeliveryDate);
-                    dateArrive = GetSpecialArriveDay((DateTime)order.DeliveryDate);
-                }
-                else
-                {
-                    dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-                    dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
-                }
+                    if (function.Activated == true)
+                    {
+                        if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
+                        {
+                            DateTime dateDispatch = DateTime.Now;
+                            DateTime dateArrive = DateTime.Now;
 
-                string message = "";
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    message = db.SiteConfigurations
-                           .Where(c => c.Key == "OrderConfirmationSmsLine1")
-                           .Select(c => c.Value)
-                           .FirstOrDefault();
+                            dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                            dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                            string message = "";
+
+                            message = db.SiteConfigurations
+                                    .Where(c => c.Key == "OrderConfirmationSmsLine1")
+                                    .Select(c => c.Value)
+                                    .FirstOrDefault();
+
+                            SMSHelper helper = new SMSHelper();
+
+                            await helper.SendMessage(string.Format(message
+                                , user.Name
+                                , order.OrderNumber
+                                , string.Format("{0:d}", dateDispatch)
+                                , string.Format("{0:f}", dateArrive))
+                                , user.PhoneNumber);
+                        }
+                        else if (order.DeliveryType == "PostOffice")
+                        {
+                            DateTime dateDispatch = DateTime.Now;
+                            DateTime dateArrive = DateTime.Now;
+
+                            dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                            dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                            string message = "";
+
+                            message = db.SiteConfigurations
+                                .Where(c => c.Key == "OrderConfirmationSmsPostOfficeLine1")
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+
+                            SMSHelper helper = new SMSHelper();
+
+                            await helper.SendMessage(string.Format(message
+                                , user.Name
+                                , order.OrderNumber
+                                , string.Format("{0:d}", dateDispatch))
+                                , user.PhoneNumber);
+                        }
+                    }
                 }
-
-                SMSHelper helper = new SMSHelper();
-
-                await helper.SendMessage(string.Format(message
-                    , user.Name
-                    , order.OrderNumber
-                    , string.Format("{0:d}", dateDispatch)
-                    , string.Format("{0:f}", dateArrive))
-                    , user.PhoneNumber);
             }
-            else if (order.DeliveryType == "PostOffice")
+        }
+
+        private async static void SendInvoiceSmsToCustomer(ApplicationUser user, OrderHeader order)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                DateTime dateDispatch = DateTime.Now;
-                DateTime dateArrive = DateTime.Now;
-
-                dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-                dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
-
-                string message = "";
-                using (FreeMarketEntities db = new FreeMarketEntities())
+                // Query the database to determine whether invoice payment reminder sms to customer is activated
+                WebsiteFunction function = db.WebsiteFunctions.Find(5);
+                if (function != null)
                 {
-                    message = db.SiteConfigurations
-                       .Where(c => c.Key == "OrderConfirmationSmsPostOfficeLine1")
-                       .Select(c => c.Value)
-                       .FirstOrDefault();
+                    if (function.Activated == true)
+                    {
+                        DateTime dateDispatch = DateTime.Now;
+                        DateTime dateArrive = DateTime.Now;
+
+                        dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                        dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                        string message = "";
+
+                        message = db.SiteConfigurations
+                                .Where(c => c.Key == "InvoiceSmsLine1")
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
+
+                        SMSHelper helper = new SMSHelper();
+
+                        await helper.SendMessage(string.Format(message
+                            , user.Name
+                            , order.OrderNumber)
+                            , user.PhoneNumber);
+                    }
                 }
-
-                SMSHelper helper = new SMSHelper();
-
-                await helper.SendMessage(string.Format(message
-                    , user.Name
-                    , order.OrderNumber
-                    , string.Format("{0:d}", dateDispatch))
-                    , user.PhoneNumber);
             }
         }
 
         private async static void SendConfirmationSmsToSupport(ApplicationUser user, Support supportInfo, OrderHeader order)
         {
-            DateTime dateDispatch = DateTime.Now;
-            DateTime dateArrive = DateTime.Now;
-
-            dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-            dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
-
-            string message = "";
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
-                message = db.SiteConfigurations
-                    .Where(c => c.Key == "OrderConfirmationSMSSupport")
-                    .FirstOrDefault()
-                    .Value;
+                // Query database if sms to support is activated
+                WebsiteFunction function = db.WebsiteFunctions.Find(1);
+                if (function != null)
+                {
+                    if (function.Activated == true)
+                    {
+                        DateTime dateDispatch = DateTime.Now;
+                        DateTime dateArrive = DateTime.Now;
+
+                        dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
+                        dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
+
+                        string message = "";
+
+                        message = db.SiteConfigurations
+                            .Where(c => c.Key == "OrderConfirmationSMSSupport")
+                            .FirstOrDefault()
+                            .Value;
+
+                        SMSHelper helper = new SMSHelper();
+
+                        await helper.SendMessage(
+                                string.Format(message
+                                , user.Name, order.OrderNumber
+                                , string.Format("{0:f}", order.DeliveryDate)
+                                , string.Format("{0:C}", order.TotalOrderValue)
+                                , order.DeliveryType)
+                            , string.Format("{0},{1}"
+                                , supportInfo.Cellphone
+                                , supportInfo.Landline));
+                    }
+                }
             }
-
-            SMSHelper helper = new SMSHelper();
-
-            await helper.SendMessage(
-                    string.Format(message
-                    , user.Name, order.OrderNumber
-                    , string.Format("{0:f}", order.DeliveryDate)
-                    , string.Format("{0:C}", order.TotalOrderValue)
-                    , order.DeliveryType)
-                , string.Format("{0},{1}"
-                    , supportInfo.Cellphone
-                    , supportInfo.Landline));
         }
 
         private async static void SendConfirmationEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<Stream, string> orderSummary)
@@ -742,7 +807,22 @@ namespace FreeMarket.Models
             string message1 = CreateConfirmationMessageCustomer();
 
             iMessage.Body = string.Format((message1), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
-            iMessage.Subject = string.Format("Schoombee and Son Order");
+            iMessage.Subject = string.Format("Overberg Trading Post Order");
+
+            EmailService email = new EmailService();
+
+            await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
+        }
+
+        private async static void SendInvoiceEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<Stream, string> orderSummary)
+        {
+            IdentityMessage iMessage = new IdentityMessage();
+            iMessage.Destination = user.Email;
+
+            string message1 = CreateInvoiceMessageCustomer();
+
+            iMessage.Body = string.Format((message1), user.Name, supportInfo.MainContactName, supportInfo.Landline, supportInfo.Cellphone, supportInfo.Email);
+            iMessage.Subject = string.Format("Overberg Trading Post Order");
 
             EmailService email = new EmailService();
 
@@ -750,25 +830,17 @@ namespace FreeMarket.Models
         }
 
         private static void GetConfirmationReports(int orderNumber, string deliveryType, ref Dictionary<Stream,
-            string> orderSummary, ref Dictionary<Stream, string> orderDeliveryInstruction, bool specialDelivery)
+            string> orderSummary, ref Dictionary<Stream, string> orderDeliveryInstruction)
         {
-            if (specialDelivery)
+            if (deliveryType == "Courier" || deliveryType == "LocalCourier")
             {
-                orderSummary = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
-                orderDeliveryInstruction = GetReport(ReportType.StruisbaaiOrderConfirmation.ToString(), orderNumber);
+                orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
+                orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
             }
-            else
+            else if (deliveryType == "PostOffice")
             {
-                if (deliveryType == "Courier" || deliveryType == "LocalCourier")
-                {
-                    orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
-                    orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
-                }
-                else if (deliveryType == "PostOffice")
-                {
-                    orderSummary = GetReport(ReportType.PostalConfirmation.ToString(), orderNumber);
-                    orderDeliveryInstruction = GetReport(ReportType.PostalInstructions.ToString(), orderNumber);
-                }
+                orderSummary = GetReport(ReportType.PostalConfirmation.ToString(), orderNumber);
+                orderDeliveryInstruction = GetReport(ReportType.PostalInstructions.ToString(), orderNumber);
             }
         }
 
@@ -853,6 +925,34 @@ namespace FreeMarket.Models
                     .FirstOrDefault();
 
                 return line1 + line2 + line3 + line4 + line5;
+            }
+        }
+
+        private static string CreateInvoiceMessageCustomer()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                string line1 = db.SiteConfigurations
+                    .Where(c => c.Key == "InvoiceLine1")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line2 = db.SiteConfigurations
+                    .Where(c => c.Key == "InvoiceLine2")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line3 = db.SiteConfigurations
+                    .Where(c => c.Key == "InvoiceLine3")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                string line4 = db.SiteConfigurations
+                    .Where(c => c.Key == "InvoiceLine4")
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
+
+                return line1 + line2 + line3 + line4;
             }
         }
 

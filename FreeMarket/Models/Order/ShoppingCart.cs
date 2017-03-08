@@ -49,23 +49,6 @@ namespace FreeMarket.Models
 
                 Order = OrderHeader.GetOrderForShoppingCart(userId);
                 Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
-
-                int postalCode = 0;
-
-                try
-                {
-                    postalCode = int.Parse(Order.DeliveryAddressPostalCode);
-                }
-                catch (Exception e)
-                {
-                    ExceptionLogging.LogException(e);
-                }
-
-                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
-                {
-                    ApplyAllSpecialPrices();
-                    UpdateTotal();
-                }
             }
         }
 
@@ -141,8 +124,6 @@ namespace FreeMarket.Models
                             MainImageNumber = imageNumber
                         });
 
-                    ApplySpecialPrices(productNumber, supplierNumber);
-
                     res.Result = FreeMarketResult.Success;
                     res.Message = string.Format("{0} ({1}) has been added to your cart.", productInfo.Description, quantity);
                 }
@@ -155,99 +136,58 @@ namespace FreeMarket.Models
             return res;
         }
 
-        public void ApplySpecialPrices(int productNumber, int supplierNumber)
-        {
-            if (Order.OrderNumber != 0)
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    int postalCode = 0;
+        //public void ApplySpecialPrices(int productNumber, int supplierNumber)
+        //{
+        //    if (Order.OrderNumber != 0)
+        //    {
+        //        using (FreeMarketEntities db = new FreeMarketEntities())
+        //        {
+        //            ProductSupplier productSupplier = db.ProductSuppliers
+        //                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+        //                .FirstOrDefault();
 
-                    try
-                    {
-                        postalCode = int.Parse(Order.DeliveryAddressPostalCode);
-                    }
-                    catch (Exception e)
-                    {
+        //            // If the user is ordering from a special region apply a special price.
+        //            if (productSupplier != null)
+        //            {
+        //                if (productSupplier.SpecialPricePerUnit != null)
+        //                {
+        //                    int quantity = Body.OrderDetails
+        //                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+        //                    .FirstOrDefault()
+        //                    .Quantity;
 
-                    }
+        //                    Body.OrderDetails
+        //                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+        //                    .FirstOrDefault()
+        //                    .Price = productSupplier.PricePerUnit;
 
-                    if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
-                    {
-                        ProductSupplier productSupplier = db.ProductSuppliers
-                            .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                            .FirstOrDefault();
+        //                    Body.OrderDetails
+        //                    .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
+        //                    .FirstOrDefault()
+        //                    .OrderItemValue = productSupplier.PricePerUnit * quantity;
+        //                }
+        //            }
 
-                        // If the user is ordering from a special region apply a special price.
-                        if (productSupplier != null)
-                        {
-                            if (productSupplier.SpecialPricePerUnit != null)
-                            {
-                                int quantity = Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .Quantity;
+        //        }
+        //    }
+        //}
 
-                                Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .Price = (decimal)productSupplier.SpecialPricePerUnit;
+        //public void ApplyAllSpecialPrices()
+        //{
+        //    foreach (OrderDetail detail in Body.OrderDetails)
+        //    {
+        //        ApplySpecialPrices(detail.ProductNumber, detail.SupplierNumber);
 
-                                Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .OrderItemValue = (decimal)productSupplier.SpecialPricePerUnit * quantity;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ProductSupplier productSupplier = db.ProductSuppliers
-                           .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                           .FirstOrDefault();
-
-                        // If the user is ordering from a special region apply a special price.
-                        if (productSupplier != null)
-                        {
-                            if (productSupplier.SpecialPricePerUnit != null)
-                            {
-                                int quantity = Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .Quantity;
-
-                                Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .Price = productSupplier.PricePerUnit;
-
-                                Body.OrderDetails
-                                .Where(c => c.ProductNumber == productNumber && c.SupplierNumber == supplierNumber)
-                                .FirstOrDefault()
-                                .OrderItemValue = productSupplier.PricePerUnit * quantity;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void ApplyAllSpecialPrices()
-        {
-            foreach (OrderDetail detail in Body.OrderDetails)
-            {
-                ApplySpecialPrices(detail.ProductNumber, detail.SupplierNumber);
-
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    if (detail.ItemNumber != 0)
-                    {
-                        db.Entry(detail).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
-                }
-            }
-        }
+        //        using (FreeMarketEntities db = new FreeMarketEntities())
+        //        {
+        //            if (detail.ItemNumber != 0)
+        //            {
+        //                db.Entry(detail).State = EntityState.Modified;
+        //                db.SaveChanges();
+        //            }
+        //        }
+        //    }
+        //}
 
         public FreeMarketObject RemoveItem(int itemNumber, int productNumber, int supplierNumber, string userId = null)
         {
@@ -444,8 +384,6 @@ namespace FreeMarket.Models
             // Re-initialize the Body
             Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
 
-            ApplyAllSpecialPrices();
-
             // Keep the total order value in sync
             UpdateTotal();
 
@@ -539,10 +477,9 @@ namespace FreeMarket.Models
             }
         }
 
-        public void UpdateDeliveryDetails(SaveCartViewModel model, bool specialDelivery)
+        public void UpdateDeliveryDetails(SaveCartViewModel model)
         {
-            Order.UpdateDeliveryDetails(model, specialDelivery);
-            ApplyAllSpecialPrices();
+            Order.UpdateDeliveryDetails(model);
             Save();
         }
 

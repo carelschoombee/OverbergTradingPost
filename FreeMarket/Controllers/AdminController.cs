@@ -447,6 +447,13 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult ControlPanelIndex()
+        {
+            List<WebsiteFunction> collection = WebsiteFunction.GetAllFunctions();
+
+            return View(collection);
+        }
+
         public ActionResult PostOfficeIndex()
         {
             PostOfficeViewModel model = PostOfficeViewModel.GetModel();
@@ -1219,6 +1226,36 @@ namespace FreeMarket.Controllers
             }
 
             return View("EditDepartment", department);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditWebsiteFunction(List<WebsiteFunction> model)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (WebsiteFunction item in model)
+                {
+                    using (FreeMarketEntities db = new FreeMarketEntities())
+                    {
+                        WebsiteFunction function = db.WebsiteFunctions.Find(item.FunctionId);
+                        if (function == null) { }
+                        else
+                        {
+                            if (function.Activated != item.Activated)
+                            {
+                                function.Activated = item.Activated;
+                                db.Entry(function).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                return RedirectToAction("ControlPanelIndex", "Admin");
+            }
+
+            return View("ControlPanelIndex", model);
         }
 
         [HttpPost]

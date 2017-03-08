@@ -33,7 +33,6 @@ namespace FreeMarket.Models
         public virtual DbSet<CourierStockMovementLog> CourierStockMovementLogs { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<ExceptionLogging> ExceptionLoggings { get; set; }
-        public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
         public virtual DbSet<PaymentGatewayParameter> PaymentGatewayParameters { get; set; }
@@ -69,6 +68,8 @@ namespace FreeMarket.Models
         public virtual DbSet<TimeFreightCourierFeeReference> TimeFreightCourierFeeReferences { get; set; }
         public virtual DbSet<PaymentOption> PaymentOptions { get; set; }
         public virtual DbSet<CharliesTransportCourierFeeReference> CharliesTransportCourierFeeReferences { get; set; }
+        public virtual DbSet<WebsiteFunction> WebsiteFunctions { get; set; }
+        public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
     
         public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
         {

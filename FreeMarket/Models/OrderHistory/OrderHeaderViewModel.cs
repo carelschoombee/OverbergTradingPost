@@ -13,7 +13,6 @@ namespace FreeMarket.Models
         public OrderHeader Order { get; set; }
         public Courier Courier { get; set; }
         public Support Support { get; set; }
-        public bool SpecialDelivery { get; set; }
         public DateTime MinDispatchDate { get; set; }
         public List<OrderDetail> ItemsInOrder { get; set; }
         public List<GetPaymentGatewayMessages_Result> PaymentMessages { get; set; }
@@ -47,26 +46,8 @@ namespace FreeMarket.Models
                 }).ToList();
 
                 model.Order = order;
-
-                int postalCode = 0;
-
                 model.Courier = db.Couriers.Find(order.CourierNumber);
-
                 model.Support = db.Supports.FirstOrDefault();
-
-                try
-                {
-                    postalCode = int.Parse(order.DeliveryAddressPostalCode);
-                }
-                catch (Exception e)
-                {
-
-                }
-
-                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
-                {
-                    model.SpecialDelivery = true;
-                }
 
                 // Find the customer's details
                 var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();

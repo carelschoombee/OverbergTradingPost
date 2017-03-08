@@ -5,13 +5,10 @@ using System.Linq;
 
 namespace FreeMarket.Models
 {
-    public class ConfirmOrderViewModel
+    public class PayInvoiceViewModel
     {
         public ShoppingCart Cart { get; set; }
-        public string Pay_Request_Id { get; set; }
-        public string Checksum { get; set; }
         public Support Support { get; set; }
-
         public DateTime MinDispatchDate { get; set; }
 
         [EnforceTrue(ErrorMessage = "You must accept the terms and conditions before you can place your order.")]
@@ -20,26 +17,14 @@ namespace FreeMarket.Models
 
         public Courier Courier { get; set; }
 
-        public ConfirmOrderViewModel()
+        public FreeMarketOwner BankDetails { get; set; }
+
+        public PayInvoiceViewModel()
         {
             Cart = new ShoppingCart();
         }
 
-        public ConfirmOrderViewModel(ShoppingCart cart, string payRequestId, string checksum)
-        {
-            Cart = cart;
-            Pay_Request_Id = payRequestId;
-            Checksum = checksum;
-            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                Courier = db.Couriers.Find(cart.Order.CourierNumber);
-                Support = db.Supports.FirstOrDefault();
-            }
-        }
-
-        public ConfirmOrderViewModel(ShoppingCart cart)
+        public PayInvoiceViewModel(ShoppingCart cart)
         {
             Cart = cart;
             MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
@@ -48,6 +33,7 @@ namespace FreeMarket.Models
             {
                 Courier = db.Couriers.Find(cart.Order.CourierNumber);
                 Support = db.Supports.FirstOrDefault();
+                BankDetails = db.FreeMarketOwners.FirstOrDefault();
             }
         }
     }

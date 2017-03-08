@@ -28,10 +28,10 @@ namespace FreeMarket
             mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));
             mail.Subject = message.Subject;
 
-            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -56,15 +56,15 @@ namespace FreeMarket
             {
                 System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
                 System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment, ct);
-                attach.ContentDisposition.FileName = "Schoombee & Son Order";
+                attach.ContentDisposition.FileName = "Overberg Trading Post Order";
 
                 mail.Attachments.Add(attach);
             }
 
-            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -93,15 +93,15 @@ namespace FreeMarket
             {
                 System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
                 System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(attachment, ct);
-                attach.ContentDisposition.FileName = "Schoombee & Son Order";
+                attach.ContentDisposition.FileName = "Overberg Trading Post Order";
 
                 mail.Attachments.Add(attach);
             }
 
-            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee & Son platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", EmailService.Borderify(bodyContent));
+            string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", EmailService.Borderify(bodyContent));
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -138,8 +138,8 @@ namespace FreeMarket
             request.AddParameter("to", message.Destination);
             request.AddParameter("subject", message.Subject);
             string body = EmailService.Borderify(message.Body);
-            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee and Son platform</td></tr><tr><td><br /><img src=\"cid:ramLogo.jpg\"></td></tr></table></body></html>", body));
-            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg"));
+            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=\"cid:ramLogo.jpg\"></td></tr></table></body></html>", body));
+            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png"));
             request.Method = Method.POST;
 
             client.Execute(request);
@@ -162,7 +162,7 @@ namespace FreeMarket
             request.AddParameter("to", message.Destination);
             request.AddParameter("subject", message.Subject);
             string body = EmailService.Borderify(message.Body);
-            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Schoombee and Son platform</td></tr><tr><td><br /><img src=\"cid:ramLogo.jpg\"></td></tr></table></body></html>", body));
+            request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=\"cid:ramLogo.jpg\"></td></tr></table></body></html>", body));
             request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/ramLogo.jpg"));
             request.AddFile("attachment", attachment.ToArray(), "Order.pdf");
             request.Method = Method.POST;

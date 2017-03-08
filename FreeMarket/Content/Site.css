@@ -96,7 +96,8 @@ textarea {
 }
 
 body {
-    background-image: url('Images/background3.jpg');
+    /*background-image: url('Images/background3.jpg');*/
+    background-image: url('Images/OBMLogo.jpg');
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;

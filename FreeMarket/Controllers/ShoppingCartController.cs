@@ -294,31 +294,6 @@ namespace FreeMarket.Controllers
         }
 
         [HttpPost]
-        public int IsSpecialDelivery(string id, string selectedDeliveryType)
-        {
-            int specialDelivery = 0;
-
-            //postalcode
-            if (!string.IsNullOrEmpty(id) && id.Length == 4)
-            {
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    try
-                    {
-                        specialDelivery = (int)db.ValidateSpecialDeliveryCode(int.Parse(id)).FirstOrDefault();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionLogging.LogException(e);
-                        return 2;
-                    }
-                }
-            }
-
-            return specialDelivery;
-        }
-
-        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult UpdateDeliveryDetails(SaveCartViewModel model)
@@ -331,82 +306,30 @@ namespace FreeMarket.Controllers
             TimeSpan endTime = new TimeSpan(17, 0, 0);
             DateTime minDate = DateTime.Today.AddDays(model.DaysToAddToMinDate);
 
-            int code = 0;
-            int specialDelivery = 0;
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                if (ModelState.IsValid)
-                {
-                    code = int.Parse(model.Address.AddressPostalCode);
-                    specialDelivery = (int)db.ValidateSpecialDeliveryCode(code).FirstOrDefault();
-                }
-            }
-
             if (model.DeliveryOptions == null || model.DeliveryOptions.SelectedDeliveryType == null)
             {
-                if (specialDelivery == 0)
-                    ModelState.AddModelError("", "Please select a delivery option");
+                ModelState.AddModelError("", "Please select a delivery option");
             }
 
             if (ModelState.IsValid)
             {
-                try
+                if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime &&
+                        model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
+                        model.prefDeliveryDateTime.Value > DateTime.Today &&
+                        (model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Monday ||
+                        model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Tuesday ||
+                        model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
+                        model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
+                        model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
                 {
-                    int postalCode = int.Parse(model.Address.AddressPostalCode);
-
-                    using (FreeMarketEntities db = new FreeMarketEntities())
-                    {
-                        int specialDeliveryDate = (int)db.ValidateSpecialDeliveryCode(postalCode).FirstOrDefault();
-
-                        if (specialDeliveryDate == 0)
-                        {
-                            if (!(model.prefDeliveryDateTime.Value.TimeOfDay > startTime &&
-                                   model.prefDeliveryDateTime.Value.TimeOfDay < endTime &&
-                                   model.prefDeliveryDateTime.Value > minDate &&
-                                   (model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
-                                    model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
-                                    model.prefDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
-                            {
-                                model.SetAddressNameOptions(userId, model.SelectedAddress);
-
-                                return View("CheckoutDeliveryDetails", model);
-                            }
-
-                            model.specialDeliveryDateTime = null;
-                        }
-                        else if (specialDeliveryDate == 1)
-                        {
-                            if (!(model.specialDeliveryDateTime.Value.TimeOfDay > startTime &&
-                                   model.specialDeliveryDateTime.Value.TimeOfDay < endTime &&
-                                   model.specialDeliveryDateTime.Value > DateTime.Today &&
-                                   (model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Monday ||
-                                   model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Tuesday ||
-                                   model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Wednesday ||
-                                    model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Thursday ||
-                                    model.specialDeliveryDateTime.Value.DayOfWeek == DayOfWeek.Friday)))
-                            {
-                                model.SetAddressNameOptions(userId, model.SelectedAddress);
-
-                                return View("CheckoutDeliveryDetails", model);
-                            }
-
-                            model.prefDeliveryDateTime = null;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    ExceptionLogging.LogException(e);
-
                     model.SetAddressNameOptions(userId, model.SelectedAddress);
 
                     return View("CheckoutDeliveryDetails", model);
                 }
 
-                bool special = specialDelivery == 1 ? true : false;
+                model.prefDeliveryDateTime = null;
 
-                sessionCart.UpdateDeliveryDetails(model, special);
+                sessionCart.UpdateDeliveryDetails(model);
                 result = new FreeMarketObject { Result = FreeMarketResult.NoResult };
                 if (model.AddressName != "Current")
                 {
@@ -493,30 +416,35 @@ namespace FreeMarket.Controllers
             // PayGate
             sessionCart.Order.PaymentOption = 2;
 
-            bool specialDelivery = false;
-            int postalCode = 0;
-
-            try
-            {
-                postalCode = int.Parse(sessionCart.Order.DeliveryAddressPostalCode);
-            }
-            catch (Exception e)
-            {
-                ExceptionLogging.LogException(e);
-            }
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
-                {
-                    specialDelivery = true;
-                }
-            }
-
             ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart);
-            model.SpecialDelivery = specialDelivery;
 
             return View("ConfirmShoppingCart", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LockInvoice(ConfirmInvoiceViewModel confirmModel)
+        {
+            string userId = User.Identity.GetUserId();
+            ShoppingCart sessionCart = GetCartFromSession(userId);
+
+            if (ModelState.IsValid)
+            {
+                sessionCart.Order.OrderStatus = "Locked";
+                sessionCart.Save();
+                AuditUser.LogAudit(28, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
+
+                if (!sessionCart.Order.InvoiceSent.HasValue || sessionCart.Order.InvoiceSent == false)
+                    OrderHeader.SendInvoice(userId, sessionCart.Order.OrderNumber);
+
+                PayInvoiceViewModel invoice = new PayInvoiceViewModel(sessionCart);
+                return View("PayInvoice", invoice);
+            }
+
+            ConfirmInvoiceViewModel model = new ConfirmInvoiceViewModel(sessionCart);
+            model.TermsAndConditions = confirmModel.TermsAndConditions;
+
+            return View("ConfirmInvoice", model);
         }
 
         [HttpPost]
@@ -532,29 +460,9 @@ namespace FreeMarket.Controllers
                 sessionCart.Save();
                 AuditUser.LogAudit(28, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
-                bool specialDelivery = false;
                 string reference = sessionCart.Order.OrderNumber.ToString();
                 decimal amount = sessionCart.Order.TotalOrderValue * 100;
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
-
-                int postalCode = 0;
-
-                try
-                {
-                    postalCode = int.Parse(sessionCart.Order.DeliveryAddressPostalCode);
-                }
-                catch (Exception e)
-                {
-
-                }
-
-                using (FreeMarketEntities db = new FreeMarketEntities())
-                {
-                    if (db.ValidateSpecialDeliveryCode(postalCode).First() == 1)
-                    {
-                        specialDelivery = true;
-                    }
-                }
 
                 PaymentGatewayIntegration payObject = new PaymentGatewayIntegration(reference, amount, user.Email);
 
@@ -562,7 +470,7 @@ namespace FreeMarket.Controllers
 
                 if (!string.IsNullOrEmpty(payObject.Pay_Request_Id) && !string.IsNullOrEmpty(payObject.Checksum))
                 {
-                    ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum, specialDelivery);
+                    ConfirmOrderViewModel model = new ConfirmOrderViewModel(sessionCart, payObject.Pay_Request_Id, payObject.Checksum);
                     model.TermsAndConditions = confirmModel.TermsAndConditions;
 
                     return View("PayShoppingCart", model);

@@ -1,0 +1,136 @@
+﻿@using FreeMarket.Models
+@model PayInvoiceViewModel
+
+@{
+    ViewBag.Title = "Payment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container text-center">
+
+    <div class="row well well-modal">
+        <h3 class="text-center">
+            Please make an electronic bank transfer payment into our bank account and send us proof of payment. Your order will be prepared and dispatched only once proof of payment has been received. A copy of this invoice has been sent to your email address.
+        </h3>
+        <br />
+        <div class="col-md-6">
+            <img class="img-rounded img-thumbnail" src="@Url.Content("~/Content/Images/OBMLogoMedium.png")" alt="Overberg Trading Post" title="Overberg Trading Post" />
+        </div>
+        <div class="col-md-6 text-center">
+            <table class="table table-bordered-custom table-responsive">
+                <tr>
+                    <td colspan="2" class="text-center"><span class="text-success">Our Banking Details</span></td>
+                </tr>
+                <tr>
+                    <th class="text-right">Reference:</th>
+                    <td class="text-left" data-label="Order #:">Order @Model.Cart.Order.OrderNumber</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Amount:</th>
+                    <td class="text-left" data-label="Amount:">@string.Format("{0:C}", Model.Cart.Order.TotalOrderValue)</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Bank:</th>
+                    <td class="text-left" data-label="Bank:">@Model.BankDetails.BankingDetailsBankName</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Branch Name:</th>
+                    <td class="text-left" data-label="Branch:">@Model.BankDetails.BankingDetailsBranchName</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Branch Code:</th>
+                    <td class="text-left" data-label="Code:">@Model.BankDetails.BankingDetailsBranchCode</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Account Number:</th>
+                    <td class="text-left" data-label="Account:">@Model.BankDetails.BankingDetailsAccountNumber</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Account Type:</th>
+                    <td class="text-left" data-label="Type:">@Model.BankDetails.BankingDetailsAccountType</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Email Proof of Payment to:</th>
+                    <td class="text-left">@Model.BankDetails.ProofOfPaymentEmail</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <h2 class="text-center">Your Order</h2>
+    <table class="table table-bordered-custom table-condensed table-responsive">
+        <tr>
+            <th class="col-sm-1">
+                Image
+            </th>
+            <th class="col-sm-3">
+                Description
+            </th>
+            <th class="col-sm-1">
+                Price
+            </th>
+            <th class="col-sm-1">
+                Quantity
+            </th>
+            <th class="col-sm-1">
+                Total
+            </th>
+        </tr>
+
+        @for (int i = 0; i < Model.Cart.Body.OrderDetails.Count; i++)
+        {
+            <tr class="well">
+                <td>
+                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
+                </td>
+                <td>
+                    @*@Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;*@@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by @Model.Cart.Body.OrderDetails[i].SupplierName
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
+                </td>
+                <td data-label="Price:">
+                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
+                </td>
+                <td class="text-center" data-label="Qty:">
+                    @if (Model.Cart.Order.OrderStatus == "Locked")
+                {
+                        @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
+                    }
+                    else
+                    {
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
+                            @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
+                        }
+                    }
+                </td>
+                <td data-label="Total:">
+                    @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ItemNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].SupplierNumber)
+                    @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].CustodianNumber)
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="https://www.rapidssl.com/learn-ssl/">
+                <img src="~/Content/Images/rapidssl.png" alt="Rapid SSL" />
+            </a>
+        </div>
+        <div class="col-sm-6">
+        </div>
+        <div class="col-sm-3">
+            @Html.Action("CartTotals", Model.Cart)
+        </div>
+    </div>
+</div>

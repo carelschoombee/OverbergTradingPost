@@ -2,7 +2,7 @@
 @model ConfirmInvoiceViewModel
 
 @{
-    ViewBag.Title = "Secure Checkout - Confirm Items";
+    ViewBag.Title = "Terms and Conditions";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -34,9 +34,6 @@
                     </td>
                 </tr>
             </table>
-            
-            @Html.Partial("_ConfirmDeliveryPartial", Model)
-
         </div>
         <div class="col-sm-6">
             <table class="table table-bordered-custom table-responsive">
@@ -54,7 +51,7 @@
                     </td>
                 </tr>
                 <tr>
-                    @if (Model.Cart.Order.DeliveryType == "Courier")
+                    @if (Model.Cart.Order.DeliveryType == "Courier" || Model.Cart.Order.DeliveryType == "LocalCourier")
                     {
                         <th>
                             Preferred Delivery Date
@@ -74,7 +71,7 @@
                     }
                 </tr>
                 <tr>
-                    @if (Model.Cart.Order.DeliveryType == "Courier")
+                    @if (Model.Cart.Order.DeliveryType == "Courier" || Model.Cart.Order.DeliveryType == "LocalCourier")
                     {
                         <th>Delivery Address<span class="glyphicon glyphicon-home"></span>&nbsp; </th>
                     }
@@ -92,10 +89,10 @@
     </div>
     <div class="row">
         <div class="col-sm-6 well">
-            @using (Html.BeginForm("LockOrder", "ShoppingCart", FormMethod.Post))
+            @using (Html.BeginForm("LockInvoice", "ShoppingCart", FormMethod.Post))
             {
                 @Html.AntiForgeryToken();
-                <div style="font-size:20px">To proceed to payment please tick this checkbox which confirms that you have read and acknowledge our <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
+                <div style="font-size:20px">To proceed to invoice please tick this checkbox which confirms that you have read and acknowledge our <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
                      class="conditionClass freemarket-link">terms and conditions (here)</a>: </div>
                 <div class="col-sm-offset-3">@Html.EditorFor(m => m.TermsAndConditions, new { htmlAttributes = new { @class = "form-control" } })</div>
                 <div>@Html.ValidationMessageFor(c => c.TermsAndConditions, "", new { @class = "text-danger" })</div>

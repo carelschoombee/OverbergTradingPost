@@ -88,22 +88,6 @@
                         <span id="temp">Example: 18/03/2024 12:00</span>
                     </div>
                 </div>
-
-                <div id="specialDeliveryDateContainer" class="form-group" style="display:none">
-                    <label class="col-sm-4 control-label">Preferred Delivery Time</label>
-                    <div class="col-sm-6">
-                        <div class="input-group date" id="specialDatetimePicker">
-                            @{ Html.EnableClientValidation(false); }
-                            @Html.EditorFor(m => m.specialDeliveryDateTime, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(m => m.specialDeliveryDateTime)
-                            @{ Html.EnableClientValidation(true); }
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                        <span id="temp">Example: 18/03/2024 12:00</span>
-                    </div>
-                </div>
                                 }
                                 else
                                 {
@@ -149,22 +133,6 @@
                                             <span id="temp">Example: 18/03/2024 12:00</span>
                                         </div>
                                     </div>
-
-                                    <div id="specialDeliveryDateContainer" class="form-group" style="display:none">
-                                        <label class="col-sm-4 control-label">Preferred Delivery Time</label>
-                                        <div class="col-sm-6">
-                                            <div class="input-group date" id="specialDatetimePicker">
-                                                @{ Html.EnableClientValidation(false); }
-                                                @Html.EditorFor(m => m.specialDeliveryDateTime, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(m => m.specialDeliveryDateTime)
-                                                @{ Html.EnableClientValidation(true); }
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                            <span id="temp">Example: 18/03/2024 12:00</span>
-                                        </div>
-                                    </div>
                                                     }
 
 
@@ -182,21 +150,6 @@
 <script type="text/javascript">
 
     $('#datetimePicker').datetimepicker({
-            format: 'DD/MM/YYYY HH:mm',
-            daysOfWeekDisabled: [0, 1, 2, 6],
-
-            minDate: moment().add(@Model.DaysToAddToMinDate, 'days'),
-
-            maxDate: moment().add(30, 'days'),
-            useCurrent: false,
-            widgetPositioning: {
-            horizontal: 'auto',
-            vertical: 'top'
-            }
-        }
-    );
-
-    $('#specialDatetimePicker').datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
         daysOfWeekDisabled: [0, 6],
 
@@ -223,18 +176,6 @@
             .validateField('prefDeliveryDateTime');
     });
 
-    $('#specialDatetimePicker')
-    .on('dp.change dp.show', function (e) {
-        // Validate the date when user change it
-        $('#saveForm')
-            // Get the bootstrapValidator instance
-            .data('bootstrapValidator')
-            // Mark the field as not validated, so it'll be re-validated when the user change date
-            .updateStatus('specialDeliveryDateTime', 'NOT_VALIDATED', null)
-            // Validate the field
-            .validateField('specialDeliveryDateTime');
-    });
-
     $(document).ready(function () {
         $('#saveForm')
             .bootstrapValidator({
@@ -245,41 +186,6 @@
                 },
                 fields: {
                     'prefDeliveryDateTime': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Please select a date and time'
-                            },
-                            date: {
-                                format: 'DD/MM/YYYY HH:mm',
-                                message: 'The value is not a valid date'
-                            },
-                            callback: {
-                                message: 'Please choose a date in the near future (next Wednesday, Thursday or Friday)',
-                                callback: function (value, validator) {
-                                    var m = new moment(value, 'DD/MM/YYYY HH:mm', true);
-                                    if (!m.isValid()) {
-                                        return false;
-                                    }
-                                    // Check if the date in our range
-                                    return m.isAfter(moment().add(@Model.DaysToAddToMinDate, 'days')) && m.isBefore(moment().add(30, 'days'))
-                                }
-                            },
-                            callback: {
-                                message: 'Please choose a valid time (office hours between 08:00 and 17:00)',
-                                callback: function (value, validator) {
-                                    var m = new moment(value, 'DD/MM/YYYY HH:mm', true);
-                                    var hb = new moment(value, 'DD/MM/YYYY HH:mm', true).hour(7);
-                                    var ha = new moment(value, 'DD/MM/YYYY HH:mm', true).hour(17);
-                                    if (!m.isValid()) {
-                                        return false;
-                                    }
-                                    // Check if the date in our range
-                                    return m.isBetween(hb, ha, 'minutes', '[]');
-                                }
-                            }
-                        }
-                    },
-                    'specialDeliveryDateTime': {
                         validators: {
                             notEmpty: {
                                 message: 'Please select a date and time'
@@ -433,120 +339,17 @@
                     }
                 });
 
-            $.ajax({
-                url: '@Url.Action("IsSpecialDelivery", "ShoppingCart")',
-                type: 'POST',
-                data: {
-                    id: $("#Address_AddressPostalCode").val(),
-                    selectedDeliveryType: selectedVal
-                }
-            }).done
-                (function (data) {
-                    if (data == 1) { //if it is a special delivery and by courier
-                        if (selectedVal == "Courier" || selectedVal == "LocalCourier")
-                        {
-                            // hide delivery options
-                            $("#radioDiv").hide();
-                            var div = document.getElementById('specialMessage');
-                            div.innerHTML = 'Free door to door delivery within 48 hours.';
-                            // hide normal picker
-                            $("#deliveryDateContainer").hide();
-                            // show special picker
-                            $("#specialDeliveryDateContainer").show().fadeIn(2000);
-                        }
-                        else if (selectedVal = "PostOffice")
-                        {
-                            // hide delivery options
-                            $("#radioDiv").hide();
-                            var div = document.getElementById('specialMessage');
-                            div.innerHTML = 'Free door to door delivery within 48 hours.';
-                            // hide both pickers
-                            $("#specialDeliveryDateContainer").hide();
-                            $("#deliveryDateContainer").hide();
-                        }
-                    }
-                    else if (data == 0)
-                    {
-                        // if it is not a special delivery and by courier
-                        if (selectedVal == "Courier" || selectedVal == "LocalCourier")
-                        {
-                            // show delivery options
-                            $("#radioDiv").show();
-                            // hide the special picker and show the normal picker
-                            $("#specialDeliveryDateContainer").hide();
-                            $("#deliveryDateContainer").show().fadeIn(2000);
-                        }
-                        else if (selectedVal = "PostOffice")
-                        {
-                            // show delivery options
-                            $("#radioDiv").show();
-                            // hide both pickers
-                            $("#specialDeliveryDateContainer").hide();
-                            $("#deliveryDateContainer").hide();
-                        }
-                    }
-                    else if (data == 2)
-                    {
-                        $("#specialDeliveryDateContainer").hide();
-                        $("#deliveryDateContainer").hide();
-                    }
-                });
+            if (selectedVal == "Courier" || selectedVal == "LocalCourier") {
+                $("#deliveryDateContainer").show().fadeIn(2000);
+            }
+            else if (selectedVal = "PostOffice") {
+                $("#deliveryDateContainer").hide();
+            }
         }
-        else
-        {
+        else {
             $("#specialDeliveryDateContainer").hide();
             $("#deliveryDateContainer").hide();
         }
-    });
-
-    $(document).ready(function () {
-        var selectedVal = "";
-        var selected = $("#radioDiv input[type='radio']:checked");
-        if (selected.length > 0) {
-            selectedVal = selected.val();
-        }
-
-        $.ajax({
-            url: '@Url.Action("IsSpecialDelivery", "ShoppingCart")',
-            type: 'POST',
-            data: {
-                id: $("#Address_AddressPostalCode").val(),
-                selectedDeliveryType: selectedVal
-            }
-        }).done
-               (function (data) {
-                   if (data == 1) { //if it is a special delivery and by courier
-                       if (selectedVal == "Courier")
-                       {
-                           // hide normal picker
-                           $("#deliveryDateContainer").hide();
-                           // show special picker
-                           $("#specialDeliveryDateContainer").show().fadeIn(2000);
-                       }
-                       else if (selectedVal = "PostOffice")
-                       {
-                           // hide both pickers
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").hide();
-                       }
-                   }
-                   else
-                   {
-                       // if it is not a special delivery and by courier
-                       if (selectedVal == "Courier" || selectedVal == "LocalCourier")
-                       {
-                           // hide the special picker and show the normal picker
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").show().fadeIn(2000);
-                       }
-                       else if (selectedVal = "PostOffice")
-                       {
-                           // hide both pickers
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").hide();
-                       }
-                   }
-               });
     });
 
     $(document).on('change', '.radioControl', function () {
@@ -557,47 +360,12 @@
             selectedVal = selected.val();
         }
 
-        $.ajax({
-            url: '@Url.Action("IsSpecialDelivery", "ShoppingCart")',
-            type: 'POST',
-            data: {
-                id: $("#Address_AddressPostalCode").val(),
-                selectedDeliveryType: selectedVal
+        if (selectedVal == "Courier" || selectedVal == "LocalCourier") {
+                $("#deliveryDateContainer").show().fadeIn(2000);
             }
-        }).done
-               (function (data) {
-                   if (data == 1) { //if it is a special delivery and by courier
-                       if (selectedVal == "Courier" || selected == "LocalCourier")
-                       {
-                           // hide normal picker
-                           $("#deliveryDateContainer").hide();
-                           // show special picker
-                           $("#specialDeliveryDateContainer").show().fadeIn(2000);
-                       }
-                       else if (selectedVal = "PostOffice")
-                       {
-                           // hide both pickers
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").hide();
-                       }
-                   }
-                   else
-                   {
-                       // if it is not a special delivery and by courier
-                       if (selectedVal == "Courier" || selectedVal == "LocalCourier")
-                       {
-                           // hide the special picker and show the normal picker
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").show().fadeIn(2000);
-                       }
-                       else if (selectedVal = "PostOffice")
-                       {
-                           // hide both pickers
-                           $("#specialDeliveryDateContainer").hide();
-                           $("#deliveryDateContainer").hide();
-                       }
-                   }
-               });
+            else if (selectedVal = "PostOffice") {
+                $("#deliveryDateContainer").hide();
+            }
 
     });
 

@@ -14,6 +14,7 @@ namespace FreeMarket.Models
     
     public partial class FreeMarketOwner
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string TelephoneNumber { get; set; }
@@ -24,5 +25,7 @@ namespace FreeMarket.Models
         public string BankingDetailsBranchCode { get; set; }
         public string BankingDetailsAccountNumber { get; set; }
         public string BankingDetailsAccountType { get; set; }
+        public string BankAccountType { get; set; }
+        public string ProofOfPaymentEmail { get; set; }
     }
 }

@@ -3,111 +3,62 @@
 
 @if (Model.OrderStatus == "Locked")
 {
-    if (Model.SpecialDelivery)
-    {
-        <div id="radioDiv" class="form-group col-md-12" style="display:none">
-            <table class="table table-responsive table-condensed table-bordered-custom">
-                <tr>
-                    <td>
-                        @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl", @disabled = "disabled" })
-                        @Html.HiddenFor(m => Model.DeliveryOptions.SelectedDeliveryType)
-                    </td>
-                    <td>Deliver via Courier</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
-                </tr>
-                <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl", @disabled = "disabled" })</td>
-                    <td>Collect from your Post Office</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="specialMessage" class="text-center">
-            Free door to door delivery within 48 hours.
-        </div>
-    }
-    else
-    {
-        <div id="radioDiv" class="form-group col-md-12">
-            <table class="table table-responsive table-condensed table-bordered-custom">
-                <tr>
-                    <td>
-                        @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "LocalCourier", new { @class = "radioControl", @disabled = "disabled" })
-                        @Html.HiddenFor(m => Model.DeliveryOptions.SelectedDeliveryType)
-                    </td>
-                    <td>Deliver via Local Courier</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.LocalCourierCost)</td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl", @disabled = "disabled" })
-                    </td>
-                    <td>Deliver via National Courier</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
-                </tr>
-                <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl", @disabled = "disabled" })</td>
-                    <td>Collect from your Post Office</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
-                </tr>
-            </table>
-        </div>
+    <div id="radioDiv" class="form-group col-md-12">
+        <table class="table table-responsive table-condensed table-bordered-custom">
+            <tr>
+                <td>
+                    @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "LocalCourier", new { @class = "radioControl", @disabled = "disabled" })
+                    @Html.HiddenFor(m => Model.DeliveryOptions.SelectedDeliveryType)
+                </td>
+                <td>Deliver via Local Courier</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.LocalCourierCost)</td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl", @disabled = "disabled" })
+                </td>
+                <td>Deliver via National Courier</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+            </tr>
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl", @disabled = "disabled" })</td>
+                <td>Collect from your Post Office</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
+            </tr>
+        </table>
+    </div>
 
         <div id="specialMessage" class="text-center">
         </div>
-    }
+
 }
 else
 {
-    if (Model.SpecialDelivery)
-    {
-        <div id="radioDiv" class="form-group col-md-12" style="display:none">
-            <table class="table table-responsive table-condensed table-bordered-custom">
-                <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl" })</td>
-                    <td>Deliver via Courier</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
-                </tr>
-                <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl" })</td>
-                    <td>Collect from your Post Office</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
-                </tr>
-            </table>
-        </div>
 
-        <div id="specialMessage" class="text-center">
-            Free door to door delivery within 48 hours.
-        </div>
-    }
-    else
-    {
-        <div id="radioDiv" class="form-group col-md-12">
-            <table class="table table-responsive table-condensed table-bordered-custom">
-                @if (Model.DeliveryOptions.LocalCourierCost > 0)
+    <div id="radioDiv" class="form-group col-md-12">
+        <table class="table table-responsive table-condensed table-bordered-custom">
+            @if (Model.DeliveryOptions.LocalCourierCost > 0)
                 {
-                    <tr>
-                        <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "LocalCourier", new { @class = "radioControl" })</td>
-                        <td>Deliver via Local Courier</td>
-                        <td>@string.Format("{0:C}", Model.DeliveryOptions.LocalCourierCost)</td>
-                    </tr>
-                }
                 <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl" })</td>
-                    <td>Deliver via National Courier</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "LocalCourier", new { @class = "radioControl" })</td>
+                    <td>Deliver via Local Courier</td>
+                    <td>@string.Format("{0:C}", Model.DeliveryOptions.LocalCourierCost)</td>
                 </tr>
-                <tr>
-                    <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl" })</td>
-                    <td>Collect from your Post Office</td>
-                    <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
-                </tr>
-            </table>
-        </div>
+            }
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "Courier", new { @class = "radioControl" })</td>
+                <td>Deliver via National Courier</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.CourierCost)</td>
+            </tr>
+            <tr>
+                <td>@Html.RadioButtonFor(c => Model.DeliveryOptions.SelectedDeliveryType, "PostOffice", new { @class = "radioControl" })</td>
+                <td>Collect from your Post Office</td>
+                <td>@string.Format("{0:C}", Model.DeliveryOptions.PostOfficeCost)</td>
+            </tr>
+        </table>
+    </div>
 
         <div id="specialMessage" class="text-center">
         </div>
-    }
 }
 

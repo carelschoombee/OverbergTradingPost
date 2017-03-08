@@ -12,9 +12,6 @@ namespace FreeMarket.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public Nullable<DateTime> prefDeliveryDateTime { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
-        public Nullable<DateTime> specialDeliveryDateTime { get; set; }
-
         [DisplayName("Delivery Address")]
         public int SelectedAddress { get; set; }
 
@@ -28,8 +25,6 @@ namespace FreeMarket.Models
         public int DaysToAddToMinDate { get; set; }
 
         public string OrderStatus { get; set; }
-
-        public bool SpecialDelivery { get; set; }
 
         public string TextBlock1 { get; set; }
         public string TextBlock2 { get; set; }
@@ -97,15 +92,9 @@ namespace FreeMarket.Models
                     Address = address;
                 }
 
-                if (db.ValidateSpecialDeliveryCode(int.Parse(Address.AddressPostalCode)).FirstOrDefault() == 1)
-                    SpecialDelivery = true;
-                else
-                    SpecialDelivery = false;
-
                 if (order.DeliveryDate == null)
                 {
                     prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
-                    specialDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
                 }
                 else
                 {
@@ -116,15 +105,6 @@ namespace FreeMarket.Models
                     else
                     {
                         prefDeliveryDateTime = order.DeliveryDate;
-                    }
-
-                    if (order.DeliveryDate < OrderHeader.GetSpecialSuggestedDeliveryTime())
-                    {
-                        specialDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
-                    }
-                    else
-                    {
-                        specialDeliveryDateTime = order.DeliveryDate;
                     }
                 }
 

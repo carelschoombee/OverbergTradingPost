@@ -11,7 +11,6 @@
         <EntityTypeShape EntityType="FreeMarketModel.CourierStockMovementLog" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Department" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.ExceptionLogging" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FreeMarketModel.FreeMarketOwner" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.Location" Width="1.5" PointX="5.25" PointY="25.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.OrderStatu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentGatewayParameter" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
@@ -64,6 +63,8 @@
         <EntityTypeShape EntityType="FreeMarketModel.TimeFreightCourierFeeReference" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="FreeMarketModel.PaymentOption" Width="1.5" PointX="9.375" PointY="13.75" />
         <EntityTypeShape EntityType="FreeMarketModel.CharliesTransportCourierFeeReference" Width="1.5" PointX="17.375" PointY="18.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.WebsiteFunction" Width="1.5" PointX="19.375" PointY="0.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.FreeMarketOwner" Width="1.5" PointX="19.375" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
