@@ -27,9 +27,6 @@ namespace FreeMarket.Models
         public string OrderStatus { get; set; }
 
         public string TextBlock1 { get; set; }
-        public string TextBlock2 { get; set; }
-        public string TextBlock3 { get; set; }
-        public string TextBlock4 { get; set; }
 
         public SaveCartViewModel() { }
 
@@ -94,13 +91,13 @@ namespace FreeMarket.Models
 
                 if (order.DeliveryDate == null)
                 {
-                    prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
+                    prefDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
                 }
                 else
                 {
-                    if (order.DeliveryDate < OrderHeader.GetSuggestedDeliveryTime())
+                    if (order.DeliveryDate < OrderHeader.GetSpecialSuggestedDeliveryTime())
                     {
-                        prefDeliveryDateTime = OrderHeader.GetSuggestedDeliveryTime();
+                        prefDeliveryDateTime = OrderHeader.GetSpecialSuggestedDeliveryTime();
                     }
                     else
                     {
@@ -128,18 +125,6 @@ namespace FreeMarket.Models
                 TextBlock1 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock1")
                         .FirstOrDefault()
                         .Value;
-
-                TextBlock2 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock2")
-                    .FirstOrDefault()
-                    .Value;
-
-                TextBlock3 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock3")
-                    .FirstOrDefault()
-                    .Value;
-
-                TextBlock4 = db.SiteConfigurations.Where(c => c.Key == "CheckoutDetailsTextBlock4")
-                    .FirstOrDefault()
-                    .Value;
             }
         }
 

@@ -43,5 +43,11 @@ namespace FreeMarket.Models
         public string TownName { get; set; }
         public string StruisbaaiPostalCode { get; set; }
         public string Province { get; set; }
+        public string BankingDetailsBankName { get; set; }
+        public string BankingDetailsBranchName { get; set; }
+        public string BankingDetailsBranchCode { get; set; }
+        public string BankingDetailsAccountType { get; set; }
+        public string BankingDetailsAccountNumber { get; set; }
+        public string ProofOfPaymentEmail { get; set; }
     }
 }

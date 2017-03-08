@@ -560,7 +560,7 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), model.OrderNumber);
+                Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.Invoice.ToString(), model.OrderNumber);
 
                 if (obj == null || obj.Count == 0)
                 {

@@ -61,7 +61,7 @@ namespace FreeMarket.Models
                 model.NumberOfItemsInOrder = db.GetNumberOfItemsInOrder(model.Order.OrderNumber)
                     .FirstOrDefault() ?? 0;
 
-                model.MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
+                model.MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSpecialSuggestedDeliveryTime());
 
                 // Get Payment information
 

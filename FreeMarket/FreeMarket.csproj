@@ -571,22 +571,16 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\animsition.css" />
     <Content Include="Content\animsition.min.css" />
-    <Content Include="Content\Images\background1.jpg" />
-    <Content Include="Content\Images\background2.jpg" />
     <Content Include="Content\Images\defaultPictureMedium.png" />
     <Content Include="Content\Images\defaultPicture.png" />
     <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\background3.jpg" />
-    <Content Include="Content\Images\logoBig.jpg" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
     <Content Include="Content\Images\RapidSSL_SEAL-90x50.gif" />
     <Content Include="Content\Images\slideCourier2.png" />
-    <Content Include="Content\Images\slideLocation1.jpg" />
-    <Content Include="Content\Images\slideLocation2.jpg" />
     <Content Include="Content\Images\slideCourier1.png" />
-    <Content Include="Content\Images\slideLocation3.jpg" />
     <Content Include="Content\Images\TimeFreight.png" />
     <Content Include="Content\Images\visa.png" />
     <Content Include="Content\morris.css" />
@@ -602,9 +596,6 @@
     <Content Include="Scripts\star-rating.min.js" />
     <Content Include="siteIcon.ico" />
     <Content Include="Content\Images\google.png" />
-    <Content Include="Content\Images\leaves.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\logoSmall.png" />
     <Content Include="Content\Images\slide1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -898,13 +889,13 @@
     <Content Include="Reports\Report4.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Reports\Report3.rdlc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Reports\Report2.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Reports\Report1.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Reports\Report7.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -25,7 +25,7 @@ namespace FreeMarket.Models
         public ConfirmInvoiceViewModel(ShoppingCart cart)
         {
             Cart = cart;
-            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
+            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSpecialSuggestedDeliveryTime());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {

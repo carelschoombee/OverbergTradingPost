@@ -191,9 +191,6 @@ namespace FreeMarket.Models
                     case "PostalConfirmation":
                         rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report4.rdlc");
                         break;
-                    case "StruisbaaiOrderConfirmation":
-                        rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report3.rdlc");
-                        break;
                     case "DeliveryInstructions":
                         rv.LocalReport.ReportPath = HttpContext.Current.Server.MapPath("~/Reports/Report2.rdlc");
                         break;

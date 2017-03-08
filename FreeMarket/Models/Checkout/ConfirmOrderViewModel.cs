@@ -30,7 +30,7 @@ namespace FreeMarket.Models
             Cart = cart;
             Pay_Request_Id = payRequestId;
             Checksum = checksum;
-            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
+            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSpecialSuggestedDeliveryTime());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
@@ -42,7 +42,7 @@ namespace FreeMarket.Models
         public ConfirmOrderViewModel(ShoppingCart cart)
         {
             Cart = cart;
-            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSuggestedDeliveryTime());
+            MinDispatchDate = OrderHeader.GetDispatchDay(OrderHeader.GetSpecialSuggestedDeliveryTime());
 
             using (FreeMarketEntities db = new FreeMarketEntities())
             {

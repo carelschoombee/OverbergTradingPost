@@ -304,7 +304,6 @@ namespace FreeMarket.Controllers
 
             TimeSpan startTime = new TimeSpan(8, 0, 0);
             TimeSpan endTime = new TimeSpan(17, 0, 0);
-            DateTime minDate = DateTime.Today.AddDays(model.DaysToAddToMinDate);
 
             if (model.DeliveryOptions == null || model.DeliveryOptions.SelectedDeliveryType == null)
             {
@@ -327,14 +326,10 @@ namespace FreeMarket.Controllers
                     return View("CheckoutDeliveryDetails", model);
                 }
 
-                model.prefDeliveryDateTime = null;
-
                 sessionCart.UpdateDeliveryDetails(model);
                 result = new FreeMarketObject { Result = FreeMarketResult.NoResult };
                 if (model.AddressName != "Current")
-                {
                     result = CustomerAddress.AddOrUpdateAddress(model, userId);
-                }
 
                 AuditUser.LogAudit(27, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
@@ -358,13 +353,9 @@ namespace FreeMarket.Controllers
             model.SetTextBlocks();
 
             if (Request.IsAjaxRequest())
-            {
                 return PartialView("_SaveCartModal", model);
-            }
             else
-            {
                 return View("CheckoutDeliveryDetails", model);
-            }
         }
 
         [Authorize]
