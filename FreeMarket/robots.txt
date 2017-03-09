@@ -4,4 +4,4 @@ Disallow: /Shared/Error.cshtml
 Disallow: /Manage/
 
 # The sitemap must be an absolute URL
-sitemap: https://schoombeeandson.co.za/sitemap.xml
+sitemap: https://overbergtradingpost.co.za/sitemap.xml

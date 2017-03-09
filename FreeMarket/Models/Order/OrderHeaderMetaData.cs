@@ -321,7 +321,7 @@ namespace FreeMarket.Models
                 string message1 = CreateRatingMessageCustomer();
 
                 iMessage.Body = string.Format((message1), user.Name, url);
-                iMessage.Subject = string.Format("Schoombee and Son Order");
+                iMessage.Subject = string.Format("Overberg Trading Post Order");
 
                 await email.SendAsync(iMessage);
 
@@ -411,7 +411,7 @@ namespace FreeMarket.Models
                     iMessage.Destination = user.Email;
 
                     iMessage.Body = string.Format((message1), user.Name, orderNumber, supportInfo.Cellphone, supportInfo.Landline, supportInfo.Email);
-                    iMessage.Subject = string.Format("Schoombee and Son Refund");
+                    iMessage.Subject = string.Format("Overberg Trading Post Refund");
 
                     await email.SendAsync(iMessage, refundSummary.FirstOrDefault().Key);
 
@@ -590,7 +590,7 @@ namespace FreeMarket.Models
                         , supportInfo.Cellphone
                         , supportInfo.Email);
 
-                    subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
+                    subject = string.Format("Overberg Trading Post Order {0}", order.OrderNumber);
 
                     if (order.DeliveryType == "Courier")
                         cc = ConfigurationManager.AppSettings["timeFreightManagementEmail"];
@@ -610,7 +610,7 @@ namespace FreeMarket.Models
 
                 iMessageCourier.Destination = supportInfo.OrdersEmail;
                 iMessageCourier.Body = string.Format((message), order.OrderNumber);
-                iMessageCourier.Subject = string.Format("Schoombee And Son Order {0}", order.OrderNumber);
+                iMessageCourier.Subject = string.Format("Overberg Trading Post Order {0}", order.OrderNumber);
 
                 EmailService email = new EmailService();
 

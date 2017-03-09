@@ -36,42 +36,7 @@
             </table>
             @if (Model.Courier != null)
             {
-                if (Model.SpecialDelivery)
-                {
-                    <table class="table table-bordered-custom table-responsive">
-                        <tr>
-                            <td colspan="2">
-                                Courier/Shipping Information
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                Courier Name:
-                            </th>
-                            <td>
-                                Schoombee and Son Delivery (deliver within 48 hours)
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                Email Address:
-                            </th>
-                            <td>
-                                <span class="glyphicon glyphicon-pencil"></span>&nbsp;@Model.Support.Email
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                Contact Number:
-                            </th>
-                            <td>
-                                <span class="glyphicon glyphicon-phone"></span>&nbsp;@Model.Support.Landline or @Model.Support.Cellphone
-                            </td>
-                        </tr>
-                    </table>
-                }
-                else
-                {
+                
                     <table class="table table-bordered-custom table-responsive">
                         <tr>
                             <td colspan="2">
@@ -114,7 +79,6 @@
                             </tr>
                         }
                     </table>
-                }
             }
 
         </div>
