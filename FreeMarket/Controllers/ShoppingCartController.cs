@@ -421,14 +421,18 @@ namespace FreeMarket.Controllers
 
             if (ModelState.IsValid)
             {
-                sessionCart.Order.OrderStatus = "Locked";
+                sessionCart.Order.OrderStatus = "Invoiced";
                 sessionCart.Save();
                 AuditUser.LogAudit(28, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
 
                 if (!sessionCart.Order.InvoiceSent.HasValue || sessionCart.Order.InvoiceSent == false)
                     OrderHeader.SendInvoice(userId, sessionCart.Order.OrderNumber);
 
-                PayInvoiceViewModel invoice = new PayInvoiceViewModel(sessionCart);
+                ShoppingCart tempCart = (ShoppingCart)sessionCart.Clone();
+                PayInvoiceViewModel invoice = new PayInvoiceViewModel(tempCart);
+
+                sessionCart.Initialize(User.Identity.GetUserId());
+
                 return View("PayInvoice", invoice);
             }
 

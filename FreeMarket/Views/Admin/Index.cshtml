@@ -13,6 +13,11 @@
         //LoadingElementId = "loadingDiv",
     };
 
+    AjaxOptions ajaxOptsPaid = new AjaxOptions
+    {
+        UpdateTargetId = "paidTable",
+    };
+
     AjaxOptions reviewAjaxOpts = new AjaxOptions
     {
         UpdateTargetId = "ratingsTable",
@@ -80,6 +85,7 @@
 
     <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
+        <li><a href="#invoices" data-toggle="tab">Invoices</a></li>
         <li><a href="#dispatch" data-toggle="tab">Orders to be Dispatched</a></li>
         <li><a href="#orders" data-toggle="tab">In Transit Orders</a></li>
         <li><a href="#customers" data-toggle="tab">Customers</a></li>
@@ -160,7 +166,7 @@
                 }
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                @*<div class="col-sm-12">
                     <h2 class="text-center">Transaction Status</h2>
                     <hr />
                     @if (Model.SalesInformation.TransactionDetails != null)
@@ -172,8 +178,8 @@
                         <text>No transactions yet.</text>
                         <div id="transactionStatus" style="height: 0px;"></div>
                     }
-                </div>
-                <div class="col-sm-6">
+                </div>*@
+                @*<div class="col-sm-6">
                     <h2 class="text-center">Payment Methods</h2>
                     <hr />
                     @if (Model.SalesInformation.PaymentDetails != null)
@@ -185,7 +191,7 @@
                         <text>No transactions yet.</text>
                         <div id="paymentTypes" style="height: 0px;"></div>
                     }
-                </div>
+                </div>*@
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -223,7 +229,29 @@
                 </div>
             </div>
         </div>
+        <div class="tab-pane" id="invoices">
+            <div class="text-center">
+                <h2>Invoices</h2>
+                @Ajax.ActionLink("Refresh", "RefreshInvoices", null, ajaxOptsPaid, new { @class = "btn btn-success" })
+                <br />
+            </div>
+            
+            @using (Ajax.BeginForm("MarkPaid", "Admin", null, ajaxOptsPaid))
+            {
+                @Html.AntiForgeryToken()
+
+                <div id="paidTable">
+                    @Html.Partial("_Invoices", Model.Invoices)
+                </div>
+            }
+        </div>
         <div class="tab-pane" id="dispatch">
+            <div class="text-center">
+                <h2>Confirmed Orders</h2>
+                @Ajax.ActionLink("Refresh", "RefreshConfirmed", null, ajaxOptsInTransit, new { @class = "btn btn-success" })
+                <br />
+            </div>
+
             @using (Ajax.BeginForm("MarkInTransit", "Admin", null, ajaxOptsInTransit))
             {
                 @Html.AntiForgeryToken()
@@ -231,16 +259,15 @@
                 <div id="InTransitTable">
                     @Html.Partial("_ConfirmedOrders", Model.ConfirmedOrders)
                 </div>
-
-                if (Model.ConfirmedOrders != null && Model.ConfirmedOrders.Count > 0)
-                {
-                    <div class="col-sm-offset-5">
-                        <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
-                    </div>
-                }
             }
         </div>
         <div class="tab-pane" id="orders">
+            <div class="text-center">
+                <h2>In Transit Orders</h2>
+                @Ajax.ActionLink("Refresh", "RefreshInTransit", null, ajaxOpts, new { @class = "btn btn-success" })
+                <br />
+            </div>
+
             @using (Ajax.BeginForm("MarkComplete", "Admin", null, ajaxOpts))
             {
                 @Html.AntiForgeryToken()
@@ -248,13 +275,6 @@
                 <div id="CompleteTable">
                     @Html.Partial("_InTransitOrders", Model.InTransitOrders)
                 </div>
-
-                if (Model.InTransitOrders != null && Model.InTransitOrders.Count > 0)
-                {
-                    <div class="col-sm-offset-5">
-                        <input type="submit" value="Save/Update" class="btn btn-primary btn-sm" />
-                    </div>
-                }
             }
         </div>
         <div class="tab-pane" id="ratings">
@@ -569,7 +589,7 @@
         }
     }
 
-    @if (Model.SalesInformation.TransactionDetails == null || Model.SalesInformation.TransactionDetails.Count == 0)
+    @*@if (Model.SalesInformation.TransactionDetails == null || Model.SalesInformation.TransactionDetails.Count == 0)
     {
 
     }
@@ -599,10 +619,10 @@
         ]
     });
     </text>
-    }
+    }*@
 
 
-    @if(Model.SalesInformation.PaymentDetails == null || Model.SalesInformation.PaymentDetails.Count == 0)
+    @*@if(Model.SalesInformation.PaymentDetails == null || Model.SalesInformation.PaymentDetails.Count == 0)
     {
 
     }
@@ -626,7 +646,7 @@
         labelColor: '#ffffff',
     });
     </text>
-    }
+    }*@
 
 
     @if (Model.SalesInformation.TotalCancelledOrders == 0 &&

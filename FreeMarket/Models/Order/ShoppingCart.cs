@@ -6,10 +6,15 @@ using System.Linq;
 
 namespace FreeMarket.Models
 {
-    public class ShoppingCart
+    public class ShoppingCart : ICloneable
     {
         public OrderHeader Order { get; set; }
         public CartBody Body { get; set; }
+
+        public object Clone()
+        {
+            return base.MemberwiseClone();
+        }
 
         public OrderDetail GetOrderDetail(int productNumber, int supplierNumber)
         {

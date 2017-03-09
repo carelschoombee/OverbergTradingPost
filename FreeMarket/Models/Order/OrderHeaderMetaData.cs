@@ -1278,6 +1278,39 @@ namespace FreeMarket.Models
 
             return toString;
         }
+
+        public static List<OrderHeader> RefreshInvoiceCollection()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.OrderHeaders
+                    .Where(c => c.OrderStatus == "Invoiced")
+                    .OrderBy(c => c.DeliveryDate)
+                    .ToList();
+            }
+        }
+
+        public static List<OrderHeader> RefreshConfirmedCollection()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.OrderHeaders
+                    .Where(c => c.OrderStatus == "Confirmed")
+                    .OrderBy(c => c.DeliveryDate)
+                    .ToList();
+            }
+        }
+
+        public static List<OrderHeader> RefreshInTransitCollection()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                return db.OrderHeaders
+                    .Where(c => c.OrderStatus == "InTransit")
+                    .OrderBy(c => c.DeliveryDate)
+                    .ToList();
+            }
+        }
     }
     public class OrderHeaderMetaData
     {

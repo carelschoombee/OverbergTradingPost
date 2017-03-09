@@ -21,32 +21,47 @@
             <th>
                 Total Weight
             </th>
-            
             <th>
                 Delivery Type
+            </th>
+            <th>
+                Delivery Address
             </th>
             <th>
                 Delivery Date
             </th>
             <th>
-                Send Rating Email and Close Order
+                Mark as Paid
             </th>
         </tr>
         for (int i = 0; i < Model.Count; i++)
         {
+            
             <tr>
                 <td data-label="#:" class="text-center">
                     @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
                     @Html.HiddenFor(model => Model[i].OrderNumber)
                 </td>
-                <td class="text-center hidden-xs"><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
+                <td class="text-center hidden-xs"><a href="@Url.Action("DownloadInvoice", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
                 <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
-                <td data-label="Total:"class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
+                <td data-label="Total:" class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
                 <td data-label="KG:" class="text-center">@Html.Action("GetTotalWeightOfOrder", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center">
-                    <div>@Model[i].DeliveryType @(@Model[i].TrackingCodes == null ? "" : " - Tracking Code:")</div>
-                    <div>@Model[i].TrackingCodes</div>
+                    @if (Model[i].DeliveryType == "LocalCourier")
+                    {
+                        <div>Local Courier</div>
+                    }
+                    else if (Model[i].DeliveryType == "PostOffice")
+                    {
+                        <div>Post Office</div>
+                    }
+                    else
+                    {
+                        <div>@Model[i].DeliveryType</div>
+                    }
+
                 </td>
+                <td class="text-center"><span style="white-space:pre-line">@Model[i].DeliveryAddress</span></td>
                 @if (Model[i].DeliveryDate < DateTime.Now)
                 {
                     <td class="text-center"><font class="text-danger">@string.Format("{0:f}", Model[i].DeliveryDate)</font></td>
@@ -55,15 +70,15 @@
                 {
                     <td class="text-center">@string.Format("{0:f}", Model[i].DeliveryDate)</td>
                 }
-                <td data-label="Feedback:" class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
+                <td data-label="Mark as Paid:" class="text-center">@Html.EditorFor(c => Model[i].Selected)</td>
             </tr>
         }
     }
     else
-    { 
+    {
         <tr>
             <td style="font-size: 20px">
-                There are no orders currently in transit.
+                There are no new invoices at the moment.
             </td>
         </tr>
     }

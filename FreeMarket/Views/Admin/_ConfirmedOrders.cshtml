@@ -1,7 +1,6 @@
 ﻿@using FreeMarket.Models
 @model List<OrderHeader>
 
-<h2 class="text-center">Confirmed Orders</h2>
 <table class="table table-bordered-custom table-responsive">
 
     @if (Model != null && Model.Count != 0)
@@ -74,3 +73,10 @@
         </tr>
     }
 </table>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="col-sm-offset-5">
+        <input type="submit" value="Save/Update" class="btn btn-primary" />
+    </div>
+}

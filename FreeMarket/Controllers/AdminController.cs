@@ -225,6 +225,36 @@ namespace FreeMarket.Controllers
             return View("Index", model);
         }
 
+        public ActionResult RefreshInvoices()
+        {
+            List<OrderHeader> invoices = OrderHeader.RefreshInvoiceCollection();
+
+            if (invoices == null)
+                invoices = new List<OrderHeader>();
+
+            return PartialView("_Invoices", invoices);
+        }
+
+        public ActionResult RefreshConfirmed()
+        {
+            List<OrderHeader> confirmed = OrderHeader.RefreshConfirmedCollection();
+
+            if (confirmed == null)
+                confirmed = new List<OrderHeader>();
+
+            return PartialView("_ConfirmedOrders", confirmed);
+        }
+
+        public ActionResult RefreshInTransit()
+        {
+            List<OrderHeader> inTransit = OrderHeader.RefreshInTransitCollection();
+
+            if (inTransit == null)
+                inTransit = new List<OrderHeader>();
+
+            return PartialView("_InTransitOrders", inTransit);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MarkComplete(List<OrderHeader> orders)
@@ -264,7 +294,7 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            return RedirectToAction("DeliverPartialInTransitTable", "Admin");
+            return RedirectToAction("RefreshInTransit", "Admin");
         }
 
         [HttpPost]
@@ -291,11 +321,6 @@ namespace FreeMarket.Controllers
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
 
-                            ApplicationUser user = System.Web.HttpContext.Current
-                                .GetOwinContext()
-                                .GetUserManager<ApplicationUserManager>()
-                                .FindById(order.CustomerNumber);
-
                             OrderHeader.SendDispatchMessage(order.CustomerNumber, order.OrderNumber);
 
                             AuditUser.LogAudit(37, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
@@ -304,7 +329,41 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            return RedirectToAction("DeliverPartialTable", "Admin");
+            return RedirectToAction("RefreshConfirmed", "Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarkPaid(List<OrderHeader> orders)
+        {
+            List<OrderHeader> selected = orders
+                .Where(c => c.Selected)
+                .ToList();
+
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (selected.Count > 0)
+                {
+                    foreach (OrderHeader oh in selected)
+                    {
+                        OrderHeader order = db.OrderHeaders.Find(oh.OrderNumber);
+
+                        if (order != null)
+                        {
+                            order.OrderStatus = "Confirmed";
+                            order.PaymentReceived = true;
+                            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+
+                            OrderHeader.SendConfirmationMessages(order.CustomerNumber, order.OrderNumber);
+
+                            AuditUser.LogAudit(38, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("RefreshInvoices", "Admin");
         }
 
         [HttpPost]
@@ -362,30 +421,6 @@ namespace FreeMarket.Controllers
             }
 
             return RedirectToAction("Index", "Admin");
-        }
-
-        public ActionResult DeliverPartialTable()
-        {
-            List<OrderHeader> confirmedOrders = new List<OrderHeader>();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                confirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
-            }
-
-            return PartialView("_ConfirmedOrders", confirmedOrders);
-        }
-
-        public ActionResult DeliverPartialInTransitTable()
-        {
-            List<OrderHeader> inTransitOrders = new List<OrderHeader>();
-
-            using (FreeMarketEntities db = new FreeMarketEntities())
-            {
-                inTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
-            }
-
-            return PartialView("_InTransitOrders", inTransitOrders);
         }
 
         public ActionResult RefundCompletedPartial()
@@ -582,6 +617,21 @@ namespace FreeMarket.Controllers
             Stream stream = new MemoryStream();
 
             Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);
+
+            if (obj == null || obj.Count == 0)
+            {
+                TempData["errorMessage"] = "An error occurred during report creation.";
+                return View("Index");
+            }
+
+            return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", orderNumber));
+        }
+
+        public ActionResult DownloadInvoice(int orderNumber)
+        {
+            Stream stream = new MemoryStream();
+
+            Dictionary<Stream, string> obj = OrderHeader.GetReport(ReportType.Invoice.ToString(), orderNumber);
 
             if (obj == null || obj.Count == 0)
             {

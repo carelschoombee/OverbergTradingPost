@@ -863,6 +863,7 @@
     <Content Include="Views\Admin\ControlPanelIndex.cshtml" />
     <Content Include="Views\ShoppingCart\_ConfirmInvoiceDeliveryPartial.cshtml" />
     <Content Include="Views\ShoppingCart\PayInvoice.cshtml" />
+    <Content Include="Views\Admin\_Invoices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
