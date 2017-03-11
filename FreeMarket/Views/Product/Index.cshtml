@@ -10,18 +10,18 @@
 {
     <div>
         <table class="table table-bordered-custom table-responsive well">
-            <tr class="well well-modal">
+            <tr>
                 <th class="col-sm-2"></th>
                 <th class="col-sm-2"></th>
             </tr>
             <tr>
                 <td class="text-center" colspan="2">
-                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
+                    <img width="256" height="192" class="img-thumbnail img-responsive" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
                 </td>
             </tr>
             <tr>
                 <td class="text-center" colspan="2">
-                    <div style="font-size: 24px; color:black"><i><strong>@Html.DisplayFor(model => Model.Products[i].Description) from @Html.DisplayFor(model => Model.Products[i].SupplierName)</strong></i></div>
+                    <div style="font-size: 24px; color:white"><i><strong>@Html.DisplayFor(model => Model.Products[i].Description) from @Html.DisplayFor(model => Model.Products[i].SupplierName)</strong></i></div>
                 </td>
             </tr>
             <tr>
@@ -63,6 +63,10 @@
 <br />
 
 <div class="container">
+    @if (Model.Products.Count > 0)
+    {
+        <h2 class="text-center">@Model.Products[0].DepartmentName</h2>
+    }
     <div class="col-sm-12">
         @if (Model.Products.Count == 1)
         {

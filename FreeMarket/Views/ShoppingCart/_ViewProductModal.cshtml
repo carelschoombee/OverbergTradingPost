@@ -90,7 +90,7 @@
                             <strong>Average Rating:</strong>
                             <div><label style="font-size: 16px; color:gold">@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber }) / 3</label></div>
                             @*<input id="input-id" name="input-id" value="@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber })" data-min="0" data-max="3" step="0.1" data-show-caption="true" data-size="sm">*@
-                            <a id="readReviews"><span class="glyphicon glyphicon-plus-sign text-success">Read Reviews</span></a> <a id="closeReviews"><span class="glyphicon glyphicon-minus-sign text-info">Close Reviews</span></a>
+                            <a id="readReviews" style="color:black"><span class="glyphicon glyphicon-plus-sign">Read Reviews</span></a> <a id="closeReviews"><span class="glyphicon glyphicon-minus-sign text-info">Close Reviews</span></a>
                         </div>
 
                         <div id="ReviewsContainer">

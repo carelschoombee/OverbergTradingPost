@@ -21,65 +21,73 @@
 
 </head>
 <body>
-    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+    <header class="masthead">
+        
+    </header>
 
-            <!-- Title -->
-            <div class="navbar-header pull-left">
-                <a href="@Url.Action("Departments", "Product")">
-                    <img class="img-rounded img-thumbnail" src="@Url.Content("~/Content/Images/logoSmall.png")" alt="Overberg Trading Post" title="Buy" />
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse navbar-header pull-left">
-
-                <ul class="nav navbar-nav pull-right">
-                    <li>
-                        <a class="dropdown-toggle navbar-brand" data-toggle="dropdown" href="#">
-                            Overberg Trading Post
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Shop", "Departments", "Product", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Delivery Options", "DeliveryOptionsInfo", "Home", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Contact Us", "Contact", "Home", new { area = "" }, null)</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
-                <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-            </button>
-
-            <div class="collapse navbar-collapse navbar-right pull-right">
-                @Html.Partial("_LoginPartial")
-            </div>
-
-            <!-- 'Sticky' (non-collapsing) right-side menu item(s) -->
-            <div class="navbar-header pull-right">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span id="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-cart well hidden-xs hidden-sm" role="menu">
-                            <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
-                            @Html.Action("SmallCartBody", "ShoppingCart")
-                        </ul>
-
-                    </li>
-                </ul>
+    <div class="container" id="banner">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img class="img-responsive center-block" src="~/Content/Images/Trading Post Logo.png" />
             </div>
         </div>
-    </nav>
+    </div>
 
-    <div class="row">
-        <div class="col-md-12 well-banner well-sm text-center">
-            <span style="font-size:60px; color:gold; font-family: 'Pacifico', cursive">Overberg Trading Post</span>
-        </div>
+    <div>
+        <nav role="navigation" class="navbar navbar-default navbar-static-top" id="topnavbar">
+            <div class="container">
+
+                <!-- Title -->
+                <div class="navbar-header pull-left">
+                    <a href="@Url.Action("Departments", "Product")">
+                        <img class="img-rounded img-thumbnail" src="@Url.Content("~/Content/Images/logoSmall.png")" alt="Overberg Trading Post" title="Buy" />
+                    </a>
+                </div>
+
+                <div class="collapse navbar-collapse navbar-header pull-left">
+
+                    <ul class="nav navbar-nav pull-right">
+                        <li>
+                            <a class="dropdown-toggle navbar-brand" data-toggle="dropdown" href="#">
+                                Overberg Trading Post
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Shop", "Departments", "Product", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Delivery Options", "DeliveryOptionsInfo", "Home", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Contact Us", "Contact", "Home", new { area = "" }, null)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+
+                <div class="collapse navbar-collapse navbar-right pull-right">
+                    @Html.Partial("_LoginPartial")
+                </div>
+
+                <!-- 'Sticky' (non-collapsing) right-side menu item(s) -->
+                <div class="navbar-header pull-right">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span id="cartItemsPartial" class="glyphicon glyphicon-shopping-cart" aria-hidden="true" onclick="window.location = '@Url.Action("Cart", "ShoppingCart")'">Cart(@Html.Action("GetItemsCount", "ShoppingCart"))</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-cart well hidden-xs hidden-sm" role="menu">
+                                <li><a style="color:white" class="btn btn-xs btn-success" href="@Url.Action("Cart", "ShoppingCart")/">Go to Cart</a></li>
+                                @Html.Action("SmallCartBody", "ShoppingCart")
+                            </ul>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
     
     @if (System.Web.Configuration.WebConfigurationManager.AppSettings["specialMessage"] == "true")
@@ -120,12 +128,12 @@
         @RenderBody()
         <hr />
         <footer>
-            <p class="text-center">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
-            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link" })</div>
+            <p class="text-center" style="font-weight:bold">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
+            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link", @style = "color:black" })</div>
             
             <div class="row text-center">
                 <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
-                   class="conditionClass freemarket-link"><span aria-hidden="true">&nbsp; Terms and Conditions</span></a>
+                   class="conditionClass freemarket-link"><span style="color:black" aria-hidden="true">&nbsp; Terms and Conditions</span></a>
             </div>
 
             <div id="parent" class="center_div text-center">
@@ -242,6 +250,12 @@
                 $('#EditModal').modal('show');
             });
         });
+
+        $('#topnavbar').affix({
+            offset: {
+                top: $('#banner').height()
+            }   
+        });	
 
     </script>
 

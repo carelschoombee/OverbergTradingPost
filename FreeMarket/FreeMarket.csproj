@@ -545,6 +545,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\AboutUs.jpg" />
+    <Content Include="Content\Images\Background4.jpg" />
     <Content Include="Content\Images\delivery.jpg" />
     <Content Include="Content\Images\MasterCard.png" />
     <Content Include="Content\Images\OBMLogo.jpg" />
@@ -582,6 +583,8 @@
     <Content Include="Content\Images\slideCourier2.png" />
     <Content Include="Content\Images\slideCourier1.png" />
     <Content Include="Content\Images\TimeFreight.png" />
+    <Content Include="Content\Images\Trading Post Logo 3.png" />
+    <Content Include="Content\Images\Trading Post Logo.png" />
     <Content Include="Content\Images\visa.png" />
     <Content Include="Content\morris.css" />
     <Content Include="Content\PagedList.css" />

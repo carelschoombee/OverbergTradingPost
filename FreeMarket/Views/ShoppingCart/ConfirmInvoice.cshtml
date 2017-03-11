@@ -2,12 +2,12 @@
 @model ConfirmInvoiceViewModel
 
 @{
-    ViewBag.Title = "Terms and Conditions";
+    ViewBag.Title = "Review Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <br />
-<h2 class="text-center"><span class="glyphicon glyphicon-lock"></span>@ViewBag.Title</h2>
+<h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
 <div class="container text-center">
@@ -44,7 +44,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @Html.LabelFor(c => Model.Cart.Order.OrderNumber)
+                        Order Number
                     </th>
                     <td data-label="Order:">
                         @Html.DisplayFor(c => Model.Cart.Order.OrderNumber)
