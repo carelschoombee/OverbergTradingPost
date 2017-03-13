@@ -32,31 +32,45 @@
                             </tr>
                             <tr>
                                 <td rowspan="4">
-                                    <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber, defaultSize = PictureSize.Large })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                                    @if (Model.ProductInstance.AdditionalImageNumber != 0)
+                                    {
+                                    <div id="myCarousel" class="carousel slide" data-interval="false" data-ride="carousel">
+                                        <!-- Carousel indicators -->
+                                        <ol class="carousel-indicators">
+                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                                        </ol>
+
+                                        <!-- Wrapper for carousel items -->
+                                        <div class="carousel-inner">
+                                            <div class="item active">
+                                                <img class="img-thumbnail img-thumbnail img-responsive" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.AdditionalImageNumber })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                                            </div>
+                                            <div class="item">
+                                                <img class="img-thumbnail img-thumbnail img-responsive" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Carousel controls -->
+                                        <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </a>
+                                        <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </a>
+                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <img class="img-thumbnail img-thumbnail img-responsive" src="@Url.Action("RenderImage", "Image", new { id = Model.ProductInstance.MainImageNumber })" alt="@Model.ProductInstance.Description" title="@Model.ProductInstance.Description" />
+                                    }
                                 </td>
                                 <td>
-                                    <table class="table table-bordered-custom table-responsive well">
-                                        <tr>
-                                            <td class="text-center" colspan="2">
-                                                @*<div><u>Rest of RSA</u></div>*@
-                                                <div style="font-size:medium; font-weight:600;">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)</div>
-                                                <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
-                                                @if (Model.ProductInstance.DepartmentName == "Snacking Nuts")
-                                                {
-                                                    <div style="font-size:small"><u>Free Delivery in Struisbaai, L'Agulhas and Suiderstrand</u></div>
-                                                }
-                                            </td>
-                                            @*<td class="text-center">
-                                                <div><u>Struisbaai</u></div>
-                                                <div style="font-size:medium; font-weight:600">@String.Format("{0:C}", Model.ProductInstance.SpecialPricePerUnit) </div>
-                                                <div style="font-size:small">per&nbsp;@Html.Action("GetDimensions", "Product", new { productNumber = Model.ProductInstance.ProductNumber })</div>
-                                            </td>*@
-                                        </tr>
-                                    </table>
+                                    <div style="font-size:medium; font-weight:600;">@String.Format("{0:C}", Model.ProductInstance.PricePerUnit)</div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Supplied by: <span class="text-info">@Model.ProductInstance.SupplierName</span></td>
+                                <td><span>@Model.ProductInstance.SupplierName</span></td>
                             </tr>
                             <tr>
                                 <td>
@@ -90,7 +104,7 @@
                             <strong>Average Rating:</strong>
                             <div><label style="font-size: 16px; color:gold">@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber }) / 3</label></div>
                             @*<input id="input-id" name="input-id" value="@Html.Action("GetAverageRating", "Product", new { productNumber = Model.ProductNumber, supplierNumber = Model.SupplierNumber })" data-min="0" data-max="3" step="0.1" data-show-caption="true" data-size="sm">*@
-                            <a id="readReviews" style="color:black"><span class="glyphicon glyphicon-plus-sign">Read Reviews</span></a> <a id="closeReviews"><span class="glyphicon glyphicon-minus-sign text-info">Close Reviews</span></a>
+                            <a id="readReviews" style="color:black"><span class="glyphicon glyphicon-plus-sign">Read Reviews</span></a> <a id="closeReviews"><span style="color:black" class="glyphicon glyphicon-minus-sign">Close Reviews</span></a>
                         </div>
 
                         <div id="ReviewsContainer">
@@ -116,6 +130,17 @@
 </div>
 
 <script language="javascript" type="text/javascript">
+
+    //$(document).ready(function(){
+
+    //    $("#myCarousel").carousel({
+
+    //        interval : 5000
+
+    //    });
+
+    //});
+
 
     $('#input-id').rating({displayOnly: true, step: 0.1, stars: 3});
 

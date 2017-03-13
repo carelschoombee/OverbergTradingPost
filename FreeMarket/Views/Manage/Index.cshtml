@@ -27,7 +27,7 @@
                         else
                         {
                             <div>
-                                 @Html.ActionLink("Change Email", "ChangeEmail")
+                                 @Html.ActionLink("Change Email", "ChangeEmail", null, new { @class = "freemarket-link" })
                             </div>
                         }
                     </div>
@@ -38,7 +38,7 @@
                     <div class="text-center">
                         @if (Model.HasPassword)
                         {
-                            @Html.ActionLink("Modify Password", "ChangePassword")
+                            @Html.ActionLink("Modify Password", "ChangePassword", null, new { @class = "freemarket-link" })
                         }
                         else
                         {
@@ -66,21 +66,21 @@
             <tr>
                 <td>
                     <div class="text-center">
-                        @Html.ActionLink("Change Personal Details", "ModifyAccountDetails")
+                        @Html.ActionLink("Change Personal Details", "ModifyAccountDetails", null, new { @class = "freemarket-link" })
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="text-center">
-                        @Html.ActionLink("Change Delivery Information", "ModifyDeliveryDetails")
+                        @Html.ActionLink("Change Delivery Information", "ModifyDeliveryDetails", null, new { @class = "freemarket-link" })
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="text-center">
-                        @Html.ActionLink("View Order History", "ViewOrderHistory")
+                        @Html.ActionLink("View Order History", "ViewOrderHistory", null, new { @class = "freemarket-link" })
                     </div>
                 </td>
             </tr>

@@ -14,6 +14,7 @@ namespace FreeMarket.Models
     {
         public int MainImageNumber { get; set; }
         public int SecondaryImageNumber { get; set; }
+        public int AdditionalImageNumber { get; set; }
 
         [DisplayName("Supplier Number")]
         public int SupplierNumber { get; set; }
@@ -113,7 +114,8 @@ namespace FreeMarket.Models
                     SpecialPricePerUnit = productInfo.SpecialPricePerUnit ?? productInfo.PricePerUnit,
                     RetailPricePerUnit = productInfo.RetailPricePerUnit ?? productInfo.PricePerUnit,
                     Weight = productInfo.Weight,
-                    LongDescription = productInfo.LongDescription
+                    LongDescription = productInfo.LongDescription,
+                    IsVirtual = productInfo.IsVirtual
                 };
 
                 product.MainImageNumber = db.ProductPictures
@@ -123,6 +125,11 @@ namespace FreeMarket.Models
 
                 product.SecondaryImageNumber = db.ProductPictures
                     .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Small.ToString())
+                    .Select(c => c.PictureNumber)
+                    .FirstOrDefault();
+
+                product.AdditionalImageNumber = db.ProductPictures
+                    .Where(c => c.ProductNumber == product.ProductNumber && c.Dimensions == PictureSize.Large.ToString())
                     .Select(c => c.PictureNumber)
                     .FirstOrDefault();
 
@@ -314,6 +321,7 @@ namespace FreeMarket.Models
                     productDb.LongDescription = product.LongDescription;
                     productDb.Size = product.Size;
                     productDb.Weight = product.Weight;
+                    productDb.IsVirtual = product.IsVirtual;
                     db.Entry(productDb).State = EntityState.Modified;
                 }
 
@@ -457,6 +465,9 @@ namespace FreeMarket.Models
         [Required]
         [DisplayName("Description")]
         public string Description { get; set; }
+
+        [DisplayName("Virtual Item")]
+        public bool IsVirtual { get; set; }
 
         [Required]
         [DisplayName("Size")]

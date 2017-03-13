@@ -40,8 +40,8 @@
                     @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
                     @Html.HiddenFor(model => Model[i].OrderNumber)
                 </td>
-                <td class="text-center hidden-xs"><a href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
-                <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, null)</td>
+                <td class="text-center hidden-xs"><a class="freemarket-link" href="@Url.Action("DownLoadReportConfirmed", "Admin", new { orderNumber = Model[i].OrderNumber })"><span class="glyphicon glyphicon-download"></span></a></td>
+                <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })</td>
                 <td class="text-center">@Html.Action("GetCustomerEmail", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center">@Html.Action("GetCustomerPhone", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center" style="white-space: pre-line">@Model[i].DeliveryAddress</td>

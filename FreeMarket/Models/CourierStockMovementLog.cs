@@ -24,7 +24,7 @@ namespace FreeMarket.Models
         public int Quantity { get; set; }
     
         public virtual Courier Courier { get; set; }
-        public virtual Product Product { get; set; }
         public virtual Custodian Custodian { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

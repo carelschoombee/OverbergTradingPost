@@ -402,6 +402,7 @@
           <Property Name="DepartmentNumber" Type="int" Nullable="false" />
           <Property Name="Weight" Type="decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Size" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsVirtual" Type="bit" Nullable="false" />
           <Property Name="Activated" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductCustodian">
@@ -1023,8 +1024,8 @@
           <Property Name="DateSubtractedStock" Type="DateTime" Precision="3" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Courier" Relationship="Self.FK_CourierStockMovementLog_Courier" FromRole="CourierStockMovementLog" ToRole="Courier" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Product" FromRole="CourierStockMovementLog" ToRole="Product" />
           <NavigationProperty Name="Custodian" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Custodian" FromRole="CourierStockMovementLog" ToRole="Custodian" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Product" FromRole="CourierStockMovementLog" ToRole="Product" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -1032,8 +1033,8 @@
           </Key>
           <Property Name="DepartmentNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DepartmentName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="FreeMarketModel.FK_Product_Department" FromRole="Department" ToRole="Product" />
           <Property Name="Activated" Type="Boolean" />
+          <NavigationProperty Name="Products" Relationship="FreeMarketModel.FK_Product_Department" FromRole="Department" ToRole="Product" />
         </EntityType>
         <EntityType Name="ExceptionLogging">
           <Key>
@@ -1113,12 +1114,12 @@
           <Property Name="QuantityOnHand" Type="Int32" Nullable="false" />
           <Property Name="DateLastIncreasedBySupplier" Type="DateTime" Precision="3" />
           <Property Name="AmountLastIncreasedBySupplier" Type="Int32" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductCustodian_Product" FromRole="ProductCustodian" ToRole="Product" />
           <Property Name="SupplierNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_ProductCustodian_Supplier" FromRole="ProductCustodian" ToRole="Supplier" />
           <Property Name="StockReservedForOrders" Type="Int32" />
           <NavigationProperty Name="Custodian" Relationship="FreeMarketModel.FK_ProductCustodian_Custodian" FromRole="ProductCustodian" ToRole="Custodian" />
           <Property Name="Active" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductCustodian_Product" FromRole="ProductCustodian" ToRole="Product" />
         </EntityType>
         <EntityType Name="ProductPicture">
           <Key>
@@ -1129,8 +1130,8 @@
           <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="Annotation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Dimensions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="ProductPicture" ToRole="Product" />
           <Property Name="PictureMimeType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="ProductPicture" ToRole="Product" />
         </EntityType>
         <EntityType Name="SiteConfiguration">
           <Key>
@@ -1200,23 +1201,6 @@
           <EntitySet Name="SystemActions" EntityType="FreeMarketModel.SystemAction" />
           <EntitySet Name="AuditUsers" EntityType="FreeMarketModel.AuditUser" />
           <EntitySet Name="SitePictures" EntityType="FreeMarketModel.SitePicture" />
-          <EntitySet Name="Products" EntityType="FreeMarketModel.Product" />
-          <AssociationSet Name="FK_CourierStockMovementLog_Product" Association="FreeMarketModel.FK_CourierStockMovementLog_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Product_Department" Association="FreeMarketModel.FK_Product_Department">
-            <End Role="Department" EntitySet="Departments" />
-            <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductCustodian_Product" Association="FreeMarketModel.FK_ProductCustodian_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductCustodian" EntitySet="ProductCustodians" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductPicture_Product" Association="FreeMarketModel.FK_ProductPicture_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductPicture" EntitySet="ProductPictures" />
-          </AssociationSet>
           <EntitySet Name="SupplierLocations" EntityType="FreeMarketModel.SupplierLocation" />
           <AssociationSet Name="FK_SupplierLocation_Location" Association="FreeMarketModel.FK_SupplierLocation_Location">
             <End Role="Location" EntitySet="Locations" />
@@ -1237,19 +1221,11 @@
             <End Role="Courier" EntitySet="Couriers" />
             <End Role="CourierReview" EntitySet="CourierReviews" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductReview_Product" Association="FreeMarketModel.FK_ProductReview_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductReview" EntitySet="ProductReviews" />
-          </AssociationSet>
           <EntitySet Name="AspNetUsers" EntityType="FreeMarketModel.AspNetUser" />
           <EntitySet Name="Specials" EntityType="FreeMarketModel.Special" />
           <EntitySet Name="PriceHistories" EntityType="FreeMarketModel.PriceHistory" />
           <EntitySet Name="PostalFees" EntityType="FreeMarketModel.PostalFee" />
           <EntitySet Name="OrderDetails" EntityType="FreeMarketModel.OrderDetail" />
-          <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Supplier" Association="FreeMarketModel.FK_OrderDetail_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
@@ -1279,9 +1255,6 @@
           <FunctionImport Name="GetPriceHistories" ReturnType="Collection(FreeMarketModel.GetPriceHistories_Result)" />
           <FunctionImport Name="ValidateSpecialDeliveryCode" ReturnType="Collection(Int32)">
           <Parameter Name="postalCode" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetAllProductsInOrder" ReturnType="Collection(FreeMarketModel.GetAllProductsInOrder_Result)">
-          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllCouriersReview" ReturnType="Collection(FreeMarketModel.GetAllCouriersReview_Result)">
           <Parameter Name="orderNumber" Mode="In" Type="Int32" />
@@ -1332,10 +1305,6 @@
           <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="ProductSuppliers" EntityType="FreeMarketModel.ProductSupplier" />
-          <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductSupplier_Supplier" Association="FreeMarketModel.FK_ProductSupplier_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
@@ -1346,11 +1315,6 @@
           </FunctionImport>
           <EntitySet Name="DepartmentPictures" EntityType="FreeMarketModel.DepartmentPicture" />
           <EntitySet Name="TimeFreightCourierFeeReferences" EntityType="FreeMarketModel.TimeFreightCourierFeeReference" />
-          <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
-          <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
-          <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetAllProductsIncludingDeactivated" ReturnType="Collection(FreeMarketModel.GetAllProductsIncludingDeactivated_Result)" />
           <EntitySet Name="PaymentOptions" EntityType="FreeMarketModel.PaymentOption" />
           <EntitySet Name="CharliesTransportCourierFeeReferences" EntityType="FreeMarketModel.CharliesTransportCourierFeeReference" />
           <FunctionImport Name="CalculateCharliesFee" ReturnType="Collection(Decimal)">
@@ -1395,7 +1359,44 @@
           <EntitySet Name="WebsiteFunctions" EntityType="FreeMarketModel.WebsiteFunction" />
           <EntitySet Name="FreeMarketOwners" EntityType="FreeMarketModel.FreeMarketOwner" />
           <FunctionImport Name="GetOrderReport" ReturnType="Collection(FreeMarketModel.GetOrderReport_Result)">
-            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Products" EntityType="FreeMarketModel.Product" />
+          <AssociationSet Name="FK_CourierStockMovementLog_Product" Association="FreeMarketModel.FK_CourierStockMovementLog_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="CourierStockMovementLog" EntitySet="CourierStockMovementLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Department" Association="FreeMarketModel.FK_Product_Department">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Product" Association="FreeMarketModel.FK_OrderDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductCustodian_Product" Association="FreeMarketModel.FK_ProductCustodian_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductCustodian" EntitySet="ProductCustodians" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductPicture_Product" Association="FreeMarketModel.FK_ProductPicture_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductPicture" EntitySet="ProductPictures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductReview_Product" Association="FreeMarketModel.FK_ProductReview_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductReview" EntitySet="ProductReviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSupplier_Product" Association="FreeMarketModel.FK_ProductSupplier_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductSupplier" EntitySet="ProductSuppliers" />
+          </AssociationSet>
+          <FunctionImport Name="GetAllProducts" ReturnType="Collection(FreeMarketModel.GetAllProducts_Result)" />
+          <FunctionImport Name="GetAllProductsByDepartment" ReturnType="Collection(FreeMarketModel.GetAllProductsByDepartment_Result)">
+            <Parameter Name="DepartmentNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllProductsIncludingDeactivated" ReturnType="Collection(FreeMarketModel.GetAllProductsIncludingDeactivated_Result)" />
+          <FunctionImport Name="GetAllProductsInOrder" ReturnType="Collection(FreeMarketModel.GetAllProductsInOrder_Result)">
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1423,75 +1424,6 @@
           <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="ProductNumber" />
-          </Key>
-          <Property Name="ProductNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateModified" Type="DateTime" Precision="3" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DepartmentNumber" Type="Int32" Nullable="false" />
-          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
-          <Property Name="Size" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Activated" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CourierStockMovementLogs" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Product" FromRole="Product" ToRole="CourierStockMovementLog" />
-          <NavigationProperty Name="Department" Relationship="FreeMarketModel.FK_Product_Department" FromRole="Product" ToRole="Department" />
-          <NavigationProperty Name="ProductCustodians" Relationship="FreeMarketModel.FK_ProductCustodian_Product" FromRole="Product" ToRole="ProductCustodian" />
-          <NavigationProperty Name="ProductPictures" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="Product" ToRole="ProductPicture" />
-          <Property Name="LongDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductReviews" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="Product" ToRole="ProductReview" />
-          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
-          <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
-        </EntityType>
-        <Association Name="FK_CourierStockMovementLog_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.CourierStockMovementLog" Role="CourierStockMovementLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="CourierStockMovementLog">
-              <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Product_Department">
-          <End Type="FreeMarketModel.Department" Role="Department" Multiplicity="1" />
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Department">
-              <PropertyRef Name="DepartmentNumber" />
-            </Principal>
-            <Dependent Role="Product">
-              <PropertyRef Name="DepartmentNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductCustodian_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.ProductCustodian" Role="ProductCustodian" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="ProductCustodian">
-              <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductPicture_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.ProductPicture" Role="ProductPicture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="ProductPicture">
-              <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="SupplierLocation">
           <Key>
             <PropertyRef Name="SupplierNumber" />
@@ -1581,10 +1513,10 @@
           <Property Name="StarRating" Type="Int16" />
           <Property Name="Date" Type="DateTime" Precision="3" />
           <Property Name="ReviewContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="ProductReview" ToRole="Product" />
           <Property Name="SupplierNumber" Type="Int32" />
           <Property Name="PriceRating" Type="Int32" />
           <Property Name="Approved" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="ProductReview" ToRole="Product" />
         </EntityType>
         <Association Name="FK_CourierReview_Courier">
           <End Type="FreeMarketModel.Courier" Role="Courier" Multiplicity="0..1" />
@@ -1595,18 +1527,6 @@
             </Principal>
             <Dependent Role="CourierReview">
               <PropertyRef Name="CourierNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductReview_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="FreeMarketModel.ProductReview" Role="ProductReview" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="ProductReview">
-              <PropertyRef Name="ProductNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1686,22 +1606,10 @@
           <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="OrderItemValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_OrderDetail_Supplier" FromRole="OrderDetail" ToRole="Supplier" />
           <NavigationProperty Name="OrderHeader" Relationship="FreeMarketModel.FK_OrderDetail_OrderHeader" FromRole="OrderDetail" ToRole="OrderHeader" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
         </EntityType>
-        <Association Name="FK_OrderDetail_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetail_Supplier">
           <End Type="FreeMarketModel.Supplier" Role="Supplier" Multiplicity="1" />
           <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
@@ -1888,27 +1796,6 @@
           <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
           <Property Type="String" Name="Description" Nullable="false" />
           <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-        </ComplexType>
-        <ComplexType Name="GetAllProductsInOrder_Result">
-          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
-          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
-          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Description" Nullable="false" />
-          <Property Type="String" Name="LongDescription" Nullable="true" />
-          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
-          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
-          <Property Type="Boolean" Name="Activated" Nullable="false" />
-          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
-          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
-          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
-          <Property Type="Int16" Name="ProductRating" Nullable="true" />
-          <Property Type="String" Name="ProductReviewText" Nullable="true" />
-          <Property Type="Int32" Name="ReviewId" Nullable="true" />
-          <Property Type="Int32" Name="PriceRating" Nullable="true" />
         </ComplexType>
         <ComplexType Name="GetAllCouriersReview_Result">
           <Property Type="Int32" Name="CourierNumber" Nullable="true" />
@@ -2222,21 +2109,9 @@
           <Property Name="PricePerUnit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="SpecialPricePerUnit" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="RetailPricePerUnit" Type="Decimal" Precision="19" Scale="4" />
-          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="ProductSupplier" ToRole="Product" />
           <NavigationProperty Name="Supplier" Relationship="FreeMarketModel.FK_ProductSupplier_Supplier" FromRole="ProductSupplier" ToRole="Supplier" />
+          <NavigationProperty Name="Product" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="ProductSupplier" ToRole="Product" />
         </EntityType>
-        <Association Name="FK_ProductSupplier_Product">
-          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="FreeMarketModel.ProductSupplier" Role="ProductSupplier" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductNumber" />
-            </Principal>
-            <Dependent Role="ProductSupplier">
-              <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductSupplier_Supplier">
           <End Type="FreeMarketModel.Supplier" Role="Supplier" Multiplicity="1" />
           <End Type="FreeMarketModel.ProductSupplier" Role="ProductSupplier" Multiplicity="*" />
@@ -2265,6 +2140,7 @@
           <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
           <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
           <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
         </ComplexType>
         <EntityType Name="DepartmentPicture">
           <Key>
@@ -2291,56 +2167,6 @@
           <Property Name="DialingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="DeliveryFee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
-        <ComplexType Name="GetAllProducts_Result">
-          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
-          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
-          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Description" Nullable="false" />
-          <Property Type="String" Name="LongDescription" Nullable="true" />
-          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
-          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
-          <Property Type="Boolean" Name="Activated" Nullable="false" />
-          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
-          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
-          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
-        </ComplexType>
-        <ComplexType Name="GetAllProductsByDepartment_Result">
-          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
-          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
-          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Description" Nullable="false" />
-          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
-          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
-          <Property Type="Boolean" Name="Activated" Nullable="false" />
-          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
-          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
-          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
-        </ComplexType>
-        <ComplexType Name="GetAllProductsIncludingDeactivated_Result">
-          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
-          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
-          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Description" Nullable="false" />
-          <Property Type="String" Name="LongDescription" Nullable="true" />
-          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
-          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
-          <Property Type="Boolean" Name="Activated" Nullable="false" />
-          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
-          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
-          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
-        </ComplexType>
         <EntityType Name="PaymentOption">
           <Key>
             <PropertyRef Name="PaymentOptionID" />
@@ -2426,6 +2252,187 @@
           <Property Type="String" Name="BankingDetailsAccountType" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="BankingDetailsAccountNumber" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="ProofOfPaymentEmail" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductNumber" />
+          </Key>
+          <Property Name="ProductNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LongDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentNumber" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+          <Property Name="Size" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsVirtual" Type="Boolean" Nullable="false" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CourierStockMovementLogs" Relationship="FreeMarketModel.FK_CourierStockMovementLog_Product" FromRole="Product" ToRole="CourierStockMovementLog" />
+          <NavigationProperty Name="Department" Relationship="FreeMarketModel.FK_Product_Department" FromRole="Product" ToRole="Department" />
+          <NavigationProperty Name="OrderDetails" Relationship="FreeMarketModel.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
+          <NavigationProperty Name="ProductCustodians" Relationship="FreeMarketModel.FK_ProductCustodian_Product" FromRole="Product" ToRole="ProductCustodian" />
+          <NavigationProperty Name="ProductPictures" Relationship="FreeMarketModel.FK_ProductPicture_Product" FromRole="Product" ToRole="ProductPicture" />
+          <NavigationProperty Name="ProductReviews" Relationship="FreeMarketModel.FK_ProductReview_Product" FromRole="Product" ToRole="ProductReview" />
+          <NavigationProperty Name="ProductSuppliers" Relationship="FreeMarketModel.FK_ProductSupplier_Product" FromRole="Product" ToRole="ProductSupplier" />
+        </EntityType>
+        <Association Name="FK_CourierStockMovementLog_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.CourierStockMovementLog" Role="CourierStockMovementLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="CourierStockMovementLog">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Department">
+          <End Type="FreeMarketModel.Department" Role="Department" Multiplicity="1" />
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentNumber" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="DepartmentNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductCustodian_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.ProductCustodian" Role="ProductCustodian" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductCustodian">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductPicture_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.ProductPicture" Role="ProductPicture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductPicture">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductReview_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="FreeMarketModel.ProductReview" Role="ProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductReview">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSupplier_Product">
+          <End Type="FreeMarketModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="FreeMarketModel.ProductSupplier" Role="ProductSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductNumber" />
+            </Principal>
+            <Dependent Role="ProductSupplier">
+              <PropertyRef Name="ProductNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetAllProducts_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="LongDescription" Nullable="true" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="GetAllProductsByDepartment_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="GetAllProductsIncludingDeactivated_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="LongDescription" Nullable="true" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="RetailPricePerUnit" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="GetAllProductsInOrder_Result">
+          <Property Type="Int32" Name="SupplierNumberID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="ProductNumberID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAdded" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="LongDescription" Nullable="true" />
+          <Property Type="Int32" Name="DepartmentNumber" Nullable="false" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="Activated" Nullable="false" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
+          <Property Type="String" Name="DepartmentName" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="PricePerUnit" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="SpecialPricePerUnit" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+          <Property Type="Int16" Name="ProductRating" Nullable="true" />
+          <Property Type="String" Name="ProductReviewText" Nullable="true" />
+          <Property Type="Int32" Name="ReviewId" Nullable="true" />
+          <Property Type="Int32" Name="PriceRating" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2648,21 +2655,6 @@
                 <ScalarProperty Name="Picture" ColumnName="Picture" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="PictureNumber" ColumnName="PictureNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="FreeMarketModel.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
-                <ScalarProperty Name="Activated" ColumnName="Activated" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2998,31 +2990,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="ValidateSpecialDeliveryCode" FunctionName="FreeMarketModel.Store.ValidateSpecialDeliveryCode" />
-          <FunctionImportMapping FunctionImportName="GetAllProductsInOrder" FunctionName="FreeMarketModel.Store.GetAllProductsInOrder">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsInOrder_Result">
-                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
-                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Activated" ColumnName="Activated" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
-                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="ProductRating" ColumnName="ProductRating" />
-                <ScalarProperty Name="ProductReviewText" ColumnName="ProductReviewText" />
-                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
-                <ScalarProperty Name="PriceRating" ColumnName="PriceRating" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetAllCouriersReview" FunctionName="FreeMarketModel.Store.GetAllCouriersReview">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FreeMarketModel.GetAllCouriersReview_Result">
@@ -3386,6 +3353,7 @@
                 <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
                 <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
                 <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3416,68 +3384,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetAllProducts" FunctionName="FreeMarketModel.Store.GetAllProducts">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProducts_Result">
-                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
-                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Activated" ColumnName="Activated" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
-                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
-                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetAllProductsByDepartment" FunctionName="FreeMarketModel.Store.GetAllProductsByDepartment">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsByDepartment_Result">
-                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Activated" ColumnName="Activated" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
-                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
-                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetAllProductsIncludingDeactivated" FunctionName="FreeMarketModel.Store.GetAllProductsIncludingDeactivated">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsIncludingDeactivated_Result">
-                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
-                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Activated" ColumnName="Activated" />
-                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
-                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
-                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
-                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="PaymentOptions">
             <EntityTypeMapping TypeName="FreeMarketModel.PaymentOption">
               <MappingFragment StoreEntitySet="PaymentOption">
@@ -3578,6 +3484,113 @@
                 <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
                 <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
                 <ScalarProperty Name="ProofOfPaymentEmail" ColumnName="ProofOfPaymentEmail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="FreeMarketModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProducts" FunctionName="FreeMarketModel.Store.GetAllProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProducts_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
+                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProductsByDepartment" FunctionName="FreeMarketModel.Store.GetAllProductsByDepartment">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsByDepartment_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
+                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProductsIncludingDeactivated" FunctionName="FreeMarketModel.Store.GetAllProductsIncludingDeactivated">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsIncludingDeactivated_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
+                <ScalarProperty Name="RetailPricePerUnit" ColumnName="RetailPricePerUnit" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProductsInOrder" FunctionName="FreeMarketModel.Store.GetAllProductsInOrder">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetAllProductsInOrder_Result">
+                <ScalarProperty Name="SupplierNumberID" ColumnName="SupplierNumberID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="ProductNumberID" ColumnName="ProductNumberID" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+                <ScalarProperty Name="DepartmentNumber" ColumnName="DepartmentNumber" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="PricePerUnit" ColumnName="PricePerUnit" />
+                <ScalarProperty Name="SpecialPricePerUnit" ColumnName="SpecialPricePerUnit" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ProductRating" ColumnName="ProductRating" />
+                <ScalarProperty Name="ProductReviewText" ColumnName="ProductReviewText" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+                <ScalarProperty Name="PriceRating" ColumnName="PriceRating" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

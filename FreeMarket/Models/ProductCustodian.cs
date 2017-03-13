@@ -23,8 +23,8 @@ namespace FreeMarket.Models
         public Nullable<int> StockReservedForOrders { get; set; }
         public Nullable<bool> Active { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual Supplier Supplier { get; set; }
         public virtual Custodian Custodian { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

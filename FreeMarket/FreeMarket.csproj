@@ -547,6 +547,7 @@
     <Content Include="Content\Images\AboutUs.jpg" />
     <Content Include="Content\Images\Background4.jpg" />
     <Content Include="Content\Images\delivery.jpg" />
+    <Content Include="Content\Images\logoCarousel.png" />
     <Content Include="Content\Images\MasterCard.png" />
     <Content Include="Content\Images\OBMLogo.jpg" />
     <Content Include="Content\Images\OBMLogoMedium.png" />

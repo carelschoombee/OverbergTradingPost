@@ -53,10 +53,10 @@
                 @item.LastVisited
             </td>
             <td>
-                <span style="white-space:pre-line">@Html.ActionLink("History", "ViewOrderHistory", new { customerNumber = item.Id })</span>
+                <span style="white-space:pre-line">@Html.ActionLink("History", "ViewOrderHistory", new { customerNumber = item.Id }, new { @class = "freemarket-link" })</span>
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditCustomer", new { customerNumber = item.Id } )
+                @Html.ActionLink("Edit", "EditCustomer", new { customerNumber = item.Id }, new { @class = "freemarket-link" } )
             </td>
         </tr>
     }

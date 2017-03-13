@@ -36,6 +36,7 @@ namespace FreeMarket.Models
                         SupplierNumber = c.SupplierNumberID,
                         SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
                         RetailPricePerUnit = c.RetailPricePerUnit ?? c.PricePerUnit,
+                        IsVirtual = c.IsVirtual,
                         Weight = c.Weight
                     }
                     ).ToList();
@@ -70,6 +71,7 @@ namespace FreeMarket.Models
                         SupplierNumber = c.SupplierNumberID,
                         SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
                         RetailPricePerUnit = c.RetailPricePerUnit ?? c.PricePerUnit,
+                        IsVirtual = c.IsVirtual,
                         Weight = c.Weight
                     }
                     ).ToList();
@@ -103,6 +105,7 @@ namespace FreeMarket.Models
                         SupplierName = c.SupplierName,
                         SupplierNumber = c.SupplierNumberID,
                         SpecialPricePerUnit = c.SpecialPricePerUnit ?? c.PricePerUnit,
+                        IsVirtual = c.IsVirtual,
                         Weight = c.Weight
                     }
                     ).ToList();
@@ -142,7 +145,8 @@ namespace FreeMarket.Models
                         ProductReviewText = c.ProductReviewText,
                         PriceRating = c.PriceRating ?? 0,
                         ReviewId = c.ReviewId,
-                        PriceOrder = c.Price
+                        PriceOrder = c.Price,
+                        IsVirtual = c.IsVirtual
                     }
                     ).ToList();
 

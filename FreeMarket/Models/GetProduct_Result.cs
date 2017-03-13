@@ -28,5 +28,6 @@ namespace FreeMarket.Models
         public decimal PricePerUnit { get; set; }
         public Nullable<decimal> SpecialPricePerUnit { get; set; }
         public Nullable<decimal> RetailPricePerUnit { get; set; }
+        public bool IsVirtual { get; set; }
     }
 }

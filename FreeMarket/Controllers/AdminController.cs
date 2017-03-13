@@ -644,7 +644,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
+        public ActionResult CreateProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary, HttpPostedFileBase imageAdditional)
         {
             if (ModelState.IsValid)
             {
@@ -652,6 +652,7 @@ namespace FreeMarket.Controllers
 
                 FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
                 FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+                FreeMarketResult resultAdditional = FreeMarketResult.NoResult;
 
                 if (imagePrimary != null)
                     resultPrimary = Product.SaveProductImage(product.ProductNumber, PictureSize.Medium, imagePrimary);
@@ -659,7 +660,10 @@ namespace FreeMarket.Controllers
                 if (imageSecondary != null)
                     resultSecondary = Product.SaveProductImage(product.ProductNumber, PictureSize.Small, imageSecondary);
 
-                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                if (imageAdditional != null)
+                    resultAdditional = Product.SaveProductImage(product.ProductNumber, PictureSize.Large, imageAdditional);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success && resultAdditional == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
 
                 AuditUser.LogAudit(13, string.Format("Product Description: {0}", product.Description));
@@ -1097,7 +1101,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
+        public ActionResult EditProductProcess(Product product, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary, HttpPostedFileBase imageAdditional)
         {
             if (ModelState.IsValid)
             {
@@ -1105,6 +1109,7 @@ namespace FreeMarket.Controllers
 
                 FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
                 FreeMarketResult resultSecondary = FreeMarketResult.NoResult;
+                FreeMarketResult resultAdditional = FreeMarketResult.NoResult;
 
                 if (imagePrimary != null)
                     resultPrimary = Product.SaveProductImage(product.ProductNumber, PictureSize.Medium, imagePrimary);
@@ -1112,7 +1117,10 @@ namespace FreeMarket.Controllers
                 if (imageSecondary != null)
                     resultSecondary = Product.SaveProductImage(product.ProductNumber, PictureSize.Small, imageSecondary);
 
-                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
+                if (imageAdditional != null)
+                    resultAdditional = Product.SaveProductImage(product.ProductNumber, PictureSize.Large, imageAdditional);
+
+                if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success && resultAdditional == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded and product saved for product {0}.", product.ProductNumber);
 
                 AuditUser.LogAudit(20, string.Format("Product Description: {0}", product.Description), User.Identity.GetUserId());
