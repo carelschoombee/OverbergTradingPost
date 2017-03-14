@@ -16,7 +16,7 @@
     {
         if (Model.Order.ShippingTotal == 0)
         {
-            shippingMessage = "Free!";
+            shippingMessage = "Not Applicable";
         }
         else
         {
@@ -35,6 +35,11 @@
     else if (Model.Order.DeliveryType == "Courier")
     {
         deliveryType = "(Courier)";
+    }
+
+    if (Model.Order.ShippingTotal == 0)
+    {
+        deliveryType = "";
     }
 }
 <table class="table table-condensed table-bordered-totals well">

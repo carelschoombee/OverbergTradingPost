@@ -11,6 +11,15 @@ namespace FreeMarket.Models
         public OrderHeader Order { get; set; }
         public CartBody Body { get; set; }
 
+        public ShoppingCart(int orderNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Order = db.OrderHeaders.Find(orderNumber);
+                Body = CartBody.GetDetailsForShoppingCart(Order.OrderNumber);
+            }
+        }
+
         public object Clone()
         {
             return base.MemberwiseClone();
@@ -503,7 +512,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateDeliveryFee(totalWeight, Order.OrderNumber).FirstOrDefault();
+                if (totalWeight == 0)
+                    return 0;
+                else
+                    return (decimal)db.CalculateDeliveryFee(totalWeight, Order.OrderNumber).FirstOrDefault();
             }
         }
 
@@ -512,7 +524,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateDeliveryFeeAdhoc(totalWeight, postalCode).FirstOrDefault();
+                if (totalWeight == 0)
+                    return 0;
+                else
+                    return (decimal)db.CalculateDeliveryFeeAdhoc(totalWeight, postalCode).FirstOrDefault();
             }
         }
 
@@ -521,7 +536,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateLocalDeliveryFee(totalWeight, Order.OrderNumber).FirstOrDefault();
+                if (totalWeight == 0)
+                    return 0;
+                else
+                    return (decimal)db.CalculateLocalDeliveryFee(totalWeight, Order.OrderNumber).FirstOrDefault();
             }
         }
 
@@ -530,7 +548,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                return (decimal)db.CalculateLocalDeliveryFeeAdhoc(totalWeight, postalCode).FirstOrDefault();
+                if (totalWeight == 0)
+                    return 0;
+                else
+                    return (decimal)db.CalculateLocalDeliveryFeeAdhoc(totalWeight, postalCode).FirstOrDefault();
             }
         }
 
@@ -539,14 +560,10 @@ namespace FreeMarket.Models
             using (FreeMarketEntities db = new FreeMarketEntities())
             {
                 decimal totalWeight = GetTotalWeightOfOrder();
-                if (totalWeight != 0)
-                {
-                    return (decimal)db.CalculatePostOfficeFee(totalWeight).FirstOrDefault();
-                }
-                else
-                {
+                if (totalWeight == 0)
                     return 0;
-                }
+                else
+                    return (decimal)db.CalculatePostOfficeFee(totalWeight).FirstOrDefault();
             }
         }
 
@@ -563,23 +580,15 @@ namespace FreeMarket.Models
                 {
                     decimal fee = CalculateLocalCourierFee();
                     if (fee > 0)
-                    {
                         return fee;
-                    }
                     else
-                    {
                         return CalculateCourierFee();
-                    }
                 }
                 else // Post Office
-                {
                     return CalculatePostalFee();
-                }
             }
             else
-            {
                 return Order.ShippingTotal ?? 0;
-            }
         }
 
         public decimal GetTotalWeightOfOrder()
@@ -593,7 +602,8 @@ namespace FreeMarket.Models
 
                     if (product != null)
                     {
-                        totalWeight += product.Weight * od.Quantity;
+                        if (!product.IsVirtual)
+                            totalWeight += product.Weight * od.Quantity;
                     }
                 }
             }
@@ -716,6 +726,27 @@ namespace FreeMarket.Models
         {
             Body = new CartBody();
             Order = new OrderHeader();
+        }
+
+        public bool IsAllVirtualOrder()
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                foreach (OrderDetail detail in Body.OrderDetails)
+                {
+                    Product product = db.Products
+                        .Where(c => c.ProductNumber == detail.ProductNumber)
+                        .FirstOrDefault();
+
+                    if (product != null)
+                    {
+                        if (!product.IsVirtual)
+                            return false;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public void SetOrderConfirmed(string userId)

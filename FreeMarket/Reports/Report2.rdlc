@@ -4547,10 +4547,6 @@
       <Border>
         <Style>Solid</Style>
       </Border>
-      <BackgroundImage>
-        <Source>Embedded</Source>
-        <Value>ReportBackground</Value>
-      </BackgroundImage>
     </Style>
   </Body>
   <Width>6.66851in</Width>

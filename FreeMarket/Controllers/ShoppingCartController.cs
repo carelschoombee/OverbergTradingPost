@@ -241,6 +241,21 @@ namespace FreeMarket.Controllers
             ShoppingCart sessionCart = GetCartFromSession(userId);
             sessionCart.Save();
 
+            if (sessionCart.IsAllVirtualOrder())
+            {
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    OrderHeader order = db.OrderHeaders.Find(sessionCart.Order.OrderNumber);
+                    if (order != null)
+                    {
+                        sessionCart.Order.DeliveryType = "Virtual";
+                        sessionCart.Save();
+
+                        return RedirectToAction("ConfirmInvoice", "ShoppingCart");
+                    }
+                }
+            }
+
             decimal localCourierCost = sessionCart.CalculateLocalCourierFee();
             decimal courierCost = sessionCart.CalculateCourierFee();
             decimal postOfficeCost = sessionCart.CalculatePostalFee();
@@ -414,32 +429,47 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> LockInvoice(ConfirmInvoiceViewModel confirmModel)
         {
             string userId = User.Identity.GetUserId();
             ShoppingCart sessionCart = GetCartFromSession(userId);
+            int orderNumber = sessionCart.Order.OrderNumber;
 
             if (ModelState.IsValid)
             {
-                sessionCart.Order.OrderStatus = "Invoiced";
-                sessionCart.Save();
-                AuditUser.LogAudit(28, string.Format("Order Number: {0}", sessionCart.Order.OrderNumber), User.Identity.GetUserId());
+                using (FreeMarketEntities db = new FreeMarketEntities())
+                {
+                    OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                    if (order != null)
+                    {
+                        order.OrderStatus = "Invoiced";
+                        db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
 
-                if (!sessionCart.Order.InvoiceSent.HasValue || sessionCart.Order.InvoiceSent == false)
-                    OrderHeader.SendInvoice(userId, sessionCart.Order.OrderNumber);
+                        OrderHeader.SendInvoice(userId, order.OrderNumber);
 
-                ShoppingCart tempCart = (ShoppingCart)sessionCart.Clone();
-                PayInvoiceViewModel invoice = new PayInvoiceViewModel(tempCart);
+                        AuditUser.LogAudit(28, string.Format("Order Number: {0}", order.OrderNumber), User.Identity.GetUserId());
 
-                sessionCart.Initialize(User.Identity.GetUserId());
-
-                return View("PayInvoice", invoice);
+                        sessionCart.Initialize(User.Identity.GetUserId());
+                    }
+                }
+                return RedirectToAction("PayInvoice", new { orderNumber = orderNumber });
             }
 
             ConfirmInvoiceViewModel model = new ConfirmInvoiceViewModel(sessionCart);
             model.TermsAndConditions = confirmModel.TermsAndConditions;
 
             return View("ConfirmInvoice", model);
+        }
+
+        [Authorize]
+        public ActionResult PayInvoice(int orderNumber)
+        {
+            ShoppingCart cart = new ShoppingCart(orderNumber);
+            PayInvoiceViewModel model = new PayInvoiceViewModel(cart);
+
+            return View("PayInvoice", model);
         }
 
         [HttpPost]

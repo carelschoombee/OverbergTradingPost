@@ -71,20 +71,25 @@
                             @string.Format("{0:f}", Model.MinDispatchDate)
                         </td>
                     }
+                    else if (Model.Order.DeliveryType == "Virtual")
+                    {
+                        <td colspan="2">
+                            An agent will contact you once proof of payment has been received to discuss your advert.
+                        </td>
+                    }
                 </tr>
                 <tr>
                     @if (Model.Order.DeliveryType == "Courier" || Model.Order.DeliveryType == "LocalCourier")
                     {
                         <th>Delivery Address<span class="glyphicon glyphicon-home"></span>&nbsp; </th>
+                        <td>
+                            <span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span>
+                        </td>
                     }
                     else if (Model.Order.DeliveryType == "PostOffice")
                     {
                         <th>Delivery Address - Collect at Post Office <span class="glyphicon glyphicon-home"></span>&nbsp; </th>
                     }
-
-                    <td>
-                        <span style="white-space :pre-line" aria-hidden="true">@Model.Order.DeliveryAddress</span>
-                    </td>
                 </tr>
             </table>
         </div>

@@ -94,22 +94,7 @@
                     @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].Price)
                 </td>
                 <td class="text-center" data-label="Qty:">
-                    @if (Model.Cart.Order.OrderStatus == "Locked")
-                {
-                        @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
-                    }
-                    else
-                    {
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            @Html.EditorFor(model => Model.Cart.Body.OrderDetails[i].Quantity, new { htmlAttributes = new { @style = "width: 75px" } })
-                            @Html.ValidationMessageFor(model => Model.Cart.Body.OrderDetails[i].Quantity, null, new { @class = "text-danger" })
-                        }
-                        else
-                        {
-                            @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
-                        }
-                    }
+                    @Html.DisplayFor(model => Model.Cart.Body.OrderDetails[i].Quantity)
                 </td>
                 <td data-label="Total:">
                     @String.Format("{0:C}", Model.Cart.Body.OrderDetails[i].OrderItemValue)
