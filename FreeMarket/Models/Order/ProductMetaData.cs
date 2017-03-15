@@ -82,7 +82,8 @@ namespace FreeMarket.Models
 
                 if (product != null && supplier != null)
                 {
-                    toReturn = String.Format("{0} {1} {2} supplied by {3}", product.Weight, "KG", product.Description, supplier.SupplierName);
+                    //toReturn = String.Format("{0} {1} {2} supplied by {3}", product.Weight, "KG", product.Description, supplier.SupplierName);
+                    toReturn = String.Format("{0} - {1}", product.Description, supplier.SupplierName);
                 }
             }
 

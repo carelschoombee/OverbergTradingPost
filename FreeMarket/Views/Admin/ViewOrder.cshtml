@@ -36,7 +36,18 @@
             </table>
             @if (Model.Courier != null)
             {
-                
+                if (Model.Order.DeliveryType == "Virtual")
+                {
+                    <table class="table table-bordered-custom table-responsive">
+                        <tr>
+                            <td colspan="2">
+                                This order is virtual; no courier was assigned.
+                            </td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
                     <table class="table table-bordered-custom table-responsive">
                         <tr>
                             <td colspan="2">
@@ -79,6 +90,7 @@
                             </tr>
                         }
                     </table>
+                }
             }
 
         </div>
@@ -91,7 +103,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @Html.LabelFor(c => Model.Order.OrderNumber)
+                        Order Number
                     </th>
                     <td data-label="Order:">
                         @Html.DisplayFor(c => Model.Order.OrderNumber)
@@ -101,9 +113,18 @@
                     <th>
                         Preferred Delivery Date
                     </th>
-                    <td>
-                        @string.Format("{0:f}", Model.Order.DeliveryDate)
-                    </td>
+                    @if (Model.Order.DeliveryDate == null)
+                    {
+                        <td>
+                            Not Applicable
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @string.Format("{0:f}", Model.Order.DeliveryDate)
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th>Delivery Address <span class="glyphicon glyphicon-home"></span>&nbsp; </th>

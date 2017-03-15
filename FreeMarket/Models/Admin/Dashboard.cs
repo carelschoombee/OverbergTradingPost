@@ -115,10 +115,10 @@ namespace FreeMarket.Models
 
                 RatingsInformation = new RatingsInfo();
                 Customers = new List<AspNetUser>();
-                Invoices = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced").OrderBy(c => c.DeliveryDate).ToList();
-                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderBy(c => c.DeliveryDate).ToList();
-                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderBy(c => c.DeliveryDate).ToList();
-                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderBy(c => c.DeliveryDate).ToList();
+                Invoices = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced").OrderByDescending(c => c.OrderNumber).ToList();
+                ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderByDescending(c => c.OrderNumber).ToList();
+                InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderByDescending(c => c.OrderNumber).ToList();
+                RefundPending = db.OrderHeaders.Where(c => c.OrderStatus == "RefundPending").OrderByDescending(c => c.OrderNumber).ToList();
                 RefundableOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed" || c.OrderStatus == "InTransit").ToList();
 
                 TotalSales = SalesInformation.SalesDetails.Sum(c => c.Value);

@@ -416,9 +416,9 @@
             <div>
                 Website hits since inception: @Model.WebsiteHits
             </div>
-            <div>
+            @*<div>
                 SMS credits remaining: @Model.SMSCredits
-            </div>
+            </div>*@
 
             @using (Ajax.BeginForm("SearchAudit", "Admin", null, ajaxOptsSearchAudit, new { @id = "searchAuditForm" }))
             {

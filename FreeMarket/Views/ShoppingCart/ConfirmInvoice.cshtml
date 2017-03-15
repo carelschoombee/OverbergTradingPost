@@ -134,6 +134,20 @@
     </div>
 </div>
 
+@if (Model.Cart.Order.DeliveryType == "Virtual")
+{
+    <div class="text-center">
+        @Html.ActionLink("Back", "Cart", "ShoppingCart", new { @class = "btn btn-success" })
+    </div>
+}
+else
+{
+    <div class="text-center">
+        @Html.ActionLink("Back", "SecureDeliveryDetails", "ShoppingCart", new { @class = "btn btn-success" })
+    </div>
+}
+
+
 @Html.Partial("_TermsAndConditionsContainer")
 
 <script type="text/javascript">

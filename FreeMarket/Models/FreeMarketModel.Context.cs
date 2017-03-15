@@ -411,5 +411,14 @@ namespace FreeMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllProductsInOrder_Result>("GetAllProductsInOrder", orderNumberParameter);
         }
+    
+        public virtual ObjectResult<GetOrderDeliveryReport_Result> GetOrderDeliveryReport(Nullable<int> orderNumber)
+        {
+            var orderNumberParameter = orderNumber.HasValue ?
+                new ObjectParameter("OrderNumber", orderNumber) :
+                new ObjectParameter("OrderNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOrderDeliveryReport_Result>("GetOrderDeliveryReport", orderNumberParameter);
+        }
     }
 }

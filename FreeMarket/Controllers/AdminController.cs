@@ -350,7 +350,11 @@ namespace FreeMarket.Controllers
 
                         if (order != null)
                         {
-                            order.OrderStatus = "Confirmed";
+                            if (order.DeliveryType == "Virtual")
+                                order.OrderStatus = "Complete";
+                            else
+                                order.OrderStatus = "Confirmed";
+
                             order.PaymentReceived = true;
                             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
@@ -482,11 +486,12 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
-        public ActionResult ControlPanelIndex()
+        public async Task<ActionResult> ControlPanelIndex()
         {
-            List<WebsiteFunction> collection = WebsiteFunction.GetAllFunctions();
+            ControlPanelViewModel model = new ControlPanelViewModel();
+            model.SetSMSCredits();
 
-            return View(collection);
+            return View(model);
         }
 
         public ActionResult PostOfficeIndex()
@@ -1410,7 +1415,10 @@ namespace FreeMarket.Controllers
                 }
             }
 
-            return Content(Math.Round(totalWeight, 2).ToString());
+            if (totalWeight == 0)
+                return Content("N/A");
+            else
+                return Content(Math.Round(totalWeight, 2).ToString());
         }
 
         public ActionResult ExportToCsv(string id)

@@ -244,6 +244,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Admin\AdminOrderHistoryViewModel.cs" />
     <Compile Include="Models\Admin\AspNetUserCustomer.cs" />
+    <Compile Include="Models\Admin\ControlPanelViewModel.cs" />
     <Compile Include="Models\Admin\CouriersCollection.cs" />
     <Compile Include="Models\Admin\SupportMetaData.cs" />
     <Compile Include="Models\Admin\CustodianMetaData.cs" />
@@ -353,6 +354,9 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetNumberOfItemsStatistic_Result.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetOrderDeliveryReport_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetOrderDetails_Result.cs">

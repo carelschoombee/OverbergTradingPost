@@ -466,10 +466,24 @@ namespace FreeMarket.Controllers
         [Authorize]
         public ActionResult PayInvoice(int orderNumber)
         {
-            ShoppingCart cart = new ShoppingCart(orderNumber);
-            PayInvoiceViewModel model = new PayInvoiceViewModel(cart);
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(orderNumber);
+                if (order == null)
+                    return RedirectToAction("Cart");
+                else
+                {
+                    if (User.Identity.GetUserId() == order.CustomerNumber)
+                    {
+                        ShoppingCart cart = new ShoppingCart(orderNumber);
+                        PayInvoiceViewModel model = new PayInvoiceViewModel(cart);
 
-            return View("PayInvoice", model);
+                        return View("PayInvoice", model);
+                    }
+                }
+            }
+
+            return RedirectToAction("Cart");
         }
 
         [HttpPost]

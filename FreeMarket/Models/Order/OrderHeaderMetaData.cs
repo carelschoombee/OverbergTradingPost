@@ -159,22 +159,38 @@ namespace FreeMarket.Models
         {
             Stream stream = new MemoryStream();
             Dictionary<Stream, string> outCollection = new Dictionary<Stream, string>();
+            ReportDataSource rds = new ReportDataSource();
 
             try
             {
-                GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
-                FreeMarketDataSet ds = new FreeMarketDataSet();
+                if (reportType == "DeliveryInstructions")
+                {
+                    GetOrderDeliveryReportTableAdapter ta = new GetOrderDeliveryReportTableAdapter();
+                    FreeMarketDataSet ds = new FreeMarketDataSet();
 
-                ds.GetOrderReport.Clear();
-                ds.EnforceConstraints = false;
+                    ds.GetOrderDeliveryReport.Clear();
+                    ds.EnforceConstraints = false;
 
-                ta.Fill(ds.GetOrderReport, orderNumber);
+                    ta.Fill(ds.GetOrderDeliveryReport, orderNumber);
 
-                ReportDataSource rds = new ReportDataSource();
-                rds.Name = "DataSet1";
-                rds.Value = ds.GetOrderReport;
+                    rds.Name = "DataSet1";
+                    rds.Value = ds.GetOrderDeliveryReport;
+                }
+                else
+                {
+                    GetOrderReportTableAdapter ta = new GetOrderReportTableAdapter();
+                    FreeMarketDataSet ds = new FreeMarketDataSet();
 
-                ReportViewer rv = new Microsoft.Reporting.WebForms.ReportViewer();
+                    ds.GetOrderReport.Clear();
+                    ds.EnforceConstraints = false;
+
+                    ta.Fill(ds.GetOrderReport, orderNumber);
+
+                    rds.Name = "DataSet1";
+                    rds.Value = ds.GetOrderReport;
+                }
+
+                ReportViewer rv = new ReportViewer();
                 rv.ProcessingMode = ProcessingMode.Local;
 
                 switch (reportType)
@@ -199,7 +215,6 @@ namespace FreeMarket.Models
                         break;
                     default:
                         return new Dictionary<Stream, string>();
-
                 }
 
                 rv.LocalReport.DataSources.Add(rds);
@@ -497,6 +512,8 @@ namespace FreeMarket.Models
 
                 SendInvoiceSmsToCustomer(user, order);
 
+                SendConfirmationSmsToSupport(user, supportInfo, order);
+
                 order.InvoiceSent = true;
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
@@ -531,8 +548,6 @@ namespace FreeMarket.Models
 
                 SendConfirmationEmailToCustomer(order, user, supportInfo, orderSummary);
 
-                SendConfirmationSmsToSupport(user, supportInfo, order);
-
                 SendConfirmationSmsToCustomer(user, order);
 
                 SendConfirmationEmailToCourier(order, supportInfo, orderDeliveryInstruction);
@@ -544,12 +559,12 @@ namespace FreeMarket.Models
             if (order.DeliveryType == "Courier" || order.DeliveryType == "LocalCourier")
             {
                 Courier courier = new Courier();
-                List<GetOrderReport_Result> result = new List<GetOrderReport_Result>();
+                List<GetOrderDeliveryReport_Result> result = new List<GetOrderDeliveryReport_Result>();
 
                 using (FreeMarketEntities db = new FreeMarketEntities())
                 {
                     courier = db.Couriers.Find(order.CourierNumber);
-                    result = db.GetOrderReport(order.OrderNumber).ToList();
+                    result = db.GetOrderDeliveryReport(order.OrderNumber).ToList();
                 }
 
                 string destination = "";
@@ -618,7 +633,7 @@ namespace FreeMarket.Models
             }
         }
 
-        private static string BuildItemsTableForEmail(List<GetOrderReport_Result> result)
+        private static string BuildItemsTableForEmail(List<GetOrderDeliveryReport_Result> result)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("<table>");
@@ -638,7 +653,7 @@ namespace FreeMarket.Models
             builder.Append("</th>");
             builder.Append("</tr>");
 
-            foreach (GetOrderReport_Result res in result)
+            foreach (GetOrderDeliveryReport_Result res in result)
             {
                 builder.Append("<tr>");
                 builder.Append("<td>");
@@ -718,6 +733,22 @@ namespace FreeMarket.Models
                                 , string.Format("{0:d}", dateDispatch))
                                 , user.PhoneNumber);
                         }
+                        else if (order.DeliveryType == "Virtual")
+                        {
+                            string message = "";
+
+                            message = db.SiteConfigurations
+                                    .Where(c => c.Key == "OrderVirtualConfirmationSmsLine1")
+                                    .Select(c => c.Value)
+                                    .FirstOrDefault();
+
+                            SMSHelper helper = new SMSHelper();
+
+                            await helper.SendMessage(string.Format(message
+                                , user.Name
+                                , order.OrderNumber)
+                                , user.PhoneNumber);
+                        }
                     }
                 }
             }
@@ -767,13 +798,13 @@ namespace FreeMarket.Models
                 {
                     if (function.Activated == true)
                     {
-                        DateTime dateDispatch = DateTime.Now;
-                        DateTime dateArrive = DateTime.Now;
-
-                        dateDispatch = GetDispatchDay((DateTime)order.DeliveryDate);
-                        dateArrive = GetArriveDay((DateTime)order.DeliveryDate);
-
                         string message = "";
+                        string date = "";
+
+                        if (order.DeliveryDate == null)
+                            date = "Not Applicable";
+                        else
+                            date = string.Format("{0:f}", order.DeliveryDate);
 
                         message = db.SiteConfigurations
                             .Where(c => c.Key == "OrderConfirmationSMSSupport")
@@ -785,7 +816,7 @@ namespace FreeMarket.Models
                         await helper.SendMessage(
                                 string.Format(message
                                 , user.Name, order.OrderNumber
-                                , string.Format("{0:f}", order.DeliveryDate)
+                                , date
                                 , string.Format("{0:C}", order.TotalOrderValue)
                                 , order.DeliveryType)
                             , string.Format("{0},{1}"
@@ -829,7 +860,7 @@ namespace FreeMarket.Models
         private static void GetConfirmationReports(int orderNumber, string deliveryType, ref Dictionary<Stream,
             string> orderSummary, ref Dictionary<Stream, string> orderDeliveryInstruction)
         {
-            if (deliveryType == "Courier" || deliveryType == "LocalCourier")
+            if (deliveryType == "Courier" || deliveryType == "LocalCourier" || deliveryType == "Virtual")
             {
                 orderSummary = GetReport(ReportType.OrderConfirmation.ToString(), orderNumber);
                 orderDeliveryInstruction = GetReport(ReportType.DeliveryInstructions.ToString(), orderNumber);

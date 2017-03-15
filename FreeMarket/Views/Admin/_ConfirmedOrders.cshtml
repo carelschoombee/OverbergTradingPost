@@ -52,7 +52,11 @@
                     <div>@Html.ValidationMessageFor(c => Model[i].TrackingCodes, "", new { @class = "text-danger" })</div>
                 </td>
                 <td class="text-center"><span style="white-space:pre-line">@Model[i].DeliveryAddress</span></td>
-                @if (Model[i].DeliveryDate < DateTime.Now)
+                @if (Model[i].DeliveryDate == null)
+                {
+                    <td class="text-center">Not Applicable</td>
+                }
+                else if (Model[i].DeliveryDate < DateTime.Now)
                 {
                     <td class="text-center"><font class="text-danger">@string.Format("{0:f}", Model[i].DeliveryDate)</font></td>
                 }
