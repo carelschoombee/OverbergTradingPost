@@ -31,7 +31,7 @@ namespace FreeMarket
             string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/Trading Post Logo 2.jpg");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -64,7 +64,7 @@ namespace FreeMarket
             string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", message.Body);
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/Trading Post Logo 2.jpg");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -101,7 +101,7 @@ namespace FreeMarket
             string body = string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=cid:LogoImage></td></tr></table></body></html>", EmailService.Borderify(bodyContent));
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body.Trim(), null, "text/html");
 
-            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png");
+            string fileNameLogo = HttpContext.Current.Server.MapPath("~/Content/Images/Trading Post Logo 2.jpg");
             System.Net.Mail.LinkedResource imageResource = new System.Net.Mail.LinkedResource(fileNameLogo, "image/png");
             imageResource.ContentId = "LogoImage";
             htmlView.LinkedResources.Add(imageResource);
@@ -139,7 +139,7 @@ namespace FreeMarket
             request.AddParameter("subject", message.Subject);
             string body = EmailService.Borderify(message.Body);
             request.AddParameter("html", string.Format("<html><body><table>{0}<tr><td><br />Thank you for using the &copy; Overberg Trading Post platform</td></tr><tr><td><br /><img src=\"cid:ramLogo.jpg\"></td></tr></table></body></html>", body));
-            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/OBMLogoMedium.png"));
+            request.AddFile("inline", HttpContext.Current.Server.MapPath("~/Content/Images/Trading Post Logo 2.jpg"));
             request.Method = Method.POST;
 
             client.Execute(request);

@@ -18,7 +18,7 @@
         </p>
         <br />
         <div class="col-md-6">
-            <img class="img-rounded img-thumbnail img-responsive" src="@Url.Content("~/Content/Images/OBMLogoMedium.png")" alt="Overberg Trading Post" title="Overberg Trading Post" />
+            <img class="img-rounded img-thumbnail img-responsive" src="@Url.Content("~/Content/Images/Trading Post Logo 2.jpg")" alt="Overberg Trading Post" title="Overberg Trading Post" />
         </div>
         <div class="col-md-6 text-center">
             <table class="table table-bordered-custom table-responsive">
@@ -87,7 +87,7 @@
                     <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = Model.Cart.Body.OrderDetails[i].MainImageNumber, defaultSize = PictureSize.Small })" alt="@Model.Cart.Body.OrderDetails[i].ProductDescription" title="@Model.Cart.Body.OrderDetails[i].ProductDescription" />
                 </td>
                 <td>
-                    @*@Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;*@@Model.Cart.Body.OrderDetails[i].ProductDescription supplied by @Model.Cart.Body.OrderDetails[i].SupplierName
+                    @*@Html.Action("GetDimensions", "Product", new { productNumber = Model.Cart.Body.OrderDetails[i].ProductNumber })&nbsp;*@@Model.Cart.Body.OrderDetails[i].ProductDescription - @Model.Cart.Body.OrderDetails[i].SupplierName
                     @Html.HiddenFor(model => Model.Cart.Body.OrderDetails[i].ProductDescription)
                 </td>
                 <td data-label="Price:">

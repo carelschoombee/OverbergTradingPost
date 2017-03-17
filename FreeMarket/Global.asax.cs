@@ -33,7 +33,7 @@ namespace FreeMarket
             }
             catch (Exception e)
             {
-
+                ExceptionLogging.LogException(e);
             }
         }
     }

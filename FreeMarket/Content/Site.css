@@ -4,9 +4,12 @@
 
 .navbar-custom {
 	color: white;
-	background: #1F1C2C; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	
+
+background: #603813; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		
 }
 
 .navbar-form input, .form-inline input {
@@ -30,17 +33,6 @@ header {
 	width: 100%;
 }
 
-@font-face {font-family: "Edwardian Script ITC";
-	/*src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot");
-	src: url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.eot?#iefix") format("embedded-opentype"),
-	url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff2") format("woff2"),
-	url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.woff") format("woff"),*/
-	/*src: url("https://localhost:44316/fonts/EdwardianScriptITC.ttf") format("truetype"),*/
-	src: url("file:../fonts/EdwardianScriptITC.ttf") format("truetype"),
-	/*url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.ttf") format("truetype"),*/
-	/*url("//db.onlinewebfonts.com/t/ca6f91c0cad2fe33614026d17117601d.svg#Edwardian Script ITC") format("svg");*/
-}
-
 input::-webkit-calendar-picker-indicator{
 	display: none;
 }
@@ -57,10 +49,9 @@ h1 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-background: #1F1C2C; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-			  
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */		  
 }
 
 h2 {
@@ -71,9 +62,9 @@ h2 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-background: #1F1C2C; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */         
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */   
 }
 
 h3 {
@@ -84,10 +75,9 @@ h3 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-background: #1F1C2C; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		 
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */		 
 }
 
 h4 {
@@ -98,10 +88,9 @@ h4 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-background: #1F1C2C; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		  
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	  
 }
 
 hr {
@@ -247,9 +236,11 @@ a:hover {
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	border: 1px solid white;
-	background: #1F1C2C; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */      
+
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			
 }
 
 .well-modal {
@@ -257,21 +248,31 @@ a:hover {
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	border: 1px solid white;
-	background: #1F1C2C; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+	
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		 
 }
 
 .well-banner {
-	background: #1F1C2C; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */     
+
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			
 }
 
 .modal-content {
-	background: #1F1C2C; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #1F1C2C , #928DAB); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #1F1C2C , #928DAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	border: 1px solid white;
+
+	background: #603813; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		
 }
 
 input, select, text {

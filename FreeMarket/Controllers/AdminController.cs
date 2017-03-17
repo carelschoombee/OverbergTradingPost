@@ -1293,11 +1293,11 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditWebsiteFunction(List<WebsiteFunction> model)
+        public ActionResult EditWebsiteFunction(ControlPanelViewModel model)
         {
             if (ModelState.IsValid)
             {
-                foreach (WebsiteFunction item in model)
+                foreach (WebsiteFunction item in model.Functions)
                 {
                     using (FreeMarketEntities db = new FreeMarketEntities())
                     {
