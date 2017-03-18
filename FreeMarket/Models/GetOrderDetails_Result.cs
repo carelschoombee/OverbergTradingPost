@@ -30,5 +30,6 @@ namespace FreeMarket.Models
         public string Description { get; set; }
         public string SupplierName { get; set; }
         public decimal Weight { get; set; }
+        public bool IsVirtual { get; set; }
     }
 }

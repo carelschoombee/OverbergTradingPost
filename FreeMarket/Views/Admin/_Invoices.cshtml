@@ -22,7 +22,7 @@
                 Total Weight
             </th>
             <th>
-                Delivery Type
+                Notes
             </th>
             <th>
                 Delivery Address
@@ -47,24 +47,21 @@
                 <td data-label="Total:" class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
                 <td data-label="KG:" class="text-center">@Html.Action("GetTotalWeightOfOrder", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center">
-                    @if (Model[i].DeliveryType == "LocalCourier")
+                    @Html.Action("AnyVirtual", "Admin", new { id = Model[i].OrderNumber })
+                </td>
+                <td class="text-center">
+                    @if (Model[i].DeliveryType == "Virtual")
                     {
-                        <div>Local Courier</div>
-                    }
-                    else if (Model[i].DeliveryType == "PostOffice")
-                    {
-                        <div>Post Office</div>
+                        <span style="white-space:pre-line">N/A</span>
                     }
                     else
                     {
-                        <div>@Model[i].DeliveryType</div>
+                        <span style="white-space:pre-line">@Model[i].DeliveryAddress</span>
                     }
-
                 </td>
-                <td class="text-center"><span style="white-space:pre-line">@Model[i].DeliveryAddress</span></td>
                 @if (Model[i].DeliveryDate == null)
                 {
-                    <td class="text-center">Not Applicable</td>
+                    <td class="text-center">N/A</td>
                 }
                 else if (Model[i].DeliveryDate < DateTime.Now)
                 {

@@ -22,7 +22,7 @@
                 Total Weight
             </th>
             <th>
-                Delivery Type
+                Notes
             </th>
             <th>
                 Delivery Address
@@ -47,8 +47,8 @@
                 <td data-label="Total:" class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
                 <td data-label="KG:" class="text-center">@Html.Action("GetTotalWeightOfOrder", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
                 <td class="text-center">
-                    <div>@Model[i].DeliveryType - Tracking Code:</div>
-                    <div>@Html.EditorFor(c => Model[i].TrackingCodes)</div>
+                    <div>@Html.Action("AnyVirtual", "Admin", new { id = Model[i].OrderNumber })</div>
+                    <div>Tracking Code: @Html.EditorFor(c => Model[i].TrackingCodes)</div>
                     <div>@Html.ValidationMessageFor(c => Model[i].TrackingCodes, "", new { @class = "text-danger" })</div>
                 </td>
                 <td class="text-center"><span style="white-space:pre-line">@Model[i].DeliveryAddress</span></td>

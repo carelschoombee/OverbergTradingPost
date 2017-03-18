@@ -1448,5 +1448,36 @@ namespace FreeMarket.Controllers
                 return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", title);
             }
         }
+
+        public ActionResult AnyVirtual(int id)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                OrderHeader order = db.OrderHeaders.Find(id);
+                if (order == null)
+                    return Content("");
+
+                List<GetOrderDetails_Result> details = db.GetOrderDetails(id).ToList();
+
+                if (details != null && details.Count > 0)
+                {
+                    foreach (GetOrderDetails_Result item in details)
+                    {
+                        if (item.IsVirtual)
+                        {
+                            return Content("Contact the customer to discuss advert(s)");
+                        }
+                    }
+                }
+
+                string deliveryType = order.DeliveryType;
+                if (deliveryType == "LocalCourier")
+                    return Content("Local Courier");
+                else if (deliveryType == "PostOffice")
+                    return Content("Post Office");
+                else
+                    return Content(deliveryType);
+            }
+        }
     }
 }

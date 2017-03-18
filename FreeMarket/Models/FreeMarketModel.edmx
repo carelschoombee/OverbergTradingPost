@@ -1282,9 +1282,6 @@
           <Parameter Name="orderNumber" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Supports" EntityType="FreeMarketModel.Support" />
-          <FunctionImport Name="GetOrderDetails" ReturnType="Collection(FreeMarketModel.GetOrderDetails_Result)">
-          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="FilterAuditUser" ReturnType="Collection(FreeMarketModel.FilterAuditUser_Result)">
           <Parameter Name="filterCriteria" Mode="In" Type="String" />
           </FunctionImport>
@@ -1402,7 +1399,10 @@
           <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetOrderDeliveryReport" ReturnType="Collection(FreeMarketModel.GetOrderDeliveryReport_Result)">
-            <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetOrderDetails" ReturnType="Collection(FreeMarketModel.GetOrderDetails_Result)">
+            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="SystemAction">
@@ -1953,25 +1953,6 @@
           <Property Name="PostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Province" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="GetOrderDetails_Result">
-          <Property Type="Int32" Name="ItemNumber" Nullable="false" />
-          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
-          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
-          <Property Type="Int32" Name="ProductNumber" Nullable="false" />
-          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
-          <Property Type="Boolean" Name="Settled" Nullable="true" />
-          <Property Type="Boolean" Name="PaySupplier" Nullable="true" />
-          <Property Type="Boolean" Name="PayCourier" Nullable="true" />
-          <Property Type="Boolean" Name="PaidSupplier" Nullable="true" />
-          <Property Type="Boolean" Name="PaidCourier" Nullable="true" />
-          <Property Type="String" Name="OrderItemStatus" Nullable="false" MaxLength="50" />
-          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
-          <Property Type="Int32" Name="Quantity" Nullable="false" />
-          <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
-          <Property Type="String" Name="Description" Nullable="false" />
-          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
-        </ComplexType>
         <ComplexType Name="FilterAuditUser_Result">
           <Property Type="Int64" Name="ActionNumber" Nullable="true" />
           <Property Type="DateTime" Name="DateTime" Nullable="true" Precision="23" />
@@ -2477,6 +2458,26 @@
           <Property Type="String" Name="BankingDetailsAccountType" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="BankingDetailsAccountNumber" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="ProofOfPaymentEmail" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetOrderDetails_Result">
+          <Property Type="Int32" Name="ItemNumber" Nullable="false" />
+          <Property Type="Int32" Name="OrderNumber" Nullable="false" />
+          <Property Type="Int32" Name="SupplierNumber" Nullable="false" />
+          <Property Type="Int32" Name="ProductNumber" Nullable="false" />
+          <Property Type="Int32" Name="CustodianNumber" Nullable="true" />
+          <Property Type="Boolean" Name="Settled" Nullable="true" />
+          <Property Type="Boolean" Name="PaySupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PayCourier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidSupplier" Nullable="true" />
+          <Property Type="Boolean" Name="PaidCourier" Nullable="true" />
+          <Property Type="String" Name="OrderItemStatus" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="Quantity" Nullable="false" />
+          <Property Type="Decimal" Name="OrderItemValue" Nullable="false" Precision="19" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
+          <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3181,29 +3182,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetOrderDetails" FunctionName="FreeMarketModel.Store.GetOrderDetails">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FreeMarketModel.GetOrderDetails_Result">
-                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
-                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
-                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
-                <ScalarProperty Name="Settled" ColumnName="Settled" />
-                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
-                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
-                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
-                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
-                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FilterAuditUser" FunctionName="FreeMarketModel.Store.FilterAuditUser">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FreeMarketModel.FilterAuditUser_Result">
@@ -3677,6 +3655,30 @@
                 <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
                 <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
                 <ScalarProperty Name="ProofOfPaymentEmail" ColumnName="ProofOfPaymentEmail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetOrderDetails" FunctionName="FreeMarketModel.Store.GetOrderDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FreeMarketModel.GetOrderDetails_Result">
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="SupplierNumber" ColumnName="SupplierNumber" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="CustodianNumber" ColumnName="CustodianNumber" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="PaySupplier" ColumnName="PaySupplier" />
+                <ScalarProperty Name="PayCourier" ColumnName="PayCourier" />
+                <ScalarProperty Name="PaidSupplier" ColumnName="PaidSupplier" />
+                <ScalarProperty Name="PaidCourier" ColumnName="PaidCourier" />
+                <ScalarProperty Name="OrderItemStatus" ColumnName="OrderItemStatus" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemValue" ColumnName="OrderItemValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

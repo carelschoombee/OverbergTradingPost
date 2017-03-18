@@ -1316,7 +1316,7 @@ namespace FreeMarket.Models
             {
                 return db.OrderHeaders
                     .Where(c => c.OrderStatus == "Invoiced")
-                    .OrderBy(c => c.DeliveryDate)
+                    .OrderByDescending(c => c.OrderNumber)
                     .ToList();
             }
         }
@@ -1327,7 +1327,7 @@ namespace FreeMarket.Models
             {
                 return db.OrderHeaders
                     .Where(c => c.OrderStatus == "Confirmed")
-                    .OrderBy(c => c.DeliveryDate)
+                    .OrderByDescending(c => c.OrderNumber)
                     .ToList();
             }
         }
@@ -1338,7 +1338,7 @@ namespace FreeMarket.Models
             {
                 return db.OrderHeaders
                     .Where(c => c.OrderStatus == "InTransit")
-                    .OrderBy(c => c.DeliveryDate)
+                    .OrderByDescending(c => c.OrderNumber)
                     .ToList();
             }
         }
