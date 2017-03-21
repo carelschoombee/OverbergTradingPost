@@ -2,14 +2,22 @@
 
 /* bootstrap 3 helpers */
 
+.has-error .form-control-feedback {
+    color: #E74C3C;
+}
+.has-success .form-control-feedback {
+    color: #18BCA0;
+}
+
 .navbar-custom {
 	color: white;
-	
 
-background: #603813; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+             
 }
 
 .navbar-form input, .form-inline input {
@@ -49,9 +57,11 @@ h1 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */		  
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        	  
 }
 
 h2 {
@@ -62,9 +72,12 @@ h2 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */   
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              
 }
 
 h3 {
@@ -75,9 +88,12 @@ h3 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */		 
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+             		 
 }
 
 h4 {
@@ -88,9 +104,12 @@ h4 {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	  
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+           
 }
 
 hr {
@@ -237,10 +256,12 @@ a:hover {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-			
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+             			
 }
 
 .well-modal {
@@ -249,18 +270,24 @@ a:hover {
 	border-radius: 10px;
 	border: 1px solid white;
 	
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		 
+
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        	 
 }
 
 .well-banner {
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-			
+
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+               	
 }
 
 .modal-content {
@@ -269,10 +296,12 @@ a:hover {
 	border-radius: 10px;
 	border: 1px solid white;
 
-	background: #603813; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to left, #603813 , #b29f94); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to left, #603813 , #b29f94); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		
+
+
+background: #000000; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          	
 }
 
 input, select, text {
@@ -561,7 +590,7 @@ th, td {
   width: 400px;
 }
 
-a.freemarket-link { color: black; font-weight: bold  }
+a.freemarket-link { color: white; font-weight: bold; text-decoration:underline  }
 
 .hidden {
 	display:none;

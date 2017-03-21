@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FreeMarket</RootNamespace>
-    <AssemblyName>FreeMarket</AssemblyName>
+    <AssemblyName>OverbergTradingPost</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -578,7 +578,6 @@
     <Content Include="Content\Images\defaultPicture.png" />
     <Content Include="Content\Images\defaultPictureSmall.png" />
     <Content Include="Content\Images\facebook.png" />
-    <Content Include="Content\Images\background3.jpg" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
     <Content Include="Content\Images\RapidSSL_SEAL-90x50.gif" />

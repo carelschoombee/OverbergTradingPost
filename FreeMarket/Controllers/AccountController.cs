@@ -98,7 +98,7 @@ namespace FreeMarket.Controllers
                     allowPassOnEmailVerfication = true;
                 }
             }
-            
+
 
 
             // This now counts login failures towards account lockout
@@ -213,7 +213,7 @@ namespace FreeMarket.Controllers
 
                     AuditUser.LogAudit(1, "", user.Id);
 
-                    return RedirectToAction("Index", "Product");
+                    return RedirectToAction("Departments", "Product");
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 }
@@ -493,7 +493,7 @@ namespace FreeMarket.Controllers
             // Destroy the session
             Session["cart"] = null;
 
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("Departments", "Product");
         }
 
         //
@@ -550,7 +550,7 @@ namespace FreeMarket.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("Departments", "Product");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

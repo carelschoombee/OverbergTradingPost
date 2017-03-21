@@ -467,7 +467,7 @@ namespace FreeMarket.Models
         [DisplayName("Description")]
         public string Description { get; set; }
 
-        [DisplayName("Virtual Item")]
+        [DisplayName("Is this an Advert?")]
         public bool IsVirtual { get; set; }
 
         [Required]

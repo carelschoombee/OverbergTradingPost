@@ -94,7 +94,10 @@
         <li><a href="#profile" data-toggle="tab">Functions</a></li>
         <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
         @*<li><a href="#cashSales" data-toggle="tab">Cash Sales</a></li>*@
-        <li><a href="#auditing" data-toggle="tab">Auditing</a></li>
+        @if (User.Identity.Name == "carelschoombee@gmail.com")
+        {
+            <li><a href="#auditing" data-toggle="tab">Auditing</a></li>
+        }
     </ul>
 
     <div class="tab-content">
@@ -409,6 +412,8 @@
 
             </div>
         </div>*@
+        @if (User.Identity.Name == "carelschoombee@gmail.com")
+        {
         <div class="tab-pane" id="auditing">
             <h2 class="text-center">Search Audit</h2>
             <hr />
@@ -450,6 +455,7 @@
 
             </div>
         </div>
+        }
         <div class="tab-pane" id="profile">
             <div style="font-size:x-large">
                 @Html.Partial("_Functions")

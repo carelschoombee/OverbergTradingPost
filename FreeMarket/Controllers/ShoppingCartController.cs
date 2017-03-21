@@ -65,7 +65,7 @@ namespace FreeMarket.Controllers
 
             ViewProductViewModel model = new ViewProductViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
             if (model == null)
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Departments", "Product");
 
             return PartialView("_ViewProductModal", model);
         }
@@ -77,7 +77,7 @@ namespace FreeMarket.Controllers
 
             ViewProductViewModel model = new ViewProductViewModel(id, supplierNumber, quantity, cart.Order.OrderNumber);
             if (model == null)
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Departments", "Product");
 
             model.Reviews = ProductReviewsCollection.GetReviewsOnly(id, supplierNumber, 0);
 
@@ -262,7 +262,7 @@ namespace FreeMarket.Controllers
 
             SaveCartViewModel model = new SaveCartViewModel(userId, sessionCart.Order, localCourierCost, courierCost, postOfficeCost);
             if (model == null)
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Departments", "Product");
 
             return View("CheckoutDeliveryDetails", model);
         }
