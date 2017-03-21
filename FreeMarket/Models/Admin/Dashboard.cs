@@ -18,6 +18,7 @@ namespace FreeMarket.Models
         public string CustomerSearchCriteria { get; set; }
         public List<AspNetUser> Customers { get; set; }
 
+        public List<OrderHeader> AllOrders { get; set; }
         public List<OrderHeader> Invoices { get; set; }
         public List<OrderHeader> ConfirmedOrders { get; set; }
         public List<OrderHeader> InTransitOrders { get; set; }
@@ -115,6 +116,7 @@ namespace FreeMarket.Models
 
                 RatingsInformation = new RatingsInfo();
                 Customers = new List<AspNetUser>();
+                AllOrders = db.OrderHeaders.OrderByDescending(c => c.OrderNumber).ToList();
                 Invoices = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced").OrderByDescending(c => c.OrderNumber).ToList();
                 ConfirmedOrders = db.OrderHeaders.Where(c => c.OrderStatus == "Confirmed").OrderByDescending(c => c.OrderNumber).ToList();
                 InTransitOrders = db.OrderHeaders.Where(c => c.OrderStatus == "InTransit").OrderByDescending(c => c.OrderNumber).ToList();

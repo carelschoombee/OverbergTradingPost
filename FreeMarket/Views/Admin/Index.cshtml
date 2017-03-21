@@ -87,10 +87,11 @@
         <li class="active"><a href="#home" data-toggle="tab">Charts</a></li>
         <li><a href="#invoices" data-toggle="tab">Invoices</a></li>
         <li><a href="#dispatch" data-toggle="tab">Orders to be Dispatched</a></li>
-        <li><a href="#orders" data-toggle="tab">In Transit Orders</a></li>
-        <li><a href="#customers" data-toggle="tab">Customers</a></li>
-        <li><a href="#orderSearch" data-toggle="tab">Search Order</a></li>
-        <li><a href="#ratings" data-toggle="tab">Ratings</a></li>
+        <li><a href="#orders" data-toggle="tab">Orders In Transit </a></li>
+        <li><a href="#customers" data-toggle="tab">Customer Search</a></li>
+        <li><a href="#orderSearch" data-toggle="tab">Order Search</a></li>
+        <li><a href="#orderRecord" data-toggle="tab">Order Record</a></li>
+        <li><a href="#ratings" data-toggle="tab">Customer Ratings</a></li>
         <li><a href="#profile" data-toggle="tab">Functions</a></li>
         <li><a href="#refunds" data-toggle="tab">Refunds</a></li>
         @*<li><a href="#cashSales" data-toggle="tab">Cash Sales</a></li>*@
@@ -294,6 +295,17 @@
                 }
 
             </div>
+        </div>
+        <div class="tab-pane" id="orderRecord">
+            <div class="text-center">
+                <h2>View all Orders</h2>
+                <br />
+            </div>
+
+            @if (Model.AllOrders != null)
+            {
+                @Html.Partial("_AllOrders", Model.AllOrders)
+            }
         </div>
         <div class="tab-pane" id="orderSearch">
             <h2 class="text-center">Search Orders</h2>

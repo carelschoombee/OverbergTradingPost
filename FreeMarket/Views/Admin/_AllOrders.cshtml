@@ -1,0 +1,58 @@
+﻿@using FreeMarket.Models
+@model List<OrderHeader>
+
+<table class="table table-bordered-custom table-responsive">
+
+    @if (Model != null && Model.Count != 0)
+    {
+        <tr>
+            <th>
+                #
+            </th>
+            <th>Status</th>
+            <th>Payment Received</th>
+            <th>
+                Customer Name
+            </th>
+            <th>
+                Total Weight
+            </th>
+            <th>Shipping</th>
+            <th>
+                Total
+            </th>
+            
+        </tr>
+        for (int i = 0; i < Model.Count; i++)
+        {
+            
+            <tr>
+                <td data-label="#:" class="text-center">
+                    @Html.ActionLink(Model[i].OrderNumber.ToString(), "ViewOrder", "Admin", new { orderNumber = Model[i].OrderNumber, customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })
+                    @Html.HiddenFor(model => Model[i].OrderNumber)
+                </td>
+                <td>@Model[i].OrderStatus</td>
+                <td>@Model[i].PaymentReceived</td>
+                <td class="text-center">@Html.ActionLink(Html.Action("GetCustomerName", "Admin", new { orderNumber = Model[i].OrderNumber }).ToString(), "ViewCustomer", "Admin", new { customerNumber = Model[i].CustomerNumber }, new { @class = "freemarket-link" })</td>                
+                <td data-label="KG:" class="text-center">@Html.Action("GetTotalWeightOfOrder", "Admin", new { orderNumber = Model[i].OrderNumber })</td>
+                <td>@string.Format("{0:C}", Model[i].ShippingTotal)</td>
+                <td data-label="Total:" class="text-center">@string.Format("{0:C}", Model[i].TotalOrderValue)</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td style="font-size: 20px">
+                There are no new invoices at the moment.
+            </td>
+        </tr>
+    }
+</table>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="col-sm-offset-5">
+        <input type="submit" value="Save/Update" class="btn btn-primary" />
+    </div>
+}

@@ -590,7 +590,7 @@ th, td {
   width: 400px;
 }
 
-a.freemarket-link { color: white; font-weight: bold; text-decoration:underline  }
+a.freemarket-link { color: yellow; font-weight: bold; text-decoration:underline  }
 
 .hidden {
 	display:none;

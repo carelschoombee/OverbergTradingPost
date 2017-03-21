@@ -550,6 +550,8 @@
   <ItemGroup>
     <Content Include="Content\Images\AboutUs.jpg" />
     <Content Include="Content\Images\Background4.jpg" />
+    <Content Include="Content\Images\comodo-seal.png" />
+    <Content Include="Content\Images\comodo.png" />
     <Content Include="Content\Images\delivery.jpg" />
     <Content Include="Content\Images\MasterCard.png" />
     <Content Include="Content\Images\PayGate-3D-Secure-Logo-MasterCard-SecureCode-Small.png" />
@@ -565,7 +567,6 @@
     <Content Include="Content\Images\PayGate-Direct-Pay-Online-Logo-Online-Payment-Processing-Small.png" />
     <Content Include="Content\Images\PayGate-Direct-Pay-Online-Logo-Online-Payment-Processing.png" />
     <Content Include="Content\Images\PayGate.png" />
-    <Content Include="Content\Images\rapidssl.png" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -580,7 +581,6 @@
     <Content Include="Content\Images\facebook.png" />
     <Content Include="Content\Images\paid.jpg" />
     <Content Include="Content\Images\ramLogo.jpg" />
-    <Content Include="Content\Images\RapidSSL_SEAL-90x50.gif" />
     <Content Include="Content\Images\slideCourier2.png" />
     <Content Include="Content\Images\slideCourier1.png" />
     <Content Include="Content\Images\TimeFreight.png" />
@@ -867,6 +867,7 @@
     <Content Include="Views\ShoppingCart\_ConfirmInvoiceDeliveryPartial.cshtml" />
     <Content Include="Views\ShoppingCart\PayInvoice.cshtml" />
     <Content Include="Views\Admin\_Invoices.cshtml" />
+    <Content Include="Views\Admin\_AllOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
