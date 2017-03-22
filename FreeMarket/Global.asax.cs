@@ -33,6 +33,9 @@ namespace FreeMarket
 
                 if (!Roles.IsUserInRole("eloise@overbergtradingpost.co.za", "Administrator"))
                     Roles.AddUserToRole("eloise@overbergtradingpost.co.za", "Administrator");
+
+                if (!Roles.IsUserInRole("admin@overbergtradingpost.co.za", "Administrator"))
+                    Roles.AddUserToRole("admin@overbergtradingpost.co.za", "Administrator");
             }
             catch (Exception e)
             {
