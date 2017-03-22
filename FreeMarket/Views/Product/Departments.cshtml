@@ -16,7 +16,38 @@
             </tr>
             <tr>
                 <td class="text-center" colspan="2">
-                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model[i].MainImageNumber})" alt="@Model[i].DepartmentName" title="@Model[i].DepartmentName" />
+                    @if (Model[i].SecondaryImageNumber != 0)
+                    {
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <!-- Carousel indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                            </ol>
+
+                            <!-- Wrapper for carousel items -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model[i].MainImageNumber})" alt="@Model[i].DepartmentName" title="@Model[i].DepartmentName" />
+                                </div>
+                                <div class="item">
+                                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model[i].SecondaryImageNumber})" alt="@Model[i].DepartmentName" title="@Model[i].DepartmentName" />
+                                </div>
+                            </div>
+
+                            <!-- Carousel controls -->
+                            <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model[i].MainImageNumber})" alt="@Model[i].DepartmentName" title="@Model[i].DepartmentName" />
+                    }
                 </td>
             </tr>
             <tr>

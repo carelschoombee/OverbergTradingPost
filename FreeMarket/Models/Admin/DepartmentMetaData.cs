@@ -54,7 +54,7 @@ namespace FreeMarket.Models
                     .FirstOrDefault();
 
                 model.SecondaryImageNumber = db.DepartmentPictures
-                    .Where(c => c.DepartmentNumber == model.DepartmentNumber && c.Dimensions == PictureSize.Small.ToString())
+                    .Where(c => c.DepartmentNumber == model.DepartmentNumber && c.Dimensions == PictureSize.Large.ToString())
                     .Select(c => c.PictureNumber)
                     .FirstOrDefault();
             }
@@ -77,7 +77,7 @@ namespace FreeMarket.Models
                         .FirstOrDefault();
 
                     int imageNumberSecondary = db.DepartmentPictures
-                        .Where(c => c.DepartmentNumber == department.DepartmentNumber && c.Dimensions == PictureSize.Small.ToString())
+                        .Where(c => c.DepartmentNumber == department.DepartmentNumber && c.Dimensions == PictureSize.Large.ToString())
                         .Select(c => c.PictureNumber)
                         .FirstOrDefault();
 

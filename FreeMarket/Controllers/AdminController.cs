@@ -745,7 +745,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
+        public ActionResult CreateDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageAdditional)
         {
             if (ModelState.IsValid)
             {
@@ -757,8 +757,8 @@ namespace FreeMarket.Controllers
                 if (imagePrimary != null)
                     resultPrimary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Medium, imagePrimary);
 
-                if (imageSecondary != null)
-                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Small, imageSecondary);
+                if (imageAdditional != null)
+                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Large, imageAdditional);
 
                 if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded for department {0}.", department.DepartmentNumber);
@@ -1265,7 +1265,7 @@ namespace FreeMarket.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageSecondary)
+        public ActionResult EditDepartmentProcess(Department department, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageAdditional)
         {
             if (ModelState.IsValid)
             {
@@ -1277,8 +1277,8 @@ namespace FreeMarket.Controllers
                 if (imagePrimary != null)
                     resultPrimary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Medium, imagePrimary);
 
-                if (imageSecondary != null)
-                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Small, imageSecondary);
+                if (imageAdditional != null)
+                    resultSecondary = Department.SaveDepartmentImage(department.DepartmentNumber, PictureSize.Large, imageAdditional);
 
                 if (resultPrimary == FreeMarketResult.Success && resultSecondary == FreeMarketResult.Success)
                     TempData["message"] = string.Format("Images uploaded for department {0}.", department.DepartmentNumber);
