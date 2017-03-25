@@ -343,6 +343,7 @@
         <div class="tab-pane" id="customers">
             <h2 class="text-center">Customers</h2>
             <hr />
+            <div class="text-center">Enter the word "all" in the textbox below to view all customers. If you know the name of the specific customer you are looking for please enter that.</div>
             @using (Ajax.BeginForm("SearchCustomer", "Admin", null, ajaxOptsCustomer, new { @id = "searchCustomerForm" }))
             {
                 @Html.AntiForgeryToken()
@@ -353,7 +354,7 @@
                         @Html.ValidationMessageFor(m => m.CustomerSearchCriteria, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-sm-3">
-                        <input type="submit" value="Filter" class="btn btn-primary btn-sm" />
+                        <input type="submit" value="Filter/Submit" class="btn btn-primary btn-sm" />
                     </div>
                 </div>
 
@@ -672,6 +673,7 @@
             Model.SalesInformation.TotalUnconfirmedOrders == 0 &&
             Model.SalesInformation.TotalConfirmedOrders == 0 &&
             Model.SalesInformation.TotalCompletedOrders == 0 &&
+            Model.SalesInformation.TotalInvoicedOrders == 0 &&
             Model.SalesInformation.TotalRefundedOrders == 0)
     {
 
@@ -688,7 +690,8 @@
             { label: "Unconfirmed", value: @Model.SalesInformation.TotalUnconfirmedOrders },
             { label: "Cancelled", value: @Model.SalesInformation.TotalCancelledOrders },
             { label: "Locked", value: @Model.SalesInformation.TotalLockedOrders },
-            { label: "Refunded", value: @Model.SalesInformation.TotalRefundedOrders }
+            { label: "Refunded", value: @Model.SalesInformation.TotalRefundedOrders },
+            { label: "Invoiced", value: @Model.SalesInformation.TotalInvoicedOrders }
         ],
         labelColor: '#ffffff',
         colors: [

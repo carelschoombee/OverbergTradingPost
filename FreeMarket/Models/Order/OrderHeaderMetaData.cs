@@ -443,14 +443,22 @@ namespace FreeMarket.Models
 
                     await email.SendAsync(iMessageNotifyRefund, refundSummary.FirstOrDefault().Key);
 
-                    SMSHelper helper = new SMSHelper();
+                    // Query the database to determine whether this is activated
+                    WebsiteFunction function = db.WebsiteFunctions.Find(6);
+                    if (function != null)
+                    {
+                        if (function.Activated == true)
+                        {
+                            SMSHelper helper = new SMSHelper();
 
-                    string smsLine1 = db.SiteConfigurations
-                        .Where(c => c.Key == "OrderRefundSmsLine1")
-                        .Select(c => c.Value)
-                        .FirstOrDefault();
+                            string smsLine1 = db.SiteConfigurations
+                                .Where(c => c.Key == "OrderRefundSmsLine1")
+                                .Select(c => c.Value)
+                                .FirstOrDefault();
 
-                    await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber), user.PhoneNumber);
+                            await helper.SendMessage(string.Format(smsLine1, user.Name, orderNumber), user.PhoneNumber);
+                        }
+                    }
                 }
             }
         }

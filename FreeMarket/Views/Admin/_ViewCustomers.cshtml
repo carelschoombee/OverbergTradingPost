@@ -16,9 +16,6 @@
             Phone 1
         </th>
         <th>
-            Phone 2
-        </th>
-        <th>
             Delivery Address
         </th>
         <th>
@@ -42,9 +39,6 @@
             </td>
             <td>
                 @item.PhoneNumber
-            </td>
-            <td>
-                @item.SecondaryPhoneNumber
             </td>
             <td>
                 @Html.Action("GetAddress", "Admin", new { userId = item.Id, addressName = item.DefaultAddress })

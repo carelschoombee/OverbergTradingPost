@@ -19,6 +19,7 @@ namespace FreeMarket.Models
         public int TotalLockedOrders { get; set; }
         public int TotalUnconfirmedOrders { get; set; }
         public int TotalRefundedOrders { get; set; }
+        public int TotalInvoicedOrders { get; set; }
 
         public int NumberOrdersSingleItem { get; set; }
         public int NumberOrdersTwoToFive { get; set; }
@@ -369,6 +370,9 @@ namespace FreeMarket.Models
 
                     List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded").ToList();
                     TotalRefundedOrders = tempRefunded.Count;
+
+                    List<OrderHeader> tempInvoiced = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced").ToList();
+                    TotalInvoicedOrders = tempInvoiced.Count;
                 }
                 else
                 {
@@ -408,6 +412,9 @@ namespace FreeMarket.Models
 
                         List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded" && c.OrderDatePlaced.Value.Year == year).ToList();
                         TotalRefundedOrders = tempRefunded.Count;
+
+                        List<OrderHeader> tempInvoiced = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced" && c.OrderDatePlaced.Value.Year == year).ToList();
+                        TotalInvoicedOrders = tempInvoiced.Count;
 
                         TotalSalesGateway = TotalSalesGateway / 100;
                     }
@@ -510,6 +517,9 @@ namespace FreeMarket.Models
 
                     List<OrderHeader> tempRefunded = db.OrderHeaders.Where(c => c.OrderStatus == "Refunded" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
                     TotalRefundedOrders = tempRefunded.Count;
+
+                    List<OrderHeader> tempInvoiced = db.OrderHeaders.Where(c => c.OrderStatus == "Invoiced" && c.OrderDatePlaced.Value.Year == date.Year && c.OrderDatePlaced.Value.Month == date.Month).ToList();
+                    TotalInvoicedOrders = tempInvoiced.Count;
 
                     TotalSalesGateway = TotalSalesGateway / 100;
                 }
