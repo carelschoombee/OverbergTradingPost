@@ -65,6 +65,8 @@
         <AssociationConnector Association="FreeMarketModel.FK_ProductPicture_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductReview_Product" />
         <AssociationConnector Association="FreeMarketModel.FK_ProductSupplier_Product" />
+        <EntityTypeShape EntityType="FreeMarketModel.ExternalWebsite" Width="1.5" PointX="19.375" PointY="8.75" />
+        <EntityTypeShape EntityType="FreeMarketModel.ExternalWebsitePicture" Width="1.5" PointX="19.375" PointY="18.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -299,6 +299,13 @@
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Error\ErrorHelpers.cs" />
+    <Compile Include="Models\ExternalWebsite.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExternalWebsitePicture.cs">
+      <DependentUpon>FreeMarketModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExternalWebsite\ExternalWebsiteMetaData.cs" />
     <Compile Include="Models\FilterAuditUser_Result.cs">
       <DependentUpon>FreeMarketModel.tt</DependentUpon>
     </Compile>
@@ -868,6 +875,11 @@
     <Content Include="Views\ShoppingCart\PayInvoice.cshtml" />
     <Content Include="Views\Admin\_Invoices.cshtml" />
     <Content Include="Views\Admin\_AllOrders.cshtml" />
+    <Content Include="Views\Admin\ExternalWebsiteIndex.cshtml" />
+    <Content Include="Views\Admin\_ExternalWebsitePartial.cshtml" />
+    <Content Include="Views\Admin\_ValidateExternalWebsitePartial.cshtml" />
+    <Content Include="Views\Admin\CreateExternalWebsite.cshtml" />
+    <Content Include="Views\Admin\EditExternalWebsite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

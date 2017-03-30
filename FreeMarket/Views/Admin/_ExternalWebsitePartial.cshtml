@@ -1,18 +1,40 @@
 ﻿@using FreeMarket.Models
-@model Department
+@model ExternalWebsite
 
 <div class="form-group">
-    @Html.LabelFor(m => m.DepartmentNumber, new { @class = "col-md-4 control-label" })
+    @Html.LabelFor(m => m.Name, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">
-        @Html.DisplayFor(m => m.DepartmentNumber)
-        @Html.HiddenFor(m => m.DepartmentNumber)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.HiddenFor(m => m.LinkId)
+        @Html.HiddenFor(m => m.DateAdded)
     </div>
 </div>
 
 <div class="form-group">
-    @Html.LabelFor(m => m.DepartmentName, new { @class = "col-md-4 control-label" })
+    @Html.LabelFor(m => m.Url, new { @class = "col-md-4 control-label" })
     <div class="col-md-6">
-        @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Department, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DropDownListFor(model => model.SelectedDepartment, Model.Departments, "Choose", new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Description, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DateAdded, new { @class = "col-md-4 control-label" })
+    <div class="col-md-6">
+        @Html.DisplayFor(m => m.DateAdded, new { @class = "form-control" })
     </div>
 </div>
 
@@ -32,7 +54,7 @@
                 <div class="form-group">
                     <div style="position:relative;">
                         <label>Image Medium (336 x 280)</label>
-                        <a class='btn' href='javascript:;'>
+                        <a class='btn btn-primary' href='javascript:;'>
                             Choose...
                             <input type="file" name="imagePrimary" size="40"
                                    style="position:absolute;z-index:2;top:0;
@@ -41,7 +63,7 @@
                                    onchange="readURLPrimary(this);">
                         </a>
                         <div class="col-sm-12">
-                            <img id="imagePrimaryPreview" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model.MainImageNumber })" alt="Free Market" />
+                            <img id="imagePrimaryPreview" class="img-thumbnail" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = Model.MainImageNumber })" alt="Free Market" />
                         </div>
                     </div>
                 </div>
@@ -54,7 +76,7 @@
                 <div class="form-group">
                     <div style="position:relative;">
                         <label>Image Extra (336 x 280)</label>
-                        <a class='btn' href='javascript:;'>
+                        <a class='btn btn-primary' href='javascript:;'>
                             Choose...
                             <input type="file" name="imageAdditional" size="40"
                                    style="position:absolute;z-index:2;top:0;
@@ -63,11 +85,14 @@
                                    onchange="readURLAdditional(this);">
                         </a>
                         <div class="col-sm-12">
-                            <img id="imageAdditionalPreview" class="img-thumbnail" src="@Url.Action("RenderDepartmentImage", "Image", new { id = Model.SecondaryImageNumber })" alt="Free Market" />
+                            <img id="imageAdditionalPreview" class="img-thumbnail" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = Model.AdditionalImageNumber })" alt="Free Market" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+     </div>
 </div>
+
+
+

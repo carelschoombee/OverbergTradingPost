@@ -35,7 +35,7 @@
     </div>
 
     <div>
-        <nav role="navigation" class="navbar navbar-default navbar-static-top navbar-custom" id="topnavbar">
+        <nav role="navigation" class="navbar navbar-default navbar-static-top" id="topnavbar">
             <div class="container">
 
                  @*
@@ -130,11 +130,11 @@
         <hr />
         <footer>
             <p class="text-center" style="font-weight:bold">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
-            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "freemarket-link", @style = "color:black" })</div>
+            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @style = "color:black" })</div>
             
             <div class="row text-center">
                 <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
-                   class="conditionClass freemarket-link"><span style="color:black" aria-hidden="true">&nbsp; Terms and Conditions</span></a>
+                   class="conditionClass"><span style="color:black" aria-hidden="true">&nbsp; Terms and Conditions</span></a>
             </div>
 
             <div id="parent" class="center_div text-center">

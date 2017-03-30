@@ -486,6 +486,13 @@ namespace FreeMarket.Controllers
             return View(collection);
         }
 
+        public ActionResult ExternalWebsiteIndex()
+        {
+            List<ExternalWebsite> collection = ExternalWebsite.GetAllWebsites();
+
+            return View(collection);
+        }
+
         public async Task<ActionResult> ControlPanelIndex()
         {
             ControlPanelViewModel model = new ControlPanelViewModel();
@@ -539,6 +546,13 @@ namespace FreeMarket.Controllers
             Product product = Product.GetNewProduct();
 
             return View(product);
+        }
+
+        public ActionResult CreateExternalWebsite()
+        {
+            ExternalWebsite website = ExternalWebsite.GetNewWebsite();
+
+            return View(website);
         }
 
         public ActionResult CreateSpecial()
@@ -645,6 +659,36 @@ namespace FreeMarket.Controllers
             }
 
             return File(obj.FirstOrDefault().Key, obj.FirstOrDefault().Value, string.Format("Order {0}.pdf", orderNumber));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateExternalWebsiteProcess(ExternalWebsite website, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageAdditional)
+        {
+            if (ModelState.IsValid)
+            {
+                ExternalWebsite.CreateNewExternalWebsite(website);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultAdditional = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = ExternalWebsite.SaveImage(website.LinkId, PictureSize.Medium, imagePrimary);
+
+                if (imageAdditional != null)
+                    resultAdditional = ExternalWebsite.SaveImage(website.LinkId, PictureSize.Large, imageAdditional);
+
+                if (resultPrimary == FreeMarketResult.Success && resultAdditional == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded and details saved for external website link {0}.", website.LinkId);
+
+                AuditUser.LogAudit(39, string.Format("Website URL: {0}", website.Url));
+
+                return RedirectToAction("ExternalWebsiteIndex", "Admin");
+            }
+
+            website.InitializeDropDowns();
+
+            return View("CreateExternalWebsite", website);
         }
 
         [HttpPost]
@@ -849,6 +893,16 @@ namespace FreeMarket.Controllers
             model = OrderHeaderViewModel.GetOrder(orderNumber, customerNumber);
 
             return View(model);
+        }
+
+        public ActionResult EditExternalWebsite(int websiteNumber)
+        {
+            if (websiteNumber == 0)
+                return RedirectToAction("ExternalWebsiteIndex", "Admin");
+
+            ExternalWebsite website = ExternalWebsite.GetWebsite(websiteNumber);
+
+            return View(website);
         }
 
         public ActionResult EditProduct(int productNumber, int supplierNumber)
@@ -1136,6 +1190,36 @@ namespace FreeMarket.Controllers
             product.InitializeDropDowns("edit");
 
             return View("EditProduct", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditExternalWebsiteProcess(ExternalWebsite website, HttpPostedFileBase imagePrimary, HttpPostedFileBase imageAdditional)
+        {
+            if (ModelState.IsValid)
+            {
+                ExternalWebsite.SaveExternalWebsite(website);
+
+                FreeMarketResult resultPrimary = FreeMarketResult.NoResult;
+                FreeMarketResult resultAdditional = FreeMarketResult.NoResult;
+
+                if (imagePrimary != null)
+                    resultPrimary = ExternalWebsite.SaveImage(website.LinkId, PictureSize.Medium, imagePrimary);
+
+                if (imageAdditional != null)
+                    resultAdditional = ExternalWebsite.SaveImage(website.LinkId, PictureSize.Large, imageAdditional);
+
+                if (resultPrimary == FreeMarketResult.Success && resultAdditional == FreeMarketResult.Success)
+                    TempData["message"] = string.Format("Images uploaded and details saved for external website link {0}.", website.LinkId);
+
+                AuditUser.LogAudit(39, string.Format("Website URL: {0}", website.Url));
+
+                return RedirectToAction("ExternalWebsiteIndex", "Admin");
+            }
+
+            website.InitializeDropDowns("edit");
+
+            return View("EditExternalWebsite", website);
         }
 
         [HttpPost]
@@ -1477,6 +1561,19 @@ namespace FreeMarket.Controllers
                     return Content("Post Office");
                 else
                     return Content(deliveryType);
+            }
+        }
+
+        [ChildActionOnly]
+        public ActionResult GetDepartmentName(int departmentNumber)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                Department department = db.Departments.Find(departmentNumber);
+                if (department == null)
+                    return Content(departmentNumber.ToString());
+                else
+                    return Content(department.DepartmentName);
             }
         }
     }

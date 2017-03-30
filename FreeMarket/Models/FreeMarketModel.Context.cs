@@ -70,6 +70,8 @@ namespace FreeMarket.Models
         public virtual DbSet<WebsiteFunction> WebsiteFunctions { get; set; }
         public virtual DbSet<FreeMarketOwner> FreeMarketOwners { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ExternalWebsite> ExternalWebsites { get; set; }
+        public virtual DbSet<ExternalWebsitePicture> ExternalWebsitePictures { get; set; }
     
         public virtual ObjectResult<FilterCustomers_Result> FilterCustomers(string filterCriteria)
         {

@@ -1,0 +1,90 @@
+﻿<script type="text/javascript">
+
+    function readURLPrimary(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imagePrimaryPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readURLAdditional(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imageAdditionalPreview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(document).ready(function () {
+        $('#websiteForm')
+                .bootstrapValidator({
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'Name': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'The maximum string length is 200.',
+                                    max: 200
+                                }
+                            }
+                        },
+                        'Description': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'The maximum string length is 500.',
+                                    max: 500
+                                }
+                            }
+                        },
+                        'Url': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                },
+                                stringLength: {
+                                    message: 'The maximum string length is 200.',
+                                    max: 200
+                                }
+                            }
+                        },
+                        'SelectedDepartment': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },
+
+                        'SelectedDepartment': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The field is required.'
+                                }
+                            }
+                        },                     
+                    }
+                })
+    });
+
+</script>

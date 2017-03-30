@@ -201,6 +201,29 @@
           <Property Name="StackTrace" Type="nvarchar(max)" />
           <Property Name="Identity" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="ExternalWebsite">
+          <Key>
+            <PropertyRef Name="LinkId" />
+          </Key>
+          <Property Name="LinkId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Department" Type="int" Nullable="false" />
+          <Property Name="Activated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExternalWebsitePicture">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WebsiteNumber" Type="int" Nullable="false" />
+          <Property Name="Picture" Type="varbinary(max)" />
+          <Property Name="Annotation" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dimensions" Type="nvarchar" MaxLength="50" />
+          <Property Name="PictureMimeType" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="FreeMarketOwner">
           <Key>
             <PropertyRef Name="Id" />
@@ -881,6 +904,8 @@
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DepartmentPicture" EntityType="Self.DepartmentPicture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExceptionLogging" EntityType="Self.ExceptionLogging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExternalWebsite" EntityType="Self.ExternalWebsite" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExternalWebsitePicture" EntityType="Self.ExternalWebsitePicture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FreeMarketOwner" EntityType="Self.FreeMarketOwner" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
@@ -1402,8 +1427,10 @@
           <Parameter Name="OrderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetOrderDetails" ReturnType="Collection(FreeMarketModel.GetOrderDetails_Result)">
-            <Parameter Name="orderNumber" Mode="In" Type="Int32" />
+          <Parameter Name="orderNumber" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="ExternalWebsites" EntityType="FreeMarketModel.ExternalWebsite" />
+          <EntitySet Name="ExternalWebsitePictures" EntityType="FreeMarketModel.ExternalWebsitePicture" />
           </EntityContainer>
         <EntityType Name="SystemAction">
           <Key>
@@ -2479,6 +2506,29 @@
           <Property Type="Decimal" Name="Weight" Nullable="false" Precision="8" Scale="2" />
           <Property Type="Boolean" Name="IsVirtual" Nullable="false" />
         </ComplexType>
+        <EntityType Name="ExternalWebsite">
+          <Key>
+            <PropertyRef Name="LinkId" />
+          </Key>
+          <Property Name="LinkId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="Int32" Nullable="false" />
+          <Property Name="Activated" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExternalWebsitePicture">
+          <Key>
+            <PropertyRef Name="PictureNumber" />
+          </Key>
+          <Property Name="PictureNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WebsiteNumber" Type="Int32" Nullable="false" />
+          <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Annotation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dimensions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PictureMimeType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3682,6 +3732,31 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="ExternalWebsites">
+            <EntityTypeMapping TypeName="FreeMarketModel.ExternalWebsite">
+              <MappingFragment StoreEntitySet="ExternalWebsite">
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LinkId" ColumnName="LinkId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExternalWebsitePictures">
+            <EntityTypeMapping TypeName="FreeMarketModel.ExternalWebsitePicture">
+              <MappingFragment StoreEntitySet="ExternalWebsitePicture">
+                <ScalarProperty Name="PictureMimeType" ColumnName="PictureMimeType" />
+                <ScalarProperty Name="Dimensions" ColumnName="Dimensions" />
+                <ScalarProperty Name="Annotation" ColumnName="Annotation" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="WebsiteNumber" ColumnName="WebsiteNumber" />
+                <ScalarProperty Name="PictureNumber" ColumnName="PictureNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

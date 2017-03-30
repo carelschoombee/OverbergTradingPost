@@ -8,10 +8,12 @@ namespace FreeMarket.Models
     public class ProductCollection
     {
         public List<Product> Products { get; set; }
+        public List<ExternalWebsite> Websites { get; set; }
 
         public ProductCollection()
         {
             Products = new List<Product>();
+            Websites = new List<ExternalWebsite>();
         }
 
         public static ProductCollection GetAllProducts()
@@ -78,7 +80,11 @@ namespace FreeMarket.Models
 
                 SetProductData(departmentProducts);
 
-                Debug.Write(departmentProducts);
+                departmentProducts.Websites = db.ExternalWebsites
+                    .Where(c => c.Department == departmentNumber)
+                    .ToList();
+
+                SetWebsiteData(departmentProducts);
 
                 return departmentProducts;
             }
@@ -206,6 +212,31 @@ namespace FreeMarket.Models
                         });
 
                         product.CashQuantity = 0;
+                    }
+                }
+            }
+        }
+
+        public static void SetWebsiteData(ProductCollection allProducts)
+        {
+            using (FreeMarketEntities db = new FreeMarketEntities())
+            {
+                if (allProducts.Websites != null && allProducts.Websites.Count > 0)
+                {
+                    foreach (ExternalWebsite website in allProducts.Websites)
+                    {
+                        int imageNumber = db.ExternalWebsitePictures
+                            .Where(c => c.WebsiteNumber == website.LinkId && c.Dimensions == PictureSize.Medium.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        int imageNumberSecondary = db.ExternalWebsitePictures
+                            .Where(c => c.WebsiteNumber == website.LinkId && c.Dimensions == PictureSize.Large.ToString())
+                            .Select(c => c.PictureNumber)
+                            .FirstOrDefault();
+
+                        website.MainImageNumber = imageNumber;
+                        website.AdditionalImageNumber = imageNumberSecondary;
                     }
                 }
             }

@@ -26,35 +26,78 @@
             </tr>
             <tr>
                 <td class="text-center" colspan="2">
-                    @*<div style="color:black"><u>Regular Price</u></div>*@
-                    @*@if (Model.Products[i].Weight < 1)
-                    {
-                        string weight = string.Format("{0}", Math.Round((Model.Products[i].Weight * 1000), 0).ToString());
-                        <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @weight&nbsp;Grams</div>
-                    }
-                    else
-                    {
-                        <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>
-                    }*@
-
                     <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].PricePerUnit)</div>
-
-                    @if (Model.Products[i].DepartmentName == "Snacking Nuts")
-                    {
-                        <div style="font-size:small"><u>Free Delivery in Struisbaai, L'Agulhas and Suiderstrand</u></div>
-                    }
                 </td>
-                @*<td class="text-center">
-                        <div style="color:black"><u>Special Offer</u></div>
-                        <div style="font-size: 20px">@String.Format("{0:C}", Model.Products[i].SpecialPricePerUnit) &nbsp;per @Html.DisplayFor(model => Model.Products[i].Weight)&nbsp;KG</div>
-                        <div style="font-size: 16px"><i>Struisbaai and L'Agulhas Visitors Only</i></div>
-                    </td>*@
             </tr>
-
             <tr>
                 <td class="text-center" colspan="2">
                     <a href="@Url.Action("ViewProduct", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1" data-id="@Url.Action("ViewProductModal", "ShoppingCart")/@Model.Products[i].ProductNumber?supplierNumber=@Model.Products[i].SupplierNumber&amp;quantity=1"
                        class="btn btn-success editClass"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">&nbsp;&nbsp;View Product</span></a>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+}
+
+@helper ListWebsite(int i)
+{
+    <div>
+        <table class="table table-bordered-custom table-responsive well">
+            <tr>
+                <th class="col-sm-2"></th>
+                <th class="col-sm-2"></th>
+            </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    @if (Model.Websites[i].AdditionalImageNumber != 0)
+                    {
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <!-- Carousel indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                            </ol>
+
+                            <!-- Wrapper for carousel items -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img width="256" height="192" class="img-thumbnail img-responsive" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = Model.Websites[i].MainImageNumber})" alt="@Model.Websites[i].Description" title="@Model.Websites[i].Description" />
+                                </div>
+                                <div class="item">
+                                    <img width="256" height="192" class="img-thumbnail img-responsive" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = Model.Websites[i].AdditionalImageNumber})" alt="@Model.Websites[i].Description" title="@Model.Websites[i].Description" />
+                                </div>
+                            </div>
+
+                            <!-- Carousel controls -->
+                            <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <img width="256" height="192" class="img-thumbnail img-responsive" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = Model.Websites[i].MainImageNumber})" alt="@Model.Websites[i].Description" title="@Model.Websites[i].Description" />
+                    }
+                    </td>
+                </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    <div style="font-size: 24px; color:white"><i><strong>@Html.DisplayFor(model => Model.Websites[i].Name)</strong></i></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    <div style="font-size: 24px; color:white"><i><strong>@Html.DisplayFor(model => Model.Websites[i].Description)</strong></i></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center" colspan="2">
+                    <a href="@Model.Websites[i].Url"
+                       class="btn btn-success"><span class="glyphicon glyphicon-globe" aria-hidden="true">&nbsp;&nbsp;Visit Website</span></a>
                 </td>
             </tr>
 
@@ -145,8 +188,82 @@
 
     </div>
     <div class="col-sm-12">
+        @if (Model.Websites.Count == 1)
+        {
+            <div class="row">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-6">
+                    @ListWebsite(0)
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-3">
+                </div>
+            </div>
+        }
+        else if (Model.Websites.Count == 2)
+        {
+            <div class="row">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                    @ListWebsite(0)
+                </div>
+
+                <div class="col-sm-4">
+                    @ListWebsite(1)
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+            </div>
+        }
+        else if (Model.Websites.Count == 3)
+        {
+            <div class="row">
+                <div class="col-sm-4">
+                    @ListWebsite(0)
+                </div>
+                <div class="col-sm-4">
+                    @ListWebsite(1)
+                </div>
+                <div class="col-sm-4">
+                    @ListWebsite(2)
+                </div>
+            </div>
+        }
+        else
+        {
+            for (int i = 0; i < Model.Websites.Count; i++)
+            {
+                <div class="row">
+                    @if (i < Model.Websites.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListWebsite(i)
+                        </div>
+                    }
+                    @if (++i < Model.Websites.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListWebsite(i)
+                        </div>
+                    }
+                    @if (++i < Model.Websites.Count)
+                    {
+                        <div class="col-sm-4">
+                            @ListWebsite(i)
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+    <div class="col-sm-12">
         <div class="row text-center">
-            @Html.ActionLink("Back to Categories", "Departments", "Product", null,  new { @class = "freemarket-link" })
+            @Html.ActionLink("Back to Categories", "Departments", "Product", null, new { @style = "color:black; font-size:20px; font-weight:600" })
         </div>
     </div>
 </div>
