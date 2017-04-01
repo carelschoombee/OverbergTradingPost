@@ -81,7 +81,7 @@ namespace FreeMarket.Models
                 SetProductData(departmentProducts);
 
                 departmentProducts.Websites = db.ExternalWebsites
-                    .Where(c => c.Department == departmentNumber)
+                    .Where(c => c.Department == departmentNumber && c.Activated == true)
                     .ToList();
 
                 SetWebsiteData(departmentProducts);
