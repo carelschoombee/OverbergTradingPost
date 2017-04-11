@@ -2,6 +2,11 @@
 
 /* bootstrap 3 helpers */
 
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	width: 256px;
+	height: 192px;
+}
+
 .has-error .form-control-feedback {
 	color: #E74C3C;
 }
