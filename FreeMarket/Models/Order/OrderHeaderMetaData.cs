@@ -847,7 +847,7 @@ namespace FreeMarket.Models
 
             EmailService email = new EmailService();
 
-            await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key);
+            await email.SendAsync(iMessage, orderSummary.FirstOrDefault().Key, supportInfo.Email);
         }
 
         private async static void SendInvoiceEmailToCustomer(OrderHeader order, ApplicationUser user, Support supportInfo, Dictionary<Stream, string> orderSummary)

@@ -11,9 +11,6 @@
 
     <tr>
         <th>
-            Image
-        </th>
-        <th>
             Description
         </th>
         <th>
@@ -32,9 +29,6 @@
     @foreach (KeyValuePair<Product, Dictionary<string, int>> item in Model.AverageRatings)
     {
         <tr>
-            <td>
-                <img class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = item.Key.MainImageNumber, defaultSize = PictureSize.Small })" alt="@item.Key.Description" title="@item.Key.Description" />
-            </td>
             <td>
                 @item.Key.Description
             </td>

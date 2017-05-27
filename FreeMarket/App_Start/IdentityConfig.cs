@@ -50,6 +50,12 @@ namespace FreeMarket
             mail.From = new MailAddress(ConfigurationManager.AppSettings["systemEmail"]);
             mail.To.Add(message.Destination);
             mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["ordersEmail"]));
+
+            if (!string.IsNullOrEmpty(CC))
+            {
+                mail.Bcc.Add(new MailAddress(CC));
+            }
+
             mail.Subject = message.Subject;
 
             if (attachment != null)

@@ -9,11 +9,7 @@
 @helper ListProduct(int i)
 {
     <div>
-        <table class="table table-bordered-custom table-responsive well">
-            <tr>
-                <th class="col-sm-2"></th>
-                <th class="col-sm-2"></th>
-            </tr>
+        <table class="table table-bordered-custom-product table-responsive well">
             <tr>
                 <td class="text-center" colspan="2">
                     <img width="256" height="192" class="img-thumbnail img-responsive" src="@Url.Action("RenderImage", "Image", new { id = Model.Products[i].MainImageNumber})" alt="@Model.Products[i].Description" title="@Model.Products[i].Description" />
@@ -43,11 +39,7 @@
 @helper ListWebsite(int i)
 {
     <div>
-        <table class="table table-bordered-custom table-responsive well">
-            <tr>
-                <th class="col-sm-2"></th>
-                <th class="col-sm-2"></th>
-            </tr>
+        <table class="table table-bordered-custom-product table-responsive well">
             <tr>
                 <td class="text-center" colspan="2">
                     @if (Model.Websites[i].AdditionalImageNumber != 0)

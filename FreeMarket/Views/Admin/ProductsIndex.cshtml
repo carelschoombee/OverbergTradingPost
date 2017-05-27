@@ -18,7 +18,6 @@
         <tr>
             <th class="col-sm-1"></th>
             <th class="col-sm-1">Product Number</th>
-            <th class="col-sm-1">Image</th>
             <th class="col-sm-2">Description</th>
             <th class="col-sm-2">Weight</th>
             <th class="col-sm-2">Supplier</th>
@@ -34,9 +33,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(model => product.ProductNumber)
-                </td>
-                <td>
-                    <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderImage", "Image", new { id = product.MainImageNumber})" alt="@product.Description" title="@product.Description" />
                 </td>
                 <td>
                     @Html.DisplayFor(model => product.Description)
