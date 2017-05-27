@@ -351,7 +351,7 @@ namespace FreeMarket.Controllers
                         if (order != null)
                         {
                             if (order.DeliveryType == "Virtual")
-                                order.OrderStatus = "Complete";
+                                order.OrderStatus = "Completed";
                             else
                                 order.OrderStatus = "Confirmed";
 
