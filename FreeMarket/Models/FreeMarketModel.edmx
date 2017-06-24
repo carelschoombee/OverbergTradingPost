@@ -234,6 +234,7 @@
           <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="CellphoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankDetailsBankAccountName" Type="nvarchar" MaxLength="200" />
           <Property Name="BankingDetailsBankName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="BankingDetailsBranchName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="BankingDetailsBranchCode" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -2228,6 +2229,7 @@
           <Property Name="BankingDetailsAccountType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BankAccountType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="ProofOfPaymentEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BankDetailsBankAccountName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="GetOrderReport_Result">
           <Property Type="String" Name="CustomerName" Nullable="true" />
@@ -2266,6 +2268,7 @@
           <Property Type="String" Name="BankingDetailsAccountType" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="BankingDetailsAccountNumber" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="ProofOfPaymentEmail" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="BankDetailsBankAccountName" Nullable="true" MaxLength="200" />
         </ComplexType>
         <EntityType Name="Product">
           <Key>
@@ -3501,6 +3504,7 @@
           <EntitySetMapping Name="FreeMarketOwners">
             <EntityTypeMapping TypeName="FreeMarketModel.FreeMarketOwner">
               <MappingFragment StoreEntitySet="FreeMarketOwner">
+                <ScalarProperty Name="BankDetailsBankAccountName" ColumnName="BankDetailsBankAccountName" />
                 <ScalarProperty Name="ProofOfPaymentEmail" ColumnName="ProofOfPaymentEmail" />
                 <ScalarProperty Name="BankAccountType" ColumnName="BankAccountType" />
                 <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
@@ -3556,6 +3560,7 @@
                 <ScalarProperty Name="BankingDetailsAccountType" ColumnName="BankingDetailsAccountType" />
                 <ScalarProperty Name="BankingDetailsAccountNumber" ColumnName="BankingDetailsAccountNumber" />
                 <ScalarProperty Name="ProofOfPaymentEmail" ColumnName="ProofOfPaymentEmail" />
+                <ScalarProperty Name="BankDetailsBankAccountName" ColumnName="BankDetailsBankAccountName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

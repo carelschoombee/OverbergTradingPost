@@ -386,6 +386,8 @@ namespace FreeMarket {
             
             private global::System.Data.DataColumn columnProofOfPaymentEmail;
             
+            private global::System.Data.DataColumn columnBankDetailsBankAccountName;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetOrderReportDataTable() {
@@ -709,6 +711,14 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn BankDetailsBankAccountNameColumn {
+                get {
+                    return this.columnBankDetailsBankAccountName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -779,7 +789,8 @@ namespace FreeMarket {
                         string BankingDetailsBranchCode, 
                         string BankingDetailsAccountType, 
                         string BankingDetailsAccountNumber, 
-                        string ProofOfPaymentEmail) {
+                        string ProofOfPaymentEmail, 
+                        string BankDetailsBankAccountName) {
                 GetOrderReportRow rowGetOrderReportRow = ((GetOrderReportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         CustomerName,
@@ -817,7 +828,8 @@ namespace FreeMarket {
                         BankingDetailsBranchCode,
                         BankingDetailsAccountType,
                         BankingDetailsAccountNumber,
-                        ProofOfPaymentEmail};
+                        ProofOfPaymentEmail,
+                        BankDetailsBankAccountName};
                 rowGetOrderReportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetOrderReportRow);
                 return rowGetOrderReportRow;
@@ -883,6 +895,7 @@ namespace FreeMarket {
                 this.columnBankingDetailsAccountType = base.Columns["BankingDetailsAccountType"];
                 this.columnBankingDetailsAccountNumber = base.Columns["BankingDetailsAccountNumber"];
                 this.columnProofOfPaymentEmail = base.Columns["ProofOfPaymentEmail"];
+                this.columnBankDetailsBankAccountName = base.Columns["BankDetailsBankAccountName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -960,6 +973,8 @@ namespace FreeMarket {
                 base.Columns.Add(this.columnBankingDetailsAccountNumber);
                 this.columnProofOfPaymentEmail = new global::System.Data.DataColumn("ProofOfPaymentEmail", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnProofOfPaymentEmail);
+                this.columnBankDetailsBankAccountName = new global::System.Data.DataColumn("BankDetailsBankAccountName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBankDetailsBankAccountName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnOrderNumber}, true));
                 this.columnCustomerName.MaxLength = 2147483647;
@@ -1011,6 +1026,7 @@ namespace FreeMarket {
                 this.columnBankingDetailsAccountNumber.AllowDBNull = false;
                 this.columnBankingDetailsAccountNumber.MaxLength = 50;
                 this.columnProofOfPaymentEmail.MaxLength = 100;
+                this.columnBankDetailsBankAccountName.MaxLength = 200;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2485,6 +2501,23 @@ namespace FreeMarket {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string BankDetailsBankAccountName {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetOrderReport.BankDetailsBankAccountNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BankDetailsBankAccountName\' in table \'GetOrderReport\' is DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetOrderReport.BankDetailsBankAccountNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCustomerNameNull() {
                 return this.IsNull(this.tableGetOrderReport.CustomerNameColumn);
             }
@@ -2733,6 +2766,18 @@ namespace FreeMarket {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetProofOfPaymentEmailNull() {
                 this[this.tableGetOrderReport.ProofOfPaymentEmailColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsBankDetailsBankAccountNameNull() {
+                return this.IsNull(this.tableGetOrderReport.BankDetailsBankAccountNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetBankDetailsBankAccountNameNull() {
+                this[this.tableGetOrderReport.BankDetailsBankAccountNameColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -3741,6 +3786,7 @@ namespace FreeMarket.FreeMarketDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("BankingDetailsAccountType", "BankingDetailsAccountType");
             tableMapping.ColumnMappings.Add("BankingDetailsAccountNumber", "BankingDetailsAccountNumber");
             tableMapping.ColumnMappings.Add("ProofOfPaymentEmail", "ProofOfPaymentEmail");
+            tableMapping.ColumnMappings.Add("BankDetailsBankAccountName", "BankDetailsBankAccountName");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

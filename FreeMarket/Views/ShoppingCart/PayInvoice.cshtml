@@ -34,6 +34,10 @@
                     <td class="text-left" data-label="Amount:">@string.Format("{0:C}", Model.Cart.Order.TotalOrderValue)</td>
                 </tr>
                 <tr>
+                    <th class="text-right">Account Name:</th>
+                    <td class="text-left" data-label="Account:">@Model.BankDetails.BankDetailsBankAccountName</td>
+                </tr>
+                <tr>
                     <th class="text-right">Bank:</th>
                     <td class="text-left" data-label="Bank:">@Model.BankDetails.BankingDetailsBankName</td>
                 </tr>

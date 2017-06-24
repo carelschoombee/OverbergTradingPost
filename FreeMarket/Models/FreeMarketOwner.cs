@@ -27,5 +27,6 @@ namespace FreeMarket.Models
         public string BankingDetailsAccountType { get; set; }
         public string BankAccountType { get; set; }
         public string ProofOfPaymentEmail { get; set; }
+        public string BankDetailsBankAccountName { get; set; }
     }
 }

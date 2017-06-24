@@ -60,6 +60,7 @@
               <Mapping SourceColumn="BankingDetailsAccountType" DataSetColumn="BankingDetailsAccountType" />
               <Mapping SourceColumn="BankingDetailsAccountNumber" DataSetColumn="BankingDetailsAccountNumber" />
               <Mapping SourceColumn="ProofOfPaymentEmail" DataSetColumn="ProofOfPaymentEmail" />
+              <Mapping SourceColumn="BankDetailsBankAccountName" DataSetColumn="BankDetailsBankAccountName" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -125,7 +126,7 @@
   <xs:element name="FreeMarketDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="FreeMarketDataSet" msprop:Generator_UserDSName="FreeMarketDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="GetOrderReport" msprop:Generator_TableClassName="GetOrderReportDataTable" msprop:Generator_TableVarName="tableGetOrderReport" msprop:Generator_RowChangedName="GetOrderReportRowChanged" msprop:Generator_TablePropName="GetOrderReport" msprop:Generator_RowDeletingName="GetOrderReportRowDeleting" msprop:Generator_RowChangingName="GetOrderReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderReportRowDeleted" msprop:Generator_RowClassName="GetOrderReportRow" msprop:Generator_UserTableName="GetOrderReport" msprop:Generator_RowEvArgName="GetOrderReportRowChangeEvent">
+        <xs:element name="GetOrderReport" msprop:Generator_TableClassName="GetOrderReportDataTable" msprop:Generator_TableVarName="tableGetOrderReport" msprop:Generator_TablePropName="GetOrderReport" msprop:Generator_RowDeletingName="GetOrderReportRowDeleting" msprop:Generator_RowChangingName="GetOrderReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderReportRowDeleted" msprop:Generator_UserTableName="GetOrderReport" msprop:Generator_RowChangedName="GetOrderReportRowChanged" msprop:Generator_RowEvArgName="GetOrderReportRowChangeEvent" msprop:Generator_RowClassName="GetOrderReportRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CustomerName" msprop:Generator_ColumnVarNameInTable="columnCustomerName" msprop:Generator_ColumnPropNameInRow="CustomerName" msprop:Generator_ColumnPropNameInTable="CustomerNameColumn" msprop:Generator_UserColumnName="CustomerName" minOccurs="0">
@@ -326,10 +327,17 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="BankDetailsBankAccountName" msprop:Generator_ColumnVarNameInTable="columnBankDetailsBankAccountName" msprop:Generator_ColumnPropNameInRow="BankDetailsBankAccountName" msprop:Generator_ColumnPropNameInTable="BankDetailsBankAccountNameColumn" msprop:Generator_UserColumnName="BankDetailsBankAccountName" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="GetOrderDeliveryReport" msprop:Generator_TableClassName="GetOrderDeliveryReportDataTable" msprop:Generator_TableVarName="tableGetOrderDeliveryReport" msprop:Generator_TablePropName="GetOrderDeliveryReport" msprop:Generator_RowDeletingName="GetOrderDeliveryReportRowDeleting" msprop:Generator_RowChangingName="GetOrderDeliveryReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderDeliveryReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderDeliveryReportRowDeleted" msprop:Generator_UserTableName="GetOrderDeliveryReport" msprop:Generator_RowChangedName="GetOrderDeliveryReportRowChanged" msprop:Generator_RowEvArgName="GetOrderDeliveryReportRowChangeEvent" msprop:Generator_RowClassName="GetOrderDeliveryReportRow">
+        <xs:element name="GetOrderDeliveryReport" msprop:Generator_TableClassName="GetOrderDeliveryReportDataTable" msprop:Generator_TableVarName="tableGetOrderDeliveryReport" msprop:Generator_RowChangedName="GetOrderDeliveryReportRowChanged" msprop:Generator_TablePropName="GetOrderDeliveryReport" msprop:Generator_RowDeletingName="GetOrderDeliveryReportRowDeleting" msprop:Generator_RowChangingName="GetOrderDeliveryReportRowChanging" msprop:Generator_RowEvHandlerName="GetOrderDeliveryReportRowChangeEventHandler" msprop:Generator_RowDeletedName="GetOrderDeliveryReportRowDeleted" msprop:Generator_RowClassName="GetOrderDeliveryReportRow" msprop:Generator_UserTableName="GetOrderDeliveryReport" msprop:Generator_RowEvArgName="GetOrderDeliveryReportRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CustomerName" msprop:Generator_ColumnVarNameInTable="columnCustomerName" msprop:Generator_ColumnPropNameInRow="CustomerName" msprop:Generator_ColumnPropNameInTable="CustomerNameColumn" msprop:Generator_UserColumnName="CustomerName" minOccurs="0">
