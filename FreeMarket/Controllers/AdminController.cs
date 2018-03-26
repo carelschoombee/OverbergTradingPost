@@ -12,7 +12,6 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
-    [RequireHttps]
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {

@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
-    [RequireHttps]
     public class ProductController : Controller
     {
         FreeMarketEntities db = new FreeMarketEntities();

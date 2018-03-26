@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
-    [RequireHttps]
     public class HomeController : Controller
     {
         public ActionResult Index()

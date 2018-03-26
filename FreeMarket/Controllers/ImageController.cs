@@ -4,7 +4,6 @@ using System.Web.Mvc;
 
 namespace FreeMarket.Controllers
 {
-    [RequireHttps]
     public class ImageController : Controller
     {
         public FreeMarketEntities db = new FreeMarketEntities();

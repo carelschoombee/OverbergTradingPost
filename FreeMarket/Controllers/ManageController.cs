@@ -11,7 +11,6 @@ using System.Web.Mvc;
 namespace FreeMarket.Controllers
 {
     [Authorize]
-    [RequireHttps]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
