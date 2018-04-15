@@ -130,7 +130,7 @@
         <hr />
         <footer>
             <p class="text-center" style="font-weight:bold">&copy; @DateTime.Now.Year - Overberg Trading Post</p>
-            <div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @style = "color:black" })</div>
+            @*<div class="text-center">@Html.ActionLink("Privacy", "Privacy", "Home", null, new { @style = "color:black" })</div>*@
             
             @*<div class="row text-center">
                 <a href="@Url.Action("TermsAndConditions", "Home")" data-id="@Url.Action("TermsAndConditionsModal", "Home")"
@@ -140,7 +140,7 @@
             <div id="parent" class="center_div text-center">
                @* <div class="text-center">Our payment partners:</div>*@
 
-                @Html.Partial("_PaymentPartners")
+               @* @Html.Partial("_PaymentPartners")*@
                 
             </div>
             
