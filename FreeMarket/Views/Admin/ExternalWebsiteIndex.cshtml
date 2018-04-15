@@ -17,7 +17,6 @@
 
         <tr>
             <th class="col-sm-1"></th>
-            <th class="col-sm-1">Website Number</th>
             <th class="col-sm-2">Image</th>
             <th class="col-sm-1">Name</th>
             <th class="col-sm-2">URL</th>
@@ -31,9 +30,6 @@
             <tr class="well">
                 <td class="text-center">
                     @Html.ActionLink("Edit", "EditExternalWebsite", new { websiteNumber = website.LinkId }, new { @class = "freemarket-link" })
-                </td>
-                <td>
-                    @Html.DisplayFor(model => website.LinkId)
                 </td>
                 <td>
                     <img width="256" height="192" class="img-thumbnail" src="@Url.Action("RenderExternalWebsiteImage", "Image", new { id = website.MainImageNumber})" alt="@website.Description" title="@website.Description" />
