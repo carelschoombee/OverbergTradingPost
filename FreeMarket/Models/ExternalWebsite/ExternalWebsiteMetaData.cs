@@ -87,9 +87,9 @@ namespace FreeMarket.Models
                 {
                     ExternalWebsitePicture picture = new ExternalWebsitePicture();
 
-                    Product product = db.Products.Find(websiteNumber);
+                    ExternalWebsite site = db.ExternalWebsites.Find(websiteNumber);
 
-                    if (product == null)
+                    if (site == null)
                         return FreeMarketResult.Failure;
 
                     picture = db.ExternalWebsitePictures
@@ -103,7 +103,7 @@ namespace FreeMarket.Models
                         {
                             picture = new ExternalWebsitePicture();
                             picture.Picture = new byte[image.ContentLength];
-                            picture.Annotation = product.Description;
+                            picture.Annotation = site.Description;
                             picture.Dimensions = size.ToString();
                             image.InputStream.Read(picture.Picture, 0, image.ContentLength);
                             picture.PictureMimeType = image.ContentType;
@@ -117,7 +117,7 @@ namespace FreeMarket.Models
                         }
                         else
                         {
-                            picture.Annotation = product.Description;
+                            picture.Annotation = site.Description;
                             picture.Picture = new byte[image.ContentLength];
                             image.InputStream.Read(picture.Picture, 0, image.ContentLength);
                             picture.PictureMimeType = image.ContentType;
